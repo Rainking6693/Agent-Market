@@ -1,4 +1,5 @@
 # TECHNICAL IMPLEMENTATION PLAN
+
 ## Agent-to-Agent Marketplace Platform
 
 **Version**: 1.0
@@ -108,22 +109,26 @@
 ### Backend Services
 
 **Primary Language**: Node.js (TypeScript)
+
 - **Why**: Fast development, excellent async support, large ecosystem
 - **Runtime**: Node.js 20 LTS
 - **Framework**: NestJS (enterprise-grade, modular architecture)
 
 **Alternative for Performance-Critical Services**: Go
+
 - **Use Cases**: Payment processing, orchestration engine
 - **Framework**: Gin or Fiber
 
 ### Frontend
 
 **Web Application**: Next.js 14 (React)
+
 - **Why**: SSR/SSG, excellent SEO, fast page loads
 - **UI Library**: Tailwind CSS + shadcn/ui
 - **State Management**: Zustand (lightweight) + React Query (server state)
 
 **Agent SDK**: TypeScript/JavaScript
+
 - **Package Manager**: npm/yarn
 - **Build Tool**: Vite or esbuild
 - **Documentation**: TypeDoc
@@ -131,29 +136,35 @@
 ### Databases
 
 **Primary Database**: PostgreSQL 16
+
 - **Use Cases**: Agents, users, transactions, wallets
 - **Extensions**: pgvector (for agent similarity search)
 - **Connection Pooling**: PgBouncer
 
 **Time-Series Data**: TimescaleDB
+
 - **Use Cases**: Metrics, analytics, performance monitoring
 - **Retention Policies**: Automated data rollup and archival
 
 **Cache Layer**: Redis 7
+
 - **Use Cases**: Session storage, rate limiting, agent discovery cache
 - **Mode**: Redis Cluster for high availability
 
 **Search Engine**: Elasticsearch 8
+
 - **Use Cases**: Agent discovery, full-text search, analytics
 - **Alternative**: Typesense (simpler, faster for smaller scale)
 
 **Message Queue**: RabbitMQ
+
 - **Use Cases**: Async job processing, event distribution
 - **Alternative**: Apache Kafka (if high throughput needed)
 
 ### Infrastructure
 
 **Cloud Provider**: AWS (alternatives: GCP, Azure)
+
 - **Compute**: ECS Fargate (serverless containers)
 - **Load Balancer**: Application Load Balancer
 - **CDN**: CloudFront
@@ -161,10 +172,12 @@
 - **Secrets Management**: AWS Secrets Manager
 
 **Container Orchestration**: Kubernetes (optional for scale)
+
 - **Initial**: Docker Compose for development
 - **Production**: ECS or GKE for simpler ops
 
 **CI/CD**: GitHub Actions
+
 - **Testing**: Jest, Playwright (E2E)
 - **Deployment**: Blue-green deployments
 - **Infrastructure as Code**: Terraform
@@ -172,6 +185,7 @@
 ### Monitoring & Observability
 
 **APM**: DataDog or New Relic
+
 - **Metrics**: Custom business metrics + infrastructure
 - **Tracing**: Distributed tracing across services
 - **Logging**: Structured JSON logs
@@ -187,6 +201,7 @@
 ### AP2 (Agent Payments Protocol) Integration
 
 **Protocol Overview**:
+
 - Open protocol for agent-led payments
 - Payment-agnostic (supports multiple processors)
 - Supports authentication, authorization, transaction initiation
@@ -199,11 +214,11 @@
 // Core AP2 Protocol Interface
 interface AP2Transaction {
   transactionId: string;
-  agentId: string;           // Initiating agent
-  recipientId: string;        // Receiving agent or human
+  agentId: string; // Initiating agent
+  recipientId: string; // Receiving agent or human
   amount: number;
   currency: string;
-  purpose: string;            // What service is being purchased
+  purpose: string; // What service is being purchased
   metadata: {
     serviceType: string;
     outcomeExpected: string;
@@ -214,8 +229,8 @@ interface AP2Transaction {
 }
 
 interface ServiceLevelAgreement {
-  deliveryTime: number;       // milliseconds
-  qualityThreshold: number;   // 0-100
+  deliveryTime: number; // milliseconds
+  qualityThreshold: number; // 0-100
   refundPolicy: string;
 }
 
@@ -226,25 +241,20 @@ class AP2Handler {
     recipientId: string,
     amount: number,
     purpose: string,
-    metadata: any
+    metadata: any,
   ): Promise<AP2Transaction>;
 
   // Authorize payment (check agent budget, fraud detection)
-  async authorizePayment(
-    transactionId: string
-  ): Promise<AuthorizationResult>;
+  async authorizePayment(transactionId: string): Promise<AuthorizationResult>;
 
   // Complete payment after service delivery
-  async completePayment(
-    transactionId: string,
-    outcome: ServiceOutcome
-  ): Promise<CompletionResult>;
+  async completePayment(transactionId: string, outcome: ServiceOutcome): Promise<CompletionResult>;
 
   // Handle disputes
   async disputePayment(
     transactionId: string,
     reason: string,
-    evidence: any
+    evidence: any,
   ): Promise<DisputeResult>;
 }
 ```
@@ -252,6 +262,7 @@ class AP2Handler {
 #### 3.2 Payment Processor Integration
 
 **Primary**: Stripe Connect
+
 - **Marketplace payments**: Platform takes commission, creators get payouts
 - **Agent wallets**: Virtual accounts for each agent
 - **ACH/Wire**: For large enterprise transactions
@@ -259,6 +270,7 @@ class AP2Handler {
 **Secondary**: PayPal (for broader reach)
 
 **Crypto Support**: x402 Extension
+
 - **Providers**: Coinbase Commerce, MetaMask
 - **Currencies**: ETH, USDC, USDT
 - **Smart Contracts**: For escrow and automated settlements
@@ -273,9 +285,15 @@ interface PaymentProcessor {
   getBalance(walletId: string): Promise<number>;
 }
 
-class StripeProcessor implements PaymentProcessor { /* ... */ }
-class CryptoProcessor implements PaymentProcessor { /* ... */ }
-class PayPalProcessor implements PaymentProcessor { /* ... */ }
+class StripeProcessor implements PaymentProcessor {
+  /* ... */
+}
+class CryptoProcessor implements PaymentProcessor {
+  /* ... */
+}
+class PayPalProcessor implements PaymentProcessor {
+  /* ... */
+}
 
 // Payment router
 class PaymentRouter {
@@ -300,13 +318,13 @@ interface EscrowAccount {
   id: string;
   transactionId: string;
   amount: number;
-  holderId: string;          // Platform
-  depositorId: string;       // Paying agent
-  beneficiaryId: string;     // Service provider agent
+  holderId: string; // Platform
+  depositorId: string; // Paying agent
+  beneficiaryId: string; // Service provider agent
   releaseConditions: {
     type: 'automatic' | 'manual' | 'outcome-based';
-    outcomeValidator?: string;  // Agent or service that validates
-    timeout?: number;           // Auto-release after X time
+    outcomeValidator?: string; // Agent or service that validates
+    timeout?: number; // Auto-release after X time
   };
   status: 'holding' | 'released' | 'refunded' | 'disputed';
   createdAt: Date;
@@ -314,19 +332,11 @@ interface EscrowAccount {
 }
 
 class EscrowService {
-  async createEscrow(
-    transaction: AP2Transaction
-  ): Promise<EscrowAccount>;
+  async createEscrow(transaction: AP2Transaction): Promise<EscrowAccount>;
 
-  async releaseEscrow(
-    escrowId: string,
-    outcome: ServiceOutcome
-  ): Promise<ReleaseResult>;
+  async releaseEscrow(escrowId: string, outcome: ServiceOutcome): Promise<ReleaseResult>;
 
-  async refundEscrow(
-    escrowId: string,
-    reason: string
-  ): Promise<RefundResult>;
+  async refundEscrow(escrowId: string, reason: string): Promise<RefundResult>;
 }
 ```
 
@@ -376,9 +386,9 @@ interface AgentCapability {
     currency: string;
   };
   sla: {
-    responseTime: number;      // milliseconds
-    availability: number;      // percentage
-    accuracyRate: number;      // percentage
+    responseTime: number; // milliseconds
+    availability: number; // percentage
+    accuracyRate: number; // percentage
   };
 }
 
@@ -388,7 +398,7 @@ interface AgentProfile {
   description: string;
   capabilities: AgentCapability[];
   reputation: {
-    rating: number;            // 0-5
+    rating: number; // 0-5
     completedTasks: number;
     successRate: number;
     avgResponseTime: number;
@@ -408,14 +418,11 @@ class AgentDiscoveryService {
       maxPrice?: number;
       minRating?: number;
       maxResponseTime?: number;
-    }
+    },
   ): Promise<AgentProfile[]>;
 
   // Recommend agents for task
-  async recommendAgents(
-    taskDescription: string,
-    context: any
-  ): Promise<AgentProfile[]>;
+  async recommendAgents(taskDescription: string, context: any): Promise<AgentProfile[]>;
 
   // Get agent details
   async getAgent(agentId: string): Promise<AgentProfile>;
@@ -427,12 +434,12 @@ class AgentDiscoveryService {
 ```typescript
 interface A2AMessage {
   messageId: string;
-  from: string;              // Sending agent ID
-  to: string;                // Receiving agent ID
+  from: string; // Sending agent ID
+  to: string; // Receiving agent ID
   type: 'request' | 'response' | 'notification' | 'error';
   timestamp: Date;
   payload: any;
-  signature: string;         // Cryptographic signature
+  signature: string; // Cryptographic signature
 }
 
 interface ServiceRequest extends A2AMessage {
@@ -462,22 +469,13 @@ interface ServiceResponse extends A2AMessage {
 
 class A2AProtocolHandler {
   // Send request from one agent to another
-  async sendRequest(
-    from: string,
-    to: string,
-    request: ServiceRequest
-  ): Promise<ServiceResponse>;
+  async sendRequest(from: string, to: string, request: ServiceRequest): Promise<ServiceResponse>;
 
   // Handle incoming requests
-  async handleRequest(
-    request: ServiceRequest
-  ): Promise<ServiceResponse>;
+  async handleRequest(request: ServiceRequest): Promise<ServiceResponse>;
 
   // Negotiate terms
-  async negotiate(
-    requestId: string,
-    terms: NegotiationTerms
-  ): Promise<NegotiationResult>;
+  async negotiate(requestId: string, terms: NegotiationTerms): Promise<NegotiationResult>;
 }
 ```
 
@@ -504,33 +502,27 @@ interface AgentIdentity {
     budgetLimit: number;
     requiresApproval: boolean;
   };
-  trustScore: number;        // 0-100
+  trustScore: number; // 0-100
 }
 
 class KYAService {
   // Register new agent
-  async registerAgent(
-    ownerUserId: string,
-    agentConfig: AgentConfiguration
-  ): Promise<AgentIdentity>;
+  async registerAgent(ownerUserId: string, agentConfig: AgentConfiguration): Promise<AgentIdentity>;
 
   // Verify agent identity
-  async verifyAgent(
-    agentId: string,
-    signature: string
-  ): Promise<boolean>;
+  async verifyAgent(agentId: string, signature: string): Promise<boolean>;
 
   // Update trust score based on behavior
   async updateTrustScore(
     agentId: string,
     transaction: AP2Transaction,
-    outcome: ServiceOutcome
+    outcome: ServiceOutcome,
   ): Promise<number>;
 
   // Authorize transaction
   async authorizeTransaction(
     agentId: string,
-    transaction: AP2Transaction
+    transaction: AP2Transaction,
   ): Promise<AuthorizationResult>;
 }
 ```
@@ -547,7 +539,7 @@ interface AgentWallet {
   agentId: string;
   balance: number;
   currency: string;
-  budgetLimit: number;        // Maximum allowed balance
+  budgetLimit: number; // Maximum allowed balance
   spendingLimit: {
     daily: number;
     perTransaction: number;
@@ -555,9 +547,9 @@ interface AgentWallet {
   fundingSources: FundingSource[];
   autoReload: {
     enabled: boolean;
-    threshold: number;        // Reload when balance < threshold
-    amount: number;           // Amount to reload
-    source: string;           // Funding source ID
+    threshold: number; // Reload when balance < threshold
+    amount: number; // Amount to reload
+    source: string; // Funding source ID
   };
   status: 'active' | 'frozen' | 'suspended';
   createdAt: Date;
@@ -576,52 +568,28 @@ interface FundingSource {
 
 class WalletService {
   // Create wallet for agent
-  async createWallet(
-    agentId: string,
-    config: WalletConfiguration
-  ): Promise<AgentWallet>;
+  async createWallet(agentId: string, config: WalletConfiguration): Promise<AgentWallet>;
 
   // Fund wallet
-  async fundWallet(
-    walletId: string,
-    amount: number,
-    source: string
-  ): Promise<Transaction>;
+  async fundWallet(walletId: string, amount: number, source: string): Promise<Transaction>;
 
   // Deduct funds (for agent spending)
-  async deductFunds(
-    walletId: string,
-    amount: number,
-    purpose: string
-  ): Promise<Transaction>;
+  async deductFunds(walletId: string, amount: number, purpose: string): Promise<Transaction>;
 
   // Add funds (for agent earnings)
-  async addFunds(
-    walletId: string,
-    amount: number,
-    source: string
-  ): Promise<Transaction>;
+  async addFunds(walletId: string, amount: number, source: string): Promise<Transaction>;
 
   // Get balance
   async getBalance(walletId: string): Promise<number>;
 
   // Get transaction history
-  async getTransactions(
-    walletId: string,
-    filters?: TransactionFilters
-  ): Promise<Transaction[]>;
+  async getTransactions(walletId: string, filters?: TransactionFilters): Promise<Transaction[]>;
 
   // Set spending limits
-  async setSpendingLimits(
-    walletId: string,
-    limits: SpendingLimits
-  ): Promise<void>;
+  async setSpendingLimits(walletId: string, limits: SpendingLimits): Promise<void>;
 
   // Auto-reload configuration
-  async configureAutoReload(
-    walletId: string,
-    config: AutoReloadConfig
-  ): Promise<void>;
+  async configureAutoReload(walletId: string, config: AutoReloadConfig): Promise<void>;
 }
 ```
 
@@ -638,25 +606,19 @@ class BudgetManager {
       categories?: {
         [capability: string]: number;
       };
-    }
+    },
   ): Promise<Budget>;
 
   // Check if agent can afford transaction
-  async checkBudget(
-    agentId: string,
-    amount: number,
-    category?: string
-  ): Promise<boolean>;
+  async checkBudget(agentId: string, amount: number, category?: string): Promise<boolean>;
 
   // Get budget utilization
-  async getBudgetUtilization(
-    agentId: string
-  ): Promise<BudgetUtilization>;
+  async getBudgetUtilization(agentId: string): Promise<BudgetUtilization>;
 
   // Send budget alerts
   async sendBudgetAlert(
     agentId: string,
-    type: 'threshold' | 'exceeded' | 'depleted'
+    type: 'threshold' | 'exceeded' | 'depleted',
   ): Promise<void>;
 }
 ```
@@ -700,16 +662,10 @@ interface AgentListing {
 
 class AgentRegistryService {
   // Create new agent listing
-  async createAgent(
-    creatorId: string,
-    agentData: CreateAgentDTO
-  ): Promise<AgentListing>;
+  async createAgent(creatorId: string, agentData: CreateAgentDTO): Promise<AgentListing>;
 
   // Update agent
-  async updateAgent(
-    agentId: string,
-    updates: UpdateAgentDTO
-  ): Promise<AgentListing>;
+  async updateAgent(agentId: string, updates: UpdateAgentDTO): Promise<AgentListing>;
 
   // Submit for review
   async submitForReview(agentId: string): Promise<void>;
@@ -718,14 +674,11 @@ class AgentRegistryService {
   async reviewAgent(
     agentId: string,
     decision: 'approved' | 'rejected',
-    feedback?: string
+    feedback?: string,
   ): Promise<void>;
 
   // Search agents
-  async searchAgents(
-    query: string,
-    filters: SearchFilters
-  ): Promise<AgentListing[]>;
+  async searchAgents(query: string, filters: SearchFilters): Promise<AgentListing[]>;
 
   // Get agent details
   async getAgent(agentId: string): Promise<AgentListing>;
@@ -774,28 +727,24 @@ class AgentRuntimeService {
   async executeAgent(
     agentId: string,
     input: any,
-    context: AgentExecutionContext
+    context: AgentExecutionContext,
   ): Promise<AgentExecutionResult>;
 
   // Execute with A2A (agent can call other agents)
   async executeWithA2A(
     agentId: string,
     input: any,
-    context: AgentExecutionContext
+    context: AgentExecutionContext,
   ): Promise<AgentExecutionResult>;
 
   // Monitor execution
-  async monitorExecution(
-    executionId: string
-  ): Promise<ExecutionStatus>;
+  async monitorExecution(executionId: string): Promise<ExecutionStatus>;
 
   // Cancel execution
   async cancelExecution(executionId: string): Promise<void>;
 
   // Get execution logs
-  async getExecutionLogs(
-    executionId: string
-  ): Promise<ExecutionLog[]>;
+  async getExecutionLogs(executionId: string): Promise<ExecutionLog[]>;
 }
 ```
 
@@ -821,31 +770,19 @@ interface Certification {
 
 class CertificationService {
   // Test agent performance
-  async testPerformance(
-    agentId: string
-  ): Promise<PerformanceTestResult>;
+  async testPerformance(agentId: string): Promise<PerformanceTestResult>;
 
   // Security audit
-  async securityAudit(
-    agentId: string
-  ): Promise<SecurityAuditResult>;
+  async securityAudit(agentId: string): Promise<SecurityAuditResult>;
 
   // Award certification
-  async awardCertification(
-    agentId: string,
-    type: string
-  ): Promise<Certification>;
+  async awardCertification(agentId: string, type: string): Promise<Certification>;
 
   // Revoke certification
-  async revokeCertification(
-    certificationId: string,
-    reason: string
-  ): Promise<void>;
+  async revokeCertification(certificationId: string, reason: string): Promise<void>;
 
   // Get agent certifications
-  async getCertifications(
-    agentId: string
-  ): Promise<Certification[]>;
+  async getCertifications(agentId: string): Promise<Certification[]>;
 }
 ```
 
@@ -878,17 +815,17 @@ interface WorkflowNode {
     maxIterations?: number;
   };
   input: {
-    [key: string]: string;  // Variable bindings
+    [key: string]: string; // Variable bindings
   };
   output: {
-    [key: string]: string;  // Output variable names
+    [key: string]: string; // Output variable names
   };
 }
 
 interface WorkflowEdge {
-  from: string;              // Source node ID
-  to: string;                // Target node ID
-  condition?: string;        // Conditional edge
+  from: string; // Source node ID
+  to: string; // Target node ID
+  condition?: string; // Conditional edge
 }
 
 interface WorkflowTrigger {
@@ -898,30 +835,24 @@ interface WorkflowTrigger {
 
 class OrchestrationEngine {
   // Create workflow
-  async createWorkflow(
-    definition: WorkflowDefinition
-  ): Promise<Workflow>;
+  async createWorkflow(definition: WorkflowDefinition): Promise<Workflow>;
 
   // Execute workflow
   async executeWorkflow(
     workflowId: string,
     input: any,
-    context: ExecutionContext
+    context: ExecutionContext,
   ): Promise<WorkflowExecutionResult>;
 
   // Monitor workflow execution
-  async monitorWorkflow(
-    executionId: string
-  ): Promise<WorkflowExecutionStatus>;
+  async monitorWorkflow(executionId: string): Promise<WorkflowExecutionStatus>;
 
   // Pause/resume workflow
   async pauseWorkflow(executionId: string): Promise<void>;
   async resumeWorkflow(executionId: string): Promise<void>;
 
   // Get workflow history
-  async getWorkflowHistory(
-    workflowId: string
-  ): Promise<WorkflowExecution[]>;
+  async getWorkflowHistory(workflowId: string): Promise<WorkflowExecution[]>;
 }
 ```
 
@@ -935,10 +866,7 @@ interface WorkflowBuilderProps {
 }
 
 // Using React Flow or similar library
-const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
-  onSave,
-  initialWorkflow
-}) => {
+const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({ onSave, initialWorkflow }) => {
   // Drag-and-drop interface
   // Agent selection from marketplace
   // Connection drawing
@@ -955,19 +883,18 @@ const WorkflowBuilder: React.FC<WorkflowBuilderProps> = ({
 ### 8.1 Security Measures
 
 **Agent Sandboxing**:
+
 ```typescript
 class SandboxService {
   // Execute agent in isolated environment
   async executeInSandbox(
     agentCode: string,
     input: any,
-    config: SandboxConfig
+    config: SandboxConfig,
   ): Promise<ExecutionResult>;
 
   // Monitor resource usage
-  async monitorResources(
-    executionId: string
-  ): Promise<ResourceUsage>;
+  async monitorResources(executionId: string): Promise<ResourceUsage>;
 
   // Kill runaway execution
   async killExecution(executionId: string): Promise<void>;
@@ -975,24 +902,17 @@ class SandboxService {
 ```
 
 **Fraud Detection**:
+
 ```typescript
 class FraudDetectionService {
   // Detect suspicious agent behavior
-  async detectAnomalies(
-    agentId: string,
-    transaction: AP2Transaction
-  ): Promise<FraudRiskScore>;
+  async detectAnomalies(agentId: string, transaction: AP2Transaction): Promise<FraudRiskScore>;
 
   // Block malicious agents
-  async blockAgent(
-    agentId: string,
-    reason: string
-  ): Promise<void>;
+  async blockAgent(agentId: string, reason: string): Promise<void>;
 
   // Review flagged transactions
-  async reviewTransaction(
-    transactionId: string
-  ): Promise<ReviewResult>;
+  async reviewTransaction(transactionId: string): Promise<ReviewResult>;
 }
 ```
 
@@ -1001,13 +921,13 @@ class FraudDetectionService {
 ```typescript
 interface ReputationScore {
   agentId: string;
-  overall: number;           // 0-100
+  overall: number; // 0-100
   components: {
-    reliability: number;     // Task completion rate
-    quality: number;         // Output quality ratings
-    speed: number;           // Response time
-    honesty: number;         // Disputes, refunds
-    collaboration: number;   // A2A interactions
+    reliability: number; // Task completion rate
+    quality: number; // Output quality ratings
+    speed: number; // Response time
+    honesty: number; // Disputes, refunds
+    collaboration: number; // A2A interactions
   };
   history: ReputationEvent[];
   lastUpdated: Date;
@@ -1015,29 +935,25 @@ interface ReputationScore {
 
 class ReputationService {
   // Calculate reputation score
-  async calculateReputation(
-    agentId: string
-  ): Promise<ReputationScore>;
+  async calculateReputation(agentId: string): Promise<ReputationScore>;
 
   // Update after transaction
   async updateReputation(
     agentId: string,
     transaction: AP2Transaction,
     outcome: ServiceOutcome,
-    feedback: UserFeedback
+    feedback: UserFeedback,
   ): Promise<ReputationScore>;
 
   // Get trust level
-  async getTrustLevel(
-    agentId: string
-  ): 'untrusted' | 'new' | 'trusted' | 'verified' | 'elite';
+  async getTrustLevel(agentId: string): 'untrusted' | 'new' | 'trusted' | 'verified' | 'elite';
 
   // Report agent
   async reportAgent(
     agentId: string,
     reporterId: string,
     reason: string,
-    evidence: any
+    evidence: any,
   ): Promise<Report>;
 }
 ```
@@ -1048,7 +964,7 @@ class ReputationService {
 interface Dispute {
   id: string;
   transactionId: string;
-  initiatedBy: string;       // Agent or user ID
+  initiatedBy: string; // Agent or user ID
   respondent: string;
   reason: string;
   evidence: {
@@ -1072,24 +988,17 @@ class DisputeService {
     transactionId: string,
     initiatorId: string,
     reason: string,
-    evidence: any
+    evidence: any,
   ): Promise<Dispute>;
 
   // Review dispute (manual or automated)
-  async reviewDispute(
-    disputeId: string
-  ): Promise<DisputeReview>;
+  async reviewDispute(disputeId: string): Promise<DisputeReview>;
 
   // Resolve dispute
-  async resolveDispute(
-    disputeId: string,
-    decision: DisputeDecision
-  ): Promise<void>;
+  async resolveDispute(disputeId: string, decision: DisputeDecision): Promise<void>;
 
   // Escalate to human review
-  async escalateDispute(
-    disputeId: string
-  ): Promise<void>;
+  async escalateDispute(disputeId: string): Promise<void>;
 }
 ```
 
@@ -1100,6 +1009,7 @@ class DisputeService {
 ### Database Schema
 
 **Users Table**:
+
 ```sql
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1114,6 +1024,7 @@ CREATE TABLE users (
 ```
 
 **Agents Table**:
+
 ```sql
 CREATE TABLE agents (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1138,6 +1049,7 @@ CREATE INDEX idx_agents_capabilities ON agents USING GIN(capabilities);
 ```
 
 **Agent Wallets Table**:
+
 ```sql
 CREATE TABLE agent_wallets (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1157,6 +1069,7 @@ CREATE INDEX idx_wallets_agent ON agent_wallets(agent_id);
 ```
 
 **Transactions Table**:
+
 ```sql
 CREATE TABLE transactions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1180,6 +1093,7 @@ CREATE INDEX idx_transactions_created ON transactions(created_at DESC);
 ```
 
 **Executions Table**:
+
 ```sql
 CREATE TABLE agent_executions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1202,6 +1116,7 @@ CREATE INDEX idx_executions_created ON agent_executions(created_at DESC);
 ```
 
 **Reputation Table** (TimescaleDB for time-series):
+
 ```sql
 CREATE TABLE reputation_events (
   time TIMESTAMPTZ NOT NULL,
@@ -1223,6 +1138,7 @@ CREATE INDEX idx_reputation_agent ON reputation_events(agent_id, time DESC);
 ### REST API Endpoints
 
 **Agent Management**:
+
 ```
 POST   /api/v1/agents                    # Create agent
 GET    /api/v1/agents                    # List agents
@@ -1233,6 +1149,7 @@ POST   /api/v1/agents/:id/publish        # Publish agent
 ```
 
 **Agent Execution**:
+
 ```
 POST   /api/v1/agents/:id/execute        # Execute agent
 GET    /api/v1/executions/:id            # Get execution status
@@ -1241,6 +1158,7 @@ GET    /api/v1/executions/:id/logs       # Get execution logs
 ```
 
 **A2A Operations**:
+
 ```
 POST   /api/v1/a2a/discover              # Discover agents
 POST   /api/v1/a2a/request               # Send service request
@@ -1249,6 +1167,7 @@ GET    /api/v1/a2a/messages              # Get A2A messages
 ```
 
 **Wallet & Payments**:
+
 ```
 POST   /api/v1/wallets                   # Create wallet
 GET    /api/v1/wallets/:id               # Get wallet details
@@ -1258,6 +1177,7 @@ GET    /api/v1/wallets/:id/transactions  # Get transactions
 ```
 
 **Workflows**:
+
 ```
 POST   /api/v1/workflows                 # Create workflow
 GET    /api/v1/workflows                 # List workflows
@@ -1270,16 +1190,19 @@ GET    /api/v1/workflows/:id/executions  # Get executions
 ### WebSocket API
 
 **Real-time Updates**:
+
 ```typescript
 // Connect to WebSocket
 const ws = new WebSocket('wss://api.example.com/ws');
 
 // Subscribe to agent execution updates
-ws.send(JSON.stringify({
-  type: 'subscribe',
-  channel: 'executions',
-  executionId: 'exec_123'
-}));
+ws.send(
+  JSON.stringify({
+    type: 'subscribe',
+    channel: 'executions',
+    executionId: 'exec_123',
+  }),
+);
 
 // Receive updates
 ws.onmessage = (event) => {
@@ -1295,20 +1218,22 @@ ws.onmessage = (event) => {
 import { AgentSDK } from '@agentic-marketplace/sdk';
 
 const sdk = new AgentSDK({
-  apiKey: process.env.API_KEY
+  apiKey: process.env.API_KEY,
 });
 
 // Register agent
 const agent = await sdk.agents.create({
   name: 'My Agent',
   description: 'Does something useful',
-  capabilities: [{
-    name: 'process-data',
-    handler: async (input) => {
-      // Agent logic here
-      return { result: 'processed' };
-    }
-  }]
+  capabilities: [
+    {
+      name: 'process-data',
+      handler: async (input) => {
+        // Agent logic here
+        return { result: 'processed' };
+      },
+    },
+  ],
 });
 
 // Use A2A to call another agent
@@ -1316,7 +1241,7 @@ const result = await sdk.a2a.call({
   agentId: 'other-agent-id',
   capability: 'analyze',
   input: { data: 'some data' },
-  maxCost: 5.00
+  maxCost: 5.0,
 });
 
 // Access wallet
@@ -1333,6 +1258,7 @@ await sdk.wallet.fund(100);
 **Goal**: Basic agent marketplace with A2A payment capability
 
 **Week 1-2: Foundation**
+
 - [ ] Set up project structure (monorepo with NestJS backend, Next.js frontend)
 - [ ] Configure databases (PostgreSQL, Redis)
 - [ ] Set up CI/CD pipeline (GitHub Actions)
@@ -1340,6 +1266,7 @@ await sdk.wallet.fund(100);
 - [ ] Deploy basic infrastructure (AWS/Docker)
 
 **Week 3-4: Agent Management**
+
 - [ ] Build agent registry service
 - [ ] Create agent CRUD APIs
 - [ ] Implement agent submission/approval workflow
@@ -1347,6 +1274,7 @@ await sdk.wallet.fund(100);
 - [ ] Create agent listing UI
 
 **Week 5-6: Payment Infrastructure**
+
 - [ ] Integrate Stripe Connect
 - [ ] Build wallet service
 - [ ] Implement basic transaction system
@@ -1354,6 +1282,7 @@ await sdk.wallet.fund(100);
 - [ ] Build payment APIs
 
 **Week 7-8: A2A Foundation**
+
 - [ ] Implement AP2 protocol handler
 - [ ] Build agent discovery service
 - [ ] Create A2A message routing
@@ -1361,6 +1290,7 @@ await sdk.wallet.fund(100);
 - [ ] Build A2A APIs
 
 **Week 9-10: Integration & Testing**
+
 - [ ] Build Agent SDK (basic)
 - [ ] Create documentation
 - [ ] End-to-end testing
@@ -1368,6 +1298,7 @@ await sdk.wallet.fund(100);
 - [ ] Security audit
 
 **Week 11-12: Launch Preparation**
+
 - [ ] Recruit 10 design partners
 - [ ] Onboard 20 initial agents
 - [ ] Alpha testing with real users
@@ -1375,6 +1306,7 @@ await sdk.wallet.fund(100);
 - [ ] Launch landing page + waitlist
 
 **MVP Features**:
+
 - ✅ Agent registration and discovery
 - ✅ Basic agent execution
 - ✅ Agent wallets with funding
@@ -1389,6 +1321,7 @@ await sdk.wallet.fund(100);
 **Goal**: Multi-agent workflows, advanced A2A features
 
 **Month 4: Workflow Engine**
+
 - [ ] Build orchestration engine
 - [ ] Create workflow definition schema
 - [ ] Implement workflow execution engine
@@ -1396,6 +1329,7 @@ await sdk.wallet.fund(100);
 - [ ] Add conditional logic and loops
 
 **Month 5: Advanced A2A**
+
 - [ ] Implement agent negotiation
 - [ ] Build agent recommendation engine
 - [ ] Add advanced discovery filters
@@ -1403,6 +1337,7 @@ await sdk.wallet.fund(100);
 - [ ] Implement budget management tools
 
 **Month 6: Quality & Trust**
+
 - [ ] Build certification system
 - [ ] Implement automated testing
 - [ ] Create dispute resolution system
@@ -1410,6 +1345,7 @@ await sdk.wallet.fund(100);
 - [ ] Build reputation dashboard
 
 **Phase 2 Features**:
+
 - ✅ Multi-agent workflows
 - ✅ Visual workflow builder
 - ✅ Agent negotiation
@@ -1423,6 +1359,7 @@ await sdk.wallet.fund(100);
 **Goal**: Build moat through network effects and ecosystem
 
 **Month 7-8: Ecosystem Tools**
+
 - [ ] Build creator analytics dashboard
 - [ ] Add A/B testing for agents
 - [ ] Create agent performance benchmarking
@@ -1430,6 +1367,7 @@ await sdk.wallet.fund(100);
 - [ ] Add webhook support for integrations
 
 **Month 9-10: Enterprise Features**
+
 - [ ] SSO/SAML integration
 - [ ] Team management features
 - [ ] Private agent libraries
@@ -1437,6 +1375,7 @@ await sdk.wallet.fund(100);
 - [ ] Advanced compliance features (SOC2, GDPR)
 
 **Month 11-12: Network Effects**
+
 - [ ] Agent referral program
 - [ ] Creator revenue optimization tools
 - [ ] Community features (forums, ratings, reviews)
@@ -1444,6 +1383,7 @@ await sdk.wallet.fund(100);
 - [ ] Mobile app (iOS/Android)
 
 **Phase 3 Features**:
+
 - ✅ Full creator analytics suite
 - ✅ Enterprise-grade security
 - ✅ Team collaboration
@@ -1456,7 +1396,9 @@ await sdk.wallet.fund(100);
 ## 12. DEVELOPMENT MILESTONES
 
 ### Milestone 1: Alpha Launch (Month 3)
+
 **Success Criteria**:
+
 - 10 design partners onboarded
 - 20 agents in marketplace
 - 100 successful A2A transactions
@@ -1464,7 +1406,9 @@ await sdk.wallet.fund(100);
 - 99% uptime
 
 ### Milestone 2: Private Beta (Month 4)
+
 **Success Criteria**:
+
 - 50 companies using platform
 - 50+ agents in marketplace
 - $10K in GMV
@@ -1472,7 +1416,9 @@ await sdk.wallet.fund(100);
 - 10 multi-agent workflows created
 
 ### Milestone 3: Public Beta (Month 6)
+
 **Success Criteria**:
+
 - 200+ agents
 - 500+ users
 - $50K in GMV
@@ -1480,7 +1426,9 @@ await sdk.wallet.fund(100);
 - 4.5+ average agent rating
 
 ### Milestone 4: General Availability (Month 9)
+
 **Success Criteria**:
+
 - 500+ agents
 - 2,000+ users
 - $250K in GMV
@@ -1488,7 +1436,9 @@ await sdk.wallet.fund(100);
 - 5 enterprise customers
 
 ### Milestone 5: Scale (Month 12)
+
 **Success Criteria**:
+
 - 1,000+ agents
 - 10,000+ users
 - $1M in GMV
@@ -1503,6 +1453,7 @@ await sdk.wallet.fund(100);
 ### Team Requirements
 
 **Phase 1 (MVP)**:
+
 - 1 Full-stack Lead Engineer
 - 1 Backend Engineer (Node.js/Go)
 - 1 Frontend Engineer (React/Next.js)
@@ -1510,6 +1461,7 @@ await sdk.wallet.fund(100);
 - 1 Product Designer
 
 **Phase 2-3 (Scale)**:
+
 - Add 2-3 more engineers
 - Add 1 ML Engineer (for recommendations, fraud detection)
 - Add 1 Security Engineer
@@ -1518,6 +1470,7 @@ await sdk.wallet.fund(100);
 ### Estimated Costs (Monthly)
 
 **Infrastructure** (Phase 1):
+
 - AWS hosting: $500-1,000
 - Database hosting: $200-500
 - CDN: $100-200
@@ -1525,6 +1478,7 @@ await sdk.wallet.fund(100);
 - **Total**: ~$1,000-2,000/month
 
 **Infrastructure** (Phase 3):
+
 - AWS hosting: $5,000-10,000
 - Database hosting: $1,000-2,000
 - CDN: $500-1,000
@@ -1532,6 +1486,7 @@ await sdk.wallet.fund(100);
 - **Total**: ~$7,000-14,000/month
 
 **Services**:
+
 - Stripe fees: 2.9% + 30¢ per transaction
 - Email service: $50-200/month
 - SMS/notifications: $100-500/month
@@ -1541,19 +1496,19 @@ await sdk.wallet.fund(100);
 
 ## Technology Decisions Summary
 
-| Component | Technology Choice | Rationale |
-|-----------|------------------|-----------|
-| Backend Framework | NestJS (Node.js) | Fast development, TypeScript, microservices-ready |
-| Frontend | Next.js 14 | SSR/SSG, excellent DX, SEO-friendly |
-| Primary DB | PostgreSQL 16 | Reliable, pgvector for search, JSONB support |
-| Cache | Redis 7 | Fast, versatile, pub/sub support |
-| Search | Elasticsearch | Powerful search, analytics capabilities |
-| Queue | RabbitMQ | Reliable message delivery, good ecosystem |
-| Payments | Stripe Connect | Marketplace-ready, excellent API |
-| Hosting | AWS | Mature, extensive services, good docs |
-| Containers | Docker + ECS | Simpler than k8s for starting, scalable |
-| CI/CD | GitHub Actions | Native GitHub integration, cost-effective |
-| Monitoring | DataDog | Comprehensive APM, logging, metrics |
+| Component         | Technology Choice | Rationale                                         |
+| ----------------- | ----------------- | ------------------------------------------------- |
+| Backend Framework | NestJS (Node.js)  | Fast development, TypeScript, microservices-ready |
+| Frontend          | Next.js 14        | SSR/SSG, excellent DX, SEO-friendly               |
+| Primary DB        | PostgreSQL 16     | Reliable, pgvector for search, JSONB support      |
+| Cache             | Redis 7           | Fast, versatile, pub/sub support                  |
+| Search            | Elasticsearch     | Powerful search, analytics capabilities           |
+| Queue             | RabbitMQ          | Reliable message delivery, good ecosystem         |
+| Payments          | Stripe Connect    | Marketplace-ready, excellent API                  |
+| Hosting           | AWS               | Mature, extensive services, good docs             |
+| Containers        | Docker + ECS      | Simpler than k8s for starting, scalable           |
+| CI/CD             | GitHub Actions    | Native GitHub integration, cost-effective         |
+| Monitoring        | DataDog           | Comprehensive APM, logging, metrics               |
 
 ---
 

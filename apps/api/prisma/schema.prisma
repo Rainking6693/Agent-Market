@@ -1,0 +1,241 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  displayName String
+  password    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  agents      Agent[]
+  reviews     AgentReview[]
+  executions  AgentExecution[] @relation("ExecutionInitiator")
+  wallets     Wallet[]         @relation("UserWallets")
+}
+
+model Agent {
+  id            String          @id @default(uuid())
+  slug          String          @unique
+  name          String
+  description   String
+  status        AgentStatus     @default(DRAFT)
+  visibility    AgentVisibility @default(PUBLIC)
+  categories    String[]
+  tags          String[]
+  pricingModel  String
+  creatorId     String
+  creator       User            @relation(fields: [creatorId], references: [id])
+  executions    AgentExecution[]
+  reviews       AgentReview[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  wallets       Wallet[]        @relation("AgentWallets")
+  requestsSent  AgentCollaboration[] @relation("RequesterAgent")
+  requestsReceived AgentCollaboration[] @relation("ResponderAgent")
+  verificationStatus VerificationStatus @default(UNVERIFIED)
+  verifiedAt    DateTime?
+  trustScore    Int              @default(50)
+  successCount  Int              @default(0)
+  failureCount  Int              @default(0)
+  lastExecutedAt DateTime?
+}
+
+model AgentExecution {
+  id            String         @id @default(uuid())
+  agentId       String
+  agent         Agent          @relation(fields: [agentId], references: [id])
+  initiatorId   String
+  initiator     User           @relation("ExecutionInitiator", fields: [initiatorId], references: [id])
+  input         Json
+  output        Json?
+  status        ExecutionStatus @default(PENDING)
+  cost          Decimal?       @db.Decimal(10, 2)
+  error         String?
+  createdAt     DateTime       @default(now())
+  completedAt   DateTime?
+}
+
+model AgentReview {
+  id          String      @id @default(uuid())
+  agentId     String
+  agent       Agent       @relation(fields: [agentId], references: [id])
+  reviewerId  String
+  reviewer    User        @relation(fields: [reviewerId], references: [id])
+  status      ReviewStatus
+  notes       String?
+  createdAt   DateTime    @default(now())
+}
+
+model AgentCollaboration {
+  id               String            @id @default(uuid())
+  requesterAgentId String
+  requesterAgent   Agent             @relation("RequesterAgent", fields: [requesterAgentId], references: [id])
+  responderAgentId String
+  responderAgent   Agent             @relation("ResponderAgent", fields: [responderAgentId], references: [id])
+  status           CollaborationStatus @default(PENDING)
+  payload          Json?
+  counterPayload   Json?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+enum CollaborationStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  COUNTERED
+}
+
+enum AgentStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+  DISABLED
+}
+
+enum AgentVisibility {
+  PUBLIC
+  PRIVATE
+  UNLISTED
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+  REVOKED
+}
+
+enum ExecutionStatus {
+  PENDING
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
+
+enum ReviewStatus {
+  APPROVED
+  REJECTED
+  NEEDS_WORK
+}
+
+model Wallet {
+  id               String          @id @default(uuid())
+  ownerType        WalletOwnerType
+  ownerUserId      String?
+  ownerUser        User?           @relation("UserWallets", fields: [ownerUserId], references: [id])
+  ownerAgentId     String?
+  ownerAgent       Agent?          @relation("AgentWallets", fields: [ownerAgentId], references: [id])
+  currency         String          @default("USD")
+  balance          Decimal         @db.Decimal(14, 2) @default(0)
+  reserved         Decimal         @db.Decimal(14, 2) @default(0)
+  stripeAccountId  String?
+  externalId       String?
+  status           WalletStatus    @default(ACTIVE)
+  transactions     Transaction[]
+  escrowsSource    Escrow[]        @relation("EscrowSource")
+  escrowsDestination Escrow[]      @relation("EscrowDestination")
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+model Transaction {
+  id          String             @id @default(uuid())
+  walletId    String
+  wallet      Wallet             @relation(fields: [walletId], references: [id])
+  type        TransactionType
+  status      TransactionStatus  @default(PENDING)
+  amount      Decimal            @db.Decimal(14, 2)
+  reference   String?
+  metadata    Json?
+  createdAt   DateTime           @default(now())
+  settledAt   DateTime?
+  escrow      Escrow?
+}
+
+model Escrow {
+  id                   String        @id @default(uuid())
+  sourceWalletId       String
+  sourceWallet         Wallet        @relation("EscrowSource", fields: [sourceWalletId], references: [id])
+  destinationWalletId  String
+  destinationWallet    Wallet        @relation("EscrowDestination", fields: [destinationWalletId], references: [id])
+  transactionId        String        @unique
+  transaction          Transaction   @relation(fields: [transactionId], references: [id])
+  status               EscrowStatus  @default(HELD)
+  amount               Decimal       @db.Decimal(14, 2)
+  releaseCondition     String?
+  createdAt            DateTime      @default(now())
+  releasedAt           DateTime?
+  refundedAt           DateTime?
+}
+
+enum WalletOwnerType {
+  USER
+  AGENT
+  PLATFORM
+}
+
+enum WalletStatus {
+  ACTIVE
+  SUSPENDED
+  CLOSED
+}
+
+enum TransactionType {
+  CREDIT
+  DEBIT
+  HOLD
+  RELEASE
+}
+
+enum TransactionStatus {
+  PENDING
+  SETTLED
+  FAILED
+  CANCELLED
+}
+
+enum EscrowStatus {
+  HELD
+  RELEASED
+  REFUNDED
+}
+
+model Workflow {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  creatorId   String
+  steps       Json
+  budget      Decimal  @db.Decimal(14, 2)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  runs        WorkflowRun[]
+}
+
+model WorkflowRun {
+  id          String             @id @default(uuid())
+  workflowId  String
+  workflow    Workflow           @relation(fields: [workflowId], references: [id])
+  status      WorkflowRunStatus  @default(PENDING)
+  context     Json?
+  totalCost   Decimal?           @db.Decimal(14, 2)
+  createdAt   DateTime           @default(now())
+  completedAt DateTime?
+}
+
+enum WorkflowRunStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+

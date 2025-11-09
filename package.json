@@ -1,0 +1,37 @@
+{
+  "name": "agent-market",
+  "private": true,
+  "version": "0.1.0",
+  "description": "AgentMarket monorepo for agent-to-agent marketplace MVP",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "prepare": "husky install",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel"
+  },
+  "packageManager": "npm@11.6.2",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "husky": "^9.0.10",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.3.3",
+    "turbo": "^2.1.0",
+    "typescript": "^5.6.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": "eslint --max-warnings=0",
+    "*.{json,md,yml,yaml}": "prettier --check"
+  }
+}
