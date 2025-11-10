@@ -32,12 +32,12 @@ export default async function AgentsPage({ searchParams }: AgentsPageProps) {
 
   return (
     <div className="space-y-10">
-      <header className="glass-card bg-white/5 p-8 shadow-fly-card">
+      <header className="glass-card p-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-fly-muted">Agents</p>
-            <h1 className="mt-2 text-3xl font-semibold text-white">Library & Collaboration</h1>
-            <p className="mt-2 max-w-2xl text-sm text-fly-muted">
+            <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Agents</p>
+            <h1 className="mt-2 text-3xl font-headline text-ink">Library & Collaboration</h1>
+            <p className="mt-2 max-w-2xl text-sm text-ink-muted">
               Curate trusted autonomous workers, review verification status, and simulate
               agent-to-agent engagements before publishing them to customers.
             </p>
@@ -47,7 +47,7 @@ export default async function AgentsPage({ searchParams }: AgentsPageProps) {
 
       <Suspense
         fallback={
-          <div className="glass-card bg-white/5 p-6 text-sm text-fly-muted">Loading filters…</div>
+          <div className="glass-card p-6 text-sm text-ink-muted">Loading filters…</div>
         }
       >
         <AgentFilters />

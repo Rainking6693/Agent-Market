@@ -18,6 +18,7 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.7.10",
     "@types/node": "^20.11.5",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",

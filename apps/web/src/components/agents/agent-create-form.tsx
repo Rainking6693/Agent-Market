@@ -71,14 +71,11 @@ export const AgentCreateForm = ({ onCreated }: AgentCreateFormProps) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="glass-card space-y-4 bg-white/5 p-6 text-sm text-fly-muted"
-    >
-      <h3 className="text-lg font-semibold text-white">Create a curated agent</h3>
+    <form onSubmit={handleSubmit} className="glass-card space-y-4 p-6 text-sm text-ink-muted">
+      <h3 className="text-lg font-headline text-ink">Create a curated agent</h3>
       <p>
-        Draft agents start in <span className="font-mono text-sky-300">DRAFT</span> status. Submit
-        them for review once you are ready.
+        Draft agents start in <span className="font-mono text-brass">DRAFT</span> status. Submit them
+        for review once you are ready.
       </p>
       <div className="grid gap-4 md:grid-cols-2">
         <label className="flex flex-col gap-2">
@@ -86,7 +83,7 @@ export const AgentCreateForm = ({ onCreated }: AgentCreateFormProps) => {
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-fly-muted focus:border-fly-primary focus:outline-none"
+            className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-ink placeholder:text-ink-muted focus:border-brass/40 focus:outline-none"
             placeholder="Intelligence Research Agent"
             required
           />
@@ -96,7 +93,7 @@ export const AgentCreateForm = ({ onCreated }: AgentCreateFormProps) => {
           <input
             value={pricingModel}
             onChange={(event) => setPricingModel(event.target.value)}
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-fly-muted focus:border-fly-primary focus:outline-none"
+            className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-ink placeholder:text-ink-muted focus:border-brass/40 focus:outline-none"
             placeholder="Outcome-based per insight"
             required
           />
@@ -107,7 +104,7 @@ export const AgentCreateForm = ({ onCreated }: AgentCreateFormProps) => {
         <textarea
           value={description}
           onChange={(event) => setDescription(event.target.value)}
-          className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-fly-muted focus:border-fly-primary focus:outline-none"
+          className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-ink placeholder:text-ink-muted focus:border-brass/40 focus:outline-none"
           placeholder="Summarises competitive intelligence and prepares deal briefs."
           rows={3}
           required
@@ -119,7 +116,7 @@ export const AgentCreateForm = ({ onCreated }: AgentCreateFormProps) => {
           <input
             value={categories}
             onChange={(event) => setCategories(event.target.value)}
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-fly-muted focus:border-fly-primary focus:outline-none"
+            className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-ink placeholder:text-ink-muted focus:border-brass/40 focus:outline-none"
           />
         </label>
         <label className="flex flex-col gap-2">
@@ -127,7 +124,7 @@ export const AgentCreateForm = ({ onCreated }: AgentCreateFormProps) => {
           <input
             value={tags}
             onChange={(event) => setTags(event.target.value)}
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white placeholder:text-fly-muted focus:border-fly-primary focus:outline-none"
+            className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-ink placeholder:text-ink-muted focus:border-brass/40 focus:outline-none"
           />
         </label>
       </div>
@@ -136,10 +133,10 @@ export const AgentCreateForm = ({ onCreated }: AgentCreateFormProps) => {
         <input
           value={creatorId}
           onChange={(event) => setCreatorId(event.target.value)}
-          className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white placeholder:text-fly-muted focus:border-fly-primary focus:outline-none"
+          className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 font-mono text-xs text-ink placeholder:text-ink-muted focus:border-brass/40 focus:outline-none"
           required
         />
-        <span className="text-xs text-fly-muted">
+        <span className="text-xs text-ink-muted">
           For now, we generate a temporary UUID. Replace with a real user ID when auth wiring is
           ready.
         </span>
@@ -157,7 +154,7 @@ export const AgentCreateForm = ({ onCreated }: AgentCreateFormProps) => {
       <button
         type="submit"
         disabled={isPending}
-        className="glass-button bg-fly-primary px-5 py-2 text-white shadow-lg shadow-fly-primary/40 hover:bg-fly-primaryDark disabled:cursor-not-allowed disabled:bg-white/10"
+        className="glass-button bg-accent px-5 py-2 text-carrara shadow-accent-glow hover:bg-accent-dark disabled:cursor-not-allowed disabled:bg-outline/40"
       >
         {isPending ? 'Creating...' : 'Create Agent'}
       </button>

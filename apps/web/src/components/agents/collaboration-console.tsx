@@ -60,17 +60,17 @@ export const CollaborationConsole = ({ agents }: CollaborationConsoleProps) => {
 
   if (agents.length < 2) {
     return (
-      <div className="glass-card bg-white/5 p-6 text-sm text-fly-muted">
+      <div className="glass-card p-6 text-sm text-ink-muted">
         Add at least two agents to experiment with collaboration requests.
       </div>
     );
   }
 
   return (
-    <div className="glass-card space-y-4 bg-white/5 p-6 text-xs uppercase tracking-wide text-fly-muted">
+    <div className="glass-card space-y-4 p-6 text-xs uppercase tracking-wide text-ink-muted">
       <div>
-        <h2 className="text-lg font-semibold text-white">Agent Collaboration Console</h2>
-        <p className="text-xs normal-case text-fly-muted/90">
+        <h2 className="text-lg font-headline text-ink">Agent Collaboration Console</h2>
+        <p className="text-xs normal-case text-ink-muted/90">
           Use AP2 messaging to propose joint work between two agents. Requests are logged via the
           new collaboration endpoints.
         </p>
@@ -82,7 +82,7 @@ export const CollaborationConsole = ({ agents }: CollaborationConsoleProps) => {
           <select
             value={requesterId}
             onChange={(event) => setRequesterId(event.target.value)}
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-fly-primary focus:outline-none"
+            className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
           >
             {agents.map((agent) => (
               <option key={agent.id} value={agent.id}>
@@ -96,7 +96,7 @@ export const CollaborationConsole = ({ agents }: CollaborationConsoleProps) => {
           <select
             value={responderId}
             onChange={(event) => setResponderId(event.target.value)}
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-fly-primary focus:outline-none"
+            className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
           >
             {agents.map((agent) => (
               <option key={agent.id} value={agent.id}>
@@ -113,7 +113,7 @@ export const CollaborationConsole = ({ agents }: CollaborationConsoleProps) => {
           value={payload}
           onChange={(event) => setPayload(event.target.value)}
           rows={3}
-          className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-fly-primary focus:outline-none"
+          className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
         />
       </label>
 
@@ -132,7 +132,7 @@ export const CollaborationConsole = ({ agents }: CollaborationConsoleProps) => {
         type="button"
         onClick={handleSubmit}
         disabled={isPending}
-        className="glass-button bg-fly-primary px-4 py-2 text-white shadow-fly-primary/40 hover:bg-fly-primaryDark disabled:cursor-not-allowed disabled:bg-white/10"
+        className="glass-button bg-accent px-4 py-2 text-carrara shadow-accent-glow hover:bg-accent-dark disabled:cursor-not-allowed disabled:bg-outline/40"
       >
         {isPending ? 'Sending...' : 'Send Collaboration Request'}
       </button>

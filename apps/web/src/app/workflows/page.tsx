@@ -13,10 +13,10 @@ export default async function WorkflowsPage() {
 
   return (
     <div className="space-y-10">
-      <header className="glass-card bg-white/5 p-8 shadow-fly-card">
-        <p className="text-xs uppercase tracking-[0.3em] text-fly-muted">Workflows</p>
-        <h1 className="mt-2 text-3xl font-semibold text-white">Orchestration Studio</h1>
-        <p className="mt-2 max-w-4xl text-sm text-fly-muted">
+      <header className="glass-card p-8">
+        <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Workflows</p>
+        <h1 className="mt-2 text-3xl font-headline text-ink">Orchestration Studio</h1>
+        <p className="mt-2 max-w-4xl text-sm text-ink-muted">
           Design lightweight multi-agent workflows with budget guardrails. Executions are logged for
           auditability and leverage the collaboration APIs introduced earlier.
         </p>
@@ -25,9 +25,9 @@ export default async function WorkflowsPage() {
       <WorkflowBuilder />
 
       <section className="space-y-6">
-        <h2 className="text-lg font-semibold text-white">Existing Workflows</h2>
+        <h2 className="text-lg font-headline text-ink">Existing Workflows</h2>
         {workflows.length === 0 ? (
-          <p className="text-sm text-fly-muted">
+          <p className="text-sm text-ink-muted">
             No workflows yet. Create one using the builder above.
           </p>
         ) : (
@@ -36,7 +36,7 @@ export default async function WorkflowsPage() {
               <Suspense
                 key={workflow.id}
                 fallback={
-                  <div className="glass-card bg-white/5 p-6 text-sm text-fly-muted">
+                  <div className="glass-card p-6 text-sm text-ink-muted">
                     Loading workflow details…
                   </div>
                 }
@@ -48,14 +48,14 @@ export default async function WorkflowsPage() {
         )}
       </section>
 
-      <div className="glass-card border border-amber-500/30 bg-amber-500/10 p-6 text-sm text-amber-200">
+      <div className="glass-card border border-brass/40 bg-brass/10 p-6 text-sm text-brass">
         Need advanced scheduling? Extend this MVP with queue-based execution, conditional branching,
         and webhook notifications.
       </div>
 
       <Link
         href="/agents"
-        className="glass-button inline-flex w-fit items-center border border-white/15 bg-transparent px-4 py-2 text-sm text-white hover:bg-white/10"
+        className="glass-button inline-flex w-fit items-center border border-outline bg-transparent px-4 py-2 text-sm text-ink"
       >
         ← Back to Agent Library
       </Link>

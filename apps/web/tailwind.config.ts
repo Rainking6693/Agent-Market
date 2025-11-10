@@ -5,23 +5,25 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        fly: {
-          primary: '#8C7BFF',
-          primaryDark: '#5536DA',
-          secondary: '#6B56FF',
-          accent: '#F1EAFF',
-          sidebar: 'rgba(17, 5, 38, 0.82)',
-          surface: 'rgba(255, 255, 255, 0.08)',
-          border: 'rgba(255, 255, 255, 0.12)',
-          foreground: '#F7F5FF',
-          muted: '#C2BAFF',
-        },
+        carrara: '#F2E8D5',
+        shell: '#F6EFE6',
+        surface: '#FBF5ED',
+        surfaceAlt: '#EFE2D3',
+        ink: '#121212',
+        'ink-muted': '#5A5249',
+        brass: '#C49A6C',
+        accent: '#8C7BFF',
+        'accent-dark': '#5A3EE8',
+        outline: 'rgba(18, 18, 18, 0.08)',
+        sidebar: '#181514',
       },
       boxShadow: {
-        'fly-card': '0px 40px 160px rgba(92, 70, 255, 0.25)',
+        'brand-panel': '0 28px 80px rgba(18, 18, 18, 0.12)',
+        'accent-glow': '0 20px 45px rgba(140, 123, 255, 0.28)',
       },
       fontFamily: {
-        brand: ['"Inter"', 'system-ui', 'sans-serif'],
+        headline: ['var(--font-headline)', 'sans-serif'],
+        body: ['var(--font-body)', 'serif'],
       },
     },
   },

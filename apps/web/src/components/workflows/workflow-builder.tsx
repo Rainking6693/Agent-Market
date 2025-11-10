@@ -66,10 +66,10 @@ export const WorkflowBuilder = () => {
   };
 
   return (
-    <section className="glass-card space-y-4 bg-white/5 p-6 text-xs uppercase tracking-wide text-fly-muted">
+    <section className="glass-card space-y-4 p-6 text-xs uppercase tracking-wide text-ink-muted">
       <header className="space-y-2">
-        <h2 className="text-xl font-semibold text-white">Create Workflow</h2>
-        <p className="text-xs normal-case text-fly-muted">
+        <h2 className="text-xl font-headline text-ink">Create Workflow</h2>
+        <p className="text-xs normal-case text-ink-muted">
           Provide a friendly name, total budget, and JSON array of steps. Each step references an
           agent identifier and optional per-step budget.
         </p>
@@ -81,7 +81,7 @@ export const WorkflowBuilder = () => {
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-fly-primary focus:outline-none"
+            className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
           />
         </label>
         <label className="flex flex-col gap-2">
@@ -91,7 +91,7 @@ export const WorkflowBuilder = () => {
             value={budget}
             onChange={(event) => setBudget(Number(event.target.value))}
             min={1}
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-fly-primary focus:outline-none"
+            className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
           />
         </label>
       </div>
@@ -102,7 +102,7 @@ export const WorkflowBuilder = () => {
           value={description}
           onChange={(event) => setDescription(event.target.value)}
           rows={2}
-          className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-fly-primary focus:outline-none"
+          className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
         />
       </label>
 
@@ -111,7 +111,7 @@ export const WorkflowBuilder = () => {
         <input
           value={creatorId}
           onChange={(event) => setCreatorId(event.target.value)}
-          className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-mono text-white focus:border-fly-primary focus:outline-none"
+          className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-xs font-mono text-ink focus:border-brass/40 focus:outline-none"
         />
       </label>
 
@@ -121,7 +121,7 @@ export const WorkflowBuilder = () => {
           value={steps}
           onChange={(event) => setSteps(event.target.value)}
           rows={6}
-          className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-fly-primary focus:outline-none"
+          className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 font-mono text-xs text-ink focus:border-brass/40 focus:outline-none"
         />
       </label>
 
@@ -140,7 +140,7 @@ export const WorkflowBuilder = () => {
         type="button"
         onClick={handleSubmit}
         disabled={isPending}
-        className="glass-button bg-fly-primary px-4 py-2 text-sm font-semibold text-white shadow-fly-primary/40 hover:bg-fly-primaryDark disabled:cursor-not-allowed disabled:bg-white/10"
+        className="glass-button bg-accent px-4 py-2 text-sm font-semibold text-carrara shadow-accent-glow hover:bg-accent-dark disabled:cursor-not-allowed disabled:bg-outline/40"
       >
         {isPending ? 'Creating...' : 'Create Workflow'}
       </button>

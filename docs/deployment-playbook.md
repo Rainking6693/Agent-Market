@@ -23,12 +23,23 @@ Populate at minimum:
 DATABASE_URL=postgresql://<user>:<password>@<host>/<database>
 JWT_SECRET=<strong-random-string>
 NEXT_PUBLIC_API_URL=https://<api-app>.fly.dev
+STRIPE_SECRET_KEY=sk_test_xxx              # server-side secret
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxx
 ```
 
 For Fly, configure secrets:
 
 ```bash
-fly secrets set DATABASE_URL=... JWT_SECRET=...
+fly secrets set \
+  DATABASE_URL=... \
+  JWT_SECRET=... \
+  STRIPE_SECRET_KEY=... \
+  STRIPE_WEBHOOK_SECRET=optional_if_used
+
+# Web app (run in apps/web)
+fly secrets set \
+  NEXT_PUBLIC_API_URL=https://<api-app>.fly.dev \
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxx
 ```
 
 ## 3. Install & Build

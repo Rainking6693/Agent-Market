@@ -34,22 +34,22 @@ const sections = [
 ];
 
 const navItemClass =
-  'block rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/10 hover:text-white';
+  'block rounded-lg px-3 py-2 text-sm transition-colors hover:bg-carrara/10';
 
 export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-fly-border/60 bg-fly-sidebar p-6 text-fly-foreground lg:flex">
+    <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-outline/40 bg-sidebar p-6 text-carrara lg:flex">
       <div className="space-y-8">
         <div>
-          <div className="text-xs uppercase tracking-[0.3em] text-fly-muted">AgentMarket</div>
-          <h1 className="mt-2 text-2xl font-semibold text-white">Command Center</h1>
+          <div className="text-[0.65rem] uppercase tracking-[0.28em] text-brass/80">AgentMarket</div>
+          <h1 className="mt-2 text-2xl font-headline text-carrara">Command Center</h1>
         </div>
 
         {sections.map((section) => (
           <Fragment key={section.title}>
-            <div className="text-xs font-semibold uppercase tracking-wide text-fly-muted">
+            <div className="text-[0.7rem] font-semibold uppercase tracking-wide text-brass/70">
               {section.title}
             </div>
             <nav className="space-y-1">
@@ -62,7 +62,9 @@ export function Sidebar() {
                     key={item.label}
                     href={item.href}
                     className={`${navItemClass} ${
-                      isActive ? 'bg-white/15 text-white' : 'text-fly-foreground/80'
+                      isActive
+                        ? 'bg-carrara/15 text-carrara'
+                        : 'text-carrara/70 hover:text-carrara'
                     }`}
                   >
                     {item.label}
@@ -74,15 +76,15 @@ export function Sidebar() {
         ))}
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-white/10 p-4">
-        <div className="text-xs uppercase tracking-wide text-fly-muted">Signed in as</div>
+      <div className="rounded-2xl border border-carrara/10 bg-carrara/5 p-4">
+        <div className="text-[0.65rem] uppercase tracking-wide text-brass/70">Signed in as</div>
         <div className="mt-2 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-sm font-semibold text-white">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-carrara/15 text-sm font-semibold text-carrara">
             BS
           </div>
           <div>
-            <div className="text-sm font-semibold text-white">Ben Stone</div>
-            <div className="text-xs text-fly-muted">Ben&apos;s Individual Org</div>
+            <div className="text-sm font-semibold text-carrara">Ben Stone</div>
+            <div className="text-xs text-carrara/70">Ben&apos;s Individual Org</div>
           </div>
         </div>
       </div>
