@@ -8,6 +8,16 @@ from agentmarket_testkit.sdk import AgentMarketSDK
 from agentmarket_testkit.utils import new_uuid, unique_agent_name
 
 
+async def _fund_initiator_wallet(
+    sdk: AgentMarketSDK,
+    initiator_id: str,
+    amount: float,
+    reference: str = "integration-test",
+) -> None:
+    wallet = await sdk.ensure_user_wallet(initiator_id)
+    await sdk.fund_wallet(wallet["id"], amount=max(amount, 1.0), reference=reference)
+
+
 @pytest.mark.asyncio
 @retry_with_exponential_backoff(attempts=6)
 async def test_agent_lifecycle_happy_path(
@@ -28,12 +38,18 @@ async def test_agent_lifecycle_happy_path(
     assert review_result["agent"]["status"] == review_payload["targetStatus"]
     assert review_result["review"]["status"] == review_payload["reviewStatus"]
 
+    await _fund_initiator_wallet(
+        agentmarket_sdk,
+        execution_payload["initiatorId"],
+        float(execution_payload["budget"]),
+    )
     execution_result = await agentmarket_sdk.execute_agent(agent["id"], execution_payload)
     execution = execution_result["execution"]
     payment = execution_result["paymentTransaction"]
 
     assert execution["status"] == "SUCCEEDED"
     assert execution["initiatorId"] == execution_payload["initiatorId"]
+    assert execution["input"] == {"task": "demo run"}
     assert payment["status"] == "SETTLED"
     assert pytest.approx(float(payment["amount"])) == pytest.approx(execution_payload["budget"])
 
@@ -84,7 +100,7 @@ async def test_review_agent_updates_status_and_persists_review(
 
 @pytest.mark.asyncio
 @retry_with_exponential_backoff(attempts=4)
-async def test_execute_agent_with_invalid_json_input_preserves_raw_payload(
+async def test_execute_agent_requires_valid_json(
     agentmarket_sdk: AgentMarketSDK,
     sample_agent_payload: dict[str, object],
     execution_payload: dict[str, object],
@@ -95,11 +111,24 @@ async def test_execute_agent_with_invalid_json_input_preserves_raw_payload(
     bad_payload["input"] = "not-json:::"
     bad_payload["jobReference"] = f"job-{new_uuid()}"
 
-    execution_result = await agentmarket_sdk.execute_agent(agent["id"], bad_payload)
-    execution = execution_result["execution"]
+    await _fund_initiator_wallet(
+        agentmarket_sdk,
+        bad_payload["initiatorId"],
+        float(bad_payload["budget"]),
+        reference="invalid-json-case",
+    )
 
-    assert execution["status"] == "SUCCEEDED"
-    assert execution["input"] == {"raw": "not-json:::"}
+    with pytest.raises(httpx.HTTPStatusError) as exc:
+        await agentmarket_sdk.execute_agent(agent["id"], bad_payload)
+    assert exc.value.response.status_code == 400
+    payload = exc.value.response.json()
+    message_field = payload.get("message", "")
+    if isinstance(message_field, list):
+        joined = " ".join(str(part) for part in message_field)
+    else:
+        joined = str(message_field)
+    assert joined, "Expected validation message in response payload"
+    assert "JSON" in joined.upper()
 
 
 @pytest.mark.asyncio
