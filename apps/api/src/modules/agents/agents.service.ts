@@ -1,10 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import {
   AgentStatus,
   AgentVisibility,
+  BudgetApprovalMode,
   ExecutionStatus,
+  InitiatorType,
+  PaymentEventStatus,
   Prisma,
   ReviewStatus,
+  type Wallet as WalletModel,
 } from '@prisma/client';
 
 import { presentAgent, presentExecution, presentReview } from './agents.presenter.js';
@@ -174,11 +178,24 @@ export class AgentsService {
       throw new NotFoundException('Agent not found');
     }
     const parsedInput = this.safeParseJson(data.input);
+    const initiatorType = data.initiatorType ?? InitiatorType.USER;
+
+    const paymentAmount = data.budget ? new Prisma.Decimal(data.budget) : new Prisma.Decimal(5);
+
+    const fundingWallet = await this.resolveFundingWallet({
+      initiatorType,
+      initiatorUserId: data.initiatorId,
+      initiatorAgentId: data.initiatorAgentId,
+      sourceWalletId: data.sourceWalletId,
+      amount: paymentAmount,
+    });
 
     const execution = await this.prisma.agentExecution.create({
       data: {
         agentId: id,
         initiatorId: data.initiatorId,
+        initiatorType,
+        sourceWalletId: fundingWallet.id,
         input: parsedInput,
         status: ExecutionStatus.SUCCEEDED,
         output: {
@@ -190,16 +207,25 @@ export class AgentsService {
     });
 
     const agentWallet = await this.walletsService.ensureAgentWallet(id);
-    const initiatorWallet = await this.walletsService.ensureUserWallet(data.initiatorId);
-
-    const paymentAmount = data.budget ? new Prisma.Decimal(data.budget) : new Prisma.Decimal(5);
 
     const paymentTransaction = await this.ap2Service.directTransfer(
-      initiatorWallet.id,
+      fundingWallet.id,
       agentWallet.id,
       paymentAmount.toNumber(),
       data.jobReference ?? `execution:${execution.id}`,
     );
+
+    await this.recordPaymentEvent({
+      transactionId: paymentTransaction.id,
+      sourceWalletId: fundingWallet.id,
+      destinationWalletId: agentWallet.id,
+      amount: paymentAmount,
+      initiatorType,
+    });
+
+    const counterAgentId =
+      initiatorType === InitiatorType.AGENT ? data.initiatorAgentId ?? null : null;
+    await this.recordAgentEngagement(id, counterAgentId, initiatorType, paymentAmount);
 
     const nextTrustScore = Math.min(100, agentRecord.trustScore + 1);
     await this.prisma.agent.update({
@@ -262,5 +288,137 @@ export class AgentsService {
     }
 
     return raw;
+  }
+
+  private async resolveFundingWallet(params: {
+    initiatorType: InitiatorType;
+    initiatorUserId: string;
+    initiatorAgentId?: string;
+    sourceWalletId?: string;
+    amount: Prisma.Decimal;
+  }): Promise<WalletModel> {
+    if (params.initiatorType === InitiatorType.USER) {
+      const wallet = await this.walletsService.ensureUserWallet(params.initiatorUserId);
+      this.assertWalletCanSpend(wallet, params.amount);
+      return wallet;
+    }
+
+    if (params.initiatorType === InitiatorType.AGENT) {
+      const agentId = params.initiatorAgentId;
+      if (!agentId) {
+        throw new BadRequestException('initiatorAgentId is required for agent-initiated executions');
+      }
+      await this.ensureExists(agentId);
+      const wallet = await this.walletsService.ensureAgentWallet(agentId);
+      await this.applyAgentBudget(agentId, params.amount);
+      this.assertWalletCanSpend(wallet, params.amount);
+      return wallet;
+    }
+
+    if (!params.sourceWalletId) {
+      throw new BadRequestException('sourceWalletId is required for workflow-initiated executions');
+    }
+
+    const wallet = await this.prisma.wallet.findUnique({
+      where: { id: params.sourceWalletId },
+    });
+
+    if (!wallet) {
+      throw new NotFoundException('Wallet not found');
+    }
+
+    this.assertWalletCanSpend(wallet, params.amount);
+    return wallet;
+  }
+
+  private assertWalletCanSpend(wallet: WalletModel, amount: Prisma.Decimal) {
+    const available = wallet.balance.minus(wallet.reserved);
+    if (available.lessThan(amount)) {
+      throw new BadRequestException('Insufficient available funds');
+    }
+
+    if (wallet.spendCeiling && amount.greaterThan(wallet.spendCeiling)) {
+      throw new BadRequestException('Amount exceeds wallet spend ceiling');
+    }
+
+    if (wallet.autoApproveThreshold && amount.greaterThan(wallet.autoApproveThreshold)) {
+      throw new BadRequestException('Amount exceeds wallet auto-approval threshold');
+    }
+  }
+
+  private async applyAgentBudget(agentId: string, amount: Prisma.Decimal) {
+    const budget = await this.prisma.agentBudget.findFirst({
+      where: { agentId },
+      orderBy: { updatedAt: 'desc' },
+    });
+
+    if (!budget) {
+      return;
+    }
+
+    if (budget.approvalMode === BudgetApprovalMode.MANUAL) {
+      throw new BadRequestException('Manual approval required before initiating spend');
+    }
+
+    if (budget.remaining.lessThan(amount)) {
+      throw new BadRequestException('Agent budget exhausted');
+    }
+
+    await this.prisma.agentBudget.update({
+      where: { id: budget.id },
+      data: {
+        remaining: budget.remaining.minus(amount),
+      },
+    });
+  }
+
+  private async recordPaymentEvent(params: {
+    transactionId: string;
+    sourceWalletId: string;
+    destinationWalletId: string;
+    amount: Prisma.Decimal;
+    initiatorType: InitiatorType;
+  }) {
+    await this.prisma.paymentEvent.create({
+      data: {
+        transactionId: params.transactionId,
+        protocol: 'LEDGER',
+        status: PaymentEventStatus.SETTLED,
+        sourceWalletId: params.sourceWalletId,
+        destinationWalletId: params.destinationWalletId,
+        amount: params.amount,
+        initiatorType: params.initiatorType,
+      },
+    });
+  }
+
+  private async recordAgentEngagement(
+    agentId: string,
+    counterAgentId: string | null,
+    initiatorType: InitiatorType,
+    amount: Prisma.Decimal,
+  ) {
+    await this.prisma.agentEngagementMetric.upsert({
+      where: {
+        agentId_counterAgentId_initiatorType: {
+          agentId,
+          counterAgentId,
+          initiatorType,
+        },
+      },
+      update: {
+        a2aCount: { increment: 1 },
+        totalSpend: { increment: amount },
+        lastInteraction: new Date(),
+      },
+      create: {
+        agentId,
+        counterAgentId,
+        initiatorType,
+        a2aCount: 1,
+        totalSpend: amount,
+        lastInteraction: new Date(),
+      },
+    });
   }
 }

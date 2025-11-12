@@ -45,6 +45,8 @@ export interface AgentExecution {
   status: string;
   agentId: string;
   initiatorId: string;
+  initiatorType: string;
+  sourceWalletId?: string;
   input: unknown;
   output?: unknown;
   error?: string;
@@ -109,6 +111,100 @@ export interface Ap2PaymentResponse {
     createdAt: string;
   };
   holdTransaction: Transaction;
+}
+
+export interface AgentCertificationRecord {
+  id: string;
+  agentId: string;
+  status: string;
+  reviewerId?: string | null;
+  checklistId?: string | null;
+  evidence?: Record<string, unknown> | null;
+  notes?: string | null;
+  expiresAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EvaluationScenarioSummary {
+  id: string;
+  name: string;
+  vertical?: string | null;
+  input: Record<string, unknown>;
+  expected?: Record<string, unknown> | null;
+  tolerances?: Record<string, unknown> | null;
+}
+
+export interface EvaluationResultRecord {
+  id: string;
+  agentId: string;
+  scenario: EvaluationScenarioSummary;
+  status: string;
+  latencyMs?: number | null;
+  cost?: string | null;
+  logs?: Record<string, unknown> | null;
+  createdAt: string;
+}
+
+export interface ServiceAgreementRecord {
+  id: string;
+  agentId: string;
+  buyerId?: string | null;
+  workflowId?: string | null;
+  escrowId?: string | null;
+  outcomeType: string;
+  targetDescription: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OutcomeVerificationRecord {
+  id: string;
+  serviceAgreementId: string;
+  escrowId?: string | null;
+  status: string;
+  evidence?: Record<string, unknown> | null;
+  notes?: string | null;
+  verifiedBy?: string | null;
+  verifiedAt?: string | null;
+  createdAt: string;
+}
+
+export interface ServiceAgreementWithVerifications extends ServiceAgreementRecord {
+  verifications: OutcomeVerificationRecord[];
+}
+
+export interface AgentQualityAnalytics {
+  agentId: string;
+  certification: {
+    status: string | null;
+    updatedAt?: string | null;
+    expiresAt?: string | null;
+    total: number;
+  };
+  evaluations: {
+    total: number;
+    passed: number;
+    passRate: number;
+    averageLatencyMs: number | null;
+    averageCost: string | null;
+  };
+  agreements: {
+    active: number;
+    completed: number;
+    disputed: number;
+    pending: number;
+  };
+  verifications: {
+    verified: number;
+    rejected: number;
+    pending: number;
+  };
+  a2a: {
+    engagements: number;
+    totalSpend: string;
+  };
 }
 
 export interface CollaborationRequest {
@@ -212,7 +308,13 @@ export class AgentMarketClient {
     id: string,
     initiatorId: string,
     input: unknown = {},
-    options?: { jobReference?: string; budget?: number },
+    options?: {
+      jobReference?: string;
+      budget?: number;
+      initiatorType?: string;
+      initiatorAgentId?: string;
+      sourceWalletId?: string;
+    },
   ) {
     return this.request
       .post(`agents/${id}/execute`, {
@@ -221,6 +323,9 @@ export class AgentMarketClient {
           input: JSON.stringify(input),
           jobReference: options?.jobReference,
           budget: options?.budget,
+          initiatorType: options?.initiatorType,
+          initiatorAgentId: options?.initiatorAgentId,
+          sourceWalletId: options?.sourceWalletId,
         },
       })
       .json<AgentExecutionResponse>();
@@ -326,6 +431,113 @@ export class AgentMarketClient {
 
   async listWorkflowRuns(workflowId: string) {
     return this.request.get(`workflows/${workflowId}/runs`).json<WorkflowRun[]>();
+  }
+
+  async createCertification(payload: {
+    agentId: string;
+    checklistId?: string;
+    evidence?: Record<string, unknown>;
+    notes?: string;
+  }) {
+    return this.request
+      .post('quality/certifications', {
+        json: payload,
+      })
+      .json<AgentCertificationRecord>();
+  }
+
+  async advanceCertification(
+    certificationId: string,
+    payload: {
+      status?: string;
+      reviewerId?: string;
+      evidence?: Record<string, unknown>;
+      notes?: string;
+      expiresAt?: string;
+    },
+  ) {
+    return this.request
+      .post(`quality/certifications/${certificationId}/advance`, {
+        json: payload,
+      })
+      .json<AgentCertificationRecord>();
+  }
+
+  async listCertifications(agentId: string) {
+    return this.request
+      .get(`quality/certifications/agent/${agentId}`)
+      .json<AgentCertificationRecord[]>();
+  }
+
+  async runEvaluation(payload: {
+    agentId: string;
+    scenarioId?: string;
+    scenarioName?: string;
+    vertical?: string;
+    input?: Record<string, unknown>;
+    expected?: Record<string, unknown>;
+    tolerances?: Record<string, unknown>;
+    passed?: boolean;
+    latencyMs?: number;
+    cost?: number;
+    logs?: Record<string, unknown>;
+    certificationId?: string;
+  }) {
+    return this.request
+      .post('quality/evaluations/run', {
+        json: payload,
+      })
+      .json<EvaluationResultRecord>();
+  }
+
+  async listEvaluationResults(agentId: string) {
+    return this.request
+      .get(`quality/evaluations/agent/${agentId}`)
+      .json<EvaluationResultRecord[]>();
+  }
+
+  async createServiceAgreement(payload: {
+    agentId: string;
+    buyerId?: string;
+    workflowId?: string;
+    escrowId?: string;
+    outcomeType: string;
+    targetDescription: string;
+  }) {
+    return this.request
+      .post('quality/outcomes/agreements', {
+        json: payload,
+      })
+      .json<ServiceAgreementRecord>();
+  }
+
+  async recordOutcomeVerification(
+    agreementId: string,
+    payload: {
+      status: string;
+      escrowId?: string;
+      evidence?: Record<string, unknown>;
+      notes?: string;
+      reviewerId?: string;
+    },
+  ) {
+    return this.request
+      .post(`quality/outcomes/agreements/${agreementId}/verify`, {
+        json: payload,
+      })
+      .json<OutcomeVerificationRecord>();
+  }
+
+  async listServiceAgreements(agentId: string) {
+    return this.request
+      .get(`quality/outcomes/agreements/agent/${agentId}`)
+      .json<ServiceAgreementWithVerifications[]>();
+  }
+
+  async getAgentQualityAnalytics(agentId: string) {
+    return this.request
+      .get(`quality/analytics/agents/${agentId}`)
+      .json<AgentQualityAnalytics>();
   }
 }
 

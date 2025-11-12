@@ -49,6 +49,8 @@ export interface AgentExecutionResponse {
   status: AgentExecution['status'];
   agentId: string;
   initiatorId: string;
+  initiatorType: AgentExecution['initiatorType'];
+  sourceWalletId?: string;
   input: unknown;
   output?: unknown;
   cost?: string;
@@ -62,6 +64,8 @@ export const presentExecution = (execution: AgentExecution): AgentExecutionRespo
   status: execution.status,
   agentId: execution.agentId,
   initiatorId: execution.initiatorId,
+  initiatorType: execution.initiatorType,
+  sourceWalletId: execution.sourceWalletId ?? undefined,
   input: execution.input as unknown,
   output: execution.output as unknown | undefined,
   cost: execution.cost?.toString(),

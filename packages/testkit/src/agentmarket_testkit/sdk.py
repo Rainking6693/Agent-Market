@@ -126,3 +126,23 @@ class AgentMarketSDK:
         response = await self._client.get(f"/agents/{agent_id}/executions")
         response.raise_for_status()
         return response.json()
+
+    async def create_workflow(self, payload: dict[str, Any]) -> dict[str, Any]:
+        response = await self._client.post("/workflows", json=payload)
+        response.raise_for_status()
+        return response.json()
+
+    async def list_workflows(self) -> list[dict[str, Any]]:
+        response = await self._client.get("/workflows")
+        response.raise_for_status()
+        return response.json()
+
+    async def run_workflow(self, workflow_id: str, payload: dict[str, Any]) -> dict[str, Any]:
+        response = await self._client.post(f"/workflows/{workflow_id}/run", json=payload)
+        response.raise_for_status()
+        return response.json()
+
+    async def list_workflow_runs(self, workflow_id: str) -> list[dict[str, Any]]:
+        response = await self._client.get(f"/workflows/{workflow_id}/runs")
+        response.raise_for_status()
+        return response.json()

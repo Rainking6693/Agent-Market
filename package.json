@@ -10,7 +10,8 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "build": "turbo run build",
-    "dev": "turbo run dev --parallel"
+    "dev": "turbo run dev --parallel",
+    "eval:run": "tsx scripts/run-evaluations.ts"
   },
   "packageManager": "npm@11.6.2",
   "workspaces": [
@@ -29,6 +30,7 @@
     "lint-staged": "^15.2.0",
     "prettier": "^3.3.3",
     "turbo": "^2.1.0",
+    "tsx": "^4.11.0",
     "typescript": "^5.6.3"
   },
   "lint-staged": {

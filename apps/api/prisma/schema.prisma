@@ -18,6 +18,9 @@ model User {
   reviews     AgentReview[]
   executions  AgentExecution[] @relation("ExecutionInitiator")
   wallets     Wallet[]         @relation("UserWallets")
+  certificationsReviewed AgentCertification[] @relation("CertificationReviewer")
+  outcomeVerifications OutcomeVerification[] @relation("VerificationReviewer")
+  serviceAgreements ServiceAgreement[] @relation("AgreementBuyer")
 }
 
 model Agent {
@@ -39,6 +42,12 @@ model Agent {
   wallets       Wallet[]        @relation("AgentWallets")
   requestsSent  AgentCollaboration[] @relation("RequesterAgent")
   requestsReceived AgentCollaboration[] @relation("ResponderAgent")
+  budgets       AgentBudget[]
+  metricsPrimary AgentEngagementMetric[] @relation("AgentMetricPrimary")
+  metricsCounter AgentEngagementMetric[] @relation("AgentMetricCounter")
+  certifications AgentCertification[]
+  serviceAgreements ServiceAgreement[]
+  evaluationResults EvaluationResult[]
   verificationStatus VerificationStatus @default(UNVERIFIED)
   verifiedAt    DateTime?
   trustScore    Int              @default(50)
@@ -53,6 +62,9 @@ model AgentExecution {
   agent         Agent          @relation(fields: [agentId], references: [id])
   initiatorId   String
   initiator     User           @relation("ExecutionInitiator", fields: [initiatorId], references: [id])
+  initiatorType InitiatorType  @default(USER)
+  sourceWalletId String?
+  sourceWallet  Wallet?        @relation("ExecutionSourceWallet", fields: [sourceWalletId], references: [id])
   input         Json
   output        Json?
   status        ExecutionStatus @default(PENDING)
@@ -140,9 +152,15 @@ model Wallet {
   stripeAccountId  String?
   externalId       String?
   status           WalletStatus    @default(ACTIVE)
+  budgetPolicyId   String?
+  policy           WalletPolicy?   @relation(fields: [budgetPolicyId], references: [id])
+  spendCeiling     Decimal?        @db.Decimal(14, 2)
+  autoApproveThreshold Decimal?    @db.Decimal(14, 2)
   transactions     Transaction[]
   escrowsSource    Escrow[]        @relation("EscrowSource")
   escrowsDestination Escrow[]      @relation("EscrowDestination")
+  budgets          AgentBudget[]
+  executionsSource AgentExecution[] @relation("ExecutionSourceWallet")
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
 }
@@ -159,6 +177,7 @@ model Transaction {
   createdAt   DateTime           @default(now())
   settledAt   DateTime?
   escrow      Escrow?
+  paymentEvents PaymentEvent[]
 }
 
 model Escrow {
@@ -175,6 +194,8 @@ model Escrow {
   createdAt            DateTime      @default(now())
   releasedAt           DateTime?
   refundedAt           DateTime?
+  serviceAgreement     ServiceAgreement?
+  verification         OutcomeVerification?
 }
 
 enum WalletOwnerType {
@@ -237,5 +258,207 @@ enum WorkflowRunStatus {
   RUNNING
   COMPLETED
   FAILED
+}
+
+enum BudgetApprovalMode {
+  AUTO
+  MANUAL
+  ESCROW
+}
+
+enum PaymentEventStatus {
+  INITIATED
+  AUTHORIZED
+  SETTLED
+  FAILED
+}
+
+enum InitiatorType {
+  USER
+  AGENT
+  WORKFLOW
+}
+
+enum CertificationStatus {
+  DRAFT
+  SUBMITTED
+  QA_TESTS
+  SECURITY_REVIEW
+  CERTIFIED
+  EXPIRED
+  REVOKED
+}
+
+enum EvaluationStatus {
+  PENDING
+  RUNNING
+  PASSED
+  FAILED
+}
+
+enum OutcomeType {
+  LEAD
+  CONTENT
+  SUPPORT_TICKET
+  WORKFLOW
+  GENERIC
+}
+
+enum ServiceAgreementStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  DISPUTED
+  CANCELLED
+}
+
+enum OutcomeVerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  EXPIRED
+}
+
+model WalletPolicy {
+  id                   String   @id @default(uuid())
+  name                 String
+  currency             String   @default("USD")
+  allowAgentToAgent    Boolean  @default(true)
+  requireManualApproval Boolean @default(false)
+  autoApproveThreshold Decimal? @db.Decimal(14, 2)
+  spendCeiling         Decimal? @db.Decimal(14, 2)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  wallets              Wallet[]
+}
+
+model AgentBudget {
+  id            String            @id @default(uuid())
+  agentId       String
+  agent         Agent             @relation(fields: [agentId], references: [id])
+  walletId      String
+  wallet        Wallet            @relation(fields: [walletId], references: [id])
+  monthlyLimit  Decimal           @db.Decimal(14, 2)
+  remaining     Decimal           @db.Decimal(14, 2)
+  approvalMode  BudgetApprovalMode @default(AUTO)
+  resetsOn      DateTime
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+model PaymentEvent {
+  id                  String             @id @default(uuid())
+  transactionId       String?
+  transaction         Transaction?       @relation(fields: [transactionId], references: [id])
+  protocol            String?
+  status              PaymentEventStatus
+  sourceWalletId      String
+  destinationWalletId String
+  amount              Decimal            @db.Decimal(14, 2)
+  initiatorType       InitiatorType
+  metadata            Json?
+  rawPayload          Json?
+  createdAt           DateTime           @default(now())
+}
+
+model AgentEngagementMetric {
+  id               String        @id @default(uuid())
+  agentId          String
+  agent            Agent         @relation("AgentMetricPrimary", fields: [agentId], references: [id])
+  counterAgentId   String?
+  counterAgent     Agent?        @relation("AgentMetricCounter", fields: [counterAgentId], references: [id])
+  initiatorType    InitiatorType
+  a2aCount         Int           @default(0)
+  totalSpend       Decimal       @db.Decimal(14, 2) @default(0)
+  lastInteraction  DateTime?
+
+  @@unique([agentId, counterAgentId, initiatorType])
+}
+
+model CertificationChecklist {
+  id        String   @id @default(uuid())
+  name      String
+  vertical  String?
+  items     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  certifications AgentCertification[]
+}
+
+model AgentCertification {
+  id             String              @id @default(uuid())
+  agentId        String
+  agent          Agent               @relation(fields: [agentId], references: [id])
+  status         CertificationStatus @default(DRAFT)
+  reviewerId     String?
+  reviewer       User?               @relation("CertificationReviewer", fields: [reviewerId], references: [id])
+  checklistId    String?
+  checklist      CertificationChecklist? @relation(fields: [checklistId], references: [id])
+  evidence       Json?
+  expiresAt      DateTime?
+  notes          String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  evaluations    EvaluationResult[]
+}
+
+model EvaluationScenario {
+  id          String   @id @default(uuid())
+  name        String
+  vertical    String?
+  input       Json
+  expected    Json?
+  tolerances  Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  evaluations EvaluationResult[]
+}
+
+model EvaluationResult {
+  id               String            @id @default(uuid())
+  agentId          String
+  agent            Agent             @relation(fields: [agentId], references: [id])
+  scenarioId       String
+  scenario         EvaluationScenario @relation(fields: [scenarioId], references: [id])
+  status           EvaluationStatus  @default(PENDING)
+  latencyMs        Int?
+  cost             Decimal?          @db.Decimal(10, 2)
+  logs             Json?
+  certificationId  String?
+  certification    AgentCertification? @relation(fields: [certificationId], references: [id])
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model ServiceAgreement {
+  id                 String                 @id @default(uuid())
+  agentId            String
+  agent              Agent                  @relation(fields: [agentId], references: [id])
+  buyerId            String?
+  buyer              User?                  @relation("AgreementBuyer", fields: [buyerId], references: [id])
+  workflowId         String?
+  escrowId           String?                @unique
+  escrow             Escrow?                @relation(fields: [escrowId], references: [id])
+  outcomeType        OutcomeType            @default(GENERIC)
+  targetDescription  String
+  status             ServiceAgreementStatus @default(PENDING)
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  verifications      OutcomeVerification[]
+}
+
+model OutcomeVerification {
+  id               String                     @id @default(uuid())
+  serviceAgreementId String
+  serviceAgreement ServiceAgreement           @relation(fields: [serviceAgreementId], references: [id])
+  escrowId         String?                    @unique
+  escrow           Escrow?                    @relation(fields: [escrowId], references: [id])
+  status           OutcomeVerificationStatus  @default(PENDING)
+  evidence         Json?
+  notes            String?
+  verifiedBy       String?
+  reviewer         User?                      @relation("VerificationReviewer", fields: [verifiedBy], references: [id])
+  verifiedAt       DateTime?
+  createdAt        DateTime                   @default(now())
 }
 

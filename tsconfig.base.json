@@ -15,7 +15,12 @@
     "jsx": "react-jsx",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "baseUrl": ".",
+    "paths": {
+      "@agent-market/sdk": ["packages/sdk/src"],
+      "@agent-market/config": ["packages/config/src"]
+    }
   },
   "exclude": ["node_modules", "dist", "build"]
 }

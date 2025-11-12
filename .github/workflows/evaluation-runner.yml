@@ -1,0 +1,26 @@
+name: Evaluation Runner
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  run-evaluations:
+    runs-on: ubuntu-latest
+    env:
+      API_URL: ${{ secrets.AGENT_MARKET_API_URL }}
+      API_TOKEN: ${{ secrets.AGENT_MARKET_API_TOKEN }}
+      EVALUATION_INITIATOR_ID: ${{ secrets.AGENT_MARKET_EVALUATION_USER_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm install
+      - run: npm run eval:run
+        env:
+          API_URL: ${{ env.API_URL }}
+          API_TOKEN: ${{ env.API_TOKEN }}
+          EVALUATION_INITIATOR_ID: ${{ env.EVALUATION_INITIATOR_ID }}

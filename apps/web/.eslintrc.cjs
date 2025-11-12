@@ -16,5 +16,6 @@ module.exports = {
   },
   rules: {
     'next/no-html-link-for-pages': 'off',
+    'import/no-unresolved': ['error', { ignore: ['^@agent-market/'] }],
   },
 };

@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module.js';
 import { DatabaseModule } from './database/database.module.js';
 import { HealthModule } from './health/health.module.js';
 import { PaymentsModule } from './payments/payments.module.js';
+import { QualityModule } from './quality/quality.module.js';
 import { TrustModule } from './trust/trust.module.js';
 import { WorkflowsModule } from './workflows/workflows.module.js';
 
@@ -20,6 +21,7 @@ import { WorkflowsModule } from './workflows/workflows.module.js';
     PaymentsModule,
     TrustModule,
     WorkflowsModule,
+    QualityModule,
     AuthModule,
     HealthModule,
   ],
