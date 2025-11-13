@@ -11,6 +11,7 @@ const sections = [
       { label: 'Dashboard', href: '/' },
       { label: 'Agents', href: '/agents' },
       { label: 'Workflows', href: '/workflows' },
+      { label: 'Billing', href: '/billing' },
       { label: 'Quality', href: '/quality' },
     ],
   },

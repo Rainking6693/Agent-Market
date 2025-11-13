@@ -6,7 +6,7 @@
     "input": {
       "task": "draft executive summary"
     },
-    "expectedOutputIncludes": "Execution simulated",
+    "expectedOutputIncludes": ["Execution simulated"],
     "budget": 5,
     "notes": "Baseline coverage to ensure agent responds."
   }

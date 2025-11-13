@@ -21,6 +21,7 @@ model User {
   certificationsReviewed AgentCertification[] @relation("CertificationReviewer")
   outcomeVerifications OutcomeVerification[] @relation("VerificationReviewer")
   serviceAgreements ServiceAgreement[] @relation("AgreementBuyer")
+  memberships OrganizationMembership[]
 }
 
 model Agent {
@@ -35,6 +36,8 @@ model Agent {
   pricingModel  String
   creatorId     String
   creator       User            @relation(fields: [creatorId], references: [id])
+  organizationId String?
+  organization   Organization?  @relation(fields: [organizationId], references: [id])
   executions    AgentExecution[]
   reviews       AgentReview[]
   createdAt     DateTime        @default(now())
@@ -146,6 +149,8 @@ model Wallet {
   ownerUser        User?           @relation("UserWallets", fields: [ownerUserId], references: [id])
   ownerAgentId     String?
   ownerAgent       Agent?          @relation("AgentWallets", fields: [ownerAgentId], references: [id])
+  organizationId   String?
+  organization     Organization?   @relation("OrganizationWallets", fields: [organizationId], references: [id])
   currency         String          @default("USD")
   balance          Decimal         @db.Decimal(14, 2) @default(0)
   reserved         Decimal         @db.Decimal(14, 2) @default(0)
@@ -445,6 +450,97 @@ model ServiceAgreement {
   createdAt          DateTime               @default(now())
   updatedAt          DateTime               @updatedAt
   verifications      OutcomeVerification[]
+}
+
+model Organization {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  members     OrganizationMembership[]
+  agents      Agent[]
+  wallets     Wallet[]  @relation("OrganizationWallets")
+  subscription OrganizationSubscription?
+  stripeCustomerId String?
+}
+
+model OrganizationMembership {
+  id             String        @id @default(uuid())
+  userId         String
+  organizationId String
+  role           OrganizationRole @default(MEMBER)
+  createdAt      DateTime       @default(now())
+  user           User           @relation(fields: [userId], references: [id])
+  organization   Organization   @relation(fields: [organizationId], references: [id])
+
+  @@unique([userId, organizationId])
+}
+
+enum OrganizationRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+model BillingPlan {
+  id             String   @id
+  name           String
+  slug           String   @unique
+  priceCents     Int
+  seats          Int
+  agentLimit     Int
+  workflowLimit  Int
+  monthlyCredits Int
+  takeRateBasisPoints Int
+  features       String[]
+  subscriptions  OrganizationSubscription[]
+}
+
+model OrganizationSubscription {
+  id                 String     @id @default(uuid())
+  organizationId     String     @unique
+  organization       Organization @relation(fields: [organizationId], references: [id])
+  planSlug           String
+  plan               BillingPlan @relation(fields: [planSlug], references: [slug])
+  status             SubscriptionStatus @default(ACTIVE)
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  paymentProvider    String?
+  paymentMethodId    String?
+  stripeSubscriptionId String?
+  creditAllowance    Int
+  creditUsed         Int      @default(0)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  invoices           Invoice[]
+}
+
+model Invoice {
+  id             String     @id @default(uuid())
+  subscriptionId String
+  subscription   OrganizationSubscription @relation(fields: [subscriptionId], references: [id])
+  amountCents    Int
+  currency       String    @default("USD")
+  issuedAt       DateTime  @default(now())
+  dueAt          DateTime
+  paidAt         DateTime?
+  status         InvoiceStatus @default(OPEN)
+  lineItems      Json
+  stripeInvoiceId String?
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  TRIALING
+}
+
+enum InvoiceStatus {
+  OPEN
+  PAID
+  VOID
 }
 
 model OutcomeVerification {

@@ -10,6 +10,7 @@ import { EvaluationConsole } from '@/components/quality/evaluation-console';
 import { OutcomeVerificationPanel } from '@/components/quality/outcome-verification-panel';
 import { QualityAgentSelector } from '@/components/quality/quality-agent-selector';
 import { QualityOverview } from '@/components/quality/quality-overview';
+import { RoiTimeseriesChart } from '@/components/quality/roi-timeseries-chart';
 import { getAgentMarketClient } from '@/lib/api';
 
 interface QualityPageProps {
@@ -33,11 +34,12 @@ export default async function QualityPage({ searchParams }: QualityPageProps) {
   const selectedAgent =
     agents.find((agent) => agent.id === searchParams.agentId) ?? agents[0];
   const selectedAgentId = selectedAgent.id;
-  const [analytics, certifications, evaluations, agreements] = await Promise.all([
+  const [analytics, certifications, evaluations, agreements, roiTimeseries] = await Promise.all([
     client.getAgentQualityAnalytics(selectedAgentId),
     client.listCertifications(selectedAgentId),
     client.listEvaluationResults(selectedAgentId),
     client.listServiceAgreements(selectedAgentId),
+    client.getAgentQualityTimeseries(selectedAgentId, 14),
   ]);
 
   return (
@@ -69,10 +71,13 @@ export default async function QualityPage({ searchParams }: QualityPageProps) {
         />
       </section>
 
-      <OutcomeVerificationPanel
-        agentId={selectedAgentId}
-        agreements={agreements as ServiceAgreementWithVerifications[]}
-      />
+      <div className="grid gap-6 lg:grid-cols-[1.5fr,1fr]">
+        <RoiTimeseriesChart points={roiTimeseries} />
+        <OutcomeVerificationPanel
+          agentId={selectedAgentId}
+          agreements={agreements as ServiceAgreementWithVerifications[]}
+        />
+      </div>
     </div>
   );
 }

@@ -13,3 +13,5 @@ export const loadServiceConfig = (): ServiceConfig => ({
   redisUrl: process.env.REDIS_URL ?? '',
   stripeSecretKey: process.env.STRIPE_SECRET_KEY ?? '',
 });
+
+export { billingPlanConfigs } from './billing.js';

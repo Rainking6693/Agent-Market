@@ -19,6 +19,8 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm install
+      - name: Sync Genesis scenarios
+        run: npm run eval:import-genesis
       - run: npm run eval:run
         env:
           API_URL: ${{ env.API_URL }}

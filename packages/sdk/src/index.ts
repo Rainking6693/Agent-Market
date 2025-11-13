@@ -205,6 +205,61 @@ export interface AgentQualityAnalytics {
     engagements: number;
     totalSpend: string;
   };
+  roi: {
+    grossMerchandiseVolume: string;
+    averageCostPerOutcome: string | null;
+    averageCostPerEngagement: string | null;
+    verifiedOutcomeRate: number;
+  };
+}
+
+export interface AgentRoiTimeseriesPoint {
+  date: string;
+  grossMerchandiseVolume: string;
+  verifiedOutcomes: number;
+  averageCostPerOutcome: string | null;
+}
+
+export interface OrganizationRoiSummary {
+  organization: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+  grossMerchandiseVolume: string;
+  totalAgents: number;
+  verifiedOutcomes: number;
+  averageCostPerOutcome: string | null;
+}
+
+export interface OrganizationRoiTimeseriesPoint {
+  date: string;
+  grossMerchandiseVolume: string;
+  verifiedOutcomes: number;
+  averageCostPerOutcome: string | null;
+}
+
+export interface BillingPlan {
+  id: string;
+  name: string;
+  slug: string;
+  priceCents: number;
+  seats: number;
+  agentLimit: number;
+  workflowLimit: number;
+  monthlyCredits: number;
+  takeRateBasisPoints: number;
+  features: string[];
+}
+
+export interface BillingSubscription {
+  id: string;
+  status: string;
+  currentPeriodStart: string;
+  currentPeriodEnd: string;
+  creditAllowance: number;
+  creditUsed: number;
+  plan: BillingPlan;
 }
 
 export interface CollaborationRequest {
@@ -538,6 +593,57 @@ export class AgentMarketClient {
     return this.request
       .get(`quality/analytics/agents/${agentId}`)
       .json<AgentQualityAnalytics>();
+  }
+
+  async getAgentQualityTimeseries(agentId: string, days?: number) {
+    return this.request
+      .get(`quality/analytics/agents/${agentId}/timeseries`, {
+        searchParams: days ? { days: String(days) } : undefined,
+      })
+      .json<AgentRoiTimeseriesPoint[]>();
+  }
+
+  async getOrganizationRoi(slug: string) {
+    return this.request.get(`organizations/${slug}/roi`).json<OrganizationRoiSummary>();
+  }
+
+  async getOrganizationRoiTimeseries(slug: string, days?: number) {
+    return this.request
+      .get(`organizations/${slug}/roi/timeseries`, {
+        searchParams: days ? { days: String(days) } : undefined,
+      })
+      .json<OrganizationRoiTimeseriesPoint[]>();
+  }
+
+  async listBillingPlans() {
+    return this.request.get('billing/plans').json<BillingPlan[]>();
+  }
+
+  async getBillingSubscription() {
+    return this.request.get('billing/subscription').json<BillingSubscription | null>();
+  }
+
+  async applyBillingPlan(planSlug: string) {
+    return this.request
+      .post('billing/subscription/apply', {
+        json: { planSlug },
+      })
+      .json<BillingSubscription>();
+  }
+
+  async createBillingCheckoutSession(
+    planSlug: string,
+    options?: { successUrl?: string; cancelUrl?: string },
+  ) {
+    return this.request
+      .post('billing/subscription/checkout', {
+        json: {
+          planSlug,
+          successUrl: options?.successUrl,
+          cancelUrl: options?.cancelUrl,
+        },
+      })
+      .json<{ checkoutUrl: string | null; subscription?: BillingSubscription }>();
   }
 }
 

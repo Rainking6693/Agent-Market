@@ -7,6 +7,9 @@ import {
   Prisma,
   ServiceAgreement,
   ServiceAgreementStatus,
+  TransactionStatus,
+  TransactionType,
+  WalletStatus,
 } from '@prisma/client';
 
 import { PrismaService } from '../database/prisma.service.js';
@@ -41,6 +44,19 @@ interface AgentQualitySummary {
     engagements: number;
     totalSpend: string;
   };
+  roi: {
+    grossMerchandiseVolume: string;
+    averageCostPerOutcome: string | null;
+    averageCostPerEngagement: string | null;
+    verifiedOutcomeRate: number;
+  };
+}
+
+interface AgentRoiTimeseriesPoint {
+  date: string;
+  grossMerchandiseVolume: string;
+  verifiedOutcomes: number;
+  averageCostPerOutcome: string | null;
 }
 
 @Injectable()
@@ -50,7 +66,7 @@ export class QualityAnalyticsService {
   async getAgentSummary(agentId: string): Promise<AgentQualitySummary> {
     await this.ensureAgentExists(agentId);
 
-    const [latestCertification, evaluations, agreements, verifications, engagementMetrics] =
+    const [latestCertification, evaluations, agreements, verifications, engagementMetrics, wallets] =
       await Promise.all([
         this.prisma.agentCertification.findFirst({
           where: { agentId },
@@ -72,12 +88,27 @@ export class QualityAnalyticsService {
         this.prisma.agentEngagementMetric.findMany({
           where: { agentId },
         }),
+        this.prisma.wallet.findMany({
+          where: {
+            ownerAgentId: agentId,
+            status: WalletStatus.ACTIVE,
+          },
+          select: { id: true },
+        }),
       ]);
 
     const evaluationStats = this.buildEvaluationStats(evaluations);
     const agreementStats = this.buildAgreementStats(agreements);
     const verificationStats = this.buildVerificationStats(verifications);
     const a2aStats = this.buildA2aStats(engagementMetrics);
+
+    const roi = await this.buildRoiMetrics({
+      walletIds: wallets.map((wallet) => wallet.id),
+      verifiedCount:
+        verificationStats.verified + verificationStats.rejected + verificationStats.pending,
+      engagements: a2aStats.engagements,
+      verifications: verificationStats,
+    });
 
     return {
       agentId,
@@ -91,7 +122,105 @@ export class QualityAnalyticsService {
       agreements: agreementStats,
       verifications: verificationStats,
       a2a: a2aStats,
+      roi,
     };
+  }
+
+  async getAgentRoiTimeseries(agentId: string, days = 30): Promise<AgentRoiTimeseriesPoint[]> {
+    await this.ensureAgentExists(agentId);
+    const clampedDays = Number.isFinite(days) && days > 0 ? Math.min(days, 90) : 30;
+
+    const since = new Date();
+    since.setHours(0, 0, 0, 0);
+    since.setDate(since.getDate() - (clampedDays - 1));
+
+    const [wallets, transactions, verifications] = await Promise.all([
+      this.prisma.wallet.findMany({
+        where: {
+          ownerAgentId: agentId,
+          status: WalletStatus.ACTIVE,
+        },
+        select: { id: true },
+      }),
+      this.prisma.transaction.findMany({
+        where: {
+          walletId: { in: wallets.map((wallet) => wallet.id) },
+          status: TransactionStatus.SETTLED,
+          type: TransactionType.CREDIT,
+          createdAt: { gte: since },
+        },
+        select: {
+          amount: true,
+          createdAt: true,
+        },
+      }),
+      this.prisma.outcomeVerification.findMany({
+        where: {
+          serviceAgreement: {
+            agentId,
+          },
+          createdAt: { gte: since },
+        },
+        select: {
+          createdAt: true,
+          status: true,
+        },
+      }),
+    ]);
+
+    const buckets = new Map<
+      string,
+      { gmv: Prisma.Decimal; verified: number; totalVerifications: number }
+    >();
+
+    transactions.forEach((transaction) => {
+      const key = this.toDateKey(transaction.createdAt);
+      const bucket = buckets.get(key) ?? {
+        gmv: new Prisma.Decimal(0),
+        verified: 0,
+        totalVerifications: 0,
+      };
+      bucket.gmv = bucket.gmv.plus(transaction.amount);
+      buckets.set(key, bucket);
+    });
+
+    verifications.forEach((verification) => {
+      const key = this.toDateKey(verification.createdAt ?? new Date());
+      const bucket = buckets.get(key) ?? {
+        gmv: new Prisma.Decimal(0),
+        verified: 0,
+        totalVerifications: 0,
+      };
+      bucket.totalVerifications += 1;
+      if (verification.status === OutcomeVerificationStatus.VERIFIED) {
+        bucket.verified += 1;
+      }
+      buckets.set(key, bucket);
+    });
+
+    const results: AgentRoiTimeseriesPoint[] = [];
+    for (let offset = clampedDays - 1; offset >= 0; offset -= 1) {
+      const day = new Date();
+      day.setHours(0, 0, 0, 0);
+      day.setDate(day.getDate() - offset);
+      const key = this.toDateKey(day);
+      const bucket = buckets.get(key) ?? {
+        gmv: new Prisma.Decimal(0),
+        verified: 0,
+        totalVerifications: 0,
+      };
+      const averageCost =
+        bucket.verified > 0 ? bucket.gmv.div(bucket.verified).toFixed(2) : null;
+
+      results.push({
+        date: key,
+        grossMerchandiseVolume: bucket.gmv.toFixed(2),
+        verifiedOutcomes: bucket.verified,
+        averageCostPerOutcome: averageCost,
+      });
+    }
+
+    return results;
   }
 
   private buildEvaluationStats(evaluations: EvaluationResult[]) {
@@ -200,6 +329,47 @@ export class QualityAnalyticsService {
     return {
       engagements,
       totalSpend: totalSpend.toFixed(2),
+    };
+  }
+
+  private async buildRoiMetrics(params: {
+    walletIds: string[];
+    verifiedCount: number;
+    engagements: number;
+    verifications: { verified: number; rejected: number; pending: number };
+  }) {
+    const { walletIds, verifiedCount, engagements, verifications } = params;
+
+    const gmvSum = walletIds.length
+      ? await this.prisma.transaction.aggregate({
+          _sum: { amount: true },
+          where: {
+            walletId: { in: walletIds },
+            status: TransactionStatus.SETTLED,
+            type: { in: [TransactionType.CREDIT] },
+          },
+        })
+      : { _sum: { amount: new Prisma.Decimal(0) } };
+
+    const grossMerchandiseVolume = (gmvSum._sum.amount ?? new Prisma.Decimal(0)).toFixed(2);
+    const gmvDecimal = gmvSum._sum.amount ?? new Prisma.Decimal(0);
+
+    const averageCostPerOutcome =
+      verifiedCount > 0 ? gmvDecimal.div(verifiedCount).toFixed(2) : null;
+    const averageCostPerEngagement =
+      engagements > 0 ? gmvDecimal.div(engagements).toFixed(2) : null;
+
+    const verificationTotal = verifications.verified + verifications.rejected + verifications.pending;
+    const verifiedOutcomeRate =
+      verificationTotal > 0
+        ? Number(((verifications.verified / verificationTotal) * 100).toFixed(1))
+        : 0;
+
+    return {
+      grossMerchandiseVolume,
+      averageCostPerOutcome,
+      averageCostPerEngagement,
+      verifiedOutcomeRate,
     };
   }
 

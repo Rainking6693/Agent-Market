@@ -7,16 +7,19 @@ import { Agent, AgentExecutionResponse, createAgentMarketClient } from '@agent-m
 interface ScenarioDefinition {
   agentId?: string;
   agentSlug?: string;
+  agentTags?: string[];
+  agentNameIncludes?: string;
   scenarioName: string;
   vertical?: string;
   input?: Record<string, unknown>;
-  expectedOutputIncludes?: string;
+  expectedOutputIncludes?: string[];
+  minOutputLength?: number;
   budget?: number;
   notes?: string;
 }
 
-const SCENARIO_FILE =
-  process.env.EVALUATION_SCENARIOS_FILE ?? path.join('configs', 'evaluations', 'sample.json');
+const SCENARIO_PATH =
+  process.env.EVALUATION_SCENARIOS_FILE ?? path.join('configs', 'evaluations');
 const API_URL = process.env.API_URL ?? 'http://localhost:4000';
 const API_TOKEN = process.env.API_TOKEN;
 const INITIATOR_ID = process.env.EVALUATION_INITIATOR_ID;
@@ -78,14 +81,34 @@ async function main() {
 }
 
 function loadScenarios(): ScenarioDefinition[] {
-  const filePath = path.resolve(SCENARIO_FILE);
-  if (!fs.existsSync(filePath)) {
-    console.warn(`Scenario file not found: ${filePath}`);
+  const targetPath = path.resolve(SCENARIO_PATH);
+  if (!fs.existsSync(targetPath)) {
+    console.warn(`Scenario path not found: ${targetPath}`);
     return [];
   }
 
-  const raw = fs.readFileSync(filePath, 'utf-8');
-  return JSON.parse(raw) as ScenarioDefinition[];
+  const stat = fs.statSync(targetPath);
+  if (stat.isDirectory()) {
+    const files = fs.readdirSync(targetPath).filter((file) => file.endsWith('.json'));
+    const collected: ScenarioDefinition[] = [];
+    for (const file of files) {
+      collected.push(...loadScenarioFile(path.join(targetPath, file)));
+    }
+    return collected;
+  }
+
+  return loadScenarioFile(targetPath);
+}
+
+function loadScenarioFile(filePath: string): ScenarioDefinition[] {
+  try {
+    const raw = fs.readFileSync(filePath, 'utf-8');
+    const data = JSON.parse(raw) as ScenarioDefinition[] | ScenarioDefinition;
+    return Array.isArray(data) ? data : [data];
+  } catch (error) {
+    console.warn(`Failed to parse scenarios from ${filePath}:`, error);
+    return [];
+  }
 }
 
 function resolveAgent(agents: Agent[], scenario: ScenarioDefinition) {
@@ -95,6 +118,34 @@ function resolveAgent(agents: Agent[], scenario: ScenarioDefinition) {
 
   if (scenario.agentSlug) {
     return agents.find((agent) => agent.slug === scenario.agentSlug);
+  }
+
+  if (scenario.agentNameIncludes) {
+    const query = scenario.agentNameIncludes.toLowerCase();
+    const byName = agents.find((agent) => agent.name.toLowerCase().includes(query));
+    if (byName) {
+      return byName;
+    }
+  }
+
+  if (scenario.agentTags?.length) {
+    const normalizedTags = scenario.agentTags.map((tag) => tag.toLowerCase());
+    const match = agents.find((agent) => {
+      const agentTags = [...(agent.tags ?? []), ...(agent.categories ?? [])].map((tag) =>
+        tag.toLowerCase(),
+      );
+      return normalizedTags.some((tag) => agentTags.includes(tag));
+    });
+    if (match) {
+      return match;
+    }
+  }
+
+  if (agents.length > 0) {
+    console.warn(
+      `Falling back to first available agent (${agents[0].name}) for scenario "${scenario.scenarioName}".`,
+    );
+    return agents[0];
   }
 
   return undefined;
@@ -112,15 +163,28 @@ async function executeScenario(
 }
 
 function evaluateOutput(execution: AgentExecutionResponse, scenario: ScenarioDefinition) {
-  if (!scenario.expectedOutputIncludes) {
-    return execution.execution.status === 'SUCCEEDED';
+  if (execution.execution.status !== 'SUCCEEDED') {
+    return false;
   }
 
-  const outputContent = JSON.stringify(execution.execution.output ?? {});
-  return (
-    execution.execution.status === 'SUCCEEDED' &&
-    outputContent.toLowerCase().includes(scenario.expectedOutputIncludes.toLowerCase())
-  );
+  const outputContent = JSON.stringify(execution.execution.output ?? {}).toLowerCase();
+  if (scenario.expectedOutputIncludes?.length) {
+    const includesAll = scenario.expectedOutputIncludes.every((fragment) =>
+      outputContent.includes(fragment.toLowerCase()),
+    );
+    if (!includesAll) {
+      return false;
+    }
+  }
+
+  if (scenario.minOutputLength) {
+    const outputLength = outputContent.length;
+    if (outputLength < scenario.minOutputLength) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 main().catch((error) => {

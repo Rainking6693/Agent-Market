@@ -84,6 +84,11 @@ This document translates the competitive analysis mandates into concrete archite
    - Extend `tests/workflows` and `packages/testkit` to run scenario scripts referencing `EvaluationScenario` definitions stored in DB (task prompts, expected outcomes, tolerance thresholds).
    - Use the harness to produce metrics like success rate, latency, cost per task; persist into `AgentPerformanceSnapshot`.
    - ✅ Implemented `scripts/run-evaluations.ts` plus `.github/workflows/evaluation-runner.yml` so CI or Temporal workers can execute scenarios and push structured outcomes into `quality/evaluations/run`.
+
+- ✅ Imported the first Genesis orchestration scenarios via `scripts/import-genesis-scenarios.ts`, producing `configs/evaluations/genesis-orchestration.json` so A2A workloads from the legacy suite now run through the new pipeline, and wired the GitHub workflow to rerun the import before every scheduled evaluation.
+- ✅ Added `dashboards/neon/orgAnalytics.ts` plus `/organizations/:slug/roi[ /timeseries]` so the Neon dashboard can query org-level GMV/outcome metrics directly via Prisma while the main console consumes the same API.
+- ✅ Locked in the subscription catalog (Starter $0 → Pro $499) and added the new billing stack: Prisma tables (`BillingPlan`, `OrganizationSubscription`, `Invoice`), Stripe-backed checkout endpoints, SDK methods, and the `/billing` UI so orgs can upgrade, see usage, and download invoices.
+
 2. **CI Integration**
    - Every agent update (prompt change, new model) reruns relevant evaluations via MCP connectors and records pass/fail plus diff vs. previous.
 

@@ -11,6 +11,7 @@
     "test": "turbo run test",
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
+    "eval:import-genesis": "tsx scripts/import-genesis-scenarios.ts --input Genesis-Rebuild-main/Genesis-Rebuild-main/tests/rogue/scenarios/orchestration_p1.yaml --output configs/evaluations/genesis-orchestration.json --vertical orchestration --limit 50 --agentTags orchestration,planner",
     "eval:run": "tsx scripts/run-evaluations.ts"
   },
   "packageManager": "npm@11.6.2",
@@ -29,12 +30,16 @@
     "husky": "^9.0.10",
     "lint-staged": "^15.2.0",
     "prettier": "^3.3.3",
-    "turbo": "^2.1.0",
     "tsx": "^4.11.0",
-    "typescript": "^5.6.3"
+    "turbo": "^2.1.0",
+    "typescript": "^5.6.3",
+    "yaml": "^2.8.1"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": "eslint --max-warnings=0",
     "*.{json,md,yml,yaml}": "prettier --check"
+  },
+  "dependencies": {
+    "stripe": "^19.3.1"
   }
 }
