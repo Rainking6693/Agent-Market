@@ -1,6 +1,8 @@
 import {
+  Agent,
   AgentCertificationRecord,
   AgentQualityAnalytics,
+  AgentRoiTimeseriesPoint,
   EvaluationResultRecord,
   ServiceAgreementWithVerifications,
 } from '@agent-market/sdk';
@@ -21,7 +23,12 @@ interface QualityPageProps {
 
 export default async function QualityPage({ searchParams }: QualityPageProps) {
   const client = getAgentMarketClient();
-  const agents = await client.listAgents();
+  let agents: Agent[] = [];
+  try {
+    agents = await client.listAgents();
+  } catch (error) {
+    console.warn('Failed to load agents for quality page', error);
+  }
 
   if (agents.length === 0) {
     return (
@@ -31,16 +38,34 @@ export default async function QualityPage({ searchParams }: QualityPageProps) {
     );
   }
 
-  const selectedAgent =
-    agents.find((agent) => agent.id === searchParams.agentId) ?? agents[0];
+  const selectedAgent = agents.find((agent) => agent.id === searchParams.agentId) ?? agents[0];
   const selectedAgentId = selectedAgent.id;
-  const [analytics, certifications, evaluations, agreements, roiTimeseries] = await Promise.all([
-    client.getAgentQualityAnalytics(selectedAgentId),
-    client.listCertifications(selectedAgentId),
-    client.listEvaluationResults(selectedAgentId),
-    client.listServiceAgreements(selectedAgentId),
-    client.getAgentQualityTimeseries(selectedAgentId, 14),
-  ]);
+
+  let analytics: AgentQualityAnalytics | null = null;
+  let certifications: AgentCertificationRecord[] = [];
+  let evaluations: EvaluationResultRecord[] = [];
+  let agreements: ServiceAgreementWithVerifications[] = [];
+  let roiTimeseries: AgentRoiTimeseriesPoint[] = [];
+
+  try {
+    [analytics, certifications, evaluations, agreements, roiTimeseries] = await Promise.all([
+      client.getAgentQualityAnalytics(selectedAgentId),
+      client.listCertifications(selectedAgentId),
+      client.listEvaluationResults(selectedAgentId),
+      client.listServiceAgreements(selectedAgentId),
+      client.getAgentQualityTimeseries(selectedAgentId, 14),
+    ]);
+  } catch (error) {
+    console.warn('Quality dashboard data unavailable during build', error);
+  }
+
+  if (!analytics) {
+    return (
+      <div className="glass-card p-8 text-sm text-ink-muted">
+        Unable to load quality analytics right now. Refresh once the API is reachable.
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-10">

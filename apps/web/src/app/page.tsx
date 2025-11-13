@@ -1,3 +1,8 @@
+import {
+  BillingSubscription,
+  OrganizationRoiSummary,
+  OrganizationRoiTimeseriesPoint,
+} from '@agent-market/sdk';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -25,11 +30,19 @@ export default async function HomePage() {
   const client = getAgentMarketClient();
   const orgSlug = process.env.NEXT_PUBLIC_DEFAULT_ORG_SLUG ?? 'genesis';
 
-  const [orgSummary, orgTimeseries, subscription] = await Promise.all([
-    client.getOrganizationRoi(orgSlug),
-    client.getOrganizationRoiTimeseries(orgSlug, 14),
-    client.getBillingSubscription(),
-  ]);
+  let orgSummary: OrganizationRoiSummary | null = null;
+  let orgTimeseries: OrganizationRoiTimeseriesPoint[] = [];
+  let subscription: BillingSubscription | null = null;
+
+  try {
+    [orgSummary, orgTimeseries, subscription] = await Promise.all([
+      client.getOrganizationRoi(orgSlug),
+      client.getOrganizationRoiTimeseries(orgSlug, 14),
+      client.getBillingSubscription(),
+    ]);
+  } catch (error) {
+    console.warn('Dashboard data unavailable during build', error);
+  }
 
   return (
     <div className="space-y-12">

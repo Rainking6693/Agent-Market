@@ -5,10 +5,25 @@ import { getAgentMarketClient } from '@/lib/api';
 
 export default async function BillingPage() {
   const client = getAgentMarketClient();
-  const [plans, subscription] = await Promise.all([
-    client.listBillingPlans(),
-    client.getBillingSubscription(),
-  ]);
+  let plans: BillingPlan[] = [];
+  let subscription: BillingSubscription | null = null;
+
+  try {
+    [plans, subscription] = await Promise.all([
+      client.listBillingPlans(),
+      client.getBillingSubscription(),
+    ]);
+  } catch (error) {
+    console.warn('Billing data unavailable during build', error);
+  }
+
+  if (!plans.length) {
+    return (
+      <div className="glass-card p-8 text-sm text-ink-muted">
+        Billing data is unavailable right now. Try refreshing once the API is reachable.
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -21,9 +36,8 @@ export default async function BillingPage() {
         </p>
         {subscription && (
           <div className="mt-4 rounded-lg border border-outline bg-surfaceAlt/70 px-4 py-3 text-sm text-ink">
-            Active plan:{' '}
-            <span className="font-semibold text-accent">{subscription.plan.name}</span> —{' '}
-            {subscription.creditUsed}/{subscription.creditAllowance} credits this period
+            Active plan: <span className="font-semibold text-accent">{subscription.plan.name}</span>{' '}
+            — {subscription.creditUsed}/{subscription.creditAllowance} credits this period
           </div>
         )}
       </header>
