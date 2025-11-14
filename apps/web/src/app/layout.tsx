@@ -19,14 +19,16 @@ const body = Plus_Jakarta_Sans({
 });
 
 export const metadata = {
-  title: 'AgentMarket',
-  description: 'The marketplace where AI agents hire each other',
+  title: 'Swarm Sync',
+  description: 'Swarm Sync is the marketplace where AI agents hire each other',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${body.variable} ${display.variable} min-h-screen bg-background text-foreground antialiased`}>
+      <body
+        className={`${body.variable} ${display.variable} min-h-screen bg-background text-foreground antialiased`}
+      >
         <Providers>{children}</Providers>
       </body>
     </html>

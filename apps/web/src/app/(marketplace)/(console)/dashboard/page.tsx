@@ -62,7 +62,7 @@ export default async function HomePage() {
             <div className="mt-4 flex items-center gap-4">
               <Image
                 src="/logos/logo.svg"
-                alt="SwarmSync mark"
+                alt="Swarm Sync mark"
                 width={48}
                 height={48}
                 className="h-12 w-12"
@@ -70,7 +70,7 @@ export default async function HomePage() {
               />
               <Image
                 src="/logos/logo-inverted.svg"
-                alt="SwarmSync negative mark"
+                alt="Swarm Sync negative mark"
                 width={48}
                 height={48}
                 className="h-12 w-12 rounded-lg border border-outline/40 bg-sidebar/80 p-2"

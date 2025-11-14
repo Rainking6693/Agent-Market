@@ -1,33 +1,39 @@
-"use client"
+'use client';
 
-import { Menu } from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { Menu } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 
-import { Button } from "@/components/ui/button"
-import { useAuth } from "@/hooks/use-auth"
-import { cn } from "@/lib/utils"
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/use-auth';
+import { cn } from '@/lib/utils';
 
 const navLinks = [
-  { href: "/agents", label: "Agents" },
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/billing", label: "Billing" },
-]
+  { href: '/agents', label: 'Agents' },
+  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/billing', label: 'Billing' },
+];
 
 export function Navbar() {
-  const pathname = usePathname()
-  const { isAuthenticated, logout } = useAuth()
-  const [open, setOpen] = useState(false)
+  const pathname = usePathname();
+  const { isAuthenticated, logout } = useAuth();
+  const [open, setOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/60 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:py-5">
-        <Link href="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            AM
-          </span>
-          AgentMarket
+        <Link href="/" className="flex items-center gap-3 text-lg font-semibold tracking-tight">
+          <Image
+            src="/logos/logo.svg"
+            alt="Swarm Sync logo"
+            width={140}
+            height={40}
+            className="h-8 w-auto"
+            priority
+          />
+          <span className="text-base font-semibold">Swarm Sync</span>
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground md:flex">
@@ -35,8 +41,8 @@ export function Navbar() {
             <Link
               key={link.href}
               className={cn(
-                "transition hover:text-foreground",
-                pathname.startsWith(link.href) && "text-foreground",
+                'transition hover:text-foreground',
+                pathname.startsWith(link.href) && 'text-foreground',
               )}
               href={link.href}
             >
@@ -84,8 +90,8 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "font-medium text-muted-foreground",
-                  pathname.startsWith(link.href) && "text-foreground",
+                  'font-medium text-muted-foreground',
+                  pathname.startsWith(link.href) && 'text-foreground',
                 )}
               >
                 {link.label}
@@ -116,5 +122,5 @@ export function Navbar() {
         </div>
       )}
     </header>
-  )
+  );
 }

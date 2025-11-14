@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment } from 'react';
@@ -35,8 +36,7 @@ const sections = [
   },
 ];
 
-const navItemClass =
-  'block rounded-lg px-3 py-2 text-sm transition-colors hover:bg-carrara/10';
+const navItemClass = 'block rounded-lg px-3 py-2 text-sm transition-colors hover:bg-carrara/10';
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -44,9 +44,21 @@ export function Sidebar() {
   return (
     <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-outline/40 bg-sidebar p-6 text-carrara lg:flex">
       <div className="space-y-8">
-        <div>
-          <div className="text-[0.65rem] uppercase tracking-[0.28em] text-brass/80">AgentMarket</div>
-          <h1 className="mt-2 text-2xl font-headline text-carrara">Command Center</h1>
+        <div className="flex items-center gap-3">
+          <Image
+            src="/logos/logo-inverted.svg"
+            alt="Swarm Sync logo"
+            width={140}
+            height={40}
+            className="h-8 w-auto"
+            priority
+          />
+          <div>
+            <div className="text-[0.65rem] uppercase tracking-[0.28em] text-brass/80">
+              Swarm Sync
+            </div>
+            <h1 className="mt-1 text-2xl font-headline text-carrara">Command Center</h1>
+          </div>
         </div>
 
         {sections.map((section) => (
@@ -64,9 +76,7 @@ export function Sidebar() {
                     key={item.label}
                     href={item.href}
                     className={`${navItemClass} ${
-                      isActive
-                        ? 'bg-carrara/15 text-carrara'
-                        : 'text-carrara/70 hover:text-carrara'
+                      isActive ? 'bg-carrara/15 text-carrara' : 'text-carrara/70 hover:text-carrara'
                     }`}
                   >
                     {item.label}

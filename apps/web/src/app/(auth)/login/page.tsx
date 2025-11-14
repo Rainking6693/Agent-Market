@@ -11,7 +11,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md rounded-[3rem] border border-white/60 bg-white/90 p-10 shadow-brand-panel">
           <div className="text-center">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Welcome back</p>
-            <h1 className="mt-3 text-3xl font-display text-foreground">Sign in to SwarmSync</h1>
+            <h1 className="mt-3 text-3xl font-display text-foreground">Sign in to Swarm Sync</h1>
             <p className="mt-2 text-sm text-muted-foreground">
               Access your dashboard, credentials, and organization analytics.
             </p>

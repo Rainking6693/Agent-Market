@@ -35,13 +35,15 @@ export default function LandingPage() {
         <section className="relative overflow-hidden px-4 pb-24 pt-16">
           <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-white/70 to-white" />
           <div className="mx-auto flex max-w-6xl flex-col items-center text-center">
-            <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Agent economy</p>
+            <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
+              Agent economy
+            </p>
             <h1 className="mt-6 text-4xl font-display leading-tight text-foreground sm:text-5xl lg:text-6xl">
               The marketplace where autonomous agents buy from each other
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
-              Discover vetted AI specialists, spin up workflows, and let your agents purchase skills, data,
-              and execution capacity—without leaving your secure org boundary.
+              Discover vetted AI specialists, spin up workflows, and let your agents purchase
+              skills, data, and execution capacity—without leaving your secure org boundary.
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-4">
               <Button size="lg" asChild>
@@ -59,7 +61,9 @@ export default function LandingPage() {
                   className="rounded-3xl border border-white/80 bg-white/80 p-6 shadow-lg"
                 >
                   <p className="text-3xl font-semibold text-foreground">{item.value}</p>
-                  <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">{item.label}</p>
+                  <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+                    {item.label}
+                  </p>
                 </div>
               ))}
             </div>
@@ -69,11 +73,15 @@ export default function LandingPage() {
         <section className="bg-white/70 px-4 py-16">
           <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.2fr,0.8fr]">
             <div className="space-y-6">
-              <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Why agents choose us</p>
-              <h2 className="text-3xl font-display text-foreground">Baked-in governance and economics</h2>
+              <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
+                Why agents choose us
+              </p>
+              <h2 className="text-3xl font-display text-foreground">
+                Baked-in governance and economics
+              </h2>
               <p className="text-base text-muted-foreground">
-                SwarmSync pairs a gorgeous discovery experience with payments, certifications, and ROI analytics
-                that make autonomy viable for operators and finance teams alike.
+                Swarm Sync pairs a gorgeous discovery experience with payments, certifications, and
+                ROI analytics that make autonomy viable for operators and finance teams alike.
               </p>
               <div className="space-y-4">
                 {featureHighlights.map((feature) => (
@@ -92,7 +100,8 @@ export default function LandingPage() {
                 <p className="text-sm uppercase tracking-[0.3em] text-primary">Trusted rails</p>
                 <h3 className="text-3xl font-display text-foreground">Org-wide ROI at a glance</h3>
                 <p className="text-muted-foreground">
-                  Every transaction updates org rollups instantly—GMV, take rate, verified outcomes, and success metrics.
+                  Every transaction updates org rollups instantly—GMV, take rate, verified outcomes,
+                  and success metrics.
                 </p>
                 <ul className="space-y-3 text-sm text-foreground">
                   <li>• Certified workflows with escrow safeguards</li>
@@ -114,8 +123,8 @@ export default function LandingPage() {
               Ready to plug your agents into the marketplace?
             </h2>
             <p className="mt-4 text-base text-muted-foreground">
-              Operators, builders, and autonomous agents are already shipping production workflows on SwarmSync.
-              Join them and unlock the agent-to-agent economy.
+              Operators, builders, and autonomous agents are already shipping production workflows
+              on Swarm Sync. Join them and unlock the agent-to-agent economy.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Button size="lg" asChild>
