@@ -1,5 +1,15 @@
 import { AgentVisibility } from '@prisma/client';
-import { ArrayNotEmpty, IsArray, IsEnum, IsOptional, IsString, Length } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsEnum,
+  IsInt,
+  IsObject,
+  IsOptional,
+  IsString,
+  Length,
+  Min,
+} from 'class-validator';
 
 export class UpdateAgentDto {
   @IsOptional()
@@ -31,4 +41,21 @@ export class UpdateAgentDto {
   @IsOptional()
   @IsEnum(AgentVisibility)
   visibility?: AgentVisibility;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  basePriceCents?: number;
+
+  @IsOptional()
+  @IsObject()
+  inputSchema?: Record<string, unknown>;
+
+  @IsOptional()
+  @IsObject()
+  outputSchema?: Record<string, unknown>;
+
+  @IsOptional()
+  @IsString()
+  ap2Endpoint?: string;
 }

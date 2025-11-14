@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { AnalyticsController } from './analytics.controller.js';
-import { AnalyticsService } from './analytics.service.js';
+import { QualityAnalyticsController } from './analytics.controller.js';
+import { QualityAnalyticsService } from './analytics.service.js';
 import { CertificationController } from './certification.controller.js';
 import { CertificationService } from './certification.service.js';
 import { EvaluationController } from './evaluation.controller.js';
@@ -17,9 +17,19 @@ import { PaymentsModule } from '../payments/payments.module.js';
     CertificationController,
     EvaluationController,
     OutcomesController,
-    AnalyticsController,
+    QualityAnalyticsController,
   ],
-  providers: [CertificationService, EvaluationService, OutcomesService, AnalyticsService],
-  exports: [CertificationService, EvaluationService, OutcomesService, AnalyticsService],
+  providers: [
+    CertificationService,
+    EvaluationService,
+    OutcomesService,
+    QualityAnalyticsService,
+  ],
+  exports: [
+    CertificationService,
+    EvaluationService,
+    OutcomesService,
+    QualityAnalyticsService,
+  ],
 })
 export class QualityModule {}

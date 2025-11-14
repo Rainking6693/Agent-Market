@@ -3,6 +3,7 @@ import {
   AgentStatus,
   AgentVisibility,
   BudgetApprovalMode,
+  CertificationStatus,
   ExecutionStatus,
   InitiatorType,
   PaymentEventStatus,
@@ -15,11 +16,13 @@ import { presentAgent, presentExecution, presentReview } from './agents.presente
 import { PrismaService } from '../database/prisma.service.js';
 import { Ap2Service } from '../payments/ap2.service.js';
 import { WalletsService } from '../payments/wallets.service.js';
+import { AgentDiscoveryQueryDto } from './dto/agent-discovery-query.dto.js';
 import { CreateAgentDto } from './dto/create-agent.dto.js';
 import { ExecuteAgentDto } from './dto/execute-agent.dto.js';
 import { ReviewAgentDto } from './dto/review-agent.dto.js';
 import { SubmitForReviewDto } from './dto/submit-for-review.dto.js';
 import { UpdateAgentDto } from './dto/update-agent.dto.js';
+import { UpdateAgentBudgetDto } from './dto/update-budget.dto.js';
 
 const slugify = (value: string) =>
   value
@@ -27,6 +30,13 @@ const slugify = (value: string) =>
     .trim()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
+
+type AgentDiscoveryAgent = Prisma.AgentGetPayload<{
+  include: {
+    certifications: true;
+    metricsPrimary: true;
+  };
+}>;
 
 @Injectable()
 export class AgentsService {
@@ -49,6 +59,10 @@ export class AgentsService {
         pricingModel: data.pricingModel,
         visibility: data.visibility ?? AgentVisibility.PUBLIC,
         creatorId: data.creatorId,
+        basePriceCents: data.basePriceCents ?? null,
+        inputSchema: data.inputSchema ?? null,
+        outputSchema: data.outputSchema ?? null,
+        ap2Endpoint: data.ap2Endpoint ?? null,
       },
     });
 
@@ -116,6 +130,10 @@ export class AgentsService {
         ...rest,
         categories: categories ?? undefined,
         tags: tags ?? undefined,
+        basePriceCents: data.basePriceCents ?? undefined,
+        inputSchema: data.inputSchema ?? undefined,
+        outputSchema: data.outputSchema ?? undefined,
+        ap2Endpoint: data.ap2Endpoint ?? undefined,
       },
     });
 
@@ -265,6 +283,414 @@ export class AgentsService {
     });
 
     return reviews.map(presentReview);
+  }
+
+  async discover(filters: AgentDiscoveryQueryDto) {
+    const normalizedCapability = filters.capability?.trim();
+    const normalizedLimit = Math.min(Math.max(filters.limit ?? 20, 1), 100);
+
+    const where: Prisma.AgentWhereInput = {
+      status: AgentStatus.APPROVED,
+      visibility: AgentVisibility.PUBLIC,
+    };
+
+    if (normalizedCapability) {
+      where.OR = [
+        { categories: { has: normalizedCapability } },
+        { tags: { has: normalizedCapability } },
+      ];
+    }
+
+    if (typeof filters.maxPriceCents === 'number') {
+      where.basePriceCents = { lte: filters.maxPriceCents };
+    }
+
+    if (filters.certificationRequired) {
+      where.certifications = {
+        some: { status: CertificationStatus.CERTIFIED },
+      };
+    }
+
+    if (typeof filters.minRating === 'number') {
+      const trustThreshold = Math.min(100, Math.max(0, Math.round(filters.minRating * 20)));
+      where.trustScore = { gte: trustThreshold };
+    }
+
+    const total = await this.prisma.agent.count({ where });
+
+    const agents = await this.prisma.agent.findMany({
+      where,
+      orderBy:
+        typeof filters.maxPriceCents === 'number'
+          ? [{ basePriceCents: 'asc' }, { updatedAt: 'desc' }]
+          : [{ updatedAt: 'desc' }],
+      cursor: filters.cursor ? { id: filters.cursor } : undefined,
+      skip: filters.cursor ? 1 : 0,
+      take: normalizedLimit + 1,
+      include: {
+        certifications: {
+          where: { status: CertificationStatus.CERTIFIED },
+          orderBy: { updatedAt: 'desc' },
+          take: 1,
+        },
+        metricsPrimary: true,
+      },
+    });
+
+    const hasNext = agents.length > normalizedLimit;
+    const trimmed = hasNext ? agents.slice(0, -1) : agents;
+    const nextCursor = hasNext ? agents[agents.length - 1].id : null;
+
+    return {
+      total,
+      nextCursor,
+      agents: trimmed.map((agent) => this.presentDiscoveryAgent(agent)),
+    };
+  }
+
+  async getAgentSchema(id: string) {
+    const agent = await this.prisma.agent.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        description: true,
+        categories: true,
+        tags: true,
+        pricingModel: true,
+        basePriceCents: true,
+        inputSchema: true,
+        outputSchema: true,
+        ap2Endpoint: true,
+      },
+    });
+
+    if (!agent) {
+      throw new NotFoundException('Agent not found');
+    }
+
+    return {
+      id: agent.id,
+      slug: agent.slug,
+      name: agent.name,
+      description: agent.description,
+      categories: agent.categories,
+      tags: agent.tags,
+      pricing: {
+        model: agent.pricingModel,
+        basePriceCents: agent.basePriceCents ?? null,
+        currency: 'USD',
+      },
+      ap2Endpoint: agent.ap2Endpoint ?? null,
+      schemas: {
+        input: agent.inputSchema ?? null,
+        output: agent.outputSchema ?? null,
+      },
+    };
+  }
+
+  async getAgentBudget(agentId: string) {
+    await this.ensureExists(agentId);
+    const wallet = await this.walletsService.ensureAgentWallet(agentId);
+    const budget = await this.ensureBudgetRecord(agentId, wallet.id);
+    return this.presentBudgetSnapshot(budget, wallet);
+  }
+
+  async updateAgentBudget(agentId: string, dto: UpdateAgentBudgetDto) {
+    await this.ensureExists(agentId);
+    let wallet = await this.walletsService.ensureAgentWallet(agentId);
+    let budget = await this.ensureBudgetRecord(agentId, wallet.id);
+
+    const budgetUpdate: Prisma.AgentBudgetUpdateInput = {};
+    let budgetTouched = false;
+
+    if (dto.monthlyLimit !== undefined) {
+      const nextLimit = new Prisma.Decimal(dto.monthlyLimit);
+      const spent = budget.monthlyLimit.minus(budget.remaining);
+      let remaining = nextLimit.minus(spent);
+      if (remaining.lessThan(0)) {
+        remaining = new Prisma.Decimal(0);
+      }
+      budgetUpdate.monthlyLimit = nextLimit;
+      budgetUpdate.remaining = remaining;
+      budgetTouched = true;
+    }
+
+    if (dto.approvalMode) {
+      budgetUpdate.approvalMode = dto.approvalMode;
+      budgetTouched = true;
+    } else if (typeof dto.autoReload === 'boolean') {
+      budgetUpdate.approvalMode = dto.autoReload ? BudgetApprovalMode.AUTO : BudgetApprovalMode.MANUAL;
+      budgetTouched = true;
+    }
+
+    if (budgetTouched) {
+      budget = await this.prisma.agentBudget.update({
+        where: { id: budget.id },
+        data: budgetUpdate,
+      });
+    }
+
+    const walletUpdate: Prisma.WalletUpdateInput = {};
+    let walletTouched = false;
+
+    if (dto.perTransactionLimit !== undefined) {
+      walletUpdate.spendCeiling =
+        dto.perTransactionLimit === null ? null : new Prisma.Decimal(dto.perTransactionLimit);
+      walletTouched = true;
+    }
+
+    if (dto.approvalThreshold !== undefined) {
+      walletUpdate.autoApproveThreshold =
+        dto.approvalThreshold === null ? null : new Prisma.Decimal(dto.approvalThreshold);
+      walletTouched = true;
+    }
+
+    if (walletTouched) {
+      await this.prisma.wallet.update({
+        where: { id: wallet.id },
+        data: walletUpdate,
+      });
+      wallet = await this.prisma.wallet.findUniqueOrThrow({ where: { id: wallet.id } });
+    }
+
+    return this.presentBudgetSnapshot(budget, wallet);
+  }
+
+  async listAgentA2aTransactions(agentId: string) {
+    await this.ensureExists(agentId);
+
+    const collaborations = await this.prisma.agentCollaboration.findMany({
+      where: {
+        OR: [{ requesterAgentId: agentId }, { responderAgentId: agentId }],
+      },
+      include: {
+        requesterAgent: { select: { id: true, name: true, slug: true } },
+        responderAgent: { select: { id: true, name: true, slug: true } },
+        serviceAgreement: {
+          include: {
+            escrow: {
+              include: {
+                transaction: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { updatedAt: 'desc' },
+      take: 50,
+    });
+
+    return collaborations.map((collaboration) => {
+      const payload = this.safeParseJson(collaboration.payload as Record<string, unknown> | undefined);
+      const counterPayload = this.safeParseJson(
+        collaboration.counterPayload as Record<string, unknown> | undefined,
+      );
+      const escrow = collaboration.serviceAgreement?.escrow ?? null;
+      const transaction = escrow?.transaction ?? null;
+
+      return {
+        id: collaboration.id,
+        status: collaboration.status,
+        requesterAgent: collaboration.requesterAgent
+          ? {
+              id: collaboration.requesterAgent.id,
+              name: collaboration.requesterAgent.name,
+              slug: collaboration.requesterAgent.slug,
+            }
+          : null,
+        responderAgent: collaboration.responderAgent
+          ? {
+              id: collaboration.responderAgent.id,
+              name: collaboration.responderAgent.name,
+              slug: collaboration.responderAgent.slug,
+            }
+          : null,
+        requestedService:
+          typeof payload.requestedService === 'string' ? (payload.requestedService as string) : null,
+        proposedBudget: typeof payload.budget === 'number' ? (payload.budget as number) : null,
+        counterPrice: typeof counterPayload.price === 'number' ? (counterPayload.price as number) : null,
+        amount: escrow?.amount ? Number(escrow.amount) : null,
+        currency: 'USD',
+        transaction: transaction
+          ? {
+              id: transaction.id,
+              status: transaction.status,
+              settledAt: transaction.settledAt,
+              createdAt: transaction.createdAt,
+            }
+          : null,
+        serviceAgreementId: collaboration.serviceAgreementId,
+        escrowId: escrow?.id ?? null,
+        createdAt: collaboration.createdAt,
+        updatedAt: collaboration.updatedAt,
+      };
+    });
+  }
+
+  async getAgentNetwork(agentId: string) {
+    const transactions = await this.listAgentA2aTransactions(agentId);
+
+    const nodes = new Map<
+      string,
+      {
+        id: string;
+        name: string;
+        slug: string;
+        isPrimary: boolean;
+        interactions: number;
+        dealsAsBuyer: number;
+        dealsAsSeller: number;
+        lastInteraction: Date | null;
+      }
+    >();
+    const edges = new Map<
+      string,
+      {
+        id: string;
+        source: string;
+        target: string;
+        transactionCount: number;
+        totalValue: number;
+        latestStatus: string;
+        updatedAt: Date;
+      }
+    >();
+
+    const registerAgent = (
+      agent: { id: string; name: string; slug: string } | null,
+      role: 'buyer' | 'seller',
+      timestamp: Date,
+    ) => {
+      if (!agent) {
+        return;
+      }
+
+      const existing =
+        nodes.get(agent.id) ??
+        {
+          id: agent.id,
+          name: agent.name,
+          slug: agent.slug,
+          isPrimary: agent.id === agentId,
+          interactions: 0,
+          dealsAsBuyer: 0,
+          dealsAsSeller: 0,
+          lastInteraction: null,
+        };
+
+      existing.interactions += 1;
+      if (role === 'buyer') {
+        existing.dealsAsBuyer += 1;
+      } else {
+        existing.dealsAsSeller += 1;
+      }
+      if (!existing.lastInteraction || existing.lastInteraction < timestamp) {
+        existing.lastInteraction = timestamp;
+      }
+
+      nodes.set(agent.id, existing);
+    };
+
+    transactions.forEach((transaction) => {
+      const timestamp = new Date(transaction.updatedAt);
+      registerAgent(transaction.requesterAgent, 'buyer', timestamp);
+      registerAgent(transaction.responderAgent, 'seller', timestamp);
+
+      if (transaction.requesterAgent && transaction.responderAgent) {
+        const edgeKey = `${transaction.requesterAgent.id}->${transaction.responderAgent.id}`;
+        const existing =
+          edges.get(edgeKey) ??
+          {
+            id: edgeKey,
+            source: transaction.requesterAgent.id,
+            target: transaction.responderAgent.id,
+            transactionCount: 0,
+            totalValue: 0,
+            latestStatus: transaction.status,
+            updatedAt: timestamp,
+          };
+
+        existing.transactionCount += 1;
+        if (typeof transaction.amount === 'number') {
+          existing.totalValue += transaction.amount;
+        }
+        existing.latestStatus = transaction.status;
+        existing.updatedAt = timestamp;
+        edges.set(edgeKey, existing);
+      }
+    });
+
+    return {
+      primaryAgentId: agentId,
+      nodes: Array.from(nodes.values()),
+      edges: Array.from(edges.values()),
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  private async ensureBudgetRecord(agentId: string, walletId: string) {
+    const existing = await this.prisma.agentBudget.findFirst({
+      where: { agentId },
+      orderBy: { updatedAt: 'desc' },
+    });
+
+    if (existing) {
+      return existing;
+    }
+
+    const defaultLimit = new Prisma.Decimal(500);
+
+    return this.prisma.agentBudget.create({
+      data: {
+        agentId,
+        walletId,
+        monthlyLimit: defaultLimit,
+        remaining: defaultLimit,
+        approvalMode: BudgetApprovalMode.AUTO,
+        resetsOn: this.calculateNextResetDate(),
+      },
+    });
+  }
+
+  private presentBudgetSnapshot(
+    budget: {
+      agentId: string;
+      walletId: string;
+      monthlyLimit: Prisma.Decimal;
+      remaining: Prisma.Decimal;
+      approvalMode: BudgetApprovalMode;
+      resetsOn: Date;
+      updatedAt: Date;
+    },
+    wallet: WalletModel,
+  ) {
+    const monthlyLimit = budget.monthlyLimit;
+    const remaining = budget.remaining;
+    const spent = monthlyLimit.minus(remaining);
+
+    return {
+      agentId: budget.agentId,
+      walletId: wallet.id,
+      currency: wallet.currency,
+      monthlyLimit: Number(monthlyLimit),
+      remaining: Number(remaining),
+      spentThisPeriod: Number(spent),
+      approvalMode: budget.approvalMode,
+      perTransactionLimit: wallet.spendCeiling ? Number(wallet.spendCeiling) : null,
+      approvalThreshold: wallet.autoApproveThreshold ? Number(wallet.autoApproveThreshold) : null,
+      autoReload: budget.approvalMode !== BudgetApprovalMode.MANUAL,
+      resetsOn: budget.resetsOn,
+      updatedAt: budget.updatedAt,
+    };
+  }
+
+  private calculateNextResetDate(base?: Date) {
+    const reference = base ?? new Date();
+    const year = reference.getUTCFullYear();
+    const month = reference.getUTCMonth();
+    return new Date(Date.UTC(year, month + 1, 1));
   }
 
   private async ensureExists(id: string) {
@@ -420,5 +846,54 @@ export class AgentsService {
         lastInteraction: new Date(),
       },
     });
+  }
+
+  private presentDiscoveryAgent(agent: AgentDiscoveryAgent) {
+    const totalExecutions = agent.successCount + agent.failureCount;
+    const successRate = totalExecutions > 0 ? agent.successCount / totalExecutions : 0;
+    const rating = Number(Math.min(5, Math.max(1, (agent.trustScore ?? 0) / 20)).toFixed(1));
+
+    const totalA2a = agent.metricsPrimary.reduce((sum, metric) => sum + metric.a2aCount, 0);
+    const totalSpend = agent.metricsPrimary.reduce(
+      (sum, metric) => sum.plus(metric.totalSpend),
+      new Prisma.Decimal(0),
+    );
+
+    const latestCertification = agent.certifications[0] ?? null;
+
+    return {
+      id: agent.id,
+      slug: agent.slug,
+      name: agent.name,
+      description: agent.description,
+      categories: agent.categories,
+      tags: agent.tags,
+      pricing: {
+        model: agent.pricingModel,
+        basePriceCents: agent.basePriceCents ?? null,
+        currency: 'USD',
+      },
+      ap2: {
+        endpoint: agent.ap2Endpoint ?? null,
+      },
+      schemas: {
+        input: agent.inputSchema ?? null,
+        output: agent.outputSchema ?? null,
+      },
+      reputation: {
+        rating,
+        trustScore: agent.trustScore,
+        successRate: Number(successRate.toFixed(2)),
+        totalExecutions,
+        totalA2a,
+        totalSpendUsd: totalSpend.toFixed(2),
+      },
+      certification: {
+        certified: Boolean(latestCertification),
+        checklistId: latestCertification?.checklistId ?? null,
+        lastCertifiedAt: latestCertification?.updatedAt ?? null,
+      },
+      updatedAt: agent.updatedAt,
+    };
   }
 }

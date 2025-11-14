@@ -1,6 +1,6 @@
 import { Workflow } from '@agent-market/sdk';
 
-import { getAgentMarketClient } from '@/lib/api';
+import { getAgentMarketClient } from '@/lib/server-client';
 
 import { RunWorkflowButton } from './workflow-runner.client';
 

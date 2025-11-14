@@ -5,7 +5,7 @@ import path from 'node:path';
 import * as YAML from 'yaml';
 
 interface CliOptions {
-  input: string;
+  inputs: string[];
   output: string;
   vertical?: string;
   limit?: number;
@@ -41,7 +41,7 @@ const DEFAULT_OUTPUT = path.join('configs', 'evaluations', 'genesis-import.json'
 function parseArgs(): CliOptions {
   const args = process.argv.slice(2);
   const options: CliOptions = {
-    input: '',
+    inputs: [],
     output: DEFAULT_OUTPUT,
   };
 
@@ -49,9 +49,13 @@ function parseArgs(): CliOptions {
     const arg = args[i];
     switch (arg) {
       case '--input':
-      case '-i':
-        options.input = args[++i] ?? '';
+      case '-i': {
+        const nextValue = args[++i];
+        if (nextValue) {
+          options.inputs.push(nextValue);
+        }
         break;
+      }
       case '--output':
       case '-o':
         options.output = args[++i] ?? DEFAULT_OUTPUT;
@@ -78,11 +82,53 @@ function parseArgs(): CliOptions {
     }
   }
 
-  if (!options.input) {
-    throw new Error('Missing required --input path to genesis YAML file.');
+  if (options.inputs.length === 0) {
+    throw new Error('Missing required --input path to at least one genesis YAML file.');
   }
 
   return options;
+}
+
+interface ScenarioContainerMeta {
+  priority?: string;
+  vertical?: string;
+  agent?: string;
+  name?: string;
+}
+
+function resolveScenarioContainer(parsed: Record<string, unknown>): {
+  container?: Record<string, unknown>;
+  meta?: ScenarioContainerMeta;
+} {
+  if (Array.isArray((parsed as { scenarios?: unknown[] }).scenarios)) {
+    return {
+      container: parsed,
+      meta: {
+        priority: (parsed as { priority?: string }).priority,
+        vertical: (parsed as { name?: string }).name,
+        agent: (parsed as { agent?: string }).agent,
+      },
+    };
+  }
+
+  for (const value of Object.values(parsed)) {
+    if (
+      value &&
+      typeof value === 'object' &&
+      Array.isArray((value as { scenarios?: unknown[] }).scenarios)
+    ) {
+      return {
+        container: value as Record<string, unknown>,
+        meta: {
+          priority: (value as { priority?: string }).priority,
+          vertical: (value as { name?: string }).name,
+          agent: (value as { agent?: string }).agent,
+        },
+      };
+    }
+  }
+
+  return { container: undefined, meta: undefined };
 }
 
 function loadGenesisScenarios(filePath: string, limit?: number) {
@@ -92,8 +138,18 @@ function loadGenesisScenarios(filePath: string, limit?: number) {
   }
 
   const raw = fs.readFileSync(absolutePath, 'utf-8');
-  const parsed = YAML.parse(raw);
-  const scenarios: GenesisScenario[] = parsed?.scenarios ?? [];
+  const parsed = YAML.parse(raw) as Record<string, unknown>;
+  const { container, meta } = resolveScenarioContainer(parsed);
+
+  if (!container) {
+    throw new Error(`No scenarios found in ${absolutePath}`);
+  }
+
+  const scenarios: GenesisScenario[] = Array.isArray(
+    (container as { scenarios?: GenesisScenario[] }).scenarios,
+  )
+    ? ((container as { scenarios?: GenesisScenario[] }).scenarios ?? [])
+    : [];
 
   if (!Array.isArray(scenarios) || scenarios.length === 0) {
     throw new Error(`No scenarios found in ${absolutePath}`);
@@ -104,8 +160,9 @@ function loadGenesisScenarios(filePath: string, limit?: number) {
 
   return {
     meta: {
-      priority: parsed?.priority,
-      vertical: parsed?.name,
+      priority: meta?.priority,
+      vertical: meta?.vertical ?? meta?.agent,
+      agent: meta?.agent,
     },
     scenarios: limited,
   };
@@ -114,13 +171,15 @@ function loadGenesisScenarios(filePath: string, limit?: number) {
 function transformScenario(
   scenario: GenesisScenario,
   options: CliOptions,
-  defaults: { priority?: string; vertical?: string },
+  defaults: { priority?: string; vertical?: string; agent?: string },
 ) {
+  const resolvedVertical = options.vertical ?? defaults.vertical ?? defaults.agent ?? 'general';
+
   return {
     sourceId: scenario.id,
     scenarioName: scenario.name,
     priority: scenario.priority ?? defaults.priority ?? null,
-    vertical: options.vertical ?? defaults.vertical ?? 'general',
+    vertical: resolvedVertical,
     agentTags: scenario.tags?.length ? scenario.tags : options.agentTags,
     agentNameIncludes: options.agentNameIncludes,
     input: scenario.input ?? {},
@@ -140,15 +199,15 @@ function transformScenario(
 
 function main() {
   const options = parseArgs();
-  const { scenarios, meta } = loadGenesisScenarios(options.input, options.limit);
-  const defaults = {
-    priority: meta.priority,
-    vertical: meta.vertical,
-  };
-
-  const outputScenarios = scenarios.map((scenario) =>
-    transformScenario(scenario, options, defaults),
-  );
+  const outputScenarios = options.inputs.flatMap((inputPath) => {
+    const { scenarios, meta } = loadGenesisScenarios(inputPath, options.limit);
+    const defaults = {
+      priority: meta.priority,
+      vertical: meta.vertical,
+      agent: meta.agent,
+    };
+    return scenarios.map((scenario) => transformScenario(scenario, options, defaults));
+  });
 
   const outputPath = path.resolve(options.output);
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });

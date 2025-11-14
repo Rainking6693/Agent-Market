@@ -57,6 +57,10 @@ model Agent {
   successCount  Int              @default(0)
   failureCount  Int              @default(0)
   lastExecutedAt DateTime?
+  basePriceCents Int?
+  inputSchema   Json?
+  outputSchema  Json?
+  ap2Endpoint   String?
 }
 
 model AgentExecution {
@@ -97,6 +101,8 @@ model AgentCollaboration {
   status           CollaborationStatus @default(PENDING)
   payload          Json?
   counterPayload   Json?
+  serviceAgreementId String?          @unique
+  serviceAgreement   ServiceAgreement? @relation("Ap2CollaborationAgreement", fields: [serviceAgreementId], references: [id])
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
 }
@@ -450,6 +456,7 @@ model ServiceAgreement {
   createdAt          DateTime               @default(now())
   updatedAt          DateTime               @updatedAt
   verifications      OutcomeVerification[]
+  ap2Negotiation     AgentCollaboration?    @relation("Ap2CollaborationAgreement")
 }
 
 model Organization {

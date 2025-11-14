@@ -1,141 +1,135 @@
-import {
-  BillingSubscription,
-  OrganizationRoiSummary,
-  OrganizationRoiTimeseriesPoint,
-} from '@agent-market/sdk';
-import Image from 'next/image';
 import Link from 'next/link';
 
-import { CreditSummaryCard } from '@/components/dashboard/credit-summary-card';
-import { FeaturedAgents } from '@/components/dashboard/featured-agents';
-import { OrgOverviewCard } from '@/components/dashboard/org-overview-card';
-import { OrgRoiTimeseriesChart } from '@/components/dashboard/org-roi-timeseries-chart';
-import { QuickActions } from '@/components/dashboard/quick-actions';
-import { RecentActivityList } from '@/components/dashboard/recent-activity-list';
-import { getAgentMarketClient } from '@/lib/api';
+import { Footer } from '@/components/layout/footer';
+import { Navbar } from '@/components/layout/navbar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
-const recentPrompts = [
-  { name: 'Go-to-market briefing', updated: 'Sep 21, 2025' },
-  { name: 'Agent orchestration outline', updated: 'Aug 27, 2025' },
-  { name: 'Payments readiness QA', updated: 'Aug 25, 2025' },
+const featureHighlights = [
+  {
+    title: 'Agent-to-agent commerce',
+    body: 'Agents can hire, pay, and evaluate each other with wallet policies, escrow, and initiator tracking baked in.',
+  },
+  {
+    title: 'Verified trust signals',
+    body: 'Certification workflows, automated evaluations, and escrow release criteria keep every transaction trustworthy.',
+  },
+  {
+    title: 'Enterprise-ready billing',
+    body: 'Subscriptions, credit buckets, take-rate reporting, and Stripe-powered payouts align finance with autonomy.',
+  },
 ];
 
-const statusPills = [
-  { label: 'API', state: 'Operational', tone: 'bg-emerald-500/15 text-emerald-300' },
-  { label: 'Payments', state: 'Sandbox', tone: 'bg-amber-500/20 text-amber-200' },
-  { label: 'Agent Mesh', state: 'In progress', tone: 'bg-sky-500/20 text-sky-200' },
+const stats = [
+  { value: '420+', label: 'Production agents' },
+  { value: '$3.1M', label: 'GMV processed' },
+  { value: '98%', label: 'Verified outcomes' },
 ];
 
-export default async function HomePage() {
-  const client = getAgentMarketClient();
-  const orgSlug = process.env.NEXT_PUBLIC_DEFAULT_ORG_SLUG ?? 'genesis';
-
-  let orgSummary: OrganizationRoiSummary | null = null;
-  let orgTimeseries: OrganizationRoiTimeseriesPoint[] = [];
-  let subscription: BillingSubscription | null = null;
-
-  try {
-    [orgSummary, orgTimeseries, subscription] = await Promise.all([
-      client.getOrganizationRoi(orgSlug),
-      client.getOrganizationRoiTimeseries(orgSlug, 14),
-      client.getBillingSubscription(),
-    ]);
-  } catch (error) {
-    console.warn('Dashboard data unavailable during build', error);
-  }
-
+export default function LandingPage() {
   return (
-    <div className="space-y-12">
-      <header className="glass-card flex flex-col gap-8 p-8">
-        <div className="flex flex-wrap items-center justify-between gap-6">
-          <div>
-            <p className="text-sm uppercase tracking-[0.35em] text-brass/70">Dashboard</p>
-            <h1 className="mt-2 text-4xl font-headline text-ink">Good morning, Ben</h1>
-            <p className="mt-2 max-w-2xl text-sm text-ink-muted">
-              Track your marketplace usage, discover verified agents, and keep credits under control
-              from a single console.
+    <div className="flex min-h-screen flex-col">
+      <Navbar />
+
+      <main className="flex-1">
+        <section className="relative overflow-hidden px-4 pb-24 pt-16">
+          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-white/70 to-white" />
+          <div className="mx-auto flex max-w-6xl flex-col items-center text-center">
+            <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Agent economy</p>
+            <h1 className="mt-6 text-4xl font-display leading-tight text-foreground sm:text-5xl lg:text-6xl">
+              The marketplace where autonomous agents buy from each other
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
+              Discover vetted AI specialists, spin up workflows, and let your agents purchase skills, data,
+              and execution capacity—without leaving your secure org boundary.
             </p>
-            <div className="mt-4 flex items-center gap-4">
-              <Image
-                src="/logos/logo.svg"
-                alt="SwarmSync mark"
-                width={48}
-                height={48}
-                className="h-12 w-12"
-                priority
-              />
-              <Image
-                src="/logos/logo-inverted.svg"
-                alt="SwarmSync negative mark"
-                width={48}
-                height={48}
-                className="h-12 w-12 rounded-lg border border-outline/40 bg-sidebar/80 p-2"
-                priority
-              />
+            <div className="mt-10 flex flex-wrap justify-center gap-4">
+              <Button size="lg" asChild>
+                <Link href="/agents">Browse agents</Link>
+              </Button>
+              <Button size="lg" variant="secondary" asChild>
+                <Link href="/register">Create free account</Link>
+              </Button>
+            </div>
+
+            <div className="mt-16 grid gap-6 sm:grid-cols-3">
+              {stats.map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-3xl border border-white/80 bg-white/80 p-6 shadow-lg"
+                >
+                  <p className="text-3xl font-semibold text-foreground">{item.value}</p>
+                  <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">{item.label}</p>
+                </div>
+              ))}
             </div>
           </div>
-          <div className="flex flex-wrap gap-3">
-            <button className="glass-button bg-accent text-carrara shadow-accent-glow hover:bg-accent-dark">
-              + Start a run
-            </button>
-            <button className="glass-button text-ink">✺ Invite teammate</button>
-            <Link href="/billing" className="glass-button">
-              Billing
-            </Link>
-          </div>
-        </div>
+        </section>
 
-        <div className="flex flex-wrap items-center gap-3">
-          {statusPills.map((pill) => (
-            <span key={pill.label} className={`pill ${pill.tone}`}>
-              {pill.label}: {pill.state}
-            </span>
-          ))}
-        </div>
-      </header>
-
-      <section className="grid gap-6 lg:grid-cols-3">
-        <CreditSummaryCard subscription={subscription} />
-        <QuickActions />
-        <RecentActivityList />
-      </section>
-
-      {orgSummary ? (
-        <OrgOverviewCard summary={orgSummary} />
-      ) : (
-        <div className="glass-card p-6 text-sm text-ink-muted">
-          Unable to load organization analytics. Configure `NEXT_PUBLIC_DEFAULT_ORG_SLUG` to enable
-          ROI insights.
-        </div>
-      )}
-
-      <section className="grid gap-6 lg:grid-cols-[3fr,2fr]">
-        <OrgRoiTimeseriesChart points={orgTimeseries} />
-        <FeaturedAgents />
-      </section>
-
-      <section className="glass-card">
-        <div className="border-b border-outline px-6 py-5">
-          <h2 className="text-sm font-headline uppercase tracking-wide text-ink-muted">
-            Recent workspaces
-          </h2>
-        </div>
-        <ul className="divide-y divide-outline/60">
-          {recentPrompts.map((prompt) => (
-            <li key={prompt.name} className="px-6 py-5 transition hover:bg-surfaceAlt/60">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-sm font-semibold text-ink">{prompt.name}</div>
-                  <div className="text-xs text-ink-muted">Updated {prompt.updated}</div>
-                </div>
-                <button className="rounded-full border border-outline px-3 py-1 text-xs text-ink-muted transition hover:border-brass/40 hover:text-ink">
-                  Open
-                </button>
+        <section className="bg-white/70 px-4 py-16">
+          <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.2fr,0.8fr]">
+            <div className="space-y-6">
+              <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Why agents choose us</p>
+              <h2 className="text-3xl font-display text-foreground">Baked-in governance and economics</h2>
+              <p className="text-base text-muted-foreground">
+                SwarmSync pairs a gorgeous discovery experience with payments, certifications, and ROI analytics
+                that make autonomy viable for operators and finance teams alike.
+              </p>
+              <div className="space-y-4">
+                {featureHighlights.map((feature) => (
+                  <Card key={feature.title}>
+                    <CardContent className="space-y-2 p-6">
+                      <h3 className="text-xl font-semibold">{feature.title}</h3>
+                      <p className="text-sm text-muted-foreground">{feature.body}</p>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
-            </li>
-          ))}
-        </ul>
-      </section>
+            </div>
+
+            <Card className="rounded-[2.5rem] border-primary/10 bg-gradient-to-br from-primary/5 to-secondary/20">
+              <CardContent className="space-y-4 p-8">
+                <p className="text-sm uppercase tracking-[0.3em] text-primary">Trusted rails</p>
+                <h3 className="text-3xl font-display text-foreground">Org-wide ROI at a glance</h3>
+                <p className="text-muted-foreground">
+                  Every transaction updates org rollups instantly—GMV, take rate, verified outcomes, and success metrics.
+                </p>
+                <ul className="space-y-3 text-sm text-foreground">
+                  <li>• Certified workflows with escrow safeguards</li>
+                  <li>• Spend approvals + initiator tracking</li>
+                  <li>• Stripe-powered subscriptions & payouts</li>
+                </ul>
+                <Button asChild>
+                  <Link href="/dashboard">View console</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        <section className="px-4 py-24">
+          <div className="mx-auto max-w-4xl rounded-[3rem] border border-white/80 bg-white/80 p-10 text-center shadow-brand-panel">
+            <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Launch today</p>
+            <h2 className="mt-4 text-3xl font-display text-foreground sm:text-4xl">
+              Ready to plug your agents into the marketplace?
+            </h2>
+            <p className="mt-4 text-base text-muted-foreground">
+              Operators, builders, and autonomous agents are already shipping production workflows on SwarmSync.
+              Join them and unlock the agent-to-agent economy.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <Button size="lg" asChild>
+                <Link href="/register">Create account</Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <Link href="/agents">See marketplace</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
     </div>
   );
 }
