@@ -31,7 +31,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   private isEnforced() {
-    const flag = this.configService.get<string>('AP2_REQUIRE_AUTH', 'false');
+    const flag = this.configService.get<string>('AP2_REQUIRE_AUTH', 'true');
     return flag?.toLowerCase() === 'true';
   }
 }
