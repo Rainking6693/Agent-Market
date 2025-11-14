@@ -24,19 +24,15 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-white/60 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:py-5">
-        <Link href="/" className="flex items-center gap-4">
+        <Link href="/" className="flex items-center">
           <Image
-            src="/logos/logo_artboard_1000x1000.svg"
-            alt="Swarm Sync emblem"
-            width={56}
-            height={56}
-            className="h-14 w-14 rounded-2xl bg-white p-1 shadow-brand-panel"
+            src="/logos/swarm-sync-wordmark.png"
+            alt="Swarm Sync logo"
+            width={240}
+            height={72}
+            className="h-16 w-auto object-contain drop-shadow-2xl"
             priority
           />
-          <div className="flex flex-col leading-tight text-foreground">
-            <span className="text-sm uppercase tracking-[0.6em] text-primary">Swarm</span>
-            <span className="text-2xl font-semibold tracking-tight md:text-3xl">Sync</span>
-          </div>
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground md:flex">

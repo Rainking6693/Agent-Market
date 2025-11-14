@@ -44,19 +44,16 @@ export function Sidebar() {
   return (
     <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-outline/40 bg-sidebar p-6 text-carrara lg:flex">
       <div className="space-y-8">
-        <div className="flex items-center gap-3">
+        <div className="space-y-2">
           <Image
-            src="/logos/logo_artboard_1000x1000_inverted.svg"
+            src="/logos/swarm-sync-wordmark.png"
             alt="Swarm Sync logo"
-            width={56}
-            height={56}
-            className="h-12 w-12 rounded-2xl bg-carrara/10 p-2"
+            width={220}
+            height={60}
+            className="h-14 w-auto object-contain drop-shadow-lg"
             priority
           />
-          <div>
-            <div className="text-[0.7rem] uppercase tracking-[0.4em] text-brass/70">Swarm Sync</div>
-            <h1 className="text-2xl font-headline text-carrara">Command Center</h1>
-          </div>
+          <h1 className="text-2xl font-headline text-carrara">Command Center</h1>
         </div>
 
         {sections.map((section) => (

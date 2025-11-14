@@ -59,16 +59,15 @@ export default async function HomePage() {
               Track your marketplace usage, discover verified agents, and keep credits under control
               from a single console.
             </p>
-            <div className="mt-4 flex items-center gap-4">
+            <div className="mt-4">
               <Image
-                src="/logos/logo_artboard_1000x1000.svg"
+                src="/logos/swarm-sync-wordmark.png"
                 alt="Swarm Sync logo"
-                width={56}
-                height={56}
-                className="h-12 w-12 rounded-2xl bg-white shadow-lg"
+                width={220}
+                height={60}
+                className="h-16 w-auto object-contain drop-shadow-lg"
                 priority
               />
-              <span className="text-xl font-semibold text-ink">Swarm Sync</span>
             </div>
           </div>
           <div className="flex flex-wrap gap-3">

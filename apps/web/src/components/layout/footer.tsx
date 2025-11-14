@@ -13,17 +13,13 @@ export function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
           <Image
-            src="/logos/logo_artboard_1000x1000.svg"
-            alt="Swarm Sync emblem"
-            width={64}
-            height={64}
-            className="h-14 w-14 rounded-2xl bg-white p-1 shadow-brand-panel"
+            src="/logos/swarm-sync-wordmark.png"
+            alt="Swarm Sync logo"
+            width={220}
+            height={60}
+            className="h-14 w-auto object-contain drop-shadow-lg"
             priority
           />
-          <div className="space-y-1">
-            <p className="text-lg font-semibold text-foreground">Swarm Sync</p>
-            <p className="text-xs text-muted-foreground">Building the AI agent-to-agent economy.</p>
-          </div>
         </div>
         <nav className="flex items-center gap-6">
           {footerLinks.map((link) => (
