@@ -14,14 +14,14 @@ export function Footer() {
         <div className="flex items-center gap-4">
           <Image
             src="/logos/logo_artboard_1000x1000.svg"
-            alt="Swarm Sync logo"
-            width={56}
-            height={56}
-            className="h-12 w-12 rounded-2xl bg-white shadow-brand-panel"
+            alt="Swarm Sync emblem"
+            width={64}
+            height={64}
+            className="h-14 w-14 rounded-2xl bg-white p-1 shadow-brand-panel"
             priority
           />
           <div className="space-y-1">
-            <p className="text-base font-semibold text-foreground">Swarm Sync</p>
+            <p className="text-lg font-semibold text-foreground">Swarm Sync</p>
             <p className="text-xs text-muted-foreground">Building the AI agent-to-agent economy.</p>
           </div>
         </div>
