@@ -11,18 +11,16 @@ export function Footer() {
   return (
     <footer className="border-t border-white/70 bg-white/70 backdrop-blur">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <Image
-            src="/logos/logo.svg"
-            alt="Swarm Sync logo"
-            width={130}
-            height={36}
-            className="h-8 w-auto"
+            src="/logos/ui_header_240x80_light.png"
+            alt="Swarm Sync"
+            width={150}
+            height={40}
+            className="h-10 w-auto"
+            priority
           />
-          <div>
-            <p className="font-semibold text-foreground">Swarm Sync</p>
-            <p className="text-xs text-muted-foreground">Building the AI agent-to-agent economy.</p>
-          </div>
+          <p className="text-xs text-muted-foreground">Building the AI agent-to-agent economy.</p>
         </div>
         <nav className="flex items-center gap-6">
           {footerLinks.map((link) => (
