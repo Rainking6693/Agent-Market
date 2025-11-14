@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { AgentsModule } from './agents/agents.module.js';
+import { AP2Module } from './ap2/ap2.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { BillingModule } from './billing/billing.module.js';
 import { DatabaseModule } from './database/database.module.js';
@@ -22,6 +23,7 @@ import { WorkflowsModule } from './workflows/workflows.module.js';
     AgentsModule,
     BillingModule,
     PaymentsModule,
+    AP2Module,
     TrustModule,
     WorkflowsModule,
     QualityModule,

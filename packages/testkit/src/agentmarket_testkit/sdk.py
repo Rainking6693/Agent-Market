@@ -117,6 +117,11 @@ class AgentMarketSDK:
         response.raise_for_status()
         return response.json()
 
+    async def get_wallet(self, wallet_id: str) -> dict[str, Any]:
+        response = await self._client.get(f"/wallets/{wallet_id}")
+        response.raise_for_status()
+        return response.json()
+
     async def list_reviews(self, agent_id: str) -> list[dict[str, Any]]:
         response = await self._client.get(f"/agents/{agent_id}/reviews")
         response.raise_for_status()
@@ -144,5 +149,38 @@ class AgentMarketSDK:
 
     async def list_workflow_runs(self, workflow_id: str) -> list[dict[str, Any]]:
         response = await self._client.get(f"/workflows/{workflow_id}/runs")
+        response.raise_for_status()
+        return response.json()
+
+    async def list_billing_plans(self) -> list[dict[str, Any]]:
+        response = await self._client.get("/billing/plans")
+        response.raise_for_status()
+        return response.json()
+
+    async def get_billing_subscription(self) -> dict[str, Any] | None:
+        response = await self._client.get("/billing/subscription")
+        if response.status_code == 204:
+            return None
+        response.raise_for_status()
+        return response.json()
+
+    async def apply_billing_plan(self, plan_slug: str) -> dict[str, Any]:
+        response = await self._client.post("/billing/subscription/apply", json={"planSlug": plan_slug})
+        response.raise_for_status()
+        return response.json()
+
+    async def create_checkout_session(
+        self,
+        plan_slug: str,
+        *,
+        success_url: str | None = None,
+        cancel_url: str | None = None,
+    ) -> dict[str, Any]:
+        payload: dict[str, Any] = {"planSlug": plan_slug}
+        if success_url:
+            payload["successUrl"] = success_url
+        if cancel_url:
+            payload["cancelUrl"] = cancel_url
+        response = await self._client.post("/billing/subscription/checkout", json=payload)
         response.raise_for_status()
         return response.json()

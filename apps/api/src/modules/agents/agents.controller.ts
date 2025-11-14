@@ -1,12 +1,14 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { AgentStatus, AgentVisibility } from '@prisma/client';
 
 import { AgentsService } from './agents.service.js';
+import { AgentDiscoveryQueryDto } from './dto/agent-discovery-query.dto.js';
 import { CreateAgentDto } from './dto/create-agent.dto.js';
 import { ExecuteAgentDto } from './dto/execute-agent.dto.js';
 import { ReviewAgentDto } from './dto/review-agent.dto.js';
 import { SubmitForReviewDto } from './dto/submit-for-review.dto.js';
 import { UpdateAgentDto } from './dto/update-agent.dto.js';
+import { UpdateAgentBudgetDto } from './dto/update-budget.dto.js';
 
 @Controller('agents')
 export class AgentsController {
@@ -30,6 +32,36 @@ export class AgentsController {
       category,
       tag,
     });
+  }
+
+  @Get('discover')
+  discover(@Query() query: AgentDiscoveryQueryDto) {
+    return this.agentsService.discover(query);
+  }
+
+  @Get(':id/schema')
+  getSchema(@Param('id') id: string) {
+    return this.agentsService.getAgentSchema(id);
+  }
+
+  @Get(':id/a2a-transactions')
+  listA2aTransactions(@Param('id') id: string) {
+    return this.agentsService.listAgentA2aTransactions(id);
+  }
+
+  @Get(':id/network')
+  getNetwork(@Param('id') id: string) {
+    return this.agentsService.getAgentNetwork(id);
+  }
+
+  @Get(':id/budget')
+  getBudget(@Param('id') id: string) {
+    return this.agentsService.getAgentBudget(id);
+  }
+
+  @Patch(':id/budget')
+  updateBudget(@Param('id') id: string, @Body() body: UpdateAgentBudgetDto) {
+    return this.agentsService.updateAgentBudget(id, body);
   }
 
   @Get(':id')

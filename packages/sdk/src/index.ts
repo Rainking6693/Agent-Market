@@ -80,6 +80,20 @@ export interface CreateWalletPayload {
   currency?: string;
 }
 
+export interface EscrowRecord {
+  id: string;
+  sourceWalletId: string;
+  destinationWalletId: string;
+  transactionId: string;
+  status: string;
+  amount: string;
+  releaseCondition?: string | null;
+  createdAt: string;
+  releasedAt?: string | null;
+  refundedAt?: string | null;
+  serviceAgreement?: ServiceAgreementRecord | null;
+}
+
 export interface Transaction {
   id: string;
   walletId: string;
@@ -90,6 +104,228 @@ export interface Transaction {
   metadata?: Record<string, unknown> | null;
   createdAt: string;
   settledAt?: string | null;
+}
+
+export type BudgetApprovalMode = 'AUTO' | 'MANUAL' | 'ESCROW';
+
+export interface AgentBudgetSettings {
+  agentId: string;
+  walletId: string;
+  currency: string;
+  monthlyLimit: number;
+  remaining: number;
+  spentThisPeriod: number;
+  approvalMode: BudgetApprovalMode;
+  perTransactionLimit: number | null;
+  approvalThreshold: number | null;
+  autoReload: boolean;
+  resetsOn: string | null;
+  updatedAt: string | null;
+}
+
+export interface UpdateAgentBudgetPayload {
+  monthlyLimit?: number;
+  perTransactionLimit?: number | null;
+  approvalThreshold?: number | null;
+  approvalMode?: BudgetApprovalMode;
+  autoReload?: boolean;
+}
+
+export interface AgentNetworkNode {
+  id: string;
+  name: string;
+  slug: string;
+  isPrimary: boolean;
+  interactions: number;
+  dealsAsBuyer: number;
+  dealsAsSeller: number;
+  lastInteraction: string | null;
+}
+
+export interface AgentNetworkEdge {
+  id: string;
+  source: string;
+  target: string;
+  transactionCount: number;
+  totalValue: number;
+  latestStatus: string;
+  updatedAt: string;
+}
+
+export interface AgentNetworkGraph {
+  primaryAgentId: string;
+  nodes: AgentNetworkNode[];
+  edges: AgentNetworkEdge[];
+  updatedAt: string;
+}
+
+export interface AgentReference {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export interface AgentA2aTransactionRecord {
+  id: string;
+  status: string;
+  requesterAgent: AgentReference | null;
+  responderAgent: AgentReference | null;
+  requestedService: string | null;
+  proposedBudget: number | null;
+  counterPrice: number | null;
+  amount: number | null;
+  currency: string;
+  transaction?: {
+    id: string;
+    status: string;
+    settledAt?: string | null;
+    createdAt: string;
+  } | null;
+  serviceAgreementId: string | null;
+  escrowId: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Ap2NegotiationRecord {
+  id: string;
+  requesterAgentId: string;
+  responderAgentId: string;
+  status: string;
+  requestedService?: string | null;
+  proposedBudget?: number | null;
+  requirements?: Record<string, unknown> | null;
+  payload: Record<string, unknown> | null;
+  counterPayload: Record<string, unknown> | null;
+  counter?: Record<string, unknown> | null;
+  requesterAgent?: {
+    id: string;
+    name: string;
+    slug: string;
+  } | null;
+  responderAgent?: {
+    id: string;
+    name: string;
+    slug: string;
+  } | null;
+  serviceAgreementId: string | null;
+  escrowId?: string | null;
+  transaction?: {
+    id: string;
+    status: string;
+    amount?: string;
+    settledAt?: string | null;
+  } | null;
+  verificationStatus?: string | null;
+  verificationUpdatedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateAp2NegotiationRequest {
+  requesterAgentId: string;
+  responderAgentId: string;
+  requestedService: string;
+  budget: number;
+  requirements?: Record<string, unknown>;
+  notes?: string;
+}
+
+export interface RespondAp2NegotiationRequest {
+  negotiationId: string;
+  responderAgentId: string;
+  status: 'ACCEPTED' | 'REJECTED' | 'COUNTERED';
+  price?: number;
+  estimatedDelivery?: string;
+  terms?: Record<string, unknown>;
+  notes?: string;
+}
+
+export interface ServiceDeliveryPayload {
+  negotiationId: string;
+  responderAgentId: string;
+  result: Record<string, unknown>;
+  evidence?: Record<string, unknown>;
+  notes?: string;
+}
+
+export interface Ap2TransactionRecord extends Ap2NegotiationRecord {
+  transaction?: Transaction | null;
+}
+
+export interface Ap2TransactionStatusResponse {
+  transaction: Transaction;
+  escrow: EscrowRecord;
+  negotiation: Ap2NegotiationRecord | null;
+}
+
+export interface AgentDiscoveryFilters {
+  capability?: string;
+  maxPriceCents?: number;
+  minRating?: number;
+  certificationRequired?: boolean;
+  limit?: number;
+  cursor?: string;
+}
+
+export interface AgentDiscoveryCatalogEntry {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  categories: string[];
+  tags: string[];
+  pricing: {
+    model: string;
+    basePriceCents: number | null;
+    currency: string;
+  };
+  ap2: {
+    endpoint: string | null;
+  };
+  schemas: {
+    input: Record<string, unknown> | null;
+    output: Record<string, unknown> | null;
+  };
+  reputation: {
+    rating: number;
+    trustScore: number;
+    successRate: number;
+    totalExecutions: number;
+    totalA2a: number;
+    totalSpendUsd: string;
+  };
+  certification: {
+    certified: boolean;
+    checklistId: string | null;
+    lastCertifiedAt: string | null;
+  };
+  updatedAt: string;
+}
+
+export interface AgentDiscoveryResponse {
+  total: number;
+  nextCursor: string | null;
+  agents: AgentDiscoveryCatalogEntry[];
+}
+
+export interface AgentSchemaDefinition {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  categories: string[];
+  tags: string[];
+  pricing: {
+    model: string;
+    basePriceCents: number | null;
+    currency: string;
+  };
+  ap2Endpoint: string | null;
+  schemas: {
+    input: Record<string, unknown> | null;
+    output: Record<string, unknown> | null;
+  };
 }
 
 export interface InitiateAp2PaymentPayload {
@@ -339,6 +575,38 @@ export class AgentMarketClient {
       .json<Agent[]>();
   }
 
+  async discoverAgents(filters?: AgentDiscoveryFilters) {
+    const params: Record<string, string> = {};
+    if (filters?.capability) {
+      params.capability = filters.capability;
+    }
+    if (typeof filters?.maxPriceCents === 'number') {
+      params.maxPriceCents = String(filters.maxPriceCents);
+    }
+    if (typeof filters?.minRating === 'number') {
+      params.minRating = String(filters.minRating);
+    }
+    if (typeof filters?.certificationRequired === 'boolean') {
+      params.certificationRequired = String(filters.certificationRequired);
+    }
+    if (typeof filters?.limit === 'number') {
+      params.limit = String(filters.limit);
+    }
+    if (filters?.cursor) {
+      params.cursor = filters.cursor;
+    }
+
+    return this.request
+      .get('agents/discover', {
+        searchParams: Object.keys(params).length ? params : undefined,
+      })
+      .json<AgentDiscoveryResponse>();
+  }
+
+  async getAgentSchema(id: string) {
+    return this.request.get(`agents/${id}/schema`).json<AgentSchemaDefinition>();
+  }
+
   async getAgent(id: string) {
     return this.request.get(`agents/${id}`).json<Agent>();
   }
@@ -349,6 +617,22 @@ export class AgentMarketClient {
 
   async updateAgent(id: string, payload: Partial<AgentPayload>) {
     return this.request.put(`agents/${id}`, { json: payload }).json<Agent>();
+  }
+
+  async getAgentBudget(agentId: string) {
+    return this.request.get(`agents/${agentId}/budget`).json<AgentBudgetSettings>();
+  }
+
+  async updateAgentBudget(agentId: string, payload: UpdateAgentBudgetPayload) {
+    return this.request.patch(`agents/${agentId}/budget`, { json: payload }).json<AgentBudgetSettings>();
+  }
+
+  async listAgentA2aTransactions(agentId: string) {
+    return this.request.get(`agents/${agentId}/a2a-transactions`).json<AgentA2aTransactionRecord[]>();
+  }
+
+  async getAgentNetwork(agentId: string) {
+    return this.request.get(`agents/${agentId}/network`).json<AgentNetworkGraph>();
   }
 
   async submitAgent(id: string, reviewerId: string, notes?: string) {
@@ -428,6 +712,48 @@ export class AgentMarketClient {
         json: { escrowId, memo },
       })
       .json();
+  }
+
+  async initiateAp2Negotiation(payload: CreateAp2NegotiationRequest) {
+    return this.request.post('ap2/negotiate', { json: payload }).json<Ap2NegotiationRecord>();
+  }
+
+  async respondToAp2Negotiation(payload: RespondAp2NegotiationRequest) {
+    return this.request.post('ap2/respond', { json: payload }).json<Ap2NegotiationRecord>();
+  }
+
+  async deliverAp2Service(payload: ServiceDeliveryPayload) {
+    return this.request.post('ap2/deliver', { json: payload }).json<OutcomeVerificationRecord>();
+  }
+
+  async getAp2Negotiation(id: string) {
+    return this.request.get(`ap2/negotiations/${id}`).json<Ap2NegotiationRecord>();
+  }
+
+  async listAp2Negotiations(agentId?: string) {
+    return this.request
+      .get('ap2/negotiations/my', {
+        searchParams: agentId ? { agentId } : undefined,
+      })
+      .json<Ap2NegotiationRecord[]>();
+  }
+
+  async cancelAp2Negotiation(id: string) {
+    return this.request
+      .patch(`ap2/negotiations/${id}/cancel`)
+      .json<{ id: string; status: string }>();
+  }
+
+  async getAp2Transaction(transactionId: string) {
+    return this.request.get(`ap2/transactions/${transactionId}`).json<Ap2TransactionStatusResponse>();
+  }
+
+  async listAp2Transactions(agentId: string) {
+    return this.request
+      .get('ap2/transactions/my', {
+        searchParams: { agentId },
+      })
+      .json<Ap2TransactionRecord[]>();
   }
 
   async createCollaborationRequest(payload: {

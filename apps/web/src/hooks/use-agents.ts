@@ -1,0 +1,12 @@
+'use client';
+
+import { useQuery } from '@tanstack/react-query';
+
+import { agentsApi, type AgentListFilters } from '@/lib/api';
+
+export const useAgents = (filters?: AgentListFilters) => {
+  return useQuery({
+    queryKey: ['agents', filters],
+    queryFn: () => agentsApi.list(filters),
+  });
+};

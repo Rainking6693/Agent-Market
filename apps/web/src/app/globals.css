@@ -2,28 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  min-height: 100%;
-}
+@layer base {
+  :root {
+    --background: 36 57% 97%;
+    --foreground: 24 15% 15%;
+    --muted: 30 32% 90%;
+    --muted-foreground: 25 18% 46%;
+    --card: 0 0% 100%;
+    --card-foreground: 24 15% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 24 15% 15%;
+    --border: 27 32% 88%;
+    --input: 27 32% 88%;
+    --primary: 244 66% 62%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 32 36% 92%;
+    --secondary-foreground: 24 20% 30%;
+    --accent: 203 89% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --ring: 244 66% 62%;
+    --radius: 1.25rem;
+  }
 
-body {
-  font-family: var(--font-body), Georgia, serif;
-  background:
-    radial-gradient(120% 120% at 20% 10%, rgba(196, 154, 108, 0.18) 0%, rgba(196, 154, 108, 0) 65%),
-    radial-gradient(100% 100% at 80% 0%, rgba(140, 123, 255, 0.18) 0%, rgba(140, 123, 255, 0) 55%),
-    linear-gradient(180deg, #f6efe6 0%, #efe2d3 45%, #ded0c0 100%);
-  color: #121212;
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body), 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont,
+      'Segoe UI', sans-serif;
+    background:
+      radial-gradient(120% 120% at 15% 10%, rgba(196, 154, 108, 0.12) 0%, rgba(196, 154, 108, 0) 65%),
+      radial-gradient(80% 80% at 75% 0%, rgba(92, 161, 255, 0.15) 0%, rgba(92, 161, 255, 0) 60%),
+      linear-gradient(180deg, #fdfaf5 0%, #f5ece0 65%, #efe2d3 100%);
+    min-height: 100vh;
+  }
 }
 
 .glass-card {
-  @apply rounded-3xl border border-outline bg-surface shadow-brand-panel;
+  @apply rounded-3xl border border-[#e8dccc] bg-white/80 shadow-brand-panel backdrop-blur;
 }
 
 .glass-button {
-  @apply inline-flex items-center gap-2 rounded-full border border-outline bg-surfaceAlt/60 px-4 py-2 text-sm font-semibold text-ink transition hover:border-brass/30 hover:bg-surfaceAlt;
+  @apply inline-flex items-center gap-2 rounded-full border border-[#e9dccc] bg-white/70 px-4 py-2 text-sm font-semibold text-foreground transition hover:border-[#d5c1ac] hover:bg-white;
 }
 
 .pill {
-  @apply inline-flex items-center rounded-full border border-outline bg-surfaceAlt/70 px-3 py-1 text-xs font-medium uppercase tracking-wide text-ink-muted;
+  @apply inline-flex items-center rounded-full border border-[#e4d8c8] bg-[#f9f3ea] px-3 py-1 text-xs font-medium uppercase tracking-wide text-[#6f6255];
 }

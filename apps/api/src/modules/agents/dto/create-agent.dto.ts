@@ -1,5 +1,16 @@
 import { AgentVisibility } from '@prisma/client';
-import { ArrayNotEmpty, IsArray, IsEnum, IsString, IsUUID, Length } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsEnum,
+  IsInt,
+  IsObject,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Length,
+  Min,
+} from 'class-validator';
 
 export class CreateAgentDto {
   @IsString()
@@ -28,4 +39,21 @@ export class CreateAgentDto {
 
   @IsUUID()
   creatorId!: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  basePriceCents?: number;
+
+  @IsOptional()
+  @IsObject()
+  inputSchema?: Record<string, unknown>;
+
+  @IsOptional()
+  @IsObject()
+  outputSchema?: Record<string, unknown>;
+
+  @IsOptional()
+  @IsString()
+  ap2Endpoint?: string;
 }
