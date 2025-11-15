@@ -1,13 +1,15 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/hooks/use-auth';
+import { useOwnedAgents } from '@/hooks/use-owned-agents';
 import { ap2Api } from '@/lib/api';
 
 interface RequestServiceFormProps {
@@ -17,12 +19,19 @@ interface RequestServiceFormProps {
 
 export function RequestServiceForm({ responderAgentId, responderAgentName }: RequestServiceFormProps) {
   const { isAuthenticated } = useAuth();
+  const { data: ownedAgents = [], isLoading } = useOwnedAgents();
   const [requesterAgentId, setRequesterAgentId] = useState('');
   const [requestedService, setRequestedService] = useState(`Engage ${responderAgentName}`);
   const [budget, setBudget] = useState('250');
   const [notes, setNotes] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    if (!requesterAgentId && ownedAgents.length > 0) {
+      setRequesterAgentId(ownedAgents[0].id);
+    }
+  }, [ownedAgents, requesterAgentId]);
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -61,6 +70,28 @@ export function RequestServiceForm({ responderAgentId, responderAgentName }: Req
     );
   }
 
+  if (isLoading) {
+    return (
+      <div className="rounded-2xl border border-outline/40 bg-white/70 p-6 text-sm text-ink">
+        Loading your agents...
+      </div>
+    );
+  }
+
+  if (!ownedAgents.length) {
+    return (
+      <div className="space-y-3 rounded-2xl border border-dashed border-outline/60 bg-white/60 p-6 text-sm text-ink">
+        <p className="font-semibold">No requester agents found</p>
+        <p className="text-xs text-ink-muted">
+          Deploy an agent from the console first, then return here to initiate AP2 negotiations.
+        </p>
+        <Button asChild>
+          <a href="/agents/new">Create agent</a>
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4 rounded-[2rem] border border-outline/40 bg-white/80 p-6 shadow-brand-panel">
       <div>
@@ -68,18 +99,24 @@ export function RequestServiceForm({ responderAgentId, responderAgentName }: Req
           Request service
         </h3>
         <p className="text-xs text-muted-foreground">
-          Provide a requester agent ID (from your org), a brief objective, and a provisional budget.
+          Pick which of your agents is requesting help, define the service, and set a provisional budget.
         </p>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="requester-agent-id">Requester agent ID</Label>
-        <Input
-          id="requester-agent-id"
-          placeholder="UUID of your agent"
-          value={requesterAgentId}
-          onChange={(event) => setRequesterAgentId(event.target.value)}
-        />
+        <Label>Requester agent</Label>
+        <Select value={requesterAgentId} onValueChange={setRequesterAgentId}>
+          <SelectTrigger className="rounded-full">
+            <SelectValue placeholder="Choose an agent" />
+          </SelectTrigger>
+          <SelectContent>
+            {ownedAgents.map((agent) => (
+              <SelectItem key={agent.id} value={agent.id}>
+                {agent.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-2">
@@ -121,8 +158,9 @@ export function RequestServiceForm({ responderAgentId, responderAgentName }: Req
         onClick={() => mutation.mutate()}
         disabled={
           mutation.isPending ||
-          !requesterAgentId.trim() ||
+          !requesterAgentId ||
           !requestedService.trim() ||
+          Number.isNaN(Number(budget)) ||
           Number(budget) <= 0
         }
       >

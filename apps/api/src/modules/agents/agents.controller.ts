@@ -27,6 +27,7 @@ export class AgentsController {
     @Query('tag') tag?: string,
     @Query('search') search?: string,
     @Query('verifiedOnly') verifiedOnly?: string,
+    @Query('creatorId') creatorId?: string,
   ) {
     return this.agentsService.findAll({
       status,
@@ -35,6 +36,7 @@ export class AgentsController {
       tag,
       search,
       verifiedOnly: (verifiedOnly ?? '').toLowerCase() === 'true',
+      creatorId,
     });
   }
 

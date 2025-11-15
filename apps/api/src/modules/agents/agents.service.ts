@@ -77,6 +77,7 @@ export class AgentsService {
     tag?: string;
     search?: string;
     verifiedOnly?: boolean;
+    creatorId?: string;
   }) {
     const where: Prisma.AgentWhereInput = {};
     if (params?.status) {
@@ -104,6 +105,9 @@ export class AgentsService {
         { name: { contains: term, mode: 'insensitive' } },
         { description: { contains: term, mode: 'insensitive' } },
       ];
+    }
+    if (params?.creatorId) {
+      where.creatorId = params.creatorId;
     }
 
     const agents = await this.prisma.agent.findMany({

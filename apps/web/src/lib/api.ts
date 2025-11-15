@@ -93,6 +93,7 @@ export interface AgentListFilters {
   limit?: number;
   tag?: string;
   verifiedOnly?: boolean;
+  creatorId?: string;
 }
 
 export const authApi = {
@@ -126,6 +127,7 @@ export const agentsApi = {
           ...(filters?.limit ? { limit: String(filters.limit) } : {}),
           ...(filters?.tag ? { tag: filters.tag } : {}),
           ...(filters?.verifiedOnly ? { verifiedOnly: 'true' } : {}),
+          ...(filters?.creatorId ? { creatorId: filters.creatorId } : {}),
         },
       })
       .json<Agent[]>(),
