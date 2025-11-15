@@ -176,4 +176,16 @@ export const billingApi = {
       .json<{ checkoutUrl: string | null }>(),
 };
 
+export const walletsApi = {
+  getUserWallet: (userId: string) => api.get(`wallets/user/${userId}`).json(),
+  getAgentWallet: (agentId: string) => api.get(`wallets/agent/${agentId}`).json(),
+  getWallet: (walletId: string) => api.get(`wallets/${walletId}`).json(),
+  fundWallet: (walletId: string, amount: number, reference?: string) =>
+    api
+      .post(`wallets/${walletId}/fund`, {
+        json: { amount, reference },
+      })
+      .json(),
+};
+
 export { API_BASE_URL, api };

@@ -62,9 +62,9 @@ const config: Config = {
         'accent-glow': '0 20px 45px rgba(140, 123, 255, 0.28)',
       },
       fontFamily: {
-        display: ['var(--font-display)', 'sans-serif'],
-        body: ['var(--font-body)', 'sans-serif'],
-        headline: ['var(--font-display)', 'sans-serif'],
+        display: ['Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', 'serif'],
+        body: ['Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', 'serif'],
+        headline: ['Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', 'serif'],
       },
       keyframes: {
         'accordion-down': {
