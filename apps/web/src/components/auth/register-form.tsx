@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/use-auth';
 
+import { GoogleSignInButton } from './google-signin-button';
+
 const schema = z.object({
   displayName: z.string().min(3, 'Name must be at least 3 characters'),
   email: z.string().email('Invalid email address'),
@@ -19,7 +21,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export function RegisterForm() {
-  const { register: registerUser, registerStatus } = useAuth();
+  const { register: registerUser, registerStatus, loginWithGoogle, googleLoginStatus } = useAuth();
   const {
     register,
     handleSubmit,
@@ -70,6 +72,18 @@ export function RegisterForm() {
           'Create account'
         )}
       </Button>
+
+      <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-muted-foreground">
+        <div className="h-px flex-1 bg-border" />
+        or
+        <div className="h-px flex-1 bg-border" />
+      </div>
+
+      <GoogleSignInButton
+        label="Sign up with Google"
+        status={googleLoginStatus}
+        onToken={(token) => loginWithGoogle(token)}
+      />
     </form>
   );
 }

@@ -1,9 +1,12 @@
 import { randomUUID } from 'node:crypto';
 
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { hash, verify } from 'argon2';
+import { OAuth2Client } from 'google-auth-library';
 
+import { GoogleLoginDto } from './dto/google-login.dto.js';
 import { LoginDto } from './dto/login.dto.js';
 import { RegisterUserDto } from './dto/register-user.dto.js';
 
@@ -11,13 +14,29 @@ export interface AuthenticatedUser {
   id: string;
   email: string;
   displayName: string;
+  kind?: 'user' | 'service_account';
+  serviceAccountId?: string;
+  organizationId?: string;
+  agentId?: string;
+  scopes?: string[];
 }
 
 @Injectable()
 export class AuthService {
   private readonly users = new Map<string, { user: AuthenticatedUser; passwordHash: string }>();
 
-  constructor(private readonly jwtService: JwtService) {}
+  private readonly googleClientId?: string;
+  private oauthClient?: OAuth2Client;
+
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {
+    this.googleClientId = this.configService.get<string>('GOOGLE_OAUTH_CLIENT_ID');
+    if (this.googleClientId) {
+      this.oauthClient = new OAuth2Client(this.googleClientId);
+    }
+  }
 
   async register(data: RegisterUserDto) {
     const { email, password, displayName } = data;
@@ -27,13 +46,7 @@ export class AuthService {
     }
 
     const passwordHash = await hash(password);
-    const user = {
-      id: randomUUID(),
-      email,
-      displayName,
-    };
-
-    this.users.set(email, { user, passwordHash });
+    const user = this.createUserRecord(email, displayName, passwordHash);
     return this.buildAuthResponse(user);
   }
 
@@ -52,11 +65,72 @@ export class AuthService {
     return this.buildAuthResponse(existing.user);
   }
 
+  async loginWithGoogle(data: GoogleLoginDto) {
+    if (!this.oauthClient || !this.googleClientId) {
+      throw new UnauthorizedException('Google login is not configured');
+    }
+
+    const payload = await this.validateGoogleToken(data.token);
+
+    const displayName = payload.name || payload.email.split('@')[0];
+    const user = this.ensureUser(payload.email, displayName);
+
+    return this.buildAuthResponse(user);
+  }
+
+  private async validateGoogleToken(token: string) {
+    if (!this.oauthClient || !this.googleClientId) {
+      throw new UnauthorizedException('Google login is not configured');
+    }
+
+    // Support both ID tokens and OAuth access tokens.
+    let payload = null;
+    try {
+      const ticket = await this.oauthClient.verifyIdToken({
+        idToken: token,
+        audience: this.googleClientId,
+      });
+      payload = ticket.getPayload();
+    } catch (err) {
+      const tokenInfo = await this.oauthClient.getTokenInfo(token);
+      payload = {
+        email: tokenInfo.email,
+        name: tokenInfo.email,
+      };
+    }
+
+    if (!payload?.email) {
+      throw new UnauthorizedException('Invalid Google token');
+    }
+
+    return payload;
+  }
+
+  private ensureUser(email: string, displayName: string) {
+    const existing = this.users.get(email);
+    if (existing) {
+      return existing.user;
+    }
+    return this.createUserRecord(email, displayName, '');
+  }
+
+  private createUserRecord(email: string, displayName: string, passwordHash: string) {
+    const user: AuthenticatedUser = {
+      id: randomUUID(),
+      email,
+      displayName,
+      kind: 'user',
+    };
+    this.users.set(email, { user, passwordHash });
+    return user;
+  }
+
   private buildAuthResponse(user: AuthenticatedUser) {
     const payload = {
       sub: user.id,
       email: user.email,
       displayName: user.displayName,
+      kind: user.kind ?? 'user',
     };
 
     const accessToken = this.jwtService.sign(payload);

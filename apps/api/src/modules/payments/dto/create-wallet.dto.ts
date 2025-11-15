@@ -14,6 +14,10 @@ export class CreateWalletDto {
   ownerAgentId?: string;
 
   @IsOptional()
+  @IsUUID()
+  organizationId?: string;
+
+  @IsOptional()
   @IsString()
   currency?: string;
 }

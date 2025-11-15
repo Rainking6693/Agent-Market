@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { IsOptional, IsString } from 'class-validator';
+import { IsInt, IsOptional, IsString, Min } from 'class-validator';
 
 import { BillingService } from './billing.service.js';
 
@@ -16,6 +16,19 @@ class CheckoutRequestDto {
   cancelUrl?: string;
 }
 
+class TopUpRequestDto {
+  @IsInt()
+  @Min(1000)
+  amountCents!: number;
+
+  @IsOptional()
+  @IsString()
+  successUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  cancelUrl?: string;
+}
 
 @Controller('billing')
 export class BillingController {
@@ -39,5 +52,10 @@ export class BillingController {
   @Post('subscription/checkout')
   createCheckout(@Body() body: CheckoutRequestDto) {
     return this.billingService.createCheckoutSession(body.planSlug, body.successUrl, body.cancelUrl);
+  }
+
+  @Post('topup')
+  createTopUp(@Body() body: TopUpRequestDto) {
+    return this.billingService.createTopUpSession(body.amountCents, body.successUrl, body.cancelUrl);
   }
 }

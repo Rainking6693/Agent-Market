@@ -25,12 +25,16 @@ export class AgentsController {
     @Query('visibility') visibility?: AgentVisibility,
     @Query('category') category?: string,
     @Query('tag') tag?: string,
+    @Query('search') search?: string,
+    @Query('verifiedOnly') verifiedOnly?: string,
   ) {
     return this.agentsService.findAll({
       status,
       visibility,
       category,
       tag,
+      search,
+      verifiedOnly: (verifiedOnly ?? '').toLowerCase() === 'true',
     });
   }
 
@@ -62,6 +66,11 @@ export class AgentsController {
   @Patch(':id/budget')
   updateBudget(@Param('id') id: string, @Body() body: UpdateAgentBudgetDto) {
     return this.agentsService.updateAgentBudget(id, body);
+  }
+
+  @Get('slug/:slug')
+  findBySlug(@Param('slug') slug: string) {
+    return this.agentsService.findBySlug(slug);
   }
 
   @Get(':id')

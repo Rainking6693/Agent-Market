@@ -16,6 +16,8 @@ export interface AgentResponse {
   categories: string[];
   tags: string[];
   pricingModel: string;
+  basePriceCents: number | null;
+  ap2Endpoint: string | null;
   creatorId: string;
   createdAt: string;
   updatedAt: string;
@@ -35,6 +37,8 @@ export const presentAgent = (agent: Agent): AgentResponse => ({
   categories: agent.categories,
   tags: agent.tags,
   pricingModel: agent.pricingModel,
+  basePriceCents: agent.basePriceCents,
+  ap2Endpoint: agent.ap2Endpoint,
   creatorId: agent.creatorId,
   createdAt: agent.createdAt.toISOString(),
   updatedAt: agent.updatedAt.toISOString(),

@@ -1,6 +1,7 @@
 import { BillingPlan, BillingSubscription } from '@agent-market/sdk';
 
 import { PlanCard } from '@/components/billing/plan-card';
+import { TopUpCard } from '@/components/billing/top-up-card';
 import { getAgentMarketClient } from '@/lib/server-client';
 
 export default async function BillingPage() {
@@ -51,6 +52,8 @@ export default async function BillingPage() {
           />
         ))}
       </section>
+
+      <TopUpCard />
     </div>
   );
 }

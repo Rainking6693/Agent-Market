@@ -25,11 +25,16 @@ export class WalletsService {
       throw new BadRequestException('ownerAgentId must be provided for agent wallets');
     }
 
+    if (dto.organizationId && dto.ownerType !== WalletOwnerType.PLATFORM) {
+      throw new BadRequestException('organizationId is only valid for platform wallets');
+    }
+
     const wallet = await this.prisma.wallet.create({
       data: {
         ownerType: dto.ownerType,
         ownerUserId: dto.ownerUserId,
         ownerAgentId: dto.ownerAgentId,
+        organizationId: dto.organizationId,
         currency: dto.currency ?? 'USD',
         status: WalletStatus.ACTIVE,
       },
@@ -72,6 +77,25 @@ export class WalletsService {
     return this.createWallet({
       ownerType: WalletOwnerType.USER,
       ownerUserId: userId,
+      currency,
+    });
+  }
+
+  async ensureOrganizationWallet(organizationId: string, currency = 'USD') {
+    const wallet = await this.prisma.wallet.findFirst({
+      where: {
+        organizationId,
+        status: WalletStatus.ACTIVE,
+      },
+    });
+
+    if (wallet) {
+      return wallet;
+    }
+
+    return this.createWallet({
+      ownerType: WalletOwnerType.PLATFORM,
+      organizationId,
       currency,
     });
   }

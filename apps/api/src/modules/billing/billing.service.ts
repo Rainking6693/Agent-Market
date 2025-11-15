@@ -1,8 +1,10 @@
 import { billingPlanConfigs } from '@agent-market/config';
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
+import { InvoiceStatus, SubscriptionStatus } from '@prisma/client';
 import Stripe from 'stripe';
 
 import { PrismaService } from '../database/prisma.service.js';
+import { WalletsService } from '../payments/wallets.service.js';
 
 const DEFAULT_ORG_SLUG = process.env.DEFAULT_ORG_SLUG ?? 'genesis';
 const STRIPE_WEB_URL = process.env.STRIPE_WEB_URL ?? process.env.WEB_URL ?? 'http://localhost:3000';
@@ -10,11 +12,16 @@ const STRIPE_WEB_URL = process.env.STRIPE_WEB_URL ?? process.env.WEB_URL ?? 'htt
 @Injectable()
 export class BillingService {
   private readonly stripe: Stripe | null;
+  private readonly webhookSecret?: string;
   private readonly logger = new Logger(BillingService.name);
 
-  constructor(private readonly prisma: PrismaService) {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly walletsService: WalletsService,
+  ) {
     const secret = process.env.STRIPE_SECRET_KEY;
-    this.stripe = secret ? new Stripe(secret, { apiVersion: '2024-09-30.acacia' }) : null;
+    this.stripe = secret ? new Stripe(secret, { apiVersion: '2024-11-20.acacia' }) : null;
+    this.webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   }
 
   async listPlans() {
@@ -109,9 +116,87 @@ export class BillingService {
         organizationId: organization.id,
         planSlug: plan.slug,
       },
+      subscription_data: {
+        metadata: {
+          organizationId: organization.id,
+          planSlug: plan.slug,
+        },
+      },
     });
 
-  return { checkoutUrl: session.url };
+    return { checkoutUrl: session.url };
+  }
+
+  async handleStripeWebhook(signature: string | undefined, payload: Buffer) {
+    if (!this.stripe || !this.webhookSecret) {
+      this.logger.warn('Stripe webhook received but Stripe is not configured.');
+      return;
+    }
+
+    if (!signature) {
+      throw new BadRequestException('Missing Stripe signature header');
+    }
+
+    let event: Stripe.Event;
+    try {
+      event = this.stripe.webhooks.constructEvent(payload, signature, this.webhookSecret);
+    } catch (error) {
+      this.logger.error('Stripe webhook signature verification failed', error as Error);
+      throw new BadRequestException('Invalid Stripe signature');
+    }
+
+    switch (event.type) {
+      case 'checkout.session.completed':
+        await this.handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+        break;
+      case 'customer.subscription.created':
+      case 'customer.subscription.updated':
+      case 'customer.subscription.deleted':
+        await this.syncSubscriptionFromStripe(event.data.object as Stripe.Subscription);
+        break;
+      case 'invoice.payment_succeeded':
+      case 'invoice.payment_failed':
+        await this.recordInvoice(event.data.object as Stripe.Invoice);
+        break;
+      default:
+        this.logger.debug(`Unhandled Stripe event type ${event.type}`);
+    }
+
+    return { received: true };
+  }
+
+  async createTopUpSession(amountCents: number, successUrl?: string, cancelUrl?: string) {
+    if (!this.stripe) {
+      throw new Error('Stripe is not configured');
+    }
+
+    const organization = await this.getDefaultOrganization();
+    const stripeCustomerId = await this.ensureStripeCustomer(organization.id);
+
+    const session = await this.stripe.checkout.sessions.create({
+      mode: 'payment',
+      customer: stripeCustomerId,
+      success_url: successUrl ?? `${STRIPE_WEB_URL}/billing?status=topup-success`,
+      cancel_url: cancelUrl ?? `${STRIPE_WEB_URL}/billing?status=topup-cancel`,
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Marketplace credit top-up',
+            },
+            unit_amount: amountCents,
+          },
+          quantity: 1,
+        },
+      ],
+      metadata: {
+        organizationId: organization.id,
+        topUpAmountCents: String(amountCents),
+      },
+    });
+
+    return { checkoutUrl: session.url };
   }
 
   private async ensureStripeCustomer(orgId: string) {
@@ -193,5 +278,181 @@ export class BillingService {
         }),
       ),
     );
+  }
+
+  private async handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+    const subscriptionId =
+      typeof session.subscription === 'string'
+        ? session.subscription
+        : session.subscription?.id ?? null;
+    const planSlug = session.metadata?.planSlug;
+    const organizationId = session.metadata?.organizationId;
+
+    if (subscriptionId && this.stripe) {
+      const subscription = await this.stripe.subscriptions.retrieve(subscriptionId);
+      await this.syncSubscriptionFromStripe(subscription);
+    } else if (planSlug && organizationId) {
+      await this.applyPlan(planSlug);
+    }
+
+    const topUpAmount = session.metadata?.topUpAmountCents;
+    if (topUpAmount && organizationId) {
+      await this.applyTopUp(organizationId, Number(topUpAmount), session.id);
+    }
+  }
+
+  private async syncSubscriptionFromStripe(stripeSubscription: Stripe.Subscription) {
+    const organization = await this.resolveOrganizationFromStripeSubscription(stripeSubscription);
+    if (!organization) {
+      this.logger.warn('Unable to resolve organization for subscription', {
+        subscriptionId: stripeSubscription.id,
+      });
+      return;
+    }
+
+    const price = stripeSubscription.items.data[0]?.price;
+    const priceId =
+      typeof price === 'string' ? price : price?.id ?? stripeSubscription.metadata?.priceId;
+
+    if (!priceId) {
+      this.logger.warn('Subscription missing price data', { subscriptionId: stripeSubscription.id });
+      return;
+    }
+
+    const plan = await this.prisma.billingPlan.findFirst({
+      where: { stripePriceId: priceId },
+    });
+
+    if (!plan) {
+      this.logger.warn('No billing plan matches Stripe price', { priceId });
+      return;
+    }
+
+    const start = new Date(stripeSubscription.current_period_start * 1000);
+    const end = new Date(stripeSubscription.current_period_end * 1000);
+
+    await this.prisma.organizationSubscription.upsert({
+      where: { organizationId: organization.id },
+      update: {
+        planSlug: plan.slug,
+        status: this.mapSubscriptionStatus(stripeSubscription.status),
+        currentPeriodStart: start,
+        currentPeriodEnd: end,
+        stripeSubscriptionId: stripeSubscription.id,
+        creditAllowance: plan.monthlyCredits,
+      },
+      create: {
+        organizationId: organization.id,
+        planSlug: plan.slug,
+        status: this.mapSubscriptionStatus(stripeSubscription.status),
+        currentPeriodStart: start,
+        currentPeriodEnd: end,
+        stripeSubscriptionId: stripeSubscription.id,
+        creditAllowance: plan.monthlyCredits,
+      },
+    });
+
+    if (
+      typeof stripeSubscription.customer === 'string' &&
+      organization.stripeCustomerId !== stripeSubscription.customer
+    ) {
+      await this.prisma.organization.update({
+        where: { id: organization.id },
+        data: { stripeCustomerId: stripeSubscription.customer },
+      });
+    }
+  }
+
+  private async recordInvoice(invoice: Stripe.Invoice) {
+    const subscriptionId =
+      typeof invoice.subscription === 'string'
+        ? invoice.subscription
+        : invoice.subscription?.id ?? null;
+    if (!subscriptionId) {
+      return;
+    }
+
+    const subscription = await this.prisma.organizationSubscription.findFirst({
+      where: { stripeSubscriptionId: subscriptionId },
+    });
+    if (!subscription) {
+      this.logger.warn('Invoice for unknown subscription', { subscriptionId });
+      return;
+    }
+
+    const status = invoice.status === 'paid' ? InvoiceStatus.PAID : InvoiceStatus.OPEN;
+
+    await this.prisma.invoice.upsert({
+      where: { stripeInvoiceId: invoice.id },
+      update: {
+        amountCents: invoice.amount_due ?? invoice.amount_paid ?? 0,
+        status,
+        paidAt: invoice.status_transitions?.paid_at
+          ? new Date(invoice.status_transitions.paid_at * 1000)
+          : null,
+        lineItems: invoice.lines?.data ?? [],
+      },
+      create: {
+        subscriptionId: subscription.id,
+        amountCents: invoice.amount_due ?? invoice.amount_paid ?? 0,
+        issuedAt: new Date(invoice.created * 1000),
+        dueAt: invoice.due_date ? new Date(invoice.due_date * 1000) : new Date(),
+        status,
+        lineItems: invoice.lines?.data ?? [],
+        stripeInvoiceId: invoice.id,
+        currency: invoice.currency?.toUpperCase() ?? 'USD',
+        paidAt: invoice.status_transitions?.paid_at
+          ? new Date(invoice.status_transitions.paid_at * 1000)
+          : null,
+      },
+    });
+  }
+
+  private async resolveOrganizationFromStripeSubscription(
+    subscription: Stripe.Subscription,
+  ) {
+    const metadataOrgId = subscription.metadata?.organizationId;
+    if (metadataOrgId) {
+      const org = await this.prisma.organization.findUnique({
+        where: { id: metadataOrgId },
+      });
+      if (org) {
+        return org;
+      }
+    }
+
+    if (typeof subscription.customer === 'string') {
+      return this.prisma.organization.findFirst({
+        where: { stripeCustomerId: subscription.customer },
+      });
+    }
+
+    return null;
+  }
+
+  private mapSubscriptionStatus(status: Stripe.Subscription.Status): SubscriptionStatus {
+    switch (status) {
+      case 'past_due':
+      case 'unpaid':
+        return SubscriptionStatus.PAST_DUE;
+      case 'canceled':
+        return SubscriptionStatus.CANCELED;
+      case 'trialing':
+        return SubscriptionStatus.TRIALING;
+      default:
+        return SubscriptionStatus.ACTIVE;
+    }
+  }
+
+  private async applyTopUp(organizationId: string, amountCents: number, reference: string) {
+    if (!Number.isFinite(amountCents) || amountCents <= 0) {
+      return;
+    }
+
+    const wallet = await this.walletsService.ensureOrganizationWallet(organizationId);
+    await this.walletsService.fundWallet(wallet.id, {
+      amount: amountCents / 100,
+      reference: `stripe-topup:${reference}`,
+    });
   }
 }

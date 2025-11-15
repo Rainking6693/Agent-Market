@@ -9,6 +9,7 @@ import {
   PaymentEventStatus,
   Prisma,
   ReviewStatus,
+  VerificationStatus,
   type Wallet as WalletModel,
 } from '@prisma/client';
 
@@ -74,6 +75,8 @@ export class AgentsService {
     visibility?: AgentVisibility;
     category?: string;
     tag?: string;
+    search?: string;
+    verifiedOnly?: boolean;
   }) {
     const where: Prisma.AgentWhereInput = {};
     if (params?.status) {
@@ -92,6 +95,16 @@ export class AgentsService {
         has: params.tag,
       };
     }
+    if (params?.verifiedOnly) {
+      where.verificationStatus = VerificationStatus.VERIFIED;
+    }
+    if (params?.search?.trim()) {
+      const term = params.search.trim();
+      where.OR = [
+        { name: { contains: term, mode: 'insensitive' } },
+        { description: { contains: term, mode: 'insensitive' } },
+      ];
+    }
 
     const agents = await this.prisma.agent.findMany({
       where,
@@ -106,6 +119,18 @@ export class AgentsService {
   async findOne(id: string) {
     const agent = await this.prisma.agent.findUnique({
       where: { id },
+    });
+
+    if (!agent) {
+      throw new NotFoundException('Agent not found');
+    }
+
+    return presentAgent(agent);
+  }
+
+  async findBySlug(slug: string) {
+    const agent = await this.prisma.agent.findUnique({
+      where: { slug },
     });
 
     if (!agent) {

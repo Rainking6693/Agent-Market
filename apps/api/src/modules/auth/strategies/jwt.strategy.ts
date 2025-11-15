@@ -9,6 +9,7 @@ interface JwtPayload {
   sub: string;
   email: string;
   displayName: string;
+  kind?: 'user' | 'service_account';
 }
 
 @Injectable()
@@ -26,6 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       id: payload.sub,
       email: payload.email,
       displayName: payload.displayName,
+      kind: payload.kind ?? 'user',
     };
   }
 }

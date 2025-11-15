@@ -13,12 +13,17 @@ import { useAgents } from '@/hooks/use-agents';
 export default function MarketplaceAgentsPage() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
+  const [capability, setCapability] = useState('');
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
+
   const filters = useMemo(
     () => ({
       search: search.trim() || undefined,
       category: category || undefined,
+      tag: capability || undefined,
+      verifiedOnly,
     }),
-    [search, category],
+    [search, category, capability, verifiedOnly],
   );
   const { data: agents, isLoading, refetch } = useAgents(filters);
 
@@ -44,7 +49,14 @@ export default function MarketplaceAgentsPage() {
             <AgentSearch value={search} onChange={setSearch} />
           </header>
 
-          <AgentFilters category={category} onCategoryChange={setCategory} />
+          <AgentFilters
+            category={category}
+            capability={capability}
+            verifiedOnly={verifiedOnly}
+            onCategoryChange={setCategory}
+            onCapabilityChange={setCapability}
+            onVerifiedToggle={setVerifiedOnly}
+          />
 
           <AgentGrid agents={agents} isLoading={isLoading} />
         </div>

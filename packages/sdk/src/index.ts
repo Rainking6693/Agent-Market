@@ -31,6 +31,8 @@ export interface Agent {
   categories: string[];
   tags: string[];
   pricingModel: string;
+  basePriceCents?: number | null;
+  ap2Endpoint?: string | null;
   creatorId: string;
   createdAt: string;
   updatedAt: string;
@@ -609,6 +611,10 @@ export class AgentMarketClient {
 
   async getAgent(id: string) {
     return this.request.get(`agents/${id}`).json<Agent>();
+  }
+
+  async getAgentBySlug(slug: string) {
+    return this.request.get(`agents/slug/${slug}`).json<Agent>();
   }
 
   async createAgent(payload: AgentPayload) {

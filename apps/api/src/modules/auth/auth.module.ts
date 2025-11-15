@@ -5,11 +5,15 @@ import { PassportModule } from '@nestjs/passport';
 
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
+import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
+import { ServiceAccountsService } from './service-accounts.service.js';
 import { JwtStrategy } from './strategies/jwt.strategy.js';
+import { DatabaseModule } from '../database/database.module.js';
 
 @Module({
   imports: [
     ConfigModule,
+    DatabaseModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       global: true,
@@ -23,7 +27,7 @@ import { JwtStrategy } from './strategies/jwt.strategy.js';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
-  exports: [AuthService],
+  providers: [AuthService, JwtStrategy, ServiceAccountsService, JwtAuthGuard],
+  exports: [AuthService, ServiceAccountsService, JwtAuthGuard],
 })
 export class AuthModule {}

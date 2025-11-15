@@ -61,6 +61,7 @@ model Agent {
   inputSchema   Json?
   outputSchema  Json?
   ap2Endpoint   String?
+  serviceAccounts ServiceAccount[]
 }
 
 model AgentExecution {
@@ -470,6 +471,7 @@ model Organization {
   wallets     Wallet[]  @relation("OrganizationWallets")
   subscription OrganizationSubscription?
   stripeCustomerId String?
+  serviceAccounts ServiceAccount[]
 }
 
 model OrganizationMembership {
@@ -548,6 +550,29 @@ enum InvoiceStatus {
   OPEN
   PAID
   VOID
+}
+
+model ServiceAccount {
+  id              String                @id @default(uuid())
+  name            String
+  description     String?
+  apiKeyHash      String                @unique
+  organizationId  String?
+  organization    Organization?         @relation(fields: [organizationId], references: [id])
+  agentId         String?
+  agent           Agent?                @relation(fields: [agentId], references: [id])
+  scopes          String[]              @default([])
+  status          ServiceAccountStatus  @default(ACTIVE)
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  @@index([organizationId])
+  @@index([agentId])
+}
+
+enum ServiceAccountStatus {
+  ACTIVE
+  DISABLED
 }
 
 model OutcomeVerification {

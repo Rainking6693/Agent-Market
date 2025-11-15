@@ -1,7 +1,11 @@
 'use client';
 
 import { BillingPlan, BillingSubscription } from '@agent-market/sdk';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
+
+import { useAuth } from '@/hooks/use-auth';
+import { billingApi } from '@/lib/api';
 
 interface PlanCardProps {
   plan: BillingPlan;
@@ -16,51 +20,56 @@ const formatter = new Intl.NumberFormat('en-US', {
 
 export function PlanCard({ plan, subscription }: PlanCardProps) {
   const isActive = subscription?.plan.slug === plan.slug;
-  const [isLoading, setIsLoading] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const [errorMessage, setErrorMessage] = useState('');
   const priceLabel =
     plan.priceCents === 0 ? 'Free' : `${formatter.format(plan.priceCents / 100)}/mo`;
 
-  const handleSelectPlan = async () => {
-    if (isActive) {
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const successUrl = `${window.location.origin}/billing?status=success`;
+      const cancelUrl = `${window.location.origin}/billing?status=cancel`;
+
+      if (plan.priceCents === 0) {
+        await billingApi.changePlan(plan.slug);
+        return { checkoutUrl: null };
+      }
+
+      return billingApi.createCheckoutSession(plan.slug, successUrl, cancelUrl);
+    },
+    onSuccess: (result) => {
+      if (!result.checkoutUrl) {
+        window.location.reload();
+      } else {
+        window.location.href = result.checkoutUrl;
+      }
+    },
+    onError: (error: unknown) => {
+      const message =
+        error instanceof Error ? error.message : 'Unable to change plan. Please try again.';
+      setErrorMessage(message);
+    },
+  });
+
+  const handleSelectPlan = () => {
+    if (isActive || mutation.isPending) {
       return;
     }
 
-    setIsLoading(true);
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'}/billing/${
-          plan.priceCents === 0 ? 'subscription/apply' : 'subscription/checkout'
-        }`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            planSlug: plan.slug,
-            successUrl: `${window.location.origin}/billing?status=success`,
-            cancelUrl: `${window.location.origin}/billing?status=cancel`,
-          }),
-        },
-      );
-      const data = await response.json();
-
-      if (plan.priceCents === 0 || data.subscription) {
-        window.location.reload();
-      } else if (data.checkoutUrl) {
-        window.location.href = data.checkoutUrl;
-      }
-    } catch (error) {
-      console.error('Failed to switch plan', error);
-      alert('Unable to change plan. Please try again or contact support.');
-    } finally {
-      setIsLoading(false);
+    if (!isAuthenticated) {
+      window.location.href = '/login';
+      return;
     }
+
+    setErrorMessage('');
+    mutation.mutate();
   };
 
   return (
     <div
-      className={`glass-card flex flex-col gap-4 p-6 ${isActive ? 'border border-accent' : 'border border-outline/60'}`}
+      className={`glass-card flex flex-col gap-4 p-6 ${
+        isActive ? 'border border-accent' : 'border border-outline/60'
+      }`}
     >
       <div>
         <p className="text-xs uppercase tracking-wide text-ink-muted">{plan.slug}</p>
@@ -73,7 +82,10 @@ export function PlanCard({ plan, subscription }: PlanCardProps) {
         <li>Seats: {plan.seats === 0 ? 'Unlimited' : plan.seats}</li>
         <li>Agents: {plan.agentLimit === 0 ? 'Unlimited' : plan.agentLimit}</li>
         <li>Workflows: {plan.workflowLimit === 0 ? 'Unlimited' : plan.workflowLimit}</li>
-        <li>Credits / month: {plan.monthlyCredits === 0 ? 'Custom' : plan.monthlyCredits.toLocaleString()}</li>
+        <li>
+          Credits / month:{' '}
+          {plan.monthlyCredits === 0 ? 'Custom' : plan.monthlyCredits.toLocaleString()}
+        </li>
         <li>Take rate: {(plan.takeRateBasisPoints / 100).toFixed(1)}%</li>
       </ul>
 
@@ -86,15 +98,17 @@ export function PlanCard({ plan, subscription }: PlanCardProps) {
         ))}
       </div>
 
+      {errorMessage && <p className="text-sm text-destructive">{errorMessage}</p>}
+
       <button
         type="button"
-        disabled={isActive || isLoading}
+        disabled={isActive || mutation.isPending}
         onClick={handleSelectPlan}
         className={`glass-button mt-auto w-full px-4 py-2 text-sm font-semibold ${
           isActive ? 'bg-outline/60 text-ink cursor-not-allowed' : 'bg-accent text-carrara'
         }`}
       >
-        {isActive ? 'Current plan' : isLoading ? 'Processing…' : 'Choose plan'}
+        {isActive ? 'Current plan' : mutation.isPending ? 'Processing…' : 'Choose plan'}
       </button>
     </div>
   );
