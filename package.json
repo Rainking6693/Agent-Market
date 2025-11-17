@@ -13,7 +13,8 @@
     "dev": "turbo run dev --parallel",
     "eval:import-genesis": "tsx scripts/import-genesis-scenarios.ts --input Genesis-Rebuild-main/Genesis-Rebuild-main/tests/rogue/scenarios/orchestration_p1.yaml --output configs/evaluations/genesis-orchestration.json --vertical orchestration --limit 50 --agentTags orchestration,planner",
     "eval:run": "tsx scripts/run-evaluations.ts",
-    "service-account:create": "tsx scripts/create-service-account.ts"
+    "service-account:create": "tsx scripts/create-service-account.ts",
+    "test:stripe-smoke": "npm run test:stripe-smoke --workspace apps/web"
   },
   "packageManager": "npm@11.6.2",
   "workspaces": [

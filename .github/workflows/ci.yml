@@ -34,3 +34,33 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  stripe-smoke:
+    name: Stripe Smoke
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: ${{ vars.RUN_STRIPE_SMOKE == 'true' }}
+    env:
+      RUN_STRIPE_SMOKE: '1'
+      TEST_AGENT_ID: ${{ secrets.STRIPE_SMOKE_TEST_AGENT_ID }}
+      API_URL: ${{ secrets.STRIPE_SMOKE_API_URL }}
+      E2E_BASE_URL: ${{ secrets.STRIPE_SMOKE_BASE_URL }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+        working-directory: apps/web
+
+      - name: Run Stripe smoke test
+        run: npm run test:stripe-smoke

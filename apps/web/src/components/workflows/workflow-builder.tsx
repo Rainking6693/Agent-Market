@@ -35,6 +35,7 @@ export const WorkflowBuilder = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [creatorId, setCreatorId] = useState('');
   const [parsedSteps, setParsedSteps] = useState<Array<{ agentId: string; jobReference: string; budget: number }>>([]);
 
   const handleAddStep = useCallback(() => {
@@ -113,6 +114,17 @@ export const WorkflowBuilder = () => {
           <CardTitle className="font-headline">Workflow Details</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-6 md:grid-cols-2">
+          <div>
+            <label className="block text-xs uppercase tracking-wide text-ink-muted mb-2">
+              Creator ID
+            </label>
+            <input
+              value={creatorId}
+              onChange={(event) => setCreatorId(event.target.value)}
+              placeholder="UUID of the workflow owner"
+              className="w-full rounded-lg border border-outline/40 bg-surface px-3 py-2 text-sm text-ink placeholder:text-ink-muted/50 focus:border-brass/40 focus:outline-none"
+            />
+          </div>
           <div>
             <label className="block text-xs uppercase tracking-wide text-ink-muted mb-2">
               Workflow Name

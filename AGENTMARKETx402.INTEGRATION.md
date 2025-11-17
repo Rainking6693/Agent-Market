@@ -909,6 +909,56 @@ curl http://localhost:4000/x402/agents/:agentId/payment-methods
 3. Verify both show in transaction history
 4. Confirm agents receive payments correctly
 
+### **3.4 Legacy Platform Validation**
+
+- `npm run test --workspace apps/api -- src/modules/agents/agents.service.spec.ts`  
+  Verifies that the server merges fiat wallet transactions and x402 transfers into one history feed.
+- `npm run test --workspace apps/web -- src/components/transactions/transaction-history-list.test.tsx`  
+  Confirms the transactions UI labels both rails correctly and shows wallet references + hashes.
+- Manual Stripe / escrow smoke test:
+  1. Trigger a standard AgentMarket purchase (Stripe checkout ➜ escrow release).
+  2. Confirm funds appear in `wallets` table and `GET /agents/:id/payment-history` returns the record.
+  3. Load `/console/transactions?agentId=<agent_id>` and verify the fiat line item renders alongside a recent x402 hash.
+
+### **3.5 Automating the Stripe Smoke Test**
+
+| Step | Command / Action                                                          | Notes                                                       |
+| ---- | ------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| 1    | `stripe login`                                                            | Authenticate CLI (test mode).                               |
+| 2    | `stripe listen --forward-to http://localhost:4000/billing/stripe-webhook` | Streams webhook events to local API while the UI test runs. |
+| 3    | `cd apps/web && npx playwright test stripe-smoke --project=chromium`      | Executes the Playwright spec below.                         |
+| 4    | Inspect Playwright report + API logs                                      | Confirms checkout + payment-history verification succeeded. |
+
+#### Playwright Spec (apps/web/tests/payments/stripe-smoke.spec.ts)
+
+```ts
+import { test, expect } from '@playwright/test';
+import { createAgentMarketClient } from '@agent-market/sdk';
+
+test('legacy Stripe checkout still works', async ({ page }) => {
+  const client = createAgentMarketClient({ baseUrl: process.env.API_URL });
+  const agent = await client.getAgent(process.env.TEST_AGENT_ID!);
+
+  await page.goto(`/agents/${agent.slug}/purchase`);
+  await page.getByText('AgentMarket Balance').click();
+  await page.getByRole('button', { name: 'Continue to Checkout' }).click();
+
+  const checkout = page.frameLocator('iframe[name="stripe_checkout_app"]');
+  await checkout.getByPlaceholder('Card number').fill('4242424242424242');
+  await checkout.getByPlaceholder('MM / YY').fill('12 / 34');
+  await checkout.getByPlaceholder('CVC').fill('123');
+  await checkout.getByRole('button', { name: 'Pay' }).click();
+
+  await expect(page).toHaveURL(/success/i, { timeout: 60_000 });
+
+  const history = await client.getAgentPaymentHistory(agent.id);
+  const legacyTx = history.find((tx) => tx.rail === 'platform' && tx.reference?.startsWith('ch_'));
+  expect(legacyTx).toBeDefined();
+});
+```
+
+> **CI wiring tip:** run `stripe listen` inside the pipeline (or use Stripe’s event replay) before invoking Playwright. Fail the job if the script exits non‑zero so regressions in the fiat checkout are caught automatically.
+
 ---
 
 ## 🚀 PART 4: DEPLOYMENT (Day 9-10)
@@ -925,17 +975,27 @@ NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
 
 ### **4.2 Deploy Backend:**
 
-```bash
-npm run build
-npm run deploy:api
-```
+1. `npm install`
+2. `npm run lint --workspace apps/api`
+3. `npm run test --workspace apps/api`
+4. `npx prisma migrate deploy --schema apps/api/prisma/schema.prisma`
+5. `npm run build --workspace apps/api`
+6. Deploy through Fly.io (or your target) using the existing `npm run deploy:api` script.
 
 ### **4.3 Deploy Frontend:**
 
-```bash
-npm run build
-npm run deploy:web
-```
+1. `npm install`
+2. `npm run lint --workspace apps/web`
+3. `npm run test --workspace apps/web`
+4. `npm run build --workspace apps/web`
+5. Deploy via `npm run deploy:web` (Next.js on Fly/Edge).
+
+### **4.4 Post-Deployment Verification**
+
+1. Smoke test `/agents/[slug]/purchase` for both rails.
+2. Execute one fiat + one x402 transaction in staging and confirm `/console/transactions` shows both.
+3. Monitor Stripe + blockchain facilitator dashboards for the first hour.
+4. Enable monitoring/alerts (Datadog + Sentry) for `x402` namespace.
 
 ---
 
@@ -947,7 +1007,7 @@ npm run deploy:web
 - [x] Wallet connection UI works
 - [x] Payment method selector functional
 - [x] x402 payment flow completes successfully
-- [ ] Platform payment still works
+- [x] Platform payment still works
 - [x] Transaction verification works
 - [x] Both payments show in history
 - [ ] Deployed to production
