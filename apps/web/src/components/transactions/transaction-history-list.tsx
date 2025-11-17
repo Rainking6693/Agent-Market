@@ -3,14 +3,17 @@
 interface Transaction {
   id: string;
   type: string;
-  amount: string;
+  amount: number;
   currency: string;
   status: string;
   createdAt: string;
-  initiatorId?: string;
-  recipientId?: string;
-  purpose?: string;
+  rail?: 'platform' | 'x402';
+  reference?: string;
+  buyerAddress?: string;
+  sellerAddress?: string;
+  network?: string;
   metadata?: Record<string, unknown>;
+  txHash?: string;
 }
 
 interface TransactionHistoryListProps {
@@ -31,6 +34,24 @@ const typeLabels: Record<string, string> = {
   TOPUP: 'Top-up',
   CREDIT: 'Credit',
   DEBIT: 'Debit',
+  X402: 'x402 Payment',
+};
+
+const formatAmount = (amount: number, currency: string) => {
+  if (currency === 'USD') {
+    return currencyFormatter.format(amount);
+  }
+  return `${amount.toFixed(2)} ${currency}`;
+};
+
+const truncateMiddle = (value: string, chars = 6) => {
+  if (!value) {
+    return '';
+  }
+  if (value.length <= chars * 2) {
+    return value;
+  }
+  return `${value.slice(0, chars)}…${value.slice(-chars)}`;
 };
 
 export function TransactionHistoryList({ transactions }: TransactionHistoryListProps) {
@@ -51,7 +72,6 @@ export function TransactionHistoryList({ transactions }: TransactionHistoryListP
       </div>
       <ul className="divide-y divide-outline/60">
         {transactions.map((transaction) => {
-          const amount = Number.parseFloat(transaction.amount);
           const isCredit = ['CREDIT', 'TOPUP', 'REFUND'].includes(transaction.type);
           const typeLabel = typeLabels[transaction.type] || transaction.type;
 
@@ -59,25 +79,31 @@ export function TransactionHistoryList({ transactions }: TransactionHistoryListP
             <li key={transaction.id} className="px-6 py-5 transition hover:bg-surfaceAlt/60">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-2">
                     <div className="text-sm font-semibold text-ink">{typeLabel}</div>
-                    {transaction.purpose && (
-                      <span className="text-xs text-ink-muted">{transaction.purpose}</span>
+                    {transaction.rail === 'x402' && (
+                      <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-emerald-700">
+                        x402
+                      </span>
                     )}
                   </div>
                   <div className="mt-1 text-xs text-ink-muted">
                     {new Date(transaction.createdAt).toLocaleString()}
-                    {transaction.initiatorId && ` • Initiated by ${transaction.initiatorId.slice(0, 8)}`}
+                  </div>
+                  <div className="mt-1 flex flex-wrap gap-3 text-xs text-ink-muted">
+                    {transaction.reference && <span>Ref {truncateMiddle(transaction.reference)}</span>}
+                    {transaction.txHash && <span>Hash {truncateMiddle(transaction.txHash)}</span>}
+                    {transaction.buyerAddress && <span>From {truncateMiddle(transaction.buyerAddress)}</span>}
+                    {transaction.sellerAddress && <span>To {truncateMiddle(transaction.sellerAddress)}</span>}
+                    {transaction.network && <span>Network {transaction.network}</span>}
                   </div>
                 </div>
                 <div className="text-right">
                   <div
-                    className={`text-sm font-semibold ${
-                      isCredit ? 'text-emerald-600' : 'text-ink'
-                    }`}
+                    className={`text-sm font-semibold ${isCredit ? 'text-emerald-600' : 'text-ink'}`}
                   >
                     {isCredit ? '+' : '-'}
-                    {currencyFormatter.format(Math.abs(amount))}
+                    {formatAmount(Math.abs(transaction.amount), transaction.currency)}
                   </div>
                   <div className="text-xs text-ink-muted capitalize">{transaction.status.toLowerCase()}</div>
                 </div>

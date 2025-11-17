@@ -1,22 +1,49 @@
 import { TransactionHistoryList } from '@/components/transactions/transaction-history-list';
+import { getAgentMarketClient } from '@/lib/server-client';
 
-interface Transaction {
-  id: string;
-  type: string;
-  amount: string;
-  currency: string;
-  status: string;
-  createdAt: string;
-  initiatorId?: string;
-  recipientId?: string;
-  purpose?: string;
-  metadata?: Record<string, unknown>;
+interface TransactionsPageProps {
+  searchParams?: {
+    agentId?: string;
+  };
 }
 
-export default async function TransactionsPage() {
-  // Note: In a real implementation, fetch transactions from API
-  // For now, this shows the UI structure
-  const transactions: Transaction[] = [];
+export default async function TransactionsPage({ searchParams }: TransactionsPageProps) {
+  const client = getAgentMarketClient();
+
+  let agentId = searchParams?.agentId ?? null;
+  let agentName = '';
+
+  if (agentId) {
+    const agent = await client.getAgent(agentId).catch(() => null);
+    if (agent) {
+      agentName = agent.name;
+    }
+  }
+
+  if (!agentId) {
+    const agents = await client.listAgents();
+    if (agents.length > 0) {
+      agentId = agents[0].id;
+      agentName = agents[0].name;
+    }
+  }
+
+  const history = agentId ? await client.getAgentPaymentHistory(agentId) : [];
+
+  const transactions = history.map((entry) => ({
+    id: entry.id,
+    type: entry.type,
+    amount: entry.amount,
+    currency: entry.currency,
+    status: entry.status,
+    createdAt: entry.createdAt,
+    rail: entry.rail,
+    reference: entry.reference ?? undefined,
+    buyerAddress: entry.buyerAddress ?? undefined,
+    sellerAddress: entry.sellerAddress ?? undefined,
+    network: entry.network ?? undefined,
+    txHash: entry.txHash ?? undefined,
+  }));
 
   return (
     <div className="space-y-8">
@@ -24,7 +51,7 @@ export default async function TransactionsPage() {
         <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Transactions</p>
         <h1 className="mt-2 text-3xl font-headline text-ink">Payment History</h1>
         <p className="mt-2 max-w-3xl text-sm text-ink-muted">
-          View all transactions including agent executions, A2A payments, wallet top-ups, and refunds.
+          View platform and x402 payments for your agents. {agentName ? `Currently showing ${agentName}.` : ''}
         </p>
       </header>
 

@@ -1,7 +1,11 @@
 'use client';
 
 import { createAgentMarketClient } from '@agent-market/sdk';
-import { useState, useTransition } from 'react';
+import { Plus, Save, Trash2 } from 'lucide-react';
+import { useCallback, useState, useTransition } from 'react';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const clientCache: { instance?: ReturnType<typeof createAgentMarketClient> } = {};
 
@@ -26,20 +30,47 @@ const defaultSteps = JSON.stringify(
 export const WorkflowBuilder = () => {
   const [name, setName] = useState('Sample orchestration');
   const [description, setDescription] = useState('Two-stage research and analysis flow.');
-  const [creatorId, setCreatorId] = useState('00000000-0000-0000-0000-000000000000');
   const [budget, setBudget] = useState(10);
   const [steps, setSteps] = useState(defaultSteps);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [parsedSteps, setParsedSteps] = useState<Array<{ agentId: string; jobReference: string; budget: number }>>([]);
+
+  const handleAddStep = useCallback(() => {
+    const newSteps = [...parsedSteps, { agentId: '', jobReference: '', budget: 5 }];
+    setParsedSteps(newSteps);
+    setSteps(JSON.stringify(newSteps, null, 2));
+  }, [parsedSteps]);
+
+  const handleRemoveStep = useCallback((index: number) => {
+    const newSteps = parsedSteps.filter((_, i) => i !== index);
+    setParsedSteps(newSteps);
+    setSteps(JSON.stringify(newSteps, null, 2));
+  }, [parsedSteps]);
+
+  const handleUpdateStep = useCallback(
+    (index: number, field: 'agentId' | 'jobReference' | 'budget', value: string | number) => {
+      const newSteps = [...parsedSteps];
+      if (field === 'budget') {
+        newSteps[index] = { ...newSteps[index], [field]: Number(value) };
+      } else {
+        newSteps[index] = { ...newSteps[index], [field]: value };
+      }
+      setParsedSteps(newSteps);
+      setSteps(JSON.stringify(newSteps, null, 2));
+    },
+    [parsedSteps],
+  );
 
   const handleSubmit = () => {
-    let parsedSteps: unknown;
+    let parsed: unknown;
     try {
-      parsedSteps = JSON.parse(steps);
-      if (!Array.isArray(parsedSteps)) {
+      parsed = JSON.parse(steps);
+      if (!Array.isArray(parsed)) {
         throw new Error('Steps must be an array');
       }
+      setParsedSteps(parsed);
     } catch (err) {
       setError('Steps must be valid JSON array.');
       return;
@@ -66,84 +97,167 @@ export const WorkflowBuilder = () => {
   };
 
   return (
-    <section className="glass-card space-y-4 p-6 text-xs uppercase tracking-wide text-ink-muted">
+    <div className="space-y-8">
+      {/* Header */}
       <header className="space-y-2">
-        <h2 className="text-xl font-headline text-ink">Create Workflow</h2>
-        <p className="text-xs normal-case text-ink-muted">
-          Provide a friendly name, total budget, and JSON array of steps. Each step references an
-          agent identifier and optional per-step budget.
+        <h2 className="text-4xl font-headline text-ink">Create Workflow</h2>
+        <p className="text-sm text-ink-muted">
+          Build multi-agent workflows by connecting agents in sequence or parallel. Set budgets,
+          define handoffs, and test execution.
         </p>
       </header>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <label className="flex flex-col gap-2">
-          Name
-          <input
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
+      {/* Main Configuration */}
+      <Card className="border-white/70 bg-white/80">
+        <CardHeader>
+          <CardTitle className="font-headline">Workflow Details</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-6 md:grid-cols-2">
+          <div>
+            <label className="block text-xs uppercase tracking-wide text-ink-muted mb-2">
+              Workflow Name
+            </label>
+            <input
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder="e.g., Research → Analysis → Archive"
+              className="w-full rounded-lg border border-outline/40 bg-surface px-3 py-2 text-sm text-ink placeholder:text-ink-muted/50 focus:border-brass/40 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label className="block text-xs uppercase tracking-wide text-ink-muted mb-2">
+              Total Budget (credits)
+            </label>
+            <input
+              type="number"
+              value={budget}
+              onChange={(event) => setBudget(Number(event.target.value))}
+              min={1}
+              className="w-full rounded-lg border border-outline/40 bg-surface px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-xs uppercase tracking-wide text-ink-muted mb-2">
+              Description
+            </label>
+            <textarea
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+              rows={3}
+              placeholder="What is this workflow designed to do?"
+              className="w-full rounded-lg border border-outline/40 bg-surface px-3 py-2 text-sm text-ink placeholder:text-ink-muted/50 focus:border-brass/40 focus:outline-none"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Workflow Steps Builder */}
+      <Card className="border-white/70 bg-white/80">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="font-headline">Workflow Steps</CardTitle>
+          <Button size="sm" onClick={handleAddStep} variant="secondary">
+            <Plus className="h-4 w-4" />
+            Add Step
+          </Button>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {parsedSteps.length === 0 ? (
+            <p className="text-sm text-ink-muted italic">No steps yet. Click &quot;Add Step&quot; to start building.</p>
+          ) : (
+            <div className="space-y-3">
+              {parsedSteps.map((step, index) => (
+                <div key={index} className="flex items-end gap-3 rounded-lg border border-outline/40 bg-surface/60 p-4">
+                  <div className="flex-1">
+                    <label className="block text-xs uppercase tracking-wide text-ink-muted mb-1">
+                      Agent ID
+                    </label>
+                    <input
+                      value={step.agentId}
+                      onChange={(e) => handleUpdateStep(index, 'agentId', e.target.value)}
+                      placeholder="e.g., agent_research_001"
+                      className="w-full rounded border border-outline/40 bg-white px-2 py-1 text-xs text-ink placeholder:text-ink-muted/50"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-xs uppercase tracking-wide text-ink-muted mb-1">
+                      Job Reference
+                    </label>
+                    <input
+                      value={step.jobReference}
+                      onChange={(e) => handleUpdateStep(index, 'jobReference', e.target.value)}
+                      placeholder="e.g., research"
+                      className="w-full rounded border border-outline/40 bg-white px-2 py-1 text-xs text-ink placeholder:text-ink-muted/50"
+                    />
+                  </div>
+                  <div className="w-24">
+                    <label className="block text-xs uppercase tracking-wide text-ink-muted mb-1">
+                      Budget
+                    </label>
+                    <input
+                      type="number"
+                      value={step.budget}
+                      onChange={(e) => handleUpdateStep(index, 'budget', e.target.value)}
+                      min={0}
+                      className="w-full rounded border border-outline/40 bg-white px-2 py-1 text-xs text-ink"
+                    />
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleRemoveStep(index)}
+                    className="text-red-600 hover:bg-red-50"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* JSON Editor (Advanced) */}
+      <Card className="border-white/70 bg-white/80">
+        <CardHeader>
+          <CardTitle className="font-headline">Advanced: Raw JSON</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <label className="block text-xs uppercase tracking-wide text-ink-muted mb-2">
+            Steps (JSON Array)
+          </label>
+          <textarea
+            value={steps}
+            onChange={(event) => setSteps(event.target.value)}
+            rows={6}
+            className="w-full rounded-lg border border-outline/40 bg-surface px-3 py-2 font-mono text-xs text-ink focus:border-brass/40 focus:outline-none"
           />
-        </label>
-        <label className="flex flex-col gap-2">
-          Budget (credits)
-          <input
-            type="number"
-            value={budget}
-            onChange={(event) => setBudget(Number(event.target.value))}
-            min={1}
-            className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
-          />
-        </label>
-      </div>
+        </CardContent>
+      </Card>
 
-      <label className="flex flex-col gap-2">
-        Description
-        <textarea
-          value={description}
-          onChange={(event) => setDescription(event.target.value)}
-          rows={2}
-          className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
-        />
-      </label>
-
-      <label className="flex flex-col gap-2">
-        Creator ID (demo)
-        <input
-          value={creatorId}
-          onChange={(event) => setCreatorId(event.target.value)}
-          className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-xs font-mono text-ink focus:border-brass/40 focus:outline-none"
-        />
-      </label>
-
-      <label className="flex flex-col gap-2">
-        Steps (JSON)
-        <textarea
-          value={steps}
-          onChange={(event) => setSteps(event.target.value)}
-          rows={6}
-          className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 font-mono text-xs text-ink focus:border-brass/40 focus:outline-none"
-        />
-      </label>
-
+      {/* Messages */}
       {error && (
-        <div className="rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error}
         </div>
       )}
       {message && (
-        <div className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300">
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
           {message}
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={handleSubmit}
-        disabled={isPending}
-        className="glass-button bg-accent px-4 py-2 text-sm font-semibold text-carrara shadow-accent-glow hover:bg-accent-dark disabled:cursor-not-allowed disabled:bg-outline/40"
-      >
-        {isPending ? 'Creating...' : 'Create Workflow'}
-      </button>
-    </section>
+      {/* Actions */}
+      <div className="flex gap-3">
+        <Button
+          onClick={handleSubmit}
+          disabled={isPending}
+          className="flex-1 rounded-full"
+        >
+          <Save className="h-4 w-4" />
+          {isPending ? 'Creating...' : 'Create Workflow'}
+        </Button>
+      </div>
+    </div>
   );
 };
+

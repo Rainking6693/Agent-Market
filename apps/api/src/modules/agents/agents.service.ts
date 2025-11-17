@@ -61,8 +61,8 @@ export class AgentsService {
         visibility: data.visibility ?? AgentVisibility.PUBLIC,
         creatorId: data.creatorId,
         basePriceCents: data.basePriceCents ?? null,
-        inputSchema: data.inputSchema ?? null,
-        outputSchema: data.outputSchema ?? null,
+        inputSchema: (data.inputSchema ?? Prisma.JsonNull) as Prisma.InputJsonValue,
+        outputSchema: (data.outputSchema ?? Prisma.JsonNull) as Prisma.InputJsonValue,
         ap2Endpoint: data.ap2Endpoint ?? null,
       },
     });
@@ -160,8 +160,14 @@ export class AgentsService {
         categories: categories ?? undefined,
         tags: tags ?? undefined,
         basePriceCents: data.basePriceCents ?? undefined,
-        inputSchema: data.inputSchema ?? undefined,
-        outputSchema: data.outputSchema ?? undefined,
+        inputSchema:
+          data.inputSchema === undefined
+            ? undefined
+            : ((data.inputSchema ?? Prisma.JsonNull) as Prisma.InputJsonValue),
+        outputSchema:
+          data.outputSchema === undefined
+            ? undefined
+            : ((data.outputSchema ?? Prisma.JsonNull) as Prisma.InputJsonValue),
         ap2Endpoint: data.ap2Endpoint ?? undefined,
       },
     });
@@ -424,6 +430,60 @@ export class AgentsService {
     const wallet = await this.walletsService.ensureAgentWallet(agentId);
     const budget = await this.ensureBudgetRecord(agentId, wallet.id);
     return this.presentBudgetSnapshot(budget, wallet);
+  }
+
+  async getAgentPaymentHistory(agentId: string) {
+    await this.ensureExists(agentId);
+
+    const wallets = await this.prisma.wallet.findMany({
+      where: { ownerAgentId: agentId },
+      include: {
+        transactions: {
+          orderBy: { createdAt: 'desc' },
+          take: 50,
+        },
+      },
+    });
+
+    const platformTransactions = wallets.flatMap((wallet) =>
+      wallet.transactions.map((transaction) => ({
+        id: transaction.id,
+        rail: 'platform' as const,
+        type: transaction.type,
+        amount: Number(transaction.amount),
+        currency: wallet.currency,
+        status: transaction.status,
+        reference: transaction.reference,
+        metadata: transaction.metadata,
+        createdAt: transaction.createdAt,
+        walletId: wallet.id,
+      })),
+    );
+
+    const x402Transactions = await this.prisma.x402Transaction.findMany({
+      where: { agentId },
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+    });
+
+    const cryptoTransactions = x402Transactions.map((transaction) => ({
+      id: transaction.id,
+      rail: 'x402' as const,
+      type: 'X402',
+      amount: Number(transaction.amount),
+      currency: transaction.currency,
+      status: transaction.status,
+      reference: transaction.txHash,
+      txHash: transaction.txHash,
+      buyerAddress: transaction.buyerAddress,
+      sellerAddress: transaction.sellerAddress,
+      network: transaction.network,
+      createdAt: transaction.createdAt,
+    }));
+
+    return [...platformTransactions, ...cryptoTransactions]
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 50);
   }
 
   async updateAgentBudget(agentId: string, dto: UpdateAgentBudgetDto) {
@@ -853,11 +913,13 @@ export class AgentsService {
     initiatorType: InitiatorType,
     amount: Prisma.Decimal,
   ) {
+    const normalizedCounterAgentId = counterAgentId ?? agentId;
+
     await this.prisma.agentEngagementMetric.upsert({
       where: {
         agentId_counterAgentId_initiatorType: {
           agentId,
-          counterAgentId,
+          counterAgentId: normalizedCounterAgentId,
           initiatorType,
         },
       },
@@ -868,7 +930,7 @@ export class AgentsService {
       },
       create: {
         agentId,
-        counterAgentId,
+        counterAgentId: normalizedCounterAgentId,
         initiatorType,
         a2aCount: 1,
         totalSpend: amount,

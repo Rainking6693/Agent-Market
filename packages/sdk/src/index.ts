@@ -108,6 +108,25 @@ export interface Transaction {
   settledAt?: string | null;
 }
 
+export type PaymentRail = 'platform' | 'x402';
+
+export interface AgentPaymentHistoryRecord {
+  id: string;
+  rail: PaymentRail;
+  type: string;
+  amount: number;
+  currency: string;
+  status: string;
+  createdAt: string;
+  reference?: string | null;
+  metadata?: Record<string, unknown> | null;
+  walletId?: string | null;
+  txHash?: string | null;
+  buyerAddress?: string | null;
+  sellerAddress?: string | null;
+  network?: string | null;
+}
+
 export type BudgetApprovalMode = 'AUTO' | 'MANUAL' | 'ESCROW';
 
 export interface AgentBudgetSettings {
@@ -635,6 +654,10 @@ export class AgentMarketClient {
 
   async listAgentA2aTransactions(agentId: string) {
     return this.request.get(`agents/${agentId}/a2a-transactions`).json<AgentA2aTransactionRecord[]>();
+  }
+
+  async getAgentPaymentHistory(agentId: string) {
+    return this.request.get(`agents/${agentId}/payment-history`).json<AgentPaymentHistoryRecord[]>();
   }
 
   async getAgentNetwork(agentId: string) {

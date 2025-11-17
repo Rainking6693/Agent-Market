@@ -26,7 +26,8 @@ export function GoogleSignInButton({
     flow: 'implicit',
     scope: 'openid email profile',
     onSuccess: (response) => {
-      const token = response.id_token ?? response.access_token;
+      const resp = response as { id_token?: string; access_token?: string };
+      const token = resp.id_token ?? resp.access_token;
       if (!token) {
         setError('Unable to retrieve Google token. Please try again.');
         return;

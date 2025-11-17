@@ -25,43 +25,52 @@ model User {
 }
 
 model Agent {
-  id            String          @id @default(uuid())
-  slug          String          @unique
-  name          String
-  description   String
-  status        AgentStatus     @default(DRAFT)
-  visibility    AgentVisibility @default(PUBLIC)
-  categories    String[]
-  tags          String[]
-  pricingModel  String
-  creatorId     String
-  creator       User            @relation(fields: [creatorId], references: [id])
-  organizationId String?
-  organization   Organization?  @relation(fields: [organizationId], references: [id])
-  executions    AgentExecution[]
-  reviews       AgentReview[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  wallets       Wallet[]        @relation("AgentWallets")
-  requestsSent  AgentCollaboration[] @relation("RequesterAgent")
+  id              String          @id @default(uuid())
+  slug            String          @unique
+  name            String
+  description     String
+  status          AgentStatus     @default(DRAFT)
+  visibility      AgentVisibility @default(PUBLIC)
+  categories      String[]
+  tags            String[]
+  pricingModel    String
+  pricingType     String?
+  priceAmount     Float?
+  creatorId       String
+  creator         User            @relation(fields: [creatorId], references: [id])
+  organizationId  String?
+  organization    Organization?   @relation(fields: [organizationId], references: [id])
+  executions      AgentExecution[]
+  reviews         AgentReview[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  wallets         Wallet[]        @relation("AgentWallets")
+  requestsSent    AgentCollaboration[] @relation("RequesterAgent")
   requestsReceived AgentCollaboration[] @relation("ResponderAgent")
-  budgets       AgentBudget[]
-  metricsPrimary AgentEngagementMetric[] @relation("AgentMetricPrimary")
-  metricsCounter AgentEngagementMetric[] @relation("AgentMetricCounter")
-  certifications AgentCertification[]
+  budgets         AgentBudget[]
+  metricsPrimary  AgentEngagementMetric[] @relation("AgentMetricPrimary")
+  metricsCounter  AgentEngagementMetric[] @relation("AgentMetricCounter")
+  certifications  AgentCertification[]
   serviceAgreements ServiceAgreement[]
   evaluationResults EvaluationResult[]
   verificationStatus VerificationStatus @default(UNVERIFIED)
-  verifiedAt    DateTime?
-  trustScore    Int              @default(50)
-  successCount  Int              @default(0)
-  failureCount  Int              @default(0)
-  lastExecutedAt DateTime?
-  basePriceCents Int?
-  inputSchema   Json?
-  outputSchema  Json?
-  ap2Endpoint   String?
+  verifiedAt      DateTime?
+  trustScore      Int              @default(50)
+  successCount    Int              @default(0)
+  failureCount    Int              @default(0)
+  lastExecutedAt  DateTime?
+  basePriceCents  Int?
+  x402Enabled     Boolean         @default(false)
+  x402WalletAddress String?
+  x402Network     String?
+  x402Price       Float?
+  inputSchema     Json?
+  outputSchema    Json?
+  ap2Endpoint     String?
   serviceAccounts ServiceAccount[]
+  x402Transactions X402Transaction[]
+
+  @@index([x402Enabled])
 }
 
 model AgentExecution {
@@ -168,6 +177,8 @@ model Wallet {
   policy           WalletPolicy?   @relation(fields: [budgetPolicyId], references: [id])
   spendCeiling     Decimal?        @db.Decimal(14, 2)
   autoApproveThreshold Decimal?    @db.Decimal(14, 2)
+  cryptoAddress    String?
+  cryptoNetwork    String?
   transactions     Transaction[]
   escrowsSource    Escrow[]        @relation("EscrowSource")
   escrowsDestination Escrow[]      @relation("EscrowDestination")
@@ -190,6 +201,25 @@ model Transaction {
   settledAt   DateTime?
   escrow      Escrow?
   paymentEvents PaymentEvent[]
+}
+
+model X402Transaction {
+  id            String                  @id @default(uuid())
+  agentId       String
+  agent         Agent                   @relation(fields: [agentId], references: [id])
+  buyerAddress  String
+  sellerAddress String
+  amount        Decimal                 @db.Decimal(14, 6)
+  currency      String
+  network       String
+  txHash        String                  @unique
+  status        X402TransactionStatus   @default(PENDING)
+  createdAt     DateTime                @default(now())
+  confirmedAt   DateTime?
+
+  @@index([agentId])
+  @@index([txHash])
+  @@index([status])
 }
 
 model Escrow {
@@ -234,6 +264,12 @@ enum TransactionStatus {
   SETTLED
   FAILED
   CANCELLED
+}
+
+enum X402TransactionStatus {
+  PENDING
+  CONFIRMED
+  FAILED
 }
 
 enum EscrowStatus {

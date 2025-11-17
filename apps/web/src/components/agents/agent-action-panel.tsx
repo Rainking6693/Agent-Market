@@ -1,6 +1,6 @@
 'use client';
 
-import { Balance, Heart } from 'lucide-react';
+import { Scale, Heart } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { useMarketplaceStore } from '@/stores/marketplace-store';
@@ -33,7 +33,7 @@ export function AgentActionPanel({ agentSlug }: AgentActionPanelProps) {
         className="rounded-full"
         onClick={() => toggleCompare(agentSlug)}
       >
-        <Balance className="mr-2 h-4 w-4" />
+        <Scale className="mr-2 h-4 w-4" />
         {inCompare ? 'In compare' : 'Compare'}
       </Button>
     </div>

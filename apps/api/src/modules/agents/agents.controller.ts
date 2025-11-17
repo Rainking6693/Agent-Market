@@ -9,10 +9,14 @@ import { ReviewAgentDto } from './dto/review-agent.dto.js';
 import { SubmitForReviewDto } from './dto/submit-for-review.dto.js';
 import { UpdateAgentDto } from './dto/update-agent.dto.js';
 import { UpdateAgentBudgetDto } from './dto/update-budget.dto.js';
+import { X402Service } from '../x402/x402.service.js';
 
 @Controller('agents')
 export class AgentsController {
-  constructor(private readonly agentsService: AgentsService) {}
+  constructor(
+    private readonly agentsService: AgentsService,
+    private readonly x402Service: X402Service,
+  ) {}
 
   @Post()
   create(@Body() body: CreateAgentDto) {
@@ -41,8 +45,14 @@ export class AgentsController {
   }
 
   @Get('discover')
-  discover(@Query() query: AgentDiscoveryQueryDto) {
-    return this.agentsService.discover(query);
+  async discover(@Query() query: AgentDiscoveryQueryDto) {
+    const agents = await this.agentsService.discover(query);
+    return Promise.all(
+      agents.map(async (agent) => ({
+        ...agent,
+        paymentMethods: await this.safePaymentMethods(agent.id),
+      })),
+    );
   }
 
   @Get(':id/schema')
@@ -65,19 +75,32 @@ export class AgentsController {
     return this.agentsService.getAgentBudget(id);
   }
 
+  @Get(':id/payment-history')
+  getPaymentHistory(@Param('id') id: string) {
+    return this.agentsService.getAgentPaymentHistory(id);
+  }
+
   @Patch(':id/budget')
   updateBudget(@Param('id') id: string, @Body() body: UpdateAgentBudgetDto) {
     return this.agentsService.updateAgentBudget(id, body);
   }
 
   @Get('slug/:slug')
-  findBySlug(@Param('slug') slug: string) {
-    return this.agentsService.findBySlug(slug);
+  async findBySlug(@Param('slug') slug: string) {
+    const agent = await this.agentsService.findBySlug(slug);
+    return {
+      ...agent,
+      paymentMethods: await this.safePaymentMethods(agent.id),
+    };
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.agentsService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const agent = await this.agentsService.findOne(id);
+    return {
+      ...agent,
+      paymentMethods: await this.safePaymentMethods(agent.id),
+    };
   }
 
   @Put(':id')
@@ -108,5 +131,12 @@ export class AgentsController {
   @Get(':id/reviews')
   reviews(@Param('id') id: string) {
     return this.agentsService.listReviews(id);
+  }
+  private async safePaymentMethods(agentId: string) {
+    try {
+      return await this.x402Service.getPaymentMethods(agentId);
+    } catch {
+      return [];
+    }
   }
 }

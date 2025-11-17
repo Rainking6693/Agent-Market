@@ -32,7 +32,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', serif;
+    font-family: 'Bodoni MT Black', 'Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', serif;
     background:
       radial-gradient(120% 120% at 15% 10%, rgba(196, 154, 108, 0.12) 0%, rgba(196, 154, 108, 0) 65%),
       radial-gradient(80% 80% at 75% 0%, rgba(92, 161, 255, 0.15) 0%, rgba(92, 161, 255, 0) 60%),

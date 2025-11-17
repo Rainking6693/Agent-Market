@@ -12,6 +12,7 @@ import { PaymentsModule } from './payments/payments.module.js';
 import { QualityModule } from './quality/quality.module.js';
 import { TrustModule } from './trust/trust.module.js';
 import { WorkflowsModule } from './workflows/workflows.module.js';
+import { X402Module } from './x402/x402.module.js';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { WorkflowsModule } from './workflows/workflows.module.js';
     OrganizationsModule,
     AuthModule,
     HealthModule,
+    X402Module,
   ],
 })
 export class AppModule {}

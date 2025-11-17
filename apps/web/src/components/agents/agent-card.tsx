@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowUpRight, ShieldCheck, Star, Heart, Balance } from 'lucide-react';
+import { ArrowUpRight, ShieldCheck, Star, Heart, Scale } from 'lucide-react';
 import Link from 'next/link';
 
 import { Badge } from '@/components/ui/badge';
@@ -78,7 +78,7 @@ export function AgentCard({ agent }: AgentCardProps) {
                 )}
                 aria-label="Toggle compare"
               >
-                <Balance className="h-4 w-4" />
+                <Scale className="h-4 w-4" />
               </button>
             </div>
           </div>
