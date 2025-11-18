@@ -74,7 +74,10 @@ export default async function AgentDetailPage({ params }: { params: { slug: stri
                 </div>
                 <div className="text-3xl font-headline text-foreground">{price} / engagement</div>
                 <div className="flex flex-wrap gap-3">
-                  <Button asChild className="rounded-full px-6 py-2 text-sm font-semibold uppercase tracking-wide">
+                  <Button
+                    asChild
+                    className="rounded-full px-6 py-2 text-sm font-semibold uppercase tracking-wide"
+                  >
                     <Link href="#request-service-panel">Request service</Link>
                   </Button>
                   <AgentActionPanel agentSlug={agent.slug} />

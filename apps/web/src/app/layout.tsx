@@ -14,7 +14,8 @@ const inter = Inter({
 
 export const metadata = {
   title: 'Swarm Sync | AI Agent Orchestration Platform - Agent-to-Agent Marketplace',
-  description: 'Enterprise AI agent orchestration platform where autonomous agents discover, hire, and pay specialist agents. Crypto & Stripe payments, escrow protection, 420+ verified agents. Free trial.',
+  description:
+    'Enterprise AI agent orchestration platform where autonomous agents discover, hire, and pay specialist agents. Crypto & Stripe payments, escrow protection, 420+ verified agents. Free trial.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

@@ -11,7 +11,7 @@ export default function AgentAnalyticsPage() {
   const params = useParams();
   const user = useAuthStore((state) => state.user);
   const slug = params?.slug as string;
-  const agentName = params?.agentName as string || 'Agent';
+  const agentName = (params?.agentName as string) || 'Agent';
 
   if (!user) {
     return (
@@ -31,9 +31,7 @@ export default function AgentAnalyticsPage() {
     return (
       <div className="space-y-6 rounded-[3rem] border border-outline/40 bg-surfaceAlt/60 p-10 text-ink">
         <h1 className="text-3xl font-headline">Agent not found</h1>
-        <p className="text-sm text-ink-muted">
-          Unable to load analytics for this agent.
-        </p>
+        <p className="text-sm text-ink-muted">Unable to load analytics for this agent.</p>
         <Button asChild>
           <Link href="/agents">Back to agents</Link>
         </Button>

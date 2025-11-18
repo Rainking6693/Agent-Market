@@ -1,8 +1,39 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+
 export function AgentFlowDiagram() {
+  const containerRef = useRef<SVGSVGElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, []);
+
   return (
     <svg
+      ref={containerRef}
       viewBox="0 0 800 600"
-      className="mx-auto w-full max-w-4xl"
+      className={`mx-auto w-full max-w-4xl transition-opacity duration-1000 ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      }`}
       xmlns="http://www.w3.org/2000/svg"
     >
       {/* Title */}
@@ -10,13 +41,20 @@ export function AgentFlowDiagram() {
         x="400"
         y="30"
         textAnchor="middle"
-        className="fill-ink text-xl font-headline"
+        className={`fill-ink text-xl font-headline transition-all duration-1000 delay-200 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+        }`}
       >
         Setup Once, Run Forever
       </text>
 
       {/* Step 1: Human Setup */}
-      <g className="transition-all hover:opacity-80">
+      <g
+        className={`transition-all hover:opacity-80 duration-700 ${
+          isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
+        }`}
+        style={{ transitionDelay: isVisible ? '300ms' : '0ms' }}
+      >
         <circle cx="120" cy="100" r="40" className="fill-brass/20 stroke-brass stroke-2" />
         <text x="120" y="100" textAnchor="middle" className="fill-ink font-headline text-sm" dy="5">
           Human
@@ -32,12 +70,20 @@ export function AgentFlowDiagram() {
       {/* Arrow 1 */}
       <path
         d="M 160 100 L 280 100"
-        className="stroke-brass stroke-2 fill-none"
+        className={`stroke-brass stroke-2 fill-none transition-all duration-700 ${
+          isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{ transitionDelay: isVisible ? '500ms' : '0ms' }}
         markerEnd="url(#arrowhead)"
       />
 
       {/* Step 2: Agent Autonomy */}
-      <g className="transition-all hover:opacity-80">
+      <g
+        className={`transition-all hover:opacity-80 duration-700 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}
+        style={{ transitionDelay: isVisible ? '600ms' : '0ms' }}
+      >
         <rect
           x="280"
           y="60"
@@ -60,12 +106,20 @@ export function AgentFlowDiagram() {
       {/* Arrow 2 */}
       <path
         d="M 340 140 L 340 220"
-        className="stroke-brass stroke-2 fill-none"
+        className={`stroke-brass stroke-2 fill-none transition-all duration-700 ${
+          isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{ transitionDelay: isVisible ? '800ms' : '0ms' }}
         markerEnd="url(#arrowhead)"
       />
 
       {/* Step 3: Discovery */}
-      <g className="transition-all hover:opacity-80">
+      <g
+        className={`transition-all hover:opacity-80 duration-700 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}
+        style={{ transitionDelay: isVisible ? '900ms' : '0ms' }}
+      >
         <rect
           x="280"
           y="220"
@@ -88,12 +142,20 @@ export function AgentFlowDiagram() {
       {/* Arrow 3 */}
       <path
         d="M 400 260 L 520 260"
-        className="stroke-brass stroke-2 fill-none"
+        className={`stroke-brass stroke-2 fill-none transition-all duration-700 ${
+          isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{ transitionDelay: isVisible ? '1100ms' : '0ms' }}
         markerEnd="url(#arrowhead)"
       />
 
       {/* Step 4: Negotiation */}
-      <g className="transition-all hover:opacity-80">
+      <g
+        className={`transition-all hover:opacity-80 duration-700 ${
+          isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
+        }`}
+        style={{ transitionDelay: isVisible ? '1200ms' : '0ms' }}
+      >
         <rect
           x="520"
           y="220"
@@ -116,12 +178,20 @@ export function AgentFlowDiagram() {
       {/* Arrow 4 */}
       <path
         d="M 580 300 L 580 380"
-        className="stroke-brass stroke-2 fill-none"
+        className={`stroke-brass stroke-2 fill-none transition-all duration-700 ${
+          isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{ transitionDelay: isVisible ? '1400ms' : '0ms' }}
         markerEnd="url(#arrowhead)"
       />
 
       {/* Step 5: Execution */}
-      <g className="transition-all hover:opacity-80">
+      <g
+        className={`transition-all hover:opacity-80 duration-700 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}
+        style={{ transitionDelay: isVisible ? '1500ms' : '0ms' }}
+      >
         <rect
           x="520"
           y="380"
@@ -144,12 +214,20 @@ export function AgentFlowDiagram() {
       {/* Arrow 5 */}
       <path
         d="M 520 420 L 400 420"
-        className="stroke-brass stroke-2 fill-none"
+        className={`stroke-brass stroke-2 fill-none transition-all duration-700 ${
+          isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{ transitionDelay: isVisible ? '1700ms' : '0ms' }}
         markerEnd="url(#arrowhead)"
       />
 
       {/* Step 6: Payment */}
-      <g className="transition-all hover:opacity-80">
+      <g
+        className={`transition-all hover:opacity-80 duration-700 ${
+          isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
+        }`}
+        style={{ transitionDelay: isVisible ? '1800ms' : '0ms' }}
+      >
         <rect
           x="280"
           y="380"
@@ -169,9 +247,20 @@ export function AgentFlowDiagram() {
       {/* Arrow 6 - back to human */}
       <path
         d="M 280 420 L 160 420 L 160 100"
-        className="stroke-brass/50 stroke-2 fill-none stroke-dasharray-4"
+        className={`stroke-brass/50 stroke-2 fill-none stroke-dasharray-4 transition-all duration-700 ${
+          isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{ transitionDelay: isVisible ? '2000ms' : '0ms' }}
       />
-      <text x="220" y="440" textAnchor="middle" className="fill-ink-muted text-xs font-body">
+      <text
+        x="220"
+        y="440"
+        textAnchor="middle"
+        className={`fill-ink-muted text-xs font-body transition-all duration-700 ${
+          isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{ transitionDelay: isVisible ? '2100ms' : '0ms' }}
+      >
         Dashboard Updates
       </text>
 

@@ -101,7 +101,8 @@ export default function AgentPurchasePage() {
           agentId: agent.id,
           txHash,
           buyerAddress: address,
-          amount: x402Method?.amount ?? agent.x402Price ?? agent.priceAmount ?? agent.basePriceCents ?? 0,
+          amount:
+            x402Method?.amount ?? agent.x402Price ?? agent.priceAmount ?? agent.basePriceCents ?? 0,
         }),
       });
 
@@ -137,7 +138,11 @@ export default function AgentPurchasePage() {
           <p className="text-muted-foreground">{agent.description}</p>
         </div>
 
-        <PaymentMethodSelector methods={paymentMethods} selected={selectedMethod} onSelect={setSelectedMethod} />
+        <PaymentMethodSelector
+          methods={paymentMethods}
+          selected={selectedMethod}
+          onSelect={setSelectedMethod}
+        />
 
         <div className="mt-8 space-y-6">
           {selectedMethod === 'platform' && (
@@ -150,7 +155,9 @@ export default function AgentPurchasePage() {
             <div className="space-y-4">
               {needsWalletConnection ? (
                 <div className="text-center space-y-4">
-                  <p className="text-sm text-muted-foreground">Connect your wallet to pay with crypto</p>
+                  <p className="text-sm text-muted-foreground">
+                    Connect your wallet to pay with crypto
+                  </p>
                   <ConnectWallet />
                 </div>
               ) : x402Method && x402Method.recipient ? (
@@ -172,4 +179,3 @@ export default function AgentPurchasePage() {
     </div>
   );
 }
-

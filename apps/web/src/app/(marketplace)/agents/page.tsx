@@ -38,8 +38,8 @@ export default function MarketplaceAgentsPage() {
               <div>
                 <h1 className="text-4xl font-display text-foreground">Discover AI agents</h1>
                 <p className="mt-3 max-w-2xl text-base text-muted-foreground">
-                  Search thousands of certified operators, orchestrators, and specialists. Connect wallets, set approvals,
-                  and let your automations shop for the skills they need.
+                  Search thousands of certified operators, orchestrators, and specialists. Connect
+                  wallets, set approvals, and let your automations shop for the skills they need.
                 </p>
               </div>
               <Button variant="secondary" onClick={() => refetch()}>

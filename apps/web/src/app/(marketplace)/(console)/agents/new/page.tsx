@@ -109,9 +109,11 @@ export default function NewAgentPage() {
   const [autoReload, setAutoReload] = useState(true);
 
   const [errorMessage, setErrorMessage] = useState('');
-  const [createdAgent, setCreatedAgent] = useState<{ id: string; slug: string; name: string } | null>(
-    null,
-  );
+  const [createdAgent, setCreatedAgent] = useState<{
+    id: string;
+    slug: string;
+    name: string;
+  } | null>(null);
 
   const creationMutation = useMutation({
     mutationFn: async () => {
@@ -140,7 +142,8 @@ export default function NewAgentPage() {
         tags: selectedCapabilities,
         pricingModel,
         visibility,
-        basePriceCents: basePriceNumber !== undefined ? Math.round(basePriceNumber * 100) : undefined,
+        basePriceCents:
+          basePriceNumber !== undefined ? Math.round(basePriceNumber * 100) : undefined,
         inputSchema: inputSchema.value,
         outputSchema: outputSchema.value,
         ap2Endpoint: ap2Endpoint.trim() || undefined,
@@ -186,15 +189,7 @@ export default function NewAgentPage() {
       default:
         return false;
     }
-  }, [
-    currentStep,
-    name,
-    description,
-    selectedCategories,
-    pricingModel,
-    ap2Endpoint,
-    monthlyLimit,
-  ]);
+  }, [currentStep, name, description, selectedCategories, pricingModel, ap2Endpoint, monthlyLimit]);
 
   const disableNav = creationMutation.isPending;
 
@@ -221,8 +216,8 @@ export default function NewAgentPage() {
           <div>
             <h1 className="text-4xl font-headline text-ink">Launch a new agent</h1>
             <p className="mt-2 max-w-2xl text-sm text-ink-muted">
-              Capture the basics, declare pricing and schemas, then lock budgets so your org stays in
-              control.
+              Capture the basics, declare pricing and schemas, then lock budgets so your org stays
+              in control.
             </p>
           </div>
           <Badge variant="accent" className="text-xs uppercase tracking-wide">
@@ -399,7 +394,9 @@ export default function NewAgentPage() {
                     <button
                       key={category}
                       type="button"
-                      onClick={() => toggleSelection(category, selectedCategories, setSelectedCategories)}
+                      onClick={() =>
+                        toggleSelection(category, selectedCategories, setSelectedCategories)
+                      }
                       className={cn(
                         'rounded-full border px-4 py-2 text-xs uppercase tracking-wide transition',
                         isSelected
@@ -595,7 +592,9 @@ export default function NewAgentPage() {
                   onClick={() => setAutoReload(true)}
                   className={cn(
                     'rounded-2xl border px-4 py-2 text-sm transition',
-                    autoReload ? 'border-primary bg-primary/10 text-primary' : 'border-outline text-ink',
+                    autoReload
+                      ? 'border-primary bg-primary/10 text-primary'
+                      : 'border-outline text-ink',
                   )}
                 >
                   Auto reload
@@ -605,7 +604,9 @@ export default function NewAgentPage() {
                   onClick={() => setAutoReload(false)}
                   className={cn(
                     'rounded-2xl border px-4 py-2 text-sm transition',
-                    !autoReload ? 'border-primary bg-primary/10 text-primary' : 'border-outline text-ink',
+                    !autoReload
+                      ? 'border-primary bg-primary/10 text-primary'
+                      : 'border-outline text-ink',
                   )}
                 >
                   Manual approvals

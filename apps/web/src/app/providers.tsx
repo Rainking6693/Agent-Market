@@ -9,7 +9,8 @@ import { ReactNode, useState } from 'react';
 import { WagmiProvider, http } from 'wagmi';
 import { base } from 'wagmi/chains';
 
-const walletConnectProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'demo-agent-market';
+const walletConnectProjectId =
+  process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'demo-agent-market';
 const baseRpcUrl = process.env.NEXT_PUBLIC_BASE_RPC_URL || 'https://mainnet.base.org';
 
 const wagmiConfig = getDefaultConfig({

@@ -35,4 +35,3 @@ export default function AgentPurchaseSuccessPage({ params, searchParams }: Succe
     </div>
   );
 }
-

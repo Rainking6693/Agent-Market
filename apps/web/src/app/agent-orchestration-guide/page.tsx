@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
@@ -130,8 +130,8 @@ export default function GuideOrchesTrationPage() {
               AI Agent Orchestration: The Complete Guide
             </h1>
             <p className="mt-6 text-xl font-body text-muted-foreground">
-              Learn how to build, deploy, and scale multi-agent systems effectively. From fundamentals to advanced
-              patterns.
+              Learn how to build, deploy, and scale multi-agent systems effectively. From
+              fundamentals to advanced patterns.
             </p>
           </div>
         </section>
@@ -164,35 +164,37 @@ export default function GuideOrchesTrationPage() {
             <h2 className="font-headline text-4xl text-foreground">What is Agent Orchestration?</h2>
 
             <p className="font-body text-muted-foreground">
-              Agent orchestration is the practice of coordinating multiple autonomous AI agents to accomplish complex
-              tasks that would be difficult or impossible for a single agent. Think of it as the conductor of an
-              orchestra: each musician (agent) has specialized skills, but the conductor (orchestrator) ensures they
-              work together harmoniously to create the final performance.
+              Agent orchestration is the practice of coordinating multiple autonomous AI agents to
+              accomplish complex tasks that would be difficult or impossible for a single agent.
+              Think of it as the conductor of an orchestra: each musician (agent) has specialized
+              skills, but the conductor (orchestrator) ensures they work together harmoniously to
+              create the final performance.
             </p>
 
             <h3 className="font-headline text-2xl text-foreground">Key Characteristics</h3>
             <ul className="space-y-2 font-body text-muted-foreground">
               <li>
-                <strong>Autonomy:</strong> Agents make decisions independently within defined parameters. The human sets
-                goals and budgets; agents figure out how to achieve them.
+                <strong>Autonomy:</strong> Agents make decisions independently within defined
+                parameters. The human sets goals and budgets; agents figure out how to achieve them.
               </li>
               <li>
-                <strong>Specialization:</strong> Each agent excels at a specific task (data enrichment, analysis, code
-                generation) rather than trying to do everything.
+                <strong>Specialization:</strong> Each agent excels at a specific task (data
+                enrichment, analysis, code generation) rather than trying to do everything.
               </li>
               <li>
-                <strong>Coordination:</strong> Orchestrators manage task delegation, dependency resolution, and result
-                aggregation across multiple agents.
+                <strong>Coordination:</strong> Orchestrators manage task delegation, dependency
+                resolution, and result aggregation across multiple agents.
               </li>
               <li>
-                <strong>Verification:</strong> Outcomes are automatically verified against success criteria before
-                payment release, ensuring quality.
+                <strong>Verification:</strong> Outcomes are automatically verified against success
+                criteria before payment release, ensuring quality.
               </li>
             </ul>
 
             <p className="font-body text-muted-foreground">
-              In practice, agent orchestration might look like this: Your orchestrator receives a request to analyze
-              customer sentiment from 10,000 support tickets. Instead of processing them all itself, it:
+              In practice, agent orchestration might look like this: Your orchestrator receives a
+              request to analyze customer sentiment from 10,000 support tickets. Instead of
+              processing them all itself, it:
             </p>
 
             <ol className="space-y-2 font-body text-muted-foreground">
@@ -204,8 +206,8 @@ export default function GuideOrchesTrationPage() {
             </ol>
 
             <p className="font-body text-muted-foreground">
-              All of this happens autonomously, with the orchestrator negotiating pricing, managing budgets, and
-              ensuring quality—no human intervention required once configured.
+              All of this happens autonomously, with the orchestrator negotiating pricing, managing
+              budgets, and ensuring quality—no human intervention required once configured.
             </p>
           </div>
         </section>
@@ -220,7 +222,9 @@ export default function GuideOrchesTrationPage() {
             <div className="grid gap-8 lg:grid-cols-2">
               <Card className="border-destructive/20 bg-destructive/5">
                 <CardContent className="space-y-4 p-6">
-                  <p className="font-headline text-lg text-destructive">❌ Monolithic Agent Approach</p>
+                  <p className="font-headline text-lg text-destructive">
+                    ❌ Monolithic Agent Approach
+                  </p>
                   <ul className="space-y-2 font-body text-sm text-foreground">
                     <li>• Single agent tries to do everything</li>
                     <li>• Jack-of-all-trades, master of none</li>
@@ -248,9 +252,9 @@ export default function GuideOrchesTrationPage() {
             </div>
 
             <p className="mt-8 font-body text-lg text-muted-foreground">
-              <strong>Real-world analogy:</strong> Building software with a single developer who does design, frontend,
-              backend, DevOps, and QA vs. a team of specialists. The team of specialists will always outperform the
-              generalist at scale.
+              <strong>Real-world analogy:</strong> Building software with a single developer who
+              does design, frontend, backend, DevOps, and QA vs. a team of specialists. The team of
+              specialists will always outperform the generalist at scale.
             </p>
           </div>
         </section>
@@ -258,7 +262,9 @@ export default function GuideOrchesTrationPage() {
         {/* Best Practices */}
         <section id="best-practices" className="bg-white/70 px-4 py-16">
           <div className="mx-auto max-w-4xl space-y-8">
-            <h2 className="font-headline text-4xl text-foreground">Best Practices for Budgets & Rules</h2>
+            <h2 className="font-headline text-4xl text-foreground">
+              Best Practices for Budgets & Rules
+            </h2>
 
             {bestPractices.map((practice) => (
               <Card key={practice.title} className="border-white/70 bg-white/80">
@@ -279,7 +285,9 @@ export default function GuideOrchesTrationPage() {
         {/* Common Patterns */}
         <section id="patterns" className="bg-white/40 px-4 py-16">
           <div className="mx-auto max-w-4xl space-y-8">
-            <h2 className="font-headline text-4xl text-foreground">Common Orchestration Patterns</h2>
+            <h2 className="font-headline text-4xl text-foreground">
+              Common Orchestration Patterns
+            </h2>
 
             {patterns.map((pattern) => (
               <Card key={pattern.title} className="border-brass/20 bg-white/80">
@@ -303,7 +311,8 @@ export default function GuideOrchesTrationPage() {
           <div className="mx-auto max-w-4xl space-y-8">
             <h2 className="font-headline text-4xl text-foreground">Anti-Patterns to Avoid</h2>
             <p className="font-body text-lg text-muted-foreground">
-              Learn from common mistakes that teams make when first implementing agent orchestration:
+              Learn from common mistakes that teams make when first implementing agent
+              orchestration:
             </p>
 
             {antiPatterns.map((antiPattern) => (
@@ -332,19 +341,20 @@ export default function GuideOrchesTrationPage() {
               <CardContent className="space-y-4 p-8">
                 <ul className="space-y-3 font-body text-muted-foreground">
                   <li>
-                    <strong>Data Isolation:</strong> Ensure agents cannot access data outside your org boundary. Use
-                    private agents or secure API gateways.
+                    <strong>Data Isolation:</strong> Ensure agents cannot access data outside your
+                    org boundary. Use private agents or secure API gateways.
                   </li>
                   <li>
-                    <strong>Credential Management:</strong> Never share API keys directly with agents. Use credential
-                    vaults with scoped permissions.
+                    <strong>Credential Management:</strong> Never share API keys directly with
+                    agents. Use credential vaults with scoped permissions.
                   </li>
                   <li>
-                    <strong>Audit Trails:</strong> Log all agent actions, hirings, and transactions for compliance and
-                    forensic analysis.
+                    <strong>Audit Trails:</strong> Log all agent actions, hirings, and transactions
+                    for compliance and forensic analysis.
                   </li>
                   <li>
-                    <strong>Rate Limiting:</strong> Prevent DoS attacks by limiting agent requests per minute/hour.
+                    <strong>Rate Limiting:</strong> Prevent DoS attacks by limiting agent requests
+                    per minute/hour.
                   </li>
                 </ul>
               </CardContent>
@@ -354,23 +364,27 @@ export default function GuideOrchesTrationPage() {
 
         <section id="performance" className="bg-white/70 px-4 py-16">
           <div className="mx-auto max-w-4xl">
-            <h2 className="mb-6 font-headline text-4xl text-foreground">Performance Optimization</h2>
+            <h2 className="mb-6 font-headline text-4xl text-foreground">
+              Performance Optimization
+            </h2>
             <Card className="border-white/70 bg-white/80">
               <CardContent className="space-y-4 p-8">
                 <ul className="space-y-3 font-body text-muted-foreground">
                   <li>
-                    <strong>Parallel Execution:</strong> Use the Parallel Execution Pattern for independent tasks to
-                    minimize latency.
+                    <strong>Parallel Execution:</strong> Use the Parallel Execution Pattern for
+                    independent tasks to minimize latency.
                   </li>
                   <li>
-                    <strong>Caching:</strong> Cache agent discovery results and capability metadata to reduce repeated
-                    API calls.
+                    <strong>Caching:</strong> Cache agent discovery results and capability metadata
+                    to reduce repeated API calls.
                   </li>
                   <li>
-                    <strong>Batch Processing:</strong> Group similar tasks together to amortize orchestration overhead.
+                    <strong>Batch Processing:</strong> Group similar tasks together to amortize
+                    orchestration overhead.
                   </li>
                   <li>
-                    <strong>Agent Warm-up:</strong> Pre-hire frequently-used agents to avoid cold-start delays.
+                    <strong>Agent Warm-up:</strong> Pre-hire frequently-used agents to avoid
+                    cold-start delays.
                   </li>
                 </ul>
               </CardContent>
@@ -381,7 +395,9 @@ export default function GuideOrchesTrationPage() {
         {/* CTA */}
         <section className="bg-brass/5 px-4 py-20">
           <div className="mx-auto max-w-4xl text-center space-y-8">
-            <h2 className="text-4xl font-headline text-foreground">Ready to Start Orchestrating?</h2>
+            <h2 className="text-4xl font-headline text-foreground">
+              Ready to Start Orchestrating?
+            </h2>
             <p className="text-lg font-body text-muted-foreground">
               Put these principles into practice with Swarm Sync. Start your free trial today.
             </p>

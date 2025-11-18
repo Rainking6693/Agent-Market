@@ -1,4 +1,32 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+
 export function AgentNetworkDiagram() {
+  const containerRef = useRef<SVGSVGElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, []);
+
   const specialists = [
     { x: 400, y: 100, label: 'Data Agent', icon: '📊' },
     { x: 600, y: 200, label: 'Analysis Agent', icon: '🔍' },
@@ -10,8 +38,11 @@ export function AgentNetworkDiagram() {
 
   return (
     <svg
+      ref={containerRef}
       viewBox="0 0 800 600"
-      className="mx-auto w-full max-w-4xl"
+      className={`mx-auto w-full max-w-4xl transition-opacity duration-1000 ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      }`}
       xmlns="http://www.w3.org/2000/svg"
     >
       {/* Title */}
@@ -19,7 +50,9 @@ export function AgentNetworkDiagram() {
         x="400"
         y="30"
         textAnchor="middle"
-        className="fill-ink text-xl font-headline"
+        className={`fill-ink text-xl font-headline transition-all duration-1000 delay-200 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+        }`}
       >
         Your Agent Network
       </text>
@@ -33,7 +66,10 @@ export function AgentNetworkDiagram() {
             y1="300"
             x2={spec.x}
             y2={spec.y}
-            className="stroke-brass/30 stroke-1"
+            className={`stroke-brass/30 stroke-1 transition-all duration-700 ${
+              isVisible ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{ transitionDelay: isVisible ? `${300 + idx * 100}ms` : '0ms' }}
             strokeDasharray="4 4"
           />
 
@@ -42,7 +78,10 @@ export function AgentNetworkDiagram() {
             x={(400 + spec.x) / 2}
             y={(300 + spec.y) / 2}
             textAnchor="middle"
-            className="fill-brass/60 text-[10px] font-body"
+            className={`fill-brass/60 text-[10px] font-body transition-all duration-700 ${
+              isVisible ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{ transitionDelay: isVisible ? `${400 + idx * 100}ms` : '0ms' }}
           >
             hire • pay
           </text>
@@ -50,7 +89,12 @@ export function AgentNetworkDiagram() {
       ))}
 
       {/* Central Orchestrator Agent */}
-      <g className="transition-all hover:scale-105">
+      <g
+        className={`transition-all hover:scale-105 duration-700 ${
+          isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+        }`}
+        style={{ transitionDelay: isVisible ? '500ms' : '0ms' }}
+      >
         <circle
           cx="400"
           cy="300"
@@ -85,7 +129,13 @@ export function AgentNetworkDiagram() {
 
       {/* Specialist Agents */}
       {specialists.map((spec, idx) => (
-        <g key={idx} className="transition-all hover:scale-110">
+        <g
+          key={idx}
+          className={`transition-all hover:scale-110 duration-700 ${
+            isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
+          }`}
+          style={{ transitionDelay: isVisible ? `${600 + idx * 100}ms` : '0ms' }}
+        >
           <circle
             cx={spec.x}
             cy={spec.y}
@@ -112,7 +162,13 @@ export function AgentNetworkDiagram() {
       ))}
 
       {/* Legend */}
-      <g transform="translate(50, 550)">
+      <g
+        transform="translate(50, 550)"
+        className={`transition-all duration-700 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+        }`}
+        style={{ transitionDelay: isVisible ? '1300ms' : '0ms' }}
+      >
         <line
           x1="0"
           y1="0"

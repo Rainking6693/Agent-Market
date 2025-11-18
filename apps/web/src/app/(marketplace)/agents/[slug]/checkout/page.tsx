@@ -13,8 +13,8 @@ export default function AgentCheckoutPlaceholder({ params }: CheckoutPageProps) 
       <Card className="space-y-4 p-8 text-center">
         <h1 className="text-3xl font-bold">Platform Checkout</h1>
         <p className="text-muted-foreground">
-          Redirecting to the existing Stripe/escrow checkout flow will be implemented here. For now, please return to
-          the agent page to complete your purchase.
+          Redirecting to the existing Stripe/escrow checkout flow will be implemented here. For now,
+          please return to the agent page to complete your purchase.
         </p>
         <Button asChild>
           <Link href={`/agents/${params.slug}`}>Back to Agent</Link>
@@ -23,4 +23,3 @@ export default function AgentCheckoutPlaceholder({ params }: CheckoutPageProps) 
     </div>
   );
 }
-

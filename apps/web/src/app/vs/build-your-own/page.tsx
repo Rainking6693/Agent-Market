@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
@@ -113,7 +113,8 @@ export default function BuildVsBuyPage() {
               Swarm Sync vs. Building Your Own
             </h1>
             <p className="mt-6 text-xl font-body text-muted-foreground">
-              An honest comparison of building a custom agent orchestration platform in-house versus using Swarm Sync.
+              An honest comparison of building a custom agent orchestration platform in-house versus
+              using Swarm Sync.
             </p>
           </div>
         </section>
@@ -138,7 +139,9 @@ export default function BuildVsBuyPage() {
                     <div key={item.label} className="space-y-1 border-b border-brass/20 pb-4">
                       <div className="flex justify-between">
                         <span className="font-body text-sm text-foreground">{item.label}</span>
-                        <span className="font-headline text-base text-destructive">{item.cost}</span>
+                        <span className="font-headline text-base text-destructive">
+                          {item.cost}
+                        </span>
                       </div>
                       <p className="font-body text-xs text-muted-foreground">{item.details}</p>
                     </div>
@@ -192,22 +195,30 @@ export default function BuildVsBuyPage() {
         {/* Feature Comparison Table */}
         <section className="bg-white/40 px-4 py-20">
           <div className="mx-auto max-w-5xl space-y-8">
-            <h2 className="text-center text-4xl font-headline text-foreground">Feature Comparison</h2>
+            <h2 className="text-center text-4xl font-headline text-foreground">
+              Feature Comparison
+            </h2>
 
             <div className="overflow-hidden rounded-2xl border border-white/70 bg-white/80">
               <table className="w-full">
                 <thead className="bg-brass/10">
                   <tr>
                     <th className="p-4 text-left font-headline text-sm text-foreground">Feature</th>
-                    <th className="p-4 text-left font-headline text-sm text-foreground">Build Your Own</th>
+                    <th className="p-4 text-left font-headline text-sm text-foreground">
+                      Build Your Own
+                    </th>
                     <th className="p-4 text-left font-headline text-sm text-success">Swarm Sync</th>
                   </tr>
                 </thead>
                 <tbody>
                   {comparisonTable.map((row, idx) => (
                     <tr key={row.feature} className={idx % 2 === 0 ? 'bg-white/50' : ''}>
-                      <td className="p-4 font-body text-sm font-medium text-foreground">{row.feature}</td>
-                      <td className="p-4 font-body text-sm text-muted-foreground">{row.buildYourOwn}</td>
+                      <td className="p-4 font-body text-sm font-medium text-foreground">
+                        {row.feature}
+                      </td>
+                      <td className="p-4 font-body text-sm text-muted-foreground">
+                        {row.buildYourOwn}
+                      </td>
                       <td className="p-4 font-body text-sm text-success">{row.swarmSync}</td>
                     </tr>
                   ))}
