@@ -134,17 +134,19 @@ export class QualityAnalyticsService {
     since.setHours(0, 0, 0, 0);
     since.setDate(since.getDate() - (clampedDays - 1));
 
-    const [wallets, transactions, verifications] = await Promise.all([
-      this.prisma.wallet.findMany({
-        where: {
-          ownerAgentId: agentId,
-          status: WalletStatus.ACTIVE,
-        },
-        select: { id: true },
-      }),
+    const wallets = await this.prisma.wallet.findMany({
+      where: {
+        ownerAgentId: agentId,
+        status: WalletStatus.ACTIVE,
+      },
+      select: { id: true },
+    });
+    const walletIds = wallets.map((wallet) => wallet.id);
+
+    const [transactions, verifications] = await Promise.all([
       this.prisma.transaction.findMany({
         where: {
-          walletId: { in: wallets.map((wallet) => wallet.id) },
+          walletId: { in: walletIds },
           status: TransactionStatus.SETTLED,
           type: TransactionType.CREDIT,
           createdAt: { gte: since },
@@ -236,14 +238,18 @@ export class QualityAnalyticsService {
     }
 
     const passed = evaluations.filter((evaluation) => evaluation.status === 'PASSED').length;
-    const latencyValues = evaluations.map((evaluation) => evaluation.latencyMs).filter(Boolean);
+    const latencyValues = evaluations
+      .map((evaluation) => evaluation.latencyMs)
+      .filter((value): value is number => typeof value === 'number');
     const averageLatencyMs = latencyValues.length
-      ? Math.round(latencyValues.reduce((sum, value) => sum + (value ?? 0), 0) / latencyValues.length)
+      ? Math.round(
+          latencyValues.reduce((sum, value) => sum + value, 0) / latencyValues.length,
+        )
       : null;
 
     const costValues = evaluations
       .map((evaluation) => evaluation.cost)
-      .filter((value): value is Prisma.Decimal => Boolean(value));
+      .filter((value): value is Prisma.Decimal => value instanceof Prisma.Decimal);
     const averageCost =
       costValues.length > 0
         ? costValues
@@ -371,6 +377,13 @@ export class QualityAnalyticsService {
       averageCostPerEngagement,
       verifiedOutcomeRate,
     };
+  }
+
+  private toDateKey(date: Date) {
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const day = `${date.getDate()}`.padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   private async ensureAgentExists(agentId: string) {

@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Optional, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { hash, verify } from 'argon2';
@@ -30,9 +30,11 @@ export class AuthService {
 
   constructor(
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
+    @Optional() private readonly configService?: ConfigService,
   ) {
-    this.googleClientId = this.configService.get<string>('GOOGLE_OAUTH_CLIENT_ID');
+    this.googleClientId =
+      this.configService?.get<string>('GOOGLE_OAUTH_CLIENT_ID') ??
+      process.env.GOOGLE_OAUTH_CLIENT_ID;
     if (this.googleClientId) {
       this.oauthClient = new OAuth2Client(this.googleClientId);
     }
@@ -71,9 +73,13 @@ export class AuthService {
     }
 
     const payload = await this.validateGoogleToken(data.token);
+    const email = payload.email;
+    if (!email) {
+      throw new UnauthorizedException('Google token missing email');
+    }
 
-    const displayName = payload.name || payload.email.split('@')[0];
-    const user = this.ensureUser(payload.email, displayName);
+    const displayName = payload.name || email.split('@')[0];
+    const user = this.ensureUser(email, displayName);
 
     return this.buildAuthResponse(user);
   }

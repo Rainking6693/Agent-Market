@@ -1010,8 +1010,8 @@ NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
 - [x] Platform payment still works
 - [x] Transaction verification works
 - [x] Both payments show in history
-- [ ] Deployed to production
-- [ ] Monitoring configured
+- [x] Deployed to production
+- [x] Monitoring configured
 
 ---
 

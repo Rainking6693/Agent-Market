@@ -1,6 +1,6 @@
 import { billingPlanConfigs } from '@agent-market/config';
 import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
-import { InvoiceStatus, SubscriptionStatus } from '@prisma/client';
+import { InvoiceStatus, Prisma, SubscriptionStatus } from '@prisma/client';
 import Stripe from 'stripe';
 
 import { PrismaService } from '../database/prisma.service.js';
@@ -8,6 +8,8 @@ import { WalletsService } from '../payments/wallets.service.js';
 
 const DEFAULT_ORG_SLUG = process.env.DEFAULT_ORG_SLUG ?? 'genesis';
 const STRIPE_WEB_URL = process.env.STRIPE_WEB_URL ?? process.env.WEB_URL ?? 'http://localhost:3000';
+type BillingPlanConfig = (typeof billingPlanConfigs)[number] & { stripePriceId?: string };
+const planConfigList = billingPlanConfigs as BillingPlanConfig[];
 
 @Injectable()
 export class BillingService {
@@ -20,7 +22,7 @@ export class BillingService {
     private readonly walletsService: WalletsService,
   ) {
     const secret = process.env.STRIPE_SECRET_KEY;
-    this.stripe = secret ? new Stripe(secret, { apiVersion: '2024-11-20.acacia' }) : null;
+    this.stripe = secret ? new Stripe(secret, { apiVersion: '2025-10-29.clover' }) : null;
     this.webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   }
 
@@ -86,6 +88,8 @@ export class BillingService {
       throw new NotFoundException('Plan not found');
     }
 
+    const planConfig = this.findPlanConfigBySlug(plan.slug);
+
     if (plan.priceCents === 0) {
       const subscription = await this.applyPlan(planSlug);
       return {
@@ -101,6 +105,11 @@ export class BillingService {
     const organization = await this.getDefaultOrganization();
     const stripeCustomerId = await this.ensureStripeCustomer(organization.id);
 
+    const stripePriceId = planConfig?.stripePriceId;
+    if (!stripePriceId) {
+      throw new Error(`Stripe price ID missing for plan ${plan.slug}`);
+    }
+
     const session = await this.stripe.checkout.sessions.create({
       mode: 'subscription',
       customer: stripeCustomerId,
@@ -108,7 +117,7 @@ export class BillingService {
       cancel_url: cancelUrl ?? `${STRIPE_WEB_URL}/billing?status=cancel`,
       line_items: [
         {
-          price: plan.stripePriceId ?? undefined,
+          price: stripePriceId,
           quantity: 1,
         },
       ],
@@ -319,17 +328,30 @@ export class BillingService {
       return;
     }
 
-    const plan = await this.prisma.billingPlan.findFirst({
-      where: { stripePriceId: priceId },
-    });
-
-    if (!plan) {
+    const configMatch = this.findPlanConfigByPriceId(priceId);
+    if (!configMatch) {
       this.logger.warn('No billing plan matches Stripe price', { priceId });
       return;
     }
 
-    const start = new Date(stripeSubscription.current_period_start * 1000);
-    const end = new Date(stripeSubscription.current_period_end * 1000);
+    const plan = await this.prisma.billingPlan.findUnique({
+      where: { slug: configMatch.slug },
+    });
+
+    if (!plan) {
+      this.logger.warn('Configured plan missing in database', { slug: configMatch.slug });
+      return;
+    }
+
+    const {
+      current_period_start: currentPeriodStart,
+      current_period_end: currentPeriodEnd,
+    } = stripeSubscription as Stripe.Subscription & {
+      current_period_start: number;
+      current_period_end: number;
+    };
+    const start = new Date(currentPeriodStart * 1000);
+    const end = new Date(currentPeriodEnd * 1000);
 
     await this.prisma.organizationSubscription.upsert({
       where: { organizationId: organization.id },
@@ -364,10 +386,7 @@ export class BillingService {
   }
 
   private async recordInvoice(invoice: Stripe.Invoice) {
-    const subscriptionId =
-      typeof invoice.subscription === 'string'
-        ? invoice.subscription
-        : invoice.subscription?.id ?? null;
+    const subscriptionId = this.extractSubscriptionId(invoice);
     if (!subscriptionId) {
       return;
     }
@@ -381,31 +400,41 @@ export class BillingService {
     }
 
     const status = invoice.status === 'paid' ? InvoiceStatus.PAID : InvoiceStatus.OPEN;
+    const paidAt = invoice.status_transitions?.paid_at
+      ? new Date(invoice.status_transitions.paid_at * 1000)
+      : null;
+    const baseData = {
+      subscriptionId: subscription.id,
+      amountCents: invoice.amount_due ?? invoice.amount_paid ?? 0,
+      issuedAt: new Date(invoice.created * 1000),
+      dueAt: invoice.due_date ? new Date(invoice.due_date * 1000) : new Date(),
+      status,
+      lineItems: (invoice.lines?.data ?? []) as unknown as Prisma.InputJsonValue,
+      stripeInvoiceId: invoice.id,
+      currency: invoice.currency?.toUpperCase() ?? 'USD',
+      paidAt,
+    };
 
-    await this.prisma.invoice.upsert({
+    const existing = await this.prisma.invoice.findFirst({
       where: { stripeInvoiceId: invoice.id },
-      update: {
-        amountCents: invoice.amount_due ?? invoice.amount_paid ?? 0,
-        status,
-        paidAt: invoice.status_transitions?.paid_at
-          ? new Date(invoice.status_transitions.paid_at * 1000)
-          : null,
-        lineItems: invoice.lines?.data ?? [],
-      },
-      create: {
-        subscriptionId: subscription.id,
-        amountCents: invoice.amount_due ?? invoice.amount_paid ?? 0,
-        issuedAt: new Date(invoice.created * 1000),
-        dueAt: invoice.due_date ? new Date(invoice.due_date * 1000) : new Date(),
-        status,
-        lineItems: invoice.lines?.data ?? [],
-        stripeInvoiceId: invoice.id,
-        currency: invoice.currency?.toUpperCase() ?? 'USD',
-        paidAt: invoice.status_transitions?.paid_at
-          ? new Date(invoice.status_transitions.paid_at * 1000)
-          : null,
-      },
     });
+
+    if (existing) {
+      await this.prisma.invoice.update({
+        where: { id: existing.id },
+        data: {
+          amountCents: baseData.amountCents,
+          status,
+          paidAt,
+          lineItems: baseData.lineItems,
+          currency: baseData.currency,
+          dueAt: baseData.dueAt,
+        },
+      });
+      return;
+    }
+
+    await this.prisma.invoice.create({ data: baseData });
   }
 
   private async resolveOrganizationFromStripeSubscription(
@@ -428,6 +457,16 @@ export class BillingService {
     }
 
     return null;
+  }
+
+  private findPlanConfigBySlug(slug: string): BillingPlanConfig | undefined {
+    return planConfigList.find((plan) => plan.slug === slug);
+  }
+
+  private findPlanConfigByPriceId(priceId: string): BillingPlanConfig | undefined {
+    return planConfigList.find(
+      (plan) => plan.stripePriceId && plan.stripePriceId === priceId,
+    );
   }
 
   private mapSubscriptionStatus(status: Stripe.Subscription.Status): SubscriptionStatus {
@@ -454,5 +493,19 @@ export class BillingService {
       amount: amountCents / 100,
       reference: `stripe-topup:${reference}`,
     });
+  }
+
+  private extractSubscriptionId(invoice: Stripe.Invoice) {
+    const raw =
+      (invoice as Stripe.Invoice & {
+        subscription?: string | Stripe.Subscription;
+      }).subscription ?? null;
+    if (!raw) {
+      return null;
+    }
+    if (typeof raw === 'string') {
+      return raw;
+    }
+    return raw.id ?? null;
   }
 }

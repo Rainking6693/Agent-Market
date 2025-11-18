@@ -5,6 +5,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { ServiceAccountsService } from '../service-accounts.service.js';
 
 import type { Request } from 'express';
+import { firstValueFrom, isObservable } from 'rxjs';
+import type { Observable } from 'rxjs';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -15,7 +17,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     super();
   }
 
-  async canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     if (!this.isEnforced()) {
       return true;
     }
@@ -32,15 +34,22 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       return true;
     }
 
-    return super.canActivate(context);
+    const result = super.canActivate(context) as boolean | Promise<boolean> | Observable<boolean>;
+    return this.resolveGuardResult(result);
   }
 
-  handleRequest(err: unknown, user: unknown) {
+  handleRequest<TUser = unknown>(
+    err: unknown,
+    user: TUser,
+    info?: unknown,
+    context?: ExecutionContext,
+    status?: unknown,
+  ): TUser {
     if (!this.isEnforced()) {
       if (err) {
         throw err;
       }
-      return user ?? null;
+      return (user ?? null) as TUser;
     }
 
     if (err || !user) {
@@ -48,6 +57,18 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
 
     return user;
+  }
+
+  private async resolveGuardResult(
+    result: boolean | Promise<boolean> | Observable<boolean>,
+  ): Promise<boolean> {
+    if (typeof result === 'boolean') {
+      return result;
+    }
+    if (isObservable(result)) {
+      return firstValueFrom(result);
+    }
+    return result;
   }
 
   private isEnforced() {

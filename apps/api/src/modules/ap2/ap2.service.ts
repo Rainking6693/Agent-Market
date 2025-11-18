@@ -24,21 +24,22 @@ import {
   RespondNegotiationDto,
 } from './dto/respond-negotiation.dto.js';
 import { ServiceDeliveryDto } from './dto/service-delivery.dto.js';
+import { Ap2PaymentPurpose } from '../payments/dto/initiate-ap2.dto.js';
 
 type NegotiationPayload = {
   requestedService: string;
   budget: number;
-  requirements?: Record<string, unknown>;
-  notes?: string;
-  initiatedByUserId?: string;
+  requirements: Prisma.JsonValue | null;
+  notes: string | null;
+  initiatedByUserId: string | null;
 };
 
 type NegotiationCounterPayload = {
-  status?: NegotiationResponseStatus;
-  price?: number;
-  estimatedDelivery?: string;
-  terms?: Record<string, unknown>;
-  notes?: string;
+  status: NegotiationResponseStatus | null;
+  price: number | null;
+  estimatedDelivery: string | null;
+  terms: Prisma.JsonValue | null;
+  notes: string | null;
 };
 
 type NegotiationWithRelations = AgentCollaboration & {
@@ -81,18 +82,20 @@ export class AP2Service {
     const amount = new Prisma.Decimal(payload.budget);
     await this.ensureAgentBudget(payload.requesterAgentId, amount);
 
+    const negotiationPayload: NegotiationPayload = {
+      requestedService: payload.requestedService,
+      budget: payload.budget,
+      requirements: this.toJsonValue(payload.requirements),
+      notes: payload.notes ?? null,
+      initiatedByUserId: payload.initiatedByUserId ?? null,
+    };
+
     const negotiation = await this.prisma.agentCollaboration.create({
       data: {
         requesterAgentId: payload.requesterAgentId,
         responderAgentId: payload.responderAgentId,
         status: CollaborationStatus.PENDING,
-        payload: {
-          requestedService: payload.requestedService,
-          budget: payload.budget,
-          requirements: payload.requirements ?? null,
-          notes: payload.notes ?? null,
-          initiatedByUserId: payload.initiatedByUserId ?? null,
-        } satisfies NegotiationPayload,
+        payload: negotiationPayload as Prisma.InputJsonValue,
       },
       include: this.baseNegotiationInclude,
     });
@@ -121,7 +124,7 @@ export class AP2Service {
       throw new BadRequestException('Negotiation no longer actionable');
     }
 
-    const basePayload = (negotiation.payload as NegotiationPayload) ?? null;
+    const basePayload = (negotiation.payload as NegotiationPayload | null) ?? null;
     if (!basePayload) {
       throw new BadRequestException('Negotiation payload missing');
     }
@@ -134,10 +137,10 @@ export class AP2Service {
           where: { id: negotiation.id },
           data: {
             status: CollaborationStatus.DECLINED,
-            counterPayload: {
+            counterPayload: this.buildCounterPayload({
               status: payload.status,
-              notes: payload.notes ?? null,
-            } satisfies NegotiationCounterPayload,
+              notes: payload.notes,
+            }),
           },
           include: this.baseNegotiationInclude,
         });
@@ -153,13 +156,13 @@ export class AP2Service {
           where: { id: negotiation.id },
           data: {
             status: CollaborationStatus.COUNTERED,
-            counterPayload: {
+            counterPayload: this.buildCounterPayload({
               status: payload.status,
-              price: payload.price ?? null,
-              estimatedDelivery: payload.estimatedDelivery ?? null,
-              terms: payload.terms ?? null,
-              notes: payload.notes ?? null,
-            } satisfies NegotiationCounterPayload,
+              price: payload.price,
+              estimatedDelivery: payload.estimatedDelivery,
+              terms: payload.terms,
+              notes: payload.notes,
+            }),
           },
           include: this.baseNegotiationInclude,
         });
@@ -305,33 +308,36 @@ export class AP2Service {
   }
 
   async getTransactionStatus(transactionId: string) {
-    const transaction = await this.prisma.transaction.findUnique({
-      where: { id: transactionId },
-      include: {
-        escrow: {
-          include: {
-            serviceAgreement: {
-              include: {
-                ap2Negotiation: this.baseNegotiationInclude,
+    const [transaction, escrow] = await Promise.all([
+      this.prisma.transaction.findUnique({
+        where: { id: transactionId },
+      }),
+      this.prisma.escrow.findUnique({
+        where: { transactionId },
+        include: {
+          serviceAgreement: {
+            include: {
+              ap2Negotiation: {
+                include: this.baseNegotiationInclude,
               },
             },
           },
         },
-      },
-    });
+      }),
+    ]);
 
-    if (!transaction || !transaction.escrow) {
+    if (!transaction || !escrow) {
       throw new NotFoundException('Transaction not found');
     }
 
     return {
       transaction,
-      escrow: transaction.escrow,
-      negotiation: transaction.escrow.serviceAgreement?.ap2Negotiation
+      escrow,
+      negotiation: escrow.serviceAgreement?.ap2Negotiation
         ? this.presentNegotiation(
-            transaction.escrow.serviceAgreement.ap2Negotiation,
-            transaction.escrow.serviceAgreement.ap2Negotiation.requesterAgent,
-            transaction.escrow.serviceAgreement.ap2Negotiation.responderAgent,
+            escrow.serviceAgreement.ap2Negotiation,
+            escrow.serviceAgreement.ap2Negotiation.requesterAgent,
+            escrow.serviceAgreement.ap2Negotiation.responderAgent,
           )
         : null,
     };
@@ -385,13 +391,17 @@ export class AP2Service {
       sourceWalletId: requesterWallet.id,
       destinationWalletId: responderWallet.id,
       amount: priceDecimal.toNumber(),
-      purpose: basePayload.requestedService,
+      purpose: Ap2PaymentPurpose.AGENT_HIRE,
       memo: `ap2:${negotiation.id}`,
+      metadata: {
+        negotiationId: negotiation.id,
+        requestedService: basePayload.requestedService,
+      },
     });
 
     const agreement = await this.outcomesService.createAgreement({
       agentId: negotiation.responderAgentId,
-      buyerId: null,
+      buyerId: undefined,
       escrowId: escrow.id,
       outcomeType: 'GENERIC',
       targetDescription: basePayload.requestedService,
@@ -403,19 +413,42 @@ export class AP2Service {
       where: { id: negotiation.id },
       data: {
         status: CollaborationStatus.ACCEPTED,
-        counterPayload: {
+        counterPayload: this.buildCounterPayload({
           status: payload.status,
           price: payload.price,
-          estimatedDelivery: payload.estimatedDelivery ?? null,
-          terms: payload.terms ?? null,
-          notes: payload.notes ?? null,
-        } satisfies NegotiationCounterPayload,
+          estimatedDelivery: payload.estimatedDelivery,
+          terms: payload.terms,
+          notes: payload.notes,
+        }),
         serviceAgreementId: agreement.id,
       },
       include: this.baseNegotiationInclude,
     });
 
     return this.presentNegotiation(updated, negotiation.requesterAgent, negotiation.responderAgent);
+  }
+
+  private buildCounterPayload(input: {
+    status: NegotiationResponseStatus;
+    price?: number;
+    estimatedDelivery?: string;
+    terms?: Record<string, unknown>;
+    notes?: string;
+  }): NegotiationCounterPayload {
+    return {
+      status: input.status,
+      price: input.price ?? null,
+      estimatedDelivery: input.estimatedDelivery ?? null,
+      terms: this.toJsonValue(input.terms),
+      notes: input.notes ?? null,
+    };
+  }
+
+  private toJsonValue(value?: Record<string, unknown> | null): Prisma.JsonValue | null {
+    if (value == null) {
+      return null;
+    }
+    return value as Prisma.JsonValue;
   }
 
   private get baseNegotiationInclude() {
@@ -434,12 +467,12 @@ export class AP2Service {
             },
           },
           verifications: {
-            orderBy: { createdAt: 'desc' },
+            orderBy: { createdAt: 'desc' as Prisma.SortOrder },
             take: 1,
           },
         },
       },
-    };
+    } satisfies Prisma.AgentCollaborationInclude;
   }
 
   private presentNegotiation(
@@ -447,8 +480,8 @@ export class AP2Service {
     requester?: Pick<Agent, 'id' | 'name' | 'slug'> | null,
     responder?: Pick<Agent, 'id' | 'name' | 'slug'> | null,
   ) {
-    const payload = (negotiation.payload as NegotiationPayload) ?? {};
-    const counterPayload = (negotiation.counterPayload as NegotiationCounterPayload) ?? null;
+    const payload = (negotiation.payload as NegotiationPayload | null) ?? null;
+    const counterPayload = (negotiation.counterPayload as NegotiationCounterPayload | null) ?? null;
     const escrow = negotiation.serviceAgreement?.escrow ?? null;
     const transaction = escrow?.transaction ?? null;
     const verification = negotiation.serviceAgreement?.verifications?.[0] ?? null;
@@ -458,9 +491,9 @@ export class AP2Service {
       status: negotiation.status,
       requesterAgent: requester ?? negotiation.requesterAgent ?? null,
       responderAgent: responder ?? negotiation.responderAgent ?? null,
-      requestedService: payload.requestedService ?? null,
-      proposedBudget: payload.budget ?? null,
-      requirements: payload.requirements ?? null,
+      requestedService: payload?.requestedService ?? null,
+      proposedBudget: payload?.budget ?? null,
+      requirements: payload?.requirements ?? null,
       counter: counterPayload,
       serviceAgreementId: negotiation.serviceAgreementId ?? null,
       escrowId: escrow?.id ?? null,
@@ -473,7 +506,7 @@ export class AP2Service {
           }
         : null,
       verificationStatus: verification?.status ?? null,
-      verificationUpdatedAt: verification?.updatedAt ?? null,
+      verificationUpdatedAt: verification?.verifiedAt ?? verification?.createdAt ?? null,
       createdAt: negotiation.createdAt,
       updatedAt: negotiation.updatedAt,
     };

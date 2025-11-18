@@ -1,4 +1,10 @@
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { defineConfig, devices } from '@playwright/test';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const baseURL = process.env.E2E_BASE_URL ?? 'http://localhost:3000';
 const shouldRunSmoke = process.env.RUN_STRIPE_SMOKE === '1' || process.env.RUN_STRIPE_SMOKE === 'true';

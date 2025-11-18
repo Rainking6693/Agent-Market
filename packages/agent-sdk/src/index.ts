@@ -1,4 +1,5 @@
 import {
+  AgentMarketClient,
   createAgentMarketClient,
   type AgentDiscoveryFilters,
   type AgentDiscoveryResponse,
@@ -50,7 +51,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export class AgentMarketSDK {
   private readonly agentId: string;
 
-  private readonly client: ReturnType<typeof createAgentMarketClient>;
+  private readonly client: AgentMarketClient;
 
   private readonly clientOptions: { baseUrl?: string; apiKey?: string };
 

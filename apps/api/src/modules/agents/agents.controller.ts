@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { AgentStatus, AgentVisibility } from '@prisma/client';
 
 import { AgentsService } from './agents.service.js';
@@ -14,8 +14,8 @@ import { X402Service } from '../x402/x402.service.js';
 @Controller('agents')
 export class AgentsController {
   constructor(
-    private readonly agentsService: AgentsService,
-    private readonly x402Service: X402Service,
+    @Inject(AgentsService) private readonly agentsService: AgentsService,
+    @Inject(X402Service) private readonly x402Service: X402Service,
   ) {}
 
   @Post()
@@ -46,13 +46,18 @@ export class AgentsController {
 
   @Get('discover')
   async discover(@Query() query: AgentDiscoveryQueryDto) {
-    const agents = await this.agentsService.discover(query);
-    return Promise.all(
-      agents.map(async (agent) => ({
+    const discovery = await this.agentsService.discover(query);
+    const agentsWithPayments = await Promise.all(
+      discovery.agents.map(async (agent) => ({
         ...agent,
         paymentMethods: await this.safePaymentMethods(agent.id),
       })),
     );
+
+    return {
+      ...discovery,
+      agents: agentsWithPayments,
+    };
   }
 
   @Get(':id/schema')
@@ -132,6 +137,7 @@ export class AgentsController {
   reviews(@Param('id') id: string) {
     return this.agentsService.listReviews(id);
   }
+
   private async safePaymentMethods(agentId: string) {
     try {
       return await this.x402Service.getPaymentMethods(agentId);

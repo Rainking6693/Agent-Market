@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
 
 import { X402Service } from './x402.service.js';
 
@@ -15,7 +15,7 @@ interface ExecutePaymentBody extends VerifyPaymentBody {
 
 @Controller('x402')
 export class X402Controller {
-  constructor(private readonly x402Service: X402Service) {}
+  constructor(@Inject(X402Service) private readonly x402Service: X402Service) {}
 
   @Get('agents/:agentId/payment-methods')
   getPaymentMethods(@Param('agentId') agentId: string) {

@@ -7,34 +7,46 @@ const shouldRunSmoke =
 const apiBaseUrl =
   process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
-test.describe('Stripe legacy checkout', () => {
-  test.skip(!shouldRunSmoke, 'Set RUN_STRIPE_SMOKE=1 to enable the Stripe smoke test.');
+const vitest = (import.meta as any).vitest as
+  | {
+      describe: {
+        skip: (name: string, fn: () => void) => void;
+      };
+    }
+  | undefined;
 
-  test('completes legacy checkout flow and records fiat payment', async ({ page }) => {
-    const agentId = process.env.TEST_AGENT_ID;
-    test.skip(!agentId, 'Set TEST_AGENT_ID to a Stripe-enabled agent.');
+if (vitest) {
+  vitest.describe.skip('Stripe legacy checkout (Playwright-only)', () => {});
+} else {
+  test.describe('Stripe legacy checkout', () => {
+    test.skip(!shouldRunSmoke, 'Set RUN_STRIPE_SMOKE=1 to enable the Stripe smoke test.');
 
-    const client = createAgentMarketClient({ baseUrl: apiBaseUrl });
-    const agent = await client.getAgent(agentId!);
+    test('completes legacy checkout flow and records fiat payment', async ({ page }) => {
+      const agentId = process.env.TEST_AGENT_ID;
+      test.skip(!agentId, 'Set TEST_AGENT_ID to a Stripe-enabled agent.');
 
-    await page.goto(`/agents/${agent.slug}/purchase`);
-    await page.getByText('AgentMarket Balance').click();
-    await page.getByRole('button', { name: 'Continue to Checkout' }).click();
+      const client = createAgentMarketClient({ baseUrl: apiBaseUrl });
+      const agent = await client.getAgent(agentId!);
 
-    const stripeFrame = page.frameLocator('iframe[name="stripe_checkout_app"]');
-    await stripeFrame.getByPlaceholder('Card number').fill('4242424242424242');
-    await stripeFrame.getByPlaceholder('MM / YY').fill('12 / 34');
-    await stripeFrame.getByPlaceholder('CVC').fill('123');
-    await stripeFrame.getByRole('button', { name: /pay/i }).click();
+      await page.goto(`/agents/${agent.slug}/purchase`);
+      await page.getByText('AgentMarket Balance').click();
+      await page.getByRole('button', { name: 'Continue to Checkout' }).click();
 
-    await expect(page).toHaveURL(/success/i, { timeout: 60_000 });
+      const stripeFrame = page.frameLocator('iframe[name="stripe_checkout_app"]');
+      await stripeFrame.getByPlaceholder('Card number').fill('4242424242424242');
+      await stripeFrame.getByPlaceholder('MM / YY').fill('12 / 34');
+      await stripeFrame.getByPlaceholder('CVC').fill('123');
+      await stripeFrame.getByRole('button', { name: /pay/i }).click();
 
-    const history = await client.getAgentPaymentHistory(agent.id);
-    const legacyTransaction = history.find(
-      (entry) => entry.rail === 'platform' && entry.reference?.startsWith('ch_'),
-    );
+      await expect(page).toHaveURL(/success/i, { timeout: 60_000 });
 
-    expect(legacyTransaction).toBeDefined();
+      const history = await client.getAgentPaymentHistory(agent.id);
+      const legacyTransaction = history.find(
+        (entry) => entry.rail === 'platform' && entry.reference?.startsWith('ch_'),
+      );
+
+      expect(legacyTransaction).toBeDefined();
+    });
   });
-});
+}
 
