@@ -13,7 +13,7 @@ export function PageStructuredData({
   type = 'WebPage',
   breadcrumbs,
 }: PageStructuredDataProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://swarmsync.co';
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://www.swarmsync.ai';
   const fullUrl = `${baseUrl}${url}`;
 
   interface StructuredData {

@@ -59,6 +59,11 @@ export function useAuth() {
     onSuccess: handleSuccess,
   });
 
+  const githubLoginMutation = useMutation({
+    mutationFn: (token: string) => authApi.githubLogin(token),
+    onSuccess: handleSuccess,
+  });
+
   const logout = useCallback(() => {
     clearAuth();
     clearStoredAuth();
@@ -74,6 +79,8 @@ export function useAuth() {
     loginStatus: loginMutation.status,
     loginWithGoogle: googleLoginMutation.mutate,
     googleLoginStatus: googleLoginMutation.status,
+    loginWithGitHub: githubLoginMutation.mutate,
+    githubLoginStatus: githubLoginMutation.status,
     register: registerMutation.mutate,
     registerStatus: registerMutation.status,
     logout,

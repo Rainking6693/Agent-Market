@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/use-auth';
 
+import { GitHubSignInButton } from './github-signin-button';
 import { GoogleSignInButton } from './google-signin-button';
 
 const schema = z.object({
@@ -21,7 +22,14 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export function RegisterForm() {
-  const { register: registerUser, registerStatus, loginWithGoogle, googleLoginStatus } = useAuth();
+  const {
+    register: registerUser,
+    registerStatus,
+    loginWithGoogle,
+    googleLoginStatus,
+    loginWithGitHub,
+    githubLoginStatus,
+  } = useAuth();
   const {
     register,
     handleSubmit,
@@ -83,6 +91,12 @@ export function RegisterForm() {
         label="Sign up with Google"
         status={googleLoginStatus}
         onToken={(token) => loginWithGoogle(token)}
+      />
+
+      <GitHubSignInButton
+        label="Sign up with GitHub"
+        status={githubLoginStatus}
+        onToken={(token) => loginWithGitHub(token)}
       />
     </form>
   );
