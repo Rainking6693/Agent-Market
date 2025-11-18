@@ -30,7 +30,7 @@ export function Navbar() {
             alt="Swarm Sync logo"
             width={160}
             height={48}
-            className="h-12 w-auto object-contain"
+            className="h-10 w-auto object-contain md:h-12"
             priority
           />
         </Link>

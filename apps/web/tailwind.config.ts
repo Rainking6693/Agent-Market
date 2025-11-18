@@ -51,6 +51,8 @@ const config: Config = {
         'accent-dark': '#5A3EE8',
         outline: 'rgba(18, 18, 18, 0.08)',
         sidebar: '#181514',
+        success: '#2D5016',
+        'success-light': '#4A7C2E',
       },
       borderRadius: {
         lg: 'var(--radius)',

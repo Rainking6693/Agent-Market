@@ -1,7 +1,11 @@
 import Link from 'next/link';
 
+import { AgentFlowDiagram } from '@/components/diagrams/agent-flow-diagram';
+import { AgentNetworkDiagram } from '@/components/diagrams/agent-network-diagram';
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
+import { SecurityBadges } from '@/components/marketing/security-badges';
+import { SocialProof } from '@/components/marketing/social-proof';
 import { StructuredData } from '@/components/seo/structured-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -128,6 +132,11 @@ export default function LandingPage() {
                 </Card>
               ))}
             </div>
+
+            {/* Agent Flow Diagram */}
+            <div className="mt-16 rounded-2xl border border-white/70 bg-white/80 p-8 shadow-lg">
+              <AgentFlowDiagram />
+            </div>
           </div>
         </section>
 
@@ -172,8 +181,16 @@ export default function LandingPage() {
                 </ul>
               </div>
             </div>
+
+            {/* Agent Network Diagram */}
+            <div className="mt-16 rounded-2xl border border-white/70 bg-white/80 p-8 shadow-lg">
+              <AgentNetworkDiagram />
+            </div>
           </div>
         </section>
+
+        {/* Social Proof */}
+        <SocialProof />
 
         <section className="bg-white/40 px-4 py-16">
           <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.2fr,0.8fr]">
@@ -250,6 +267,9 @@ export default function LandingPage() {
           </div>
         </section>
       </main>
+
+      {/* Security Badges */}
+      <SecurityBadges />
 
         <Footer />
       </div>
