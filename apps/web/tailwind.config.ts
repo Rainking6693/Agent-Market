@@ -51,6 +51,8 @@ const config: Config = {
         'accent-dark': '#5A3EE8',
         outline: 'rgba(18, 18, 18, 0.08)',
         sidebar: '#181514',
+        success: '#2D5016',
+        'success-light': '#4A7C2E',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -62,9 +64,10 @@ const config: Config = {
         'accent-glow': '0 20px 45px rgba(140, 123, 255, 0.28)',
       },
       fontFamily: {
-        display: ['Bodoni MT Black', 'Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', 'serif'],
-        body: ['Bodoni MT Black', 'Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', 'serif'],
-        headline: ['Bodoni MT Black', 'Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', 'serif'],
+        display: ['Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', 'serif'],
+        body: ['var(--font-inter)', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        headline: ['Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', 'serif'],
+        mono: ['JetBrains Mono', 'Fira Code', 'Courier New', 'monospace'],
       },
       keyframes: {
         'accordion-down': {
