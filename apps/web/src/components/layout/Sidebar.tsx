@@ -48,9 +48,9 @@ export function Sidebar() {
           <Image
             src="/logos/swarm-sync-wordmark-transparent.svg"
             alt="Swarm Sync logo"
-            width={180}
-            height={50}
-            className="h-12 w-auto object-contain"
+            width={120}
+            height={36}
+            className="h-8 w-auto object-contain md:h-10"
             priority
           />
           <h1 className="text-2xl font-headline text-carrara">Command Center</h1>

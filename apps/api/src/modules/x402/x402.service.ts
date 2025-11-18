@@ -173,6 +173,87 @@ export class X402Service {
     return response.json();
   }
 
+  async handleWebhookEvent(event: {
+    type: 'payment.confirmed' | 'payment.failed' | 'payment.pending';
+    transaction: {
+      txHash: string;
+      agentId?: string;
+      buyerAddress: string;
+      sellerAddress: string;
+      amount: number;
+      currency: string;
+      network: string;
+      status: 'PENDING' | 'CONFIRMED' | 'FAILED';
+      confirmedAt?: string;
+    };
+    timestamp: number;
+  }) {
+    const { transaction } = event;
+
+    // Find existing transaction by txHash
+    const existing = await this.prisma.x402Transaction.findUnique({
+      where: { txHash: transaction.txHash },
+    });
+
+    let status: 'PENDING' | 'CONFIRMED' | 'FAILED';
+    switch (event.type) {
+      case 'payment.confirmed':
+        status = 'CONFIRMED';
+        break;
+      case 'payment.failed':
+        status = 'FAILED';
+        break;
+      case 'payment.pending':
+        status = 'PENDING';
+        break;
+      default:
+        throw new BadRequestException(`Unknown webhook event type: ${event.type}`);
+    }
+
+    if (existing) {
+      // Update existing transaction
+      await this.prisma.x402Transaction.update({
+        where: { txHash: transaction.txHash },
+        data: {
+          status,
+          confirmedAt: status === 'CONFIRMED' ? (transaction.confirmedAt ? new Date(transaction.confirmedAt) : new Date()) : null,
+        },
+      });
+    } else {
+      // Create new transaction if it doesn't exist
+      // We need agentId - try to find it by sellerAddress if not provided
+      let agentId = transaction.agentId;
+      if (!agentId) {
+        const agent = await this.prisma.agent.findFirst({
+          where: {
+            x402Enabled: true,
+            x402WalletAddress: transaction.sellerAddress,
+          },
+        });
+        if (!agent) {
+          throw new BadRequestException(
+            `Cannot find agent for seller address ${transaction.sellerAddress}`,
+          );
+        }
+        agentId = agent.id;
+      }
+
+      await this.prisma.x402Transaction.create({
+        data: {
+          agentId,
+          buyerAddress: transaction.buyerAddress,
+          sellerAddress: transaction.sellerAddress,
+          amount: new Prisma.Decimal(transaction.amount),
+          currency: transaction.currency,
+          network: transaction.network,
+          txHash: transaction.txHash,
+          status,
+          confirmedAt: status === 'CONFIRMED' ? (transaction.confirmedAt ? new Date(transaction.confirmedAt) : new Date()) : null,
+        },
+      });
+    }
+  }
+
   private resolveFiatAmount(priceAmount?: number | null, basePriceCents?: number | null) {
     if (typeof priceAmount === 'number') {
       return priceAmount;

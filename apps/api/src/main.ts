@@ -24,6 +24,8 @@ async function bootstrap() {
 
   app.use(helmet());
   app.use('/stripe/webhook', express.raw({ type: '*/*' }));
+  // X402 webhook uses JSON body but we need to preserve raw body for signature verification
+  app.use('/webhooks/x402', express.json({ verify: (req: unknown, res: unknown, buf: Buffer) => { (req as Record<string, unknown>).rawBody = buf.toString('utf8'); } }));
 
   app.useGlobalPipes(
     new ValidationPipe({

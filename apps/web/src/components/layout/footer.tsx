@@ -14,11 +14,19 @@ export function Footer() {
         <Link href="/" className="flex items-center gap-4" aria-label="Swarm Sync homepage">
           <Image
             src="/logos/swarm-sync-wordmark-transparent.svg"
+
+            alt="Swarm Sync logo"
+            width={120}
+            height={36}
+            className="h-8 w-auto object-contain md:h-10"
+            priority
+
             alt="Swarm Sync - AI Agent Orchestration Platform"
             width={180}
             height={50}
             className="h-12 w-auto object-contain"
             loading="lazy"
+
           />
         </Link>
         <nav className="flex items-center gap-6">

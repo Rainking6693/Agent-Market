@@ -1,6 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 
 import { AuthService } from './auth.service.js';
+import { GitHubLoginDto } from './dto/github-login.dto.js';
 import { GoogleLoginDto } from './dto/google-login.dto.js';
 import { LoginDto } from './dto/login.dto.js';
 import { RegisterUserDto } from './dto/register-user.dto.js';
@@ -22,5 +23,10 @@ export class AuthController {
   @Post('google')
   google(@Body() body: GoogleLoginDto) {
     return this.authService.loginWithGoogle(body);
+  }
+
+  @Post('github')
+  github(@Body() body: GitHubLoginDto) {
+    return this.authService.loginWithGitHub(body);
   }
 }
