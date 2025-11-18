@@ -23,13 +23,20 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-white/60 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:py-5">
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center" aria-label="Swarm Sync homepage">
           <Image
             src="/logos/swarm-sync-wordmark-transparent.svg"
+
             alt="Swarm Sync logo"
             width={120}
             height={36}
             className="h-8 w-auto object-contain md:h-10"
+
+            alt="Swarm Sync - AI Agent Orchestration Platform"
+            width={160}
+            height={48}
+            className="h-10 w-auto object-contain md:h-12"
+
             priority
           />
         </Link>
@@ -75,14 +82,20 @@ export function Navbar() {
           type="button"
           className="inline-flex rounded-full border border-border p-2 md:hidden"
           onClick={() => setOpen((prev) => !prev)}
+          aria-label={open ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={open}
+          aria-controls="mobile-navigation"
         >
-          <Menu className="h-5 w-5" />
+          <Menu className="h-5 w-5" aria-hidden="true" />
         </button>
       </div>
 
       {open && (
-        <div className="border-t border-white/60 bg-white/90 px-4 py-4 md:hidden">
-          <div className="flex flex-col gap-4 text-sm">
+        <div
+          id="mobile-navigation"
+          className="border-t border-white/60 bg-white/90 px-4 py-4 md:hidden"
+        >
+          <nav className="flex flex-col gap-4 text-sm" aria-label="Mobile navigation">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -116,7 +129,7 @@ export function Navbar() {
                 </>
               )}
             </div>
-          </div>
+          </nav>
         </div>
       )}
     </header>

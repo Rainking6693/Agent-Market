@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -33,20 +34,53 @@ export function LoginForm() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
+
+  // Watch for login errors and display them
+  useEffect(() => {
+    if (loginStatus === 'error') {
+      setError('root', {
+        type: 'manual',
+        message:
+          'Login failed. Please check your email and password and try again. If you forgot your password, contact support.',
+      });
+    }
+  }, [loginStatus, setError]);
 
   const onSubmit = (data: FormData) => {
     login(data);
   };
 
   return (
-    <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+    <form className="space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
+      {errors.root && (
+        <div
+          role="alert"
+          className="rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive"
+        >
+          {errors.root.message}
+        </div>
+      )}
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" placeholder="you@example.com" {...register('email')} />
-        {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
+        <Input
+          id="email"
+          type="email"
+          placeholder="you@example.com"
+          autoComplete="email"
+          aria-required="true"
+          aria-invalid={!!errors.email}
+          aria-describedby={errors.email ? 'email-error' : undefined}
+          {...register('email')}
+        />
+        {errors.email && (
+          <p id="email-error" className="text-sm text-destructive" role="alert">
+            {errors.email.message}
+          </p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -56,15 +90,27 @@ export function LoginForm() {
           type="password"
           placeholder="••••••••"
           autoComplete="current-password"
+          aria-required="true"
+          aria-invalid={!!errors.password}
+          aria-describedby={errors.password ? 'password-error' : undefined}
           {...register('password')}
         />
-        {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
+        {errors.password && (
+          <p id="password-error" className="text-sm text-destructive" role="alert">
+            {errors.password.message}
+          </p>
+        )}
       </div>
 
-      <Button type="submit" className="w-full" disabled={loginStatus === 'pending'}>
+      <Button
+        type="submit"
+        className="w-full"
+        disabled={loginStatus === 'pending'}
+        aria-busy={loginStatus === 'pending'}
+      >
         {loginStatus === 'pending' ? (
           <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
             Signing in...
           </>
         ) : (
@@ -72,7 +118,11 @@ export function LoginForm() {
         )}
       </Button>
 
-      <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-muted-foreground">
+      <div
+        className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-muted-foreground"
+        role="separator"
+        aria-label="or"
+      >
         <div className="h-px flex-1 bg-border" />
         or
         <div className="h-px flex-1 bg-border" />
