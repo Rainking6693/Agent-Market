@@ -46,11 +46,11 @@ export function Sidebar() {
       <div className="space-y-8">
         <div className="space-y-2">
           <Image
-            src="/logos/swarm-sync-wordmark.png"
+            src="/logos/swarm-sync-wordmark-transparent.svg"
             alt="Swarm Sync logo"
-            width={220}
-            height={60}
-            className="h-14 w-auto object-contain drop-shadow-lg"
+            width={180}
+            height={50}
+            className="h-12 w-auto object-contain"
             priority
           />
           <h1 className="text-2xl font-headline text-carrara">Command Center</h1>

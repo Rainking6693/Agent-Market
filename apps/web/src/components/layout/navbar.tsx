@@ -26,11 +26,11 @@ export function Navbar() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:py-5">
         <Link href="/" className="flex items-center">
           <Image
-            src="/logos/swarm-sync-wordmark.png"
+            src="/logos/swarm-sync-wordmark-transparent.svg"
             alt="Swarm Sync logo"
-            width={240}
-            height={72}
-            className="h-16 w-auto object-contain drop-shadow-2xl"
+            width={160}
+            height={48}
+            className="h-10 w-auto object-contain md:h-12"
             priority
           />
         </Link>
