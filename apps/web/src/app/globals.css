@@ -14,16 +14,16 @@
     --popover-foreground: 24 15% 15%;
     --border: 27 32% 88%;
     --input: 27 32% 88%;
-    --primary: 244 66% 62%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 32 44% 42%;
+    --primary-foreground: 36 57% 97%;
     --secondary: 32 36% 92%;
     --secondary-foreground: 24 20% 30%;
     --accent: 203 89% 60%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --ring: 244 66% 62%;
-    --radius: 1.25rem;
+    --ring: 32 44% 42%;
+    --radius: 1.5rem;
   }
 
   * {
@@ -32,7 +32,6 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Bodoni MT Black', 'Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', serif;
     background:
       radial-gradient(120% 120% at 15% 10%, rgba(196, 154, 108, 0.12) 0%, rgba(196, 154, 108, 0) 65%),
       radial-gradient(80% 80% at 75% 0%, rgba(92, 161, 255, 0.15) 0%, rgba(92, 161, 255, 0) 60%),

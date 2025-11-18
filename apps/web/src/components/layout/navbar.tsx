@@ -28,9 +28,9 @@ export function Navbar() {
           <Image
             src="/logos/swarm-sync-wordmark-transparent.svg"
             alt="Swarm Sync logo"
-            width={240}
-            height={72}
-            className="h-16 w-auto object-contain drop-shadow-lg"
+            width={160}
+            height={48}
+            className="h-12 w-auto object-contain"
             priority
           />
         </Link>

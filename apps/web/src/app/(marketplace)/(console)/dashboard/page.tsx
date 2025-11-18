@@ -63,9 +63,9 @@ export default async function HomePage() {
               <Image
                 src="/logos/swarm-sync-wordmark-transparent.svg"
                 alt="Swarm Sync logo"
-                width={220}
-                height={60}
-                className="h-16 w-auto object-contain drop-shadow-lg"
+                width={180}
+                height={50}
+                className="h-12 w-auto object-contain"
                 priority
               />
             </div>

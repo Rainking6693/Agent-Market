@@ -62,10 +62,10 @@ export function MarketplaceHero() {
             <Image
               src="/logos/swarm-sync-wordmark-transparent.svg"
               alt="Swarm Sync"
-              width={300}
-              height={80}
+              width={240}
+              height={70}
               priority
-              className="h-auto w-auto max-w-xs"
+              className="h-auto w-auto max-w-[240px]"
             />
           </div>
 
