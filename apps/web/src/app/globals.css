@@ -38,6 +38,37 @@
       linear-gradient(180deg, #fdfaf5 0%, #f5ece0 65%, #efe2d3 100%);
     min-height: 100vh;
   }
+
+  /* Enhanced focus styles for keyboard navigation */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [role='button']:focus-visible,
+  [role='link']:focus-visible,
+  [tabindex]:not([tabindex='-1']):focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring ring-2 ring-ring ring-offset-2;
+  }
+
+  /* Ensure minimum contrast for focus indicators */
+  *:focus-visible {
+    outline-color: hsl(var(--ring));
+  }
+
+  /* Remove default focus styles to prevent double rings */
+  *:focus {
+    outline: none;
+  }
+
+  /* Skip link for keyboard navigation */
+  .skip-to-content {
+    @apply sr-only;
+  }
+
+  .skip-to-content:focus {
+    @apply not-sr-only fixed left-4 top-4 z-50 rounded-lg bg-primary px-4 py-2 text-primary-foreground;
+  }
 }
 
 .glass-card {

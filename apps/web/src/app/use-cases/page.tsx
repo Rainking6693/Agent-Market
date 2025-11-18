@@ -279,7 +279,7 @@ export default function UseCasesPage() {
                 </Button>
               </div>
               <p className="text-sm font-body text-muted-foreground">
-                No credit card required • 14-day free trial • $200 free credits
+                No credit card required • 14-day free trial • $100 free credits
               </p>
             </div>
           </section>

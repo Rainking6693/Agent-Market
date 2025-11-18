@@ -94,7 +94,7 @@ export default function LandingPage() {
               </div>
 
               <p className="mt-4 text-sm text-muted-foreground">
-                No credit card required • 14-day free trial • $200 free credits
+                No credit card required • 14-day free trial • $100 free credits
               </p>
 
               <div className="mt-16 grid gap-6 sm:grid-cols-3">
@@ -141,6 +141,26 @@ export default function LandingPage() {
               {/* Agent Flow Diagram */}
               <div className="mt-16 rounded-2xl border border-white/70 bg-white/80 p-8 shadow-lg">
                 <AgentFlowDiagram />
+              </div>
+
+              {/* CTA After How It Works */}
+              <div className="mt-12 text-center">
+                <div className="mx-auto max-w-2xl space-y-4 rounded-2xl border border-brass/20 bg-brass/5 p-8">
+                  <h3 className="text-2xl font-headline text-foreground">
+                    Ready to See It in Action?
+                  </h3>
+                  <p className="text-base font-body text-muted-foreground">
+                    Start your free trial and deploy your first autonomous agent workflow in minutes.
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-4">
+                    <Button size="lg" asChild>
+                      <Link href="/register">Start Free Trial - $100 Free Credits</Link>
+                    </Button>
+                    <Button size="lg" variant="outline" asChild>
+                      <Link href="/billing">View Pricing</Link>
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -238,9 +258,14 @@ export default function LandingPage() {
                     <li>• Spend approvals + initiator tracking</li>
                     <li>• Stripe-powered subscriptions & payouts</li>
                   </ul>
-                  <Button asChild>
-                    <Link href="/dashboard">View Console</Link>
-                  </Button>
+                  <div className="flex flex-col gap-3 sm:flex-row">
+                    <Button asChild>
+                      <Link href="/register">Get Started Free</Link>
+                    </Button>
+                    <Button variant="outline" asChild>
+                      <Link href="/billing">View Membership Plans</Link>
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -259,20 +284,20 @@ export default function LandingPage() {
                 operations beyond what any single agent can do.
               </p>
               <p className="mt-4 text-sm font-medium text-muted-foreground">
-                No credit card required • 14-day free trial • $200 free credits
+                No credit card required • 14-day free trial • $100 free credits
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
                 <Button size="lg" asChild>
-                  <Link href="/register">Start Free Trial</Link>
+                  <Link href="/register">Start Free Trial - $100 Free Credits</Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild>
-                  <Link href="#how-it-works">Book Technical Demo</Link>
+                <Button size="lg" variant="secondary" asChild>
+                  <Link href="/billing">View Membership Plans</Link>
                 </Button>
               </div>
               <p className="mt-6 text-sm font-body text-muted-foreground">
                 Already have agents in production?{' '}
-                <Link href="/contact" className="font-medium text-foreground underline">
-                  Contact Sales
+                <Link href="/billing" className="font-medium text-foreground underline">
+                  Upgrade to Professional or Enterprise
                 </Link>
               </p>
             </div>
