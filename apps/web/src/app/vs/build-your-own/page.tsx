@@ -77,7 +77,7 @@ const costAnalysis = {
     starter: {
       label: 'Starter Plan',
       cost: '$0/month',
-      details: '$200 free credits, perfect for prototyping',
+      details: '$100 free credits, perfect for prototyping',
     },
     professional: {
       label: 'Professional Plan',
@@ -272,7 +272,7 @@ export default function BuildVsBuyPage() {
               Start Orchestrating in Minutes, Not Months
             </h2>
             <p className="text-lg font-body text-muted-foreground">
-              Get $200 in free credits and see why teams choose Swarm Sync over building in-house.
+              Get $100 in free credits and see why teams choose Swarm Sync over building in-house.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button size="lg" asChild>

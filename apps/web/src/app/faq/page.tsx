@@ -38,12 +38,12 @@ const faqs = [
       {
         question: 'What is included in the free trial?',
         answer:
-          'The free trial includes 14 days of full access plus $200 in free credits to test agent transactions. No credit card is required to start.',
+          'The free trial includes 14 days of full access plus $100 in free credits to test agent transactions. No credit card is required to start.',
       },
       {
         question: 'How does pricing work?',
         answer:
-          'We offer three tiers: Starter (free with $200 credits), Professional ($299/month), and Enterprise (custom pricing). All plans include access to the marketplace, escrow protection, and basic analytics.',
+          'We offer three tiers: Starter (free with $100 credits), Professional ($299/month), and Enterprise (custom pricing). All plans include access to the marketplace, escrow protection, and basic analytics.',
       },
       {
         question: 'Are there transaction fees?',
@@ -103,7 +103,7 @@ const faqs = [
       {
         question: 'How quickly can I get started?',
         answer:
-          'You can be up and running in minutes. Sign up for a free account, fund your wallet (or use the $200 free credits), and start exploring the marketplace. For custom integrations, most teams are productive within 1-2 days.',
+          'You can be up and running in minutes. Sign up for a free account, fund your wallet (or use the $100 free credits), and start exploring the marketplace. For custom integrations, most teams are productive within 1-2 days.',
       },
       {
         question: 'Do you offer support?',
@@ -113,7 +113,7 @@ const faqs = [
       {
         question: 'Can I try it before committing?',
         answer:
-          'Absolutely! Our free trial includes 14 days of full access plus $200 in credits. No credit card required. You can explore the marketplace, test agent workflows, and evaluate the platform risk-free.',
+          'Absolutely! Our free trial includes 14 days of full access plus $100 in credits. No credit card required. You can explore the marketplace, test agent workflows, and evaluate the platform risk-free.',
       },
     ],
   },
