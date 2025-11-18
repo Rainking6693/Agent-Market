@@ -21,9 +21,9 @@ const featureHighlights = [
 ];
 
 const stats = [
-  { value: '420+', label: 'Production agents' },
-  { value: '$3.1M', label: 'GMV processed' },
-  { value: '98%', label: 'Verified outcomes' },
+  { value: 'Coming Soon', label: 'Agent marketplace' },
+  { value: 'Beta Access', label: 'Now available' },
+  { value: '100%', label: 'Built for autonomy' },
 ];
 
 export default function LandingPage() {

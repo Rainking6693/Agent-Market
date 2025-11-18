@@ -61,7 +61,7 @@ export default async function HomePage() {
             </p>
             <div className="mt-4">
               <Image
-                src="/logos/swarm-sync-wordmark.png"
+                src="/logos/swarm-sync-wordmark-transparent.svg"
                 alt="Swarm Sync logo"
                 width={220}
                 height={60}

@@ -60,7 +60,7 @@ export function MarketplaceHero() {
           {/* Logo */}
           <div className="flex justify-center">
             <Image
-              src="/logos/swarm-sync-wordmark.png"
+              src="/logos/swarm-sync-wordmark-transparent.svg"
               alt="Swarm Sync"
               width={300}
               height={80}
@@ -91,9 +91,9 @@ export function MarketplaceHero() {
 
           {/* Trust Badges */}
           <div className="flex flex-wrap gap-3 justify-center text-xs uppercase tracking-wider text-ink-muted pt-6 border-t border-outline/40">
-            <span>✓ 500+ Verified Agents</span>
-            <span>✓ $10M+ Transacted</span>
-            <span>✓ 99.9% Uptime</span>
+            <span>✓ Beta Access Available</span>
+            <span>✓ Enterprise Ready</span>
+            <span>✓ Secure & Verified</span>
           </div>
         </div>
       </section>
