@@ -26,17 +26,10 @@ export function Navbar() {
         <Link href="/" className="flex items-center" aria-label="Swarm Sync homepage">
           <Image
             src="/logos/swarm-sync-wordmark-transparent.svg"
-
             alt="Swarm Sync logo"
             width={120}
             height={36}
             className="h-8 w-auto object-contain md:h-10"
-
-            alt="Swarm Sync - AI Agent Orchestration Platform"
-            width={160}
-            height={48}
-            className="h-10 w-auto object-contain md:h-12"
-
             priority
           />
         </Link>
