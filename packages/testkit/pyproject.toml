@@ -2,7 +2,7 @@
 name = "agentmarket-testkit"
 version = "0.1.0"
 description = "Reusable pytest helpers and async SDK for AgentMarket end-to-end tests"
-authors = ["AgentMarket QA <qa@swarmsync.co>"]
+authors = ["AgentMarket QA <qa@swarmsync.ai>"]
 readme = "README.md"
 packages = [{ include = "agentmarket_testkit", from = "src" }]
 
