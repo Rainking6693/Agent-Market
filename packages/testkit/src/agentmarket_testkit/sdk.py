@@ -49,7 +49,25 @@ class AgentMarketSDK:
 
     async def create_agent(self, payload: dict[str, Any]) -> dict[str, Any]:
         response = await self._client.post("/agents", json=payload)
-        response.raise_for_status()
+        if not response.is_success:
+            error_text = ""
+            try:
+                error_text = response.text
+                try:
+                    error_json = response.json()
+                    if isinstance(error_json, dict) and "message" in error_json:
+                        error_text = f"{error_text}\nMessage: {error_json['message']}"
+                    if isinstance(error_json, list):
+                        error_text = f"{error_text}\nValidation errors: {error_json}"
+                except:
+                    pass
+            except:
+                error_text = "Could not read error response"
+            raise httpx.HTTPStatusError(
+                f"Client error '{response.status_code} {response.reason_phrase}' for url '{response.url}'\n{error_text}",
+                request=response.request,
+                response=response,
+            )
         return response.json()
 
     async def update_agent(self, agent_id: str, payload: dict[str, Any]) -> dict[str, Any]:

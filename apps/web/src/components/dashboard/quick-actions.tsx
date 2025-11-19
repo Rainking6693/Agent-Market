@@ -4,6 +4,7 @@ export function QuickActions() {
   const actions = [
     { label: 'Deploy a new agent', href: '/agents/new' },
     { label: 'Launch orchestration studio', href: '/workflows' },
+    { label: 'Test & evaluate agents', href: '/quality' },
     { label: 'Invite collaborator', href: '/agents' },
     { label: 'Review outcomes & quality', href: '/quality' },
   ];

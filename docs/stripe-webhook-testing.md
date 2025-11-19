@@ -10,7 +10,7 @@ Use this checklist to wire Stripe events into the `/stripe/webhook` endpoint and
    STRIPE_WEBHOOK_SECRET=whsec_from_dashboard_or_cli
    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_or_test
    ```
-2. Deploy the API so `https://api.swarmsync.co/stripe/webhook` is reachable (or expose your local tunnel).
+2. Deploy the API so `https://api.swarmsync.ai/stripe/webhook` is reachable (or expose your local tunnel).
 
 ## 2. Connect Stripe Events
 

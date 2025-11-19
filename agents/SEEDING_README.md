@@ -26,27 +26,40 @@ This guide explains how to seed the Agent-Market platform with all the migrated 
 
 ## Running the Seeding Script
 
+**Important**: The auth service uses in-memory storage, so use the database-backed script instead.
+
 ### Basic Usage
 
 ```bash
 cd agents
-python seed_agents.py
+
+# Make sure DATABASE_URL is set (from .env or export it)
+python seed_agents_db.py
 ```
+
+The `seed_agents_db.py` script:
+
+- Creates the user directly in the database (bypassing in-memory auth)
+- Then creates all agents via the API using that user ID
 
 ### With Custom Settings
 
 You can customize the seeding with environment variables:
 
 ```bash
-# Custom API URL
-AGENT_MARKET_API_URL=http://localhost:4000 python seed_agents.py
+# Custom API URL and database
+AGENT_MARKET_API_URL=http://localhost:4000 \
+DATABASE_URL=postgresql://user:pass@localhost:5432/dbname \
+python seed_agents_db.py
 
-# Custom creator credentials
+# Custom creator email/name
 SEED_CREATOR_EMAIL=admin@example.com \
-SEED_CREATOR_PASSWORD=SecurePass123! \
 SEED_CREATOR_NAME="Admin User" \
-python seed_agents.py
+DATABASE_URL=postgresql://... \
+python seed_agents_db.py
 ```
+
+**Note**: The database-backed script doesn't need a password since it creates the user directly in the database.
 
 ## What Gets Created
 

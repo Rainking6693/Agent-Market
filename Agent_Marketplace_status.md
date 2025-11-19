@@ -302,9 +302,9 @@ Continuous Monitoring (evaluations on every run)
 
 ```
 
-Starter: $0 - Limited agents, basic features
+Growth: $99 - Limited agents, basic features
 
-Growth: (TBD) - More agents, advanced analytics
+Scale: $249- More agents, advanced analytics
 
 Pro: $499/mo - Full features, high limits
 
@@ -1226,7 +1226,7 @@ Icons: Lucide React
 
 \### \*\*Week 1: Foundation Setup\*\*
 
-- [x] Set up Next.js frontend project (pps/web)
+- [x] Set up Next.js frontend project ( pps/web)
 - [x] Configure TypeScript, Tailwind, shadcn/ui
 - [x] Set up authentication flow (integrate with backend)
 - [x] Create basic layouts (navbar, sidebar, footer)

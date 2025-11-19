@@ -1,33 +1,27 @@
 #!/usr/bin/env python3
 """
-Seed Agent-Market platform with Genesis agents
+Seed Agent-Market platform with Genesis agents (Database-backed version)
 
-This script creates all migrated agents in the Agent-Market platform.
-
-Usage:
-    # Make sure API is running first
-    npm run dev --workspace @agent-market/api
-
-    # Then run the seeding script
-    python seed_agents.py
-
-    # Or with custom settings:
-    AGENT_MARKET_API_URL=http://localhost:4000 python seed_agents.py
+This script creates users directly in the database, then creates agents via API.
+This bypasses the in-memory auth service limitation.
 """
 import asyncio
 import os
 import sys
 from datetime import datetime
 from pathlib import Path
+from uuid import uuid4
+
+import asyncpg
+import httpx
 
 # Add testkit to path
 testkit_path = Path(__file__).parent.parent / "packages" / "testkit" / "src"
 sys.path.insert(0, str(testkit_path))
 
 from agentmarket_testkit.sdk import AgentMarketSDK
-from agentmarket_testkit.utils import unique_agent_name
 
-# Agent definitions with metadata
+# Agent definitions (same as seed_agents.py)
 AGENT_DEFINITIONS = [
     {
         "name": "Genesis Meta Agent",
@@ -256,18 +250,47 @@ AGENT_DEFINITIONS = [
 ]
 
 
+async def ensure_user_in_db(database_url: str, email: str, display_name: str) -> str:
+    """Create or get user directly from database"""
+    conn = await asyncpg.connect(dsn=database_url)
+    try:
+        # Try to get existing user
+        user = await conn.fetchrow('SELECT id FROM "User" WHERE email = $1', email)
+        if user:
+            return user["id"]
+        
+        # Create new user
+        user_id = str(uuid4())
+        await conn.execute(
+            'INSERT INTO "User"(id, email, "displayName", password, "createdAt", "updatedAt") '
+            'VALUES($1, $2, $3, $4, NOW(), NOW())',
+            user_id,
+            email,
+            display_name,
+            "placeholder-hash",  # Password hash (not used for API auth)
+        )
+        return user_id
+    finally:
+        await conn.close()
+
+
 async def seed_agents():
     """Seed all agents into the Agent-Market platform"""
     api_url = os.getenv("AGENT_MARKET_API_URL", "http://localhost:4000")
+    database_url = os.getenv("DATABASE_URL")
     creator_email = os.getenv("SEED_CREATOR_EMAIL", "genesis@swarmsync.ai")
-    creator_password = os.getenv("SEED_CREATOR_PASSWORD", "GenesisSeed123!")
     creator_name = os.getenv("SEED_CREATOR_NAME", "Genesis System")
 
     log_file = Path(__file__).parent / "seed_log.txt"
     
     def log(msg):
         """Log to both console and file"""
-        print(msg)
+        # Remove emojis for Windows compatibility
+        msg_clean = msg.encode('ascii', 'ignore').decode('ascii') if sys.platform == 'win32' else msg
+        try:
+            print(msg)
+        except UnicodeEncodeError:
+            print(msg_clean)
         with open(log_file, "a", encoding="utf-8") as f:
             f.write(f"{datetime.now().strftime('%H:%M:%S')} - {msg}\n")
     
@@ -276,123 +299,98 @@ async def seed_agents():
         f.write(f"Agent Seeding Log - {datetime.now()}\n")
         f.write("=" * 60 + "\n\n")
     
-    log(f"🌱 Seeding agents into Agent-Market...")
+    log("Seeding agents into Agent-Market...")
     log(f"   API URL: {api_url}")
     log(f"   Creator: {creator_email}\n")
 
+    # Check database URL
+    if not database_url:
+        log("   ❌ DATABASE_URL environment variable is required")
+        log("   Set it in your .env file or export it before running")
+        return
+
+    # Get or create user in database
+    log("Setting up creator user in database...")
+    try:
+        creator_id = await ensure_user_in_db(database_url, creator_email, creator_name)
+        log(f"   OK User ID: {creator_id}")
+    except Exception as e:
+        log(f"   ERROR Failed to create/get user: {e}")
+        return
+
+    # Test API connection (non-blocking)
     sdk = AgentMarketSDK(base_url=api_url, timeout=30.0)
-    
-    # Test API connection
+    api_accessible = False
     try:
         import httpx
         async with httpx.AsyncClient() as client:
             try:
-                response = await client.get(f"{api_url}/health", timeout=5.0)
-                if response.status_code == 200:
-                    log("   ✅ API is accessible\n")
-                else:
-                    log(f"   ⚠️  API returned status {response.status_code}\n")
-            except httpx.RequestError:
-                # Try agents endpoint instead
                 response = await client.get(f"{api_url}/agents", timeout=5.0)
-                log("   ✅ API is accessible (via /agents endpoint)\n")
-    except Exception as e:
-        log(f"   ⚠️  Could not reach API at {api_url}: {e}")
-        log(f"   Make sure the API is running: npm run dev --workspace @agent-market/api\n")
-        return
-
-    try:
-        # Create or login as creator user
-        log("👤 Setting up creator user...")
-        creator_id = None
-        
-        # Try to register first
-        try:
-            response = await sdk.register_user(
-                email=creator_email,
-                display_name=creator_name,
-                password=creator_password,
-            )
-            creator_id = response["user"]["id"]
-            log(f"   ✅ Created user: {creator_id}")
-        except Exception as e:
-            # Get detailed error info
-            error_details = str(e)
-            if hasattr(e, 'response') and hasattr(e.response, 'json'):
-                try:
-                    error_body = e.response.json()
-                    error_details = f"{error_details} - {error_body}"
-                except:
-                    pass
-            
-            log(f"   ⚠️  Registration failed: {error_details}")
-            
-            # User might already exist, try to login
-            log("   Attempting to login as existing user...")
-            try:
-                response = await sdk.login(email=creator_email, password=creator_password)
-                creator_id = response["user"]["id"]
-                log(f"   ✅ Logged in as existing user: {creator_id}")
-            except Exception as login_error:
-                login_details = str(login_error)
-                if hasattr(login_error, 'response') and hasattr(login_error.response, 'json'):
-                    try:
-                        error_body = login_error.response.json()
-                        login_details = f"{login_details} - {error_body}"
-                    except:
-                        pass
-                
-                log(f"   ❌ Failed to login: {login_details}")
-                log(f"\n   💡 Tip: You may need to create the user manually first via the web interface")
-                log(f"   Or check if the API is using a different auth system (database-backed vs in-memory)")
-                return
-        
-        if not creator_id:
-            log("   ❌ Could not obtain creator ID")
-            return
-
-        # Create all agents
-        log(f"\n📦 Creating {len(AGENT_DEFINITIONS)} agents...\n")
-        created = 0
-        errors = []
-
-        for i, agent_def in enumerate(AGENT_DEFINITIONS, 1):
-            agent_name = agent_def["name"]
-            log(f"[{i}/{len(AGENT_DEFINITIONS)}] Creating {agent_name}...")
-
-            try:
-                payload = {
-                    "name": agent_name,
-                    "description": agent_def["description"],
-                    "categories": agent_def["categories"],
-                    "tags": agent_def["tags"],
-                    "pricingModel": agent_def["pricingModel"],
-                    "visibility": "PUBLIC",
-                    "creatorId": creator_id,
-                }
-
-                agent = await sdk.create_agent(payload)
-                log(f"   ✅ Created (ID: {agent['id']})")
-                created += 1
+                log("   OK API is accessible\n")
+                api_accessible = True
             except Exception as e:
-                error_msg = str(e)[:200]
-                log(f"   ❌ Error: {error_msg}")
-                errors.append((agent_name, error_msg))
+                log(f"   WARNING Could not reach API: {e}")
+                log(f"   Will attempt to create agents anyway (API may start during seeding)\n")
+    except Exception as e:
+        log(f"   WARNING API check failed: {e}")
+        log(f"   Will attempt to create agents anyway\n")
 
-        log(f"\n📊 Summary:")
-        log(f"   ✅ Created: {created} agents")
-        log(f"   ❌ Errors: {len(errors)}")
+    # Create all agents
+    log(f"\nCreating {len(AGENT_DEFINITIONS)} agents...\n")
+    created = 0
+    errors = []
 
-        if errors:
-            log(f"\n⚠️  Errors encountered:")
-            for agent_name, error in errors:
-                log(f"   - {agent_name}: {error}")
+    for i, agent_def in enumerate(AGENT_DEFINITIONS, 1):
+        agent_name = agent_def["name"]
+        log(f"[{i}/{len(AGENT_DEFINITIONS)}] Creating {agent_name}...")
 
-        log(f"\n✅ Seeding complete!")
-        log(f"   Log file: {log_file}")
+        try:
+            payload = {
+                "name": agent_name,
+                "description": agent_def["description"],
+                "categories": agent_def["categories"],
+                "tags": agent_def["tags"],
+                "pricingModel": agent_def["pricingModel"],
+                "visibility": "PUBLIC",
+                "creatorId": creator_id,
+            }
 
-    finally:
-        await sdk.close()
+            # Use SDK method which should handle JSON properly
+            agent = await sdk.create_agent(payload)
+            log(f"   OK Created (ID: {agent['id']}, Slug: {agent.get('slug', 'N/A')})")
+            created += 1
+        except Exception as e:
+            # Try to get detailed error from response
+            error_msg = str(e)
+            error_details = error_msg
+            
+            # Try to extract error details from httpx exception
+            if hasattr(e, 'response'):
+                try:
+                    if hasattr(e.response, 'read'):
+                        error_text = e.response.text if hasattr(e.response, 'text') else str(e.response.read())
+                        error_details = f"{error_msg}\n   Response: {error_text[:500]}"
+                    elif hasattr(e.response, 'text'):
+                        error_details = f"{error_msg}\n   Response: {e.response.text[:500]}"
+                except Exception as parse_err:
+                    error_details = f"{error_msg} (could not parse response: {parse_err})"
+            
+            log(f"   ERROR: {error_details[:400]}")
+            errors.append((agent_name, error_details))
+
+    log(f"\nSummary:")
+    log(f"   Created: {created} agents")
+    log(f"   Errors: {len(errors)}")
+
+    if errors:
+        log(f"\nErrors encountered:")
+        for agent_name, error in errors:
+            log(f"   - {agent_name}: {error}")
+
+    log(f"\nSeeding complete!")
+    log(f"   Log file: {log_file}")
+
+    await sdk.close()
 
 
 if __name__ == "__main__":
