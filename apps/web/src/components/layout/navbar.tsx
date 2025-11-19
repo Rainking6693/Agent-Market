@@ -26,9 +26,9 @@ export function Navbar() {
           <Image
             src="/logos/logo-transparent.png"
             alt="Swarm Sync logo"
-            width={180}
-            height={40}
-            className="h-8 w-auto object-contain md:h-10"
+            width={240}
+            height={54}
+            className="h-12 w-auto object-contain md:h-16"
             priority
           />
         </Link>
