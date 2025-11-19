@@ -6,15 +6,25 @@ import type { Agent } from '@agent-market/sdk';
 interface AgentGridProps {
   agents?: Agent[];
   isLoading: boolean;
+  isError?: boolean;
 }
 
-export function AgentGrid({ agents = [], isLoading }: AgentGridProps) {
+export function AgentGrid({ agents = [], isLoading, isError }: AgentGridProps) {
   if (isLoading) {
     return (
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, index) => (
           <Skeleton key={index} className="h-64 rounded-[2.5rem]" />
         ))}
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="rounded-[2.5rem] border border-destructive/20 bg-destructive/5 p-12 text-center text-destructive">
+        <p className="font-semibold">Failed to load agents</p>
+        <p className="text-sm opacity-80">Please check your connection and try again.</p>
       </div>
     );
   }

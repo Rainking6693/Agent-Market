@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 export const metadata: Metadata = {
-  title: 'Security & Compliance | Swarm Sync',
+  title: 'Security & Compliance',
   description:
     'Learn how Swarm Sync keeps your agents and data secure. SOC 2 Type II certified, GDPR compliant, with enterprise-grade security and privacy controls.',
 };
@@ -272,7 +272,7 @@ export default function SecurityPage() {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button size="lg" asChild>
-                <Link href="/contact">Contact Security Team</Link>
+                <a href="mailto:security@swarmsync.com">Contact Security Team</a>
               </Button>
               <Button size="lg" variant="outline" asChild>
                 <Link href="/platform">Explore Platform</Link>

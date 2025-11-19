@@ -71,7 +71,7 @@ export function GitHubSignInButton({
         )}
       </Button>
       {error && <p className="text-sm text-destructive">{error}</p>}
-      {!githubConfigured && (
+      {!githubConfigured && process.env.NODE_ENV === 'development' && (
         <p className="text-sm text-muted-foreground">
           Add NEXT_PUBLIC_GITHUB_CLIENT_ID to enable GitHub sign-in.
         </p>

@@ -71,7 +71,7 @@ export function GoogleSignInButton({
         )}
       </Button>
       {error && <p className="text-sm text-destructive">{error}</p>}
-      {!googleConfigured && (
+      {!googleConfigured && process.env.NODE_ENV === 'development' && (
         <p className="text-sm text-muted-foreground">
           Add NEXT_PUBLIC_GOOGLE_CLIENT_ID to enable Google sign-in.
         </p>

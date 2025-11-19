@@ -25,7 +25,7 @@ export default function MarketplaceAgentsPage() {
     }),
     [search, category, capability, verifiedOnly],
   );
-  const { data: agents, isLoading, refetch } = useAgents(filters);
+  const { data: agents, isLoading, isError, refetch } = useAgents(filters);
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-white to-[#f7efe4]">
@@ -58,7 +58,7 @@ export default function MarketplaceAgentsPage() {
             onVerifiedToggle={setVerifiedOnly}
           />
 
-          <AgentGrid agents={agents} isLoading={isLoading} />
+          <AgentGrid agents={agents} isLoading={isLoading} isError={isError} />
         </div>
       </div>
       <Footer />
