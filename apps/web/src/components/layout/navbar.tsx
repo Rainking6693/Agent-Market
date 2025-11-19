@@ -19,20 +19,18 @@ export function Navbar() {
   const pathname = usePathname();
   const { isAuthenticated, logout } = useAuth();
   const [open, setOpen] = useState(false);
-
   return (
     <header className="sticky top-0 z-40 border-b border-white/60 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:py-5">
         <Link href="/" className="flex items-center" aria-label="Swarm Sync homepage">
           <Image
-            src="/logos/swarmsync-logo-new.png"
+            src="/logos/logo-transparent.png"
             alt="Swarm Sync logo"
-            width={40}
+            width={180}
             height={40}
-            className="h-10 w-auto object-contain"
+            className="h-8 w-auto object-contain md:h-10"
             priority
           />
-          <span className="ml-3 text-xl font-bold tracking-tight text-[#6B46C1]">Swarm Sync</span>
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground md:flex">
@@ -82,7 +80,7 @@ export function Navbar() {
         >
           <Menu className="h-5 w-5" aria-hidden="true" />
         </button>
-      </div>
+      </div >
 
       {open && (
         <div
@@ -126,6 +124,6 @@ export function Navbar() {
           </nav>
         </div>
       )}
-    </header>
+    </header >
   );
 }

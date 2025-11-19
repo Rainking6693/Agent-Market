@@ -49,14 +49,13 @@ export function Sidebar() {
       <div className="space-y-8">
         <div className="space-y-2">
           <Image
-            src="/logos/swarm-sync-wordmark-transparent.svg"
+            src="/logos/logo-filled.png"
             alt="Swarm Sync logo"
-            width={120}
-            height={36}
-            className="h-8 w-auto object-contain md:h-10"
+            width={180}
+            height={48}
+            className="h-12 w-auto object-contain"
             priority
           />
-          <h1 className="text-2xl font-headline text-carrara">Command Center</h1>
         </div>
 
         {sections.map((section) => (

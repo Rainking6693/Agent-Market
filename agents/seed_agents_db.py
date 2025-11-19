@@ -354,10 +354,39 @@ async def seed_agents():
                 "visibility": "PUBLIC",
                 "creatorId": creator_id,
             }
+            
+            # After creating, update status to APPROVED via direct DB call
+            import asyncpg
+            db_conn = await asyncpg.connect(dsn=database_url)
+            try:
+                # Get the created agent's ID from the response
+                agent_id = agent['id']
+                # Update status to APPROVED
+                await db_conn.execute(
+                    'UPDATE "Agent" SET status = $1 WHERE id = $2',
+                    'APPROVED',
+                    agent_id
+                )
+                log(f"   OK Status updated to APPROVED")
+            finally:
+                await db_conn.close()
 
             # Use SDK method which should handle JSON properly
             agent = await sdk.create_agent(payload)
-            log(f"   OK Created (ID: {agent['id']}, Slug: {agent.get('slug', 'N/A')})")
+            agent_id = agent['id']
+            
+            # Update status to APPROVED via direct DB call
+            db_conn = await asyncpg.connect(dsn=database_url)
+            try:
+                await db_conn.execute(
+                    'UPDATE "Agent" SET status = $1 WHERE id = $2',
+                    'APPROVED',
+                    agent_id
+                )
+            finally:
+                await db_conn.close()
+            
+            log(f"   OK Created (ID: {agent_id}, Slug: {agent.get('slug', 'N/A')}) - Status: APPROVED")
             created += 1
         except Exception as e:
             # Try to get detailed error from response
