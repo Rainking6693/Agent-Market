@@ -60,21 +60,24 @@ export default async function HomePage() {
               from a single console.
             </p>
             <div className="mt-4">
-              <Image
-                src="/logos/swarm-sync-wordmark-transparent.svg"
-                alt="Swarm Sync logo"
-                width={120}
-                height={36}
-                className="h-8 w-auto object-contain md:h-10"
-                priority
-              />
+              <div className="mt-4 flex items-center">
+                <Image
+                  src="/logos/swarmsync-logo-new.png"
+                  alt="Swarm Sync logo"
+                  width={40}
+                  height={40}
+                  className="h-10 w-auto object-contain"
+                  priority
+                />
+                <span className="ml-3 text-xl font-bold tracking-tight text-[#6B46C1]">Swarm Sync</span>
+              </div>
             </div>
           </div>
           <div className="flex flex-wrap gap-3">
-            <button className="glass-button bg-accent text-carrara shadow-accent-glow hover:bg-accent-dark">
+            <Link href="/workflows" className="glass-button bg-accent text-carrara shadow-accent-glow hover:bg-accent-dark">
               + Start a run
-            </button>
-            <button className="glass-button text-ink">✺ Invite teammate</button>
+            </Link>
+            <Link href="/settings/team" className="glass-button text-ink">✺ Invite teammate</Link>
             <Link href="/billing" className="glass-button">
               Billing
             </Link>
@@ -100,8 +103,7 @@ export default async function HomePage() {
         <OrgOverviewCard summary={orgSummary} />
       ) : (
         <div className="glass-card p-6 text-sm text-ink-muted">
-          Unable to load organization analytics. Configure `NEXT_PUBLIC_DEFAULT_ORG_SLUG` to enable
-          ROI insights.
+          Unable to load organization analytics. Please ensure your organization is fully configured.
         </div>
       )}
 

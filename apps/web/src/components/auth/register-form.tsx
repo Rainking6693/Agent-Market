@@ -46,7 +46,7 @@ export function RegisterForm() {
       setError('root', {
         type: 'manual',
         message:
-          'Registration failed. Please check your information and try again. If the problem persists, contact support.',
+          'Registration failed. Please ensure all fields are correct and try again. If the problem persists, please contact support.',
       });
     }
   }, [registerStatus, setError]);

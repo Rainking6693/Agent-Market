@@ -157,7 +157,7 @@ export default function LandingPage() {
                       <Link href="/register">Start Free Trial - $100 Free Credits</Link>
                     </Button>
                     <Button size="lg" variant="outline" asChild>
-                      <Link href="/billing">View Pricing</Link>
+                      <Link href="/pricing">View Membership Pricing</Link>
                     </Button>
                   </div>
                 </div>

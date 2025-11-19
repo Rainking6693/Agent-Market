@@ -9,7 +9,7 @@ const sections = [
   {
     title: 'Build',
     items: [
-      { label: 'Dashboard', href: '/' },
+      { label: 'Dashboard', href: '/dashboard' },
       { label: 'Agents', href: '/agents' },
       { label: 'Workflows', href: '/workflows' },
       { label: 'Billing', href: '/billing' },
@@ -38,8 +38,11 @@ const sections = [
 
 const navItemClass = 'block rounded-lg px-3 py-2 text-sm transition-colors hover:bg-carrara/10';
 
+import { useAuth } from '@/hooks/use-auth';
+
 export function Sidebar() {
   const pathname = usePathname();
+  const { user } = useAuth();
 
   return (
     <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-outline/40 bg-sidebar p-6 text-carrara lg:flex">
@@ -70,9 +73,8 @@ export function Sidebar() {
                   <Link
                     key={item.label}
                     href={item.href}
-                    className={`${navItemClass} ${
-                      isActive ? 'bg-carrara/15 text-carrara' : 'text-carrara/70 hover:text-carrara'
-                    }`}
+                    className={`${navItemClass} ${isActive ? 'bg-carrara/15 text-carrara' : 'text-carrara/70 hover:text-carrara'
+                      }`}
                   >
                     {item.label}
                   </Link>
@@ -83,18 +85,20 @@ export function Sidebar() {
         ))}
       </div>
 
-      <div className="rounded-2xl border border-carrara/10 bg-carrara/5 p-4">
-        <div className="text-[0.65rem] uppercase tracking-wide text-brass/70">Signed in as</div>
-        <div className="mt-2 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-carrara/15 text-sm font-semibold text-carrara">
-            BS
-          </div>
-          <div>
-            <div className="text-sm font-semibold text-carrara">Ben Stone</div>
-            <div className="text-xs text-carrara/70">Ben&apos;s Individual Org</div>
+      {user && (
+        <div className="rounded-2xl border border-carrara/10 bg-carrara/5 p-4">
+          <div className="text-[0.65rem] uppercase tracking-wide text-brass/70">Signed in as</div>
+          <div className="mt-2 flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-carrara/15 text-sm font-semibold text-carrara">
+              {user.displayName?.charAt(0) || user.email.charAt(0)}
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-carrara">{user.displayName || 'User'}</div>
+              <div className="text-xs text-carrara/70">{user.email}</div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </aside>
   );
 }
