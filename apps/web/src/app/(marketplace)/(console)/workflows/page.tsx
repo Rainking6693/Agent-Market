@@ -1,11 +1,12 @@
-import type { Workflow } from '@agent-market/sdk';
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
 import { WorkflowBuilder } from '@/components/workflows/workflow-builder';
 import { WorkflowRunner } from '@/components/workflows/workflow-runner';
 import { getAgentMarketClient } from '@/lib/server-client';
+
+import type { Workflow } from '@agent-market/sdk';
+import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 

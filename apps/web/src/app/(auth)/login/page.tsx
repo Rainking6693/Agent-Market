@@ -1,8 +1,9 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { LoginForm } from '@/components/auth/login-form';
 import { Navbar } from '@/components/layout/navbar';
+
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Sign In',

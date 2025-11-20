@@ -4,7 +4,6 @@ import {
   OrganizationRoiSummary,
   OrganizationRoiTimeseriesPoint,
 } from '@agent-market/sdk';
-import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -17,6 +16,8 @@ import { QuickActions } from '@/components/dashboard/quick-actions';
 import { RecentActivityList } from '@/components/dashboard/recent-activity-list';
 import { getCurrentUser } from '@/lib/auth-guard';
 import { getAgentMarketClient } from '@/lib/server-client';
+
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Dashboard',

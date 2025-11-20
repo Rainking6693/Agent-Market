@@ -1,11 +1,14 @@
-import type { Metadata } from 'next';
+import { Check } from 'lucide-react';
 import Link from 'next/link';
+
 
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Check } from 'lucide-react';
+
+import type { Metadata } from 'next';
+
 
 export const metadata: Metadata = {
     title: 'Pricing',

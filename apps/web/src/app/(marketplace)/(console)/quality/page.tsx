@@ -6,7 +6,6 @@ import {
   EvaluationResultRecord,
   ServiceAgreementWithVerifications,
 } from '@agent-market/sdk';
-import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { CertificationManager } from '@/components/quality/certification-manager';
@@ -16,6 +15,8 @@ import { QualityAgentSelector } from '@/components/quality/quality-agent-selecto
 import { QualityOverview } from '@/components/quality/quality-overview';
 import { RoiTimeseriesChart } from '@/components/quality/roi-timeseries-chart';
 import { getAgentMarketClient } from '@/lib/server-client';
+
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Quality & Trust',

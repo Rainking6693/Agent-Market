@@ -1,9 +1,11 @@
 import { BillingPlan, BillingSubscription } from '@agent-market/sdk';
-import type { Metadata } from 'next';
+
 
 import { PlanCard } from '@/components/billing/plan-card';
 import { TopUpCard } from '@/components/billing/top-up-card';
 import { getAgentMarketClient } from '@/lib/server-client';
+
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Billing',
