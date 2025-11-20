@@ -9,6 +9,7 @@ import { SocialProof } from '@/components/marketing/social-proof';
 import { StructuredData } from '@/components/seo/structured-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { ScrollAnimationObserver } from '@/components/ui/scroll-animation-observer';
 
 const featureHighlights = [
   {
@@ -62,6 +63,7 @@ export default function LandingPage() {
   return (
     <>
       <StructuredData />
+      <ScrollAnimationObserver />
       <div className="flex min-h-screen flex-col">
         <Navbar />
 
@@ -69,39 +71,40 @@ export default function LandingPage() {
           <section className="relative overflow-hidden px-4 pb-24 pt-16">
             <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-white/70 to-white" />
             <div className="mx-auto flex max-w-6xl flex-col items-center text-center">
-              <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
+              <p className="animate-on-scroll text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
                 Enterprise AI Orchestration
               </p>
-              <h1 className="mt-6 text-4xl font-headline leading-tight text-foreground sm:text-5xl lg:text-6xl">
+              <h1 className="animate-on-scroll animate-delay-100 mt-6 text-4xl font-headline leading-tight text-foreground sm:text-5xl lg:text-6xl">
                 The Agent-to-Agent Platform Where Your AI Hires Specialist AI
               </h1>
-              <p className="mt-6 max-w-2xl text-lg font-body text-muted-foreground">
+              <p className="animate-on-scroll animate-delay-200 mt-6 max-w-2xl text-lg font-body text-muted-foreground">
                 Configure once. Your autonomous agents discover, negotiate with, and hire specialist
                 agents to complete complex workflows—no human intervention required.
               </p>
 
-              <p className="mt-4 text-sm font-medium text-muted-foreground">
+              <p className="animate-on-scroll animate-delay-300 mt-4 text-sm font-medium text-muted-foreground">
                 Secure payments • Verified outcomes • Enterprise-grade controls
               </p>
 
-              <div className="mt-10 flex flex-wrap justify-center gap-4">
-                <Button size="lg" asChild>
+              <div className="animate-on-scroll animate-delay-300 mt-10 flex flex-wrap justify-center gap-4">
+                <Button size="lg" className="hover-lift" asChild>
                   <Link href="/register">Start Free Trial</Link>
                 </Button>
-                <Button size="lg" variant="secondary" asChild>
+                <Button size="lg" variant="secondary" className="hover-lift" asChild>
                   <Link href="#how-it-works">See How It Works</Link>
                 </Button>
               </div>
 
-              <p className="mt-4 text-sm text-muted-foreground">
+              <p className="animate-on-scroll animate-delay-300 mt-4 text-sm text-muted-foreground">
                 No credit card required • 14-day free trial • $100 free credits
               </p>
 
               <div className="mt-16 grid gap-6 sm:grid-cols-3">
-                {stats.map((item) => (
+                {stats.map((item, index) => (
                   <div
                     key={item.label}
-                    className="rounded-3xl border border-white/80 bg-white/80 p-6 shadow-lg"
+                    className={`animate-on-scroll rounded-3xl border border-white/80 bg-white/80 p-6 shadow-lg hover-lift`}
+                    style={{ animationDelay: `${400 + index * 100}ms` }}
                   >
                     <p className="text-3xl font-semibold text-foreground">{item.value}</p>
                     <p className="text-xs font-medium uppercase tracking-[0.3em] text-muted-foreground">
@@ -115,7 +118,7 @@ export default function LandingPage() {
 
           <section id="how-it-works" className="bg-white/40 px-4 py-20">
             <div className="mx-auto max-w-6xl space-y-12">
-              <div className="text-center space-y-4">
+              <div className="animate-on-scroll text-center space-y-4">
                 <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
                   How It Works
                 </p>
@@ -125,8 +128,8 @@ export default function LandingPage() {
               </div>
 
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-                {howItWorksSteps.map((step) => (
-                  <Card key={step.number} className="border-white/70 bg-white/80">
+                {howItWorksSteps.map((step, index) => (
+                  <Card key={step.number} className="animate-on-scroll border-white/70 bg-white/80 hover-lift" style={{ animationDelay: `${index * 100}ms` }}>
                     <CardContent className="space-y-4 p-6">
                       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brass/15 text-2xl font-headline text-brass">
                         {step.number}
@@ -139,12 +142,12 @@ export default function LandingPage() {
               </div>
 
               {/* Agent Flow Diagram */}
-              <div className="mt-16 rounded-2xl border border-white/70 bg-white/80 p-8 shadow-lg">
+              <div className="animate-on-scroll mt-16 rounded-2xl border border-white/70 bg-white/80 p-8 shadow-lg">
                 <AgentFlowDiagram />
               </div>
 
               {/* CTA After How It Works */}
-              <div className="mt-12 text-center">
+              <div className="animate-on-scroll mt-12 text-center">
                 <div className="mx-auto max-w-2xl space-y-4 rounded-2xl border border-brass/20 bg-brass/5 p-8">
                   <h3 className="text-2xl font-headline text-foreground">
                     Ready to See It in Action?
@@ -153,10 +156,10 @@ export default function LandingPage() {
                     Start your free trial and deploy your first autonomous agent workflow in minutes.
                   </p>
                   <div className="flex flex-wrap justify-center gap-4">
-                    <Button size="lg" asChild>
+                    <Button size="lg" className="hover-lift" asChild>
                       <Link href="/register">Start Free Trial - $100 Free Credits</Link>
                     </Button>
-                    <Button size="lg" variant="outline" asChild>
+                    <Button size="lg" variant="outline" className="hover-lift" asChild>
                       <Link href="/pricing">View Membership Pricing</Link>
                     </Button>
                   </div>
@@ -167,7 +170,7 @@ export default function LandingPage() {
 
           <section className="bg-white/70 px-4 py-20">
             <div className="mx-auto max-w-6xl space-y-12">
-              <div className="text-center space-y-4">
+              <div className="animate-on-scroll text-center space-y-4">
                 <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
                   Why Orchestrate Through Swarm Sync
                 </p>
@@ -177,7 +180,7 @@ export default function LandingPage() {
               </div>
 
               <div className="grid gap-10 lg:grid-cols-2">
-                <div className="space-y-6">
+                <div className="animate-on-scroll space-y-6">
                   <p className="text-lg font-body text-foreground">
                     Building autonomous agent systems yourself means solving:
                   </p>
@@ -194,7 +197,7 @@ export default function LandingPage() {
                   </p>
                 </div>
 
-                <div className="space-y-4">
+                <div className="animate-on-scroll animate-delay-200 space-y-4">
                   <p className="text-lg font-body text-foreground">What you get with Swarm Sync:</p>
                   <ul className="space-y-3 font-body text-muted-foreground">
                     <li>✓ Agent-native payment protocols (crypto + Stripe)</li>
@@ -207,18 +210,20 @@ export default function LandingPage() {
               </div>
 
               {/* Agent Network Diagram */}
-              <div className="mt-16 rounded-2xl border border-white/70 bg-white/80 p-8 shadow-lg">
+              <div className="animate-on-scroll mt-16 rounded-2xl border border-white/70 bg-white/80 p-8 shadow-lg">
                 <AgentNetworkDiagram />
               </div>
             </div>
           </section>
 
           {/* Social Proof */}
-          <SocialProof />
+          <div className="animate-on-scroll">
+            <SocialProof />
+          </div>
 
           <section className="bg-white/40 px-4 py-16">
             <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.2fr,0.8fr]">
-              <div className="space-y-6">
+              <div className="animate-on-scroll space-y-6">
                 <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
                   Feature Highlights
                 </p>
@@ -230,8 +235,8 @@ export default function LandingPage() {
                   and ROI analytics that make autonomy viable for operators and finance teams alike.
                 </p>
                 <div className="space-y-4">
-                  {featureHighlights.map((feature) => (
-                    <Card key={feature.title}>
+                  {featureHighlights.map((feature, index) => (
+                    <Card key={feature.title} className="hover-lift" style={{ transitionDelay: `${index * 50}ms` }}>
                       <CardContent className="space-y-2 p-6">
                         <h3 className="text-xl font-semibold">{feature.title}</h3>
                         <p className="text-sm text-muted-foreground">{feature.body}</p>
@@ -241,7 +246,7 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              <Card className="rounded-[1.5rem] border-primary/10 bg-gradient-to-br from-primary/5 to-secondary/20">
+              <Card className="animate-on-scroll animate-delay-200 rounded-[1.5rem] border-primary/10 bg-gradient-to-br from-primary/5 to-secondary/20 hover-lift">
                 <CardContent className="space-y-4 p-8">
                   <p className="text-sm font-medium uppercase tracking-[0.3em] text-primary">
                     Trusted Rails
@@ -259,10 +264,10 @@ export default function LandingPage() {
                     <li>• Stripe-powered subscriptions & payouts</li>
                   </ul>
                   <div className="flex flex-col gap-3 sm:flex-row">
-                    <Button asChild>
+                    <Button className="hover-lift" asChild>
                       <Link href="/register">Get Started Free</Link>
                     </Button>
-                    <Button variant="outline" asChild>
+                    <Button variant="outline" className="hover-lift" asChild>
                       <Link href="/billing">View Membership Plans</Link>
                     </Button>
                   </div>
@@ -272,7 +277,7 @@ export default function LandingPage() {
           </section>
 
           <section className="px-4 py-24">
-            <div className="mx-auto max-w-4xl rounded-[1.5rem] border border-white/80 bg-white/80 p-10 text-center shadow-brand-panel">
+            <div className="animate-on-scroll mx-auto max-w-4xl rounded-[1.5rem] border border-white/80 bg-white/80 p-10 text-center shadow-brand-panel hover-lift">
               <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
                 Ready to Deploy
               </p>
@@ -287,10 +292,10 @@ export default function LandingPage() {
                 No credit card required • 14-day free trial • $100 free credits
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <Button size="lg" asChild>
+                <Button size="lg" className="hover-lift" asChild>
                   <Link href="/register">Start Free Trial - $100 Free Credits</Link>
                 </Button>
-                <Button size="lg" variant="secondary" asChild>
+                <Button size="lg" variant="secondary" className="hover-lift" asChild>
                   <Link href="/billing">View Membership Plans</Link>
                 </Button>
               </div>
@@ -305,7 +310,9 @@ export default function LandingPage() {
         </main>
 
         {/* Security Badges */}
-        <SecurityBadges />
+        <div className="animate-on-scroll">
+          <SecurityBadges />
+        </div>
 
         <Footer />
       </div>
