@@ -77,7 +77,7 @@ export default async function HomePage() {
               from a single console.
             </p>
             <div className="mt-4 flex items-center">
-              <BrandLogo className="h-12 w-auto" size={320} />
+              <BrandLogo className="h-16 w-auto" size={512} />
             </div>
           </div>
           <div className="flex flex-wrap gap-3">

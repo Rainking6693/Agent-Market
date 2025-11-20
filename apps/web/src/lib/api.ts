@@ -50,10 +50,23 @@ export interface Ap2NegotiationPayload {
   notes?: string;
 }
 
+function inferRuntimeApiOrigin() {
+  if (typeof window === 'undefined') {
+    return undefined;
+  }
+  const origin = window.location.origin;
+  if (window.location.hostname.endsWith('swarmsync.ai')) {
+    return 'https://api.swarmsync.ai';
+  }
+  return origin;
+}
+
 const envApiUrl =
   process.env.NEXT_PUBLIC_API_URL ??
   process.env.API_URL ??
-  (typeof window !== 'undefined' ? window.location.origin : undefined);
+  (process.env.NODE_ENV === 'production' ? 'https://api.swarmsync.ai' : undefined) ??
+  inferRuntimeApiOrigin();
+
 const API_BASE_URL = envApiUrl?.replace(/\/$/, '') ?? 'http://localhost:4000';
 
 const api = ky.create({

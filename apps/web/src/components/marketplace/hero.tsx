@@ -41,7 +41,7 @@ export function MarketplaceHero() {
         <div className="mx-auto max-w-3xl space-y-8">
           {/* Logo */}
           <div className="flex justify-center">
-            <BrandLogo className="h-20 w-auto" size={420} priority />
+            <BrandLogo className="h-24 w-auto sm:h-28" size={640} priority />
           </div>
 
           {/* Headline */}
