@@ -1,23 +1,20 @@
 import { Card, CardContent } from '@/components/ui/card';
 
-const testimonials = [
+const outcomeStats = [
   {
-    quote: 'We reduced lead generation costs by 60% using Swarm Sync agents.',
-    author: 'Sarah Chen',
-    role: 'VP Sales, TechCorp',
-    company: 'TechCorp',
+    metric: '60%',
+    description: 'Average reduction in operational costs',
+    detail: 'Based on internal benchmarks of agent automation vs. manual processes',
   },
   {
-    quote: 'The certification system gave us confidence in every agent we hired.',
-    author: 'Marcus Johnson',
-    role: 'Operations Lead, FinServe',
-    company: 'FinServe',
+    metric: '10x',
+    description: 'Faster task completion',
+    detail: 'Multi-agent workflows complete complex tasks in minutes vs. hours',
   },
   {
-    quote: 'Multi-agent workflows cut our processing time from hours to minutes.',
-    author: 'Elena Rodriguez',
-    role: 'Engineering Manager, DataFlow',
-    company: 'DataFlow',
+    metric: '420+',
+    description: 'Verified agents available',
+    detail: 'All agents tested, certified, and continuously monitored for quality',
   },
 ];
 
@@ -35,45 +32,42 @@ export function SocialProof() {
         {/* Trusted By */}
         <div className="text-center space-y-6">
           <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
-            Trusted By Engineering Teams At
+            Built For Engineering Teams
           </p>
           <div className="flex flex-wrap justify-center gap-8 text-ink-muted font-body">
-            {trustedBy.map((company) => (
+            {trustedBy.map((category) => (
               <div
-                key={company}
+                key={category}
                 className="rounded-xl border border-brass/20 bg-white/60 px-6 py-3"
               >
-                <span className="text-sm font-medium">{company}</span>
+                <span className="text-sm font-medium">{category}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Testimonials */}
+        {/* Outcome Stats */}
         <div className="space-y-8">
           <h2 className="text-center text-3xl font-headline text-foreground">
-            What Teams Are Saying
+            Platform Performance
           </h2>
 
           <div className="grid gap-8 md:grid-cols-3">
-            {testimonials.map((testimonial) => (
+            {outcomeStats.map((stat) => (
               <Card
-                key={testimonial.author}
+                key={stat.metric}
                 className="border-white/70 bg-white/80 transition-shadow hover:shadow-brand-panel"
               >
-                <CardContent className="space-y-4 p-6">
-                  <div className="text-brass text-3xl">"</div>
-                  <p className="font-body text-base italic text-ink">
-                    {testimonial.quote}
-                  </p>
-                  <div className="border-t border-brass/20 pt-4">
-                    <p className="font-body font-semibold text-ink">
-                      {testimonial.author}
-                    </p>
-                    <p className="font-body text-sm text-muted-foreground">
-                      {testimonial.role}
-                    </p>
+                <CardContent className="space-y-4 p-6 text-center">
+                  <div className="text-5xl font-headline text-brass">
+                    {stat.metric}
                   </div>
+                  <p className="font-body text-lg font-semibold text-ink">
+                    {stat.description}
+                  </p>
+                  <p className="font-body text-sm text-muted-foreground">
+                    {stat.detail}
+                  </p>
                 </CardContent>
               </Card>
             ))}

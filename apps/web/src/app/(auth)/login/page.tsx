@@ -1,7 +1,16 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { LoginForm } from '@/components/auth/login-form';
 import { Navbar } from '@/components/layout/navbar';
+
+export const metadata: Metadata = {
+  title: 'Sign In',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function LoginPage() {
   return (

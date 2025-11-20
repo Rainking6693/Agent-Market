@@ -1,8 +1,17 @@
 import { BillingPlan, BillingSubscription } from '@agent-market/sdk';
+import type { Metadata } from 'next';
 
 import { PlanCard } from '@/components/billing/plan-card';
 import { TopUpCard } from '@/components/billing/top-up-card';
 import { getAgentMarketClient } from '@/lib/server-client';
+
+export const metadata: Metadata = {
+  title: 'Billing',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function BillingPage() {
   const client = getAgentMarketClient();
@@ -20,8 +29,20 @@ export default async function BillingPage() {
 
   if (!plans.length) {
     return (
-      <div className="glass-card p-8 text-sm text-ink-muted">
-        Billing data is unavailable right now. Try refreshing once the API is reachable.
+      <div className="space-y-8">
+        <header className="glass-card p-8">
+          <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Billing</p>
+          <h1 className="mt-2 text-3xl font-headline text-ink">Plans & Usage</h1>
+        </header>
+        <div className="glass-card border border-amber-500/40 bg-amber-500/10 p-8">
+          <h2 className="text-lg font-semibold text-amber-700">No Billing Plans Available</h2>
+          <p className="mt-2 text-sm text-amber-600">
+            We're currently unable to load billing information. This may be temporary.
+          </p>
+          <p className="mt-4 text-sm text-ink-muted">
+            If this issue persists, please contact support or try again later.
+          </p>
+        </div>
       </div>
     );
   }

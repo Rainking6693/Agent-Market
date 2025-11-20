@@ -41,7 +41,7 @@ const comparisonTable = [
   {
     feature: 'Compliance & Audit',
     buildYourOwn: 'Build logging, audit trails, compliance reports (1-2 months)',
-    swarmSync: 'SOC 2 Type II, GDPR-compliant infrastructure',
+    swarmSync: 'SOC 2-ready, GDPR-aligned infrastructure',
   },
   {
     feature: 'Ongoing Maintenance',
@@ -257,7 +257,7 @@ export default function BuildVsBuyPage() {
                     <li>✓ Your team should focus on core product, not infrastructure</li>
                     <li>✓ You want proven, battle-tested agent orchestration</li>
                     <li>✓ Cost predictability and low upfront investment matter</li>
-                    <li>✓ Compliance (SOC 2, GDPR) is required</li>
+                    <li>✓ Compliance (SOC 2-ready, GDPR-aligned) is important</li>
                   </ul>
                 </CardContent>
               </Card>

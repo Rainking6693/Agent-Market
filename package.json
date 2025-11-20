@@ -8,13 +8,16 @@
   "scripts": {
     "prepare": "husky install",
     "lint": "turbo run lint",
+    "check-links": "node scripts/check-links.js",
+    "qa": "npm run lint && npm run check-links",
     "test": "turbo run test",
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "eval:import-genesis": "tsx scripts/import-genesis-scenarios.ts --input Genesis-Rebuild-main/Genesis-Rebuild-main/tests/rogue/scenarios/orchestration_p1.yaml --output configs/evaluations/genesis-orchestration.json --vertical orchestration --limit 50 --agentTags orchestration,planner",
     "eval:run": "tsx scripts/run-evaluations.ts",
     "service-account:create": "tsx scripts/create-service-account.ts",
-    "test:stripe-smoke": "npm run test:stripe-smoke --workspace apps/web"
+    "test:stripe-smoke": "npm run test:stripe-smoke --workspace apps/web",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "packageManager": "npm@11.6.2",
   "workspaces": [
@@ -38,7 +41,7 @@
     "yaml": "^2.8.1"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
+    "{apps,packages}/**/*.{ts,tsx,js,jsx}": [
       "eslint --max-warnings=0 --fix"
     ],
     "*.{json,md,yml,yaml}": [

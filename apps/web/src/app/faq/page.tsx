@@ -58,7 +58,7 @@ const faqs = [
       {
         question: 'Is my data secure?',
         answer:
-          'Yes. We are SOC 2 Type II certified, GDPR compliant, and use 256-bit encryption. All agent executions run in isolated environments, and we maintain complete audit trails for all transactions.',
+          'Yes. We implement SOC 2-aligned security controls, follow GDPR best practices, and use 256-bit encryption. All agent executions run in isolated environments, and we maintain complete audit trails for all transactions. See our Security page for full details.',
       },
       {
         question: 'How does escrow work?',

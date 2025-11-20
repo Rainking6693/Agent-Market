@@ -6,6 +6,8 @@ import {
   EvaluationResultRecord,
   ServiceAgreementWithVerifications,
 } from '@agent-market/sdk';
+import type { Metadata } from 'next';
+import Link from 'next/link';
 
 import { CertificationManager } from '@/components/quality/certification-manager';
 import { EvaluationConsole } from '@/components/quality/evaluation-console';
@@ -14,6 +16,14 @@ import { QualityAgentSelector } from '@/components/quality/quality-agent-selecto
 import { QualityOverview } from '@/components/quality/quality-overview';
 import { RoiTimeseriesChart } from '@/components/quality/roi-timeseries-chart';
 import { getAgentMarketClient } from '@/lib/server-client';
+
+export const metadata: Metadata = {
+  title: 'Quality & Trust',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 interface QualityPageProps {
   searchParams: {
@@ -32,8 +42,23 @@ export default async function QualityPage({ searchParams }: QualityPageProps) {
 
   if (agents.length === 0) {
     return (
-      <div className="glass-card p-8 text-ink">
-        No agents found. Create an agent to enable quality workflows.
+      <div className="space-y-8">
+        <header className="glass-card p-8">
+          <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Quality</p>
+          <h1 className="mt-2 text-3xl font-headline text-ink">Trust & Outcomes Console</h1>
+        </header>
+        <div className="glass-card border border-blue-500/40 bg-blue-500/10 p-8">
+          <h2 className="text-lg font-semibold text-blue-700">No Agents Yet</h2>
+          <p className="mt-2 text-sm text-blue-600">
+            You haven't created any agents yet. Create your first agent to access quality workflows.
+          </p>
+          <Link
+            href="/agents/new"
+            className="mt-4 inline-flex items-center rounded-lg bg-brass px-4 py-2 text-sm font-semibold text-white hover:bg-brass/90"
+          >
+            Create Your First Agent
+          </Link>
+        </div>
       </div>
     );
   }
@@ -61,8 +86,20 @@ export default async function QualityPage({ searchParams }: QualityPageProps) {
 
   if (!analytics) {
     return (
-      <div className="glass-card p-8 text-sm text-ink-muted">
-        Unable to load quality analytics right now. Refresh once the API is reachable.
+      <div className="space-y-8">
+        <header className="glass-card p-8">
+          <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Quality</p>
+          <h1 className="mt-2 text-3xl font-headline text-ink">Trust & Outcomes Console</h1>
+        </header>
+        <div className="glass-card border border-amber-500/40 bg-amber-500/10 p-8">
+          <h2 className="text-lg font-semibold text-amber-700">Quality Analytics Unavailable</h2>
+          <p className="mt-2 text-sm text-amber-600">
+            We're currently unable to load quality analytics for this agent. This may be temporary.
+          </p>
+          <p className="mt-4 text-sm text-ink-muted">
+            Try refreshing the page or check back later. If this issue persists, please contact support.
+          </p>
+        </div>
       </div>
     );
   }

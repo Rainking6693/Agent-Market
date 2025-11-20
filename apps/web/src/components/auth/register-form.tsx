@@ -18,11 +18,12 @@ const schema = z.object({
   displayName: z.string().min(3, 'Name must be at least 3 characters'),
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
+  plan: z.string().optional(),
 });
 
 type FormData = z.infer<typeof schema>;
 
-export function RegisterForm() {
+export function RegisterForm({ selectedPlan }: { selectedPlan?: string }) {
   const {
     register: registerUser,
     registerStatus,
@@ -36,9 +37,20 @@ export function RegisterForm() {
     handleSubmit,
     formState: { errors },
     setError,
+    setValue,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      plan: selectedPlan,
+    },
   });
+
+  // Update plan if prop changes
+  useEffect(() => {
+    if (selectedPlan) {
+      setValue('plan', selectedPlan);
+    }
+  }, [selectedPlan, setValue]);
 
   // Watch for registration errors and display them
   useEffect(() => {
@@ -158,6 +170,17 @@ export function RegisterForm() {
         status={githubLoginStatus}
         onToken={(token) => loginWithGitHub(token)}
       />
+
+      <p className="text-xs text-muted-foreground text-center mt-4">
+        By creating an account, you agree to our{' '}
+        <a href="/terms" className="text-brass hover:underline font-medium">
+          Terms of Service
+        </a>{' '}
+        and{' '}
+        <a href="/privacy" className="text-brass hover:underline font-medium">
+          Privacy Policy
+        </a>
+      </p>
     </form>
   );
 }

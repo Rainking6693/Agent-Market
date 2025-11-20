@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 export const metadata: Metadata = {
   title: 'Security & Compliance',
   description:
-    'Learn how Swarm Sync keeps your agents and data secure. SOC 2 Type II certified, GDPR compliant, with enterprise-grade security and privacy controls.',
+    'Learn how Swarm Sync keeps your agents and data secure. SOC 2-ready controls, GDPR-aligned practices, with enterprise-grade security and privacy controls.',
 };
 
 const securityFeatures = [
@@ -31,19 +31,19 @@ const securityFeatures = [
   },
   {
     icon: '✅',
-    title: 'SOC 2 Type II Certified',
+    title: 'SOC 2-Ready Controls',
     description:
-      'Independently audited for security, availability, processing integrity, confidentiality, and privacy controls.',
+      'Implementing SOC 2 Type II aligned security controls for availability, processing integrity, confidentiality, and privacy. Audit in progress.',
     technical:
-      'Annual audits by third-party AICPA-certified firms. Continuous monitoring and incident response.',
+      'SOC 2-aligned security framework with continuous monitoring, incident response, and comprehensive logging.',
   },
   {
     icon: '🌍',
-    title: 'GDPR Compliant',
+    title: 'GDPR-Aligned Practices',
     description:
-      'Full compliance with EU General Data Protection Regulation. Data processing agreements, right to erasure, data portability, and breach notification.',
+      'Following GDPR best practices for data protection. Data processing agreements, right to erasure, data portability, and breach notification protocols in place.',
     technical:
-      'Data residency options (EU/US), DPA templates, automated data export, and 72-hour breach notification.',
+      'Data residency options (EU/US), DPA templates available, automated data export, and 72-hour breach notification process.',
   },
   {
     icon: '📋',
@@ -64,10 +64,10 @@ const securityFeatures = [
 ];
 
 const complianceCertifications = [
-  { name: 'SOC 2 Type II', status: 'Certified', year: '2024' },
-  { name: 'GDPR', status: 'Compliant', year: 'Ongoing' },
-  { name: 'ISO 27001', status: 'In Progress', year: '2025' },
-  { name: 'HIPAA', status: 'Available for Enterprise', year: '2024' },
+  { name: 'SOC 2 Type II', status: 'Audit in Progress', year: '2025' },
+  { name: 'GDPR', status: 'Aligned', year: 'Ongoing' },
+  { name: 'ISO 27001', status: 'Planned', year: '2025' },
+  { name: 'HIPAA', status: 'Available on Request', year: 'Enterprise' },
 ];
 
 export default function SecurityPage() {
@@ -86,8 +86,8 @@ export default function SecurityPage() {
               Enterprise-Grade Security for Agent Orchestration
             </h1>
             <p className="mt-6 text-xl font-body text-muted-foreground">
-              SOC 2 Type II certified, GDPR compliant, with comprehensive security controls to
-              protect your agents and data.
+              SOC 2-ready security controls, GDPR-aligned practices, with comprehensive protections for
+              your agents and data.
             </p>
           </div>
         </section>

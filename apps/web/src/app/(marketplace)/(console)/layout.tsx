@@ -1,8 +1,12 @@
 import { Sidebar } from '@/components/layout/Sidebar';
+import { requireAuth } from '@/lib/auth-guard';
 
 import type { ReactNode } from 'react';
 
-export default function ConsoleLayout({ children }: { children: ReactNode }) {
+export default async function ConsoleLayout({ children }: { children: ReactNode }) {
+  // Protect all console routes - redirect to login if not authenticated
+  await requireAuth('/dashboard');
+
   return (
     <div className="flex min-h-screen w-full">
       <Sidebar />

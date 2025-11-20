@@ -1,24 +1,30 @@
+import Link from 'next/link';
+
 export function SecurityBadges() {
   const badges = [
     {
       icon: '🔒',
-      title: 'SOC 2 Type II',
-      subtitle: 'Certified',
+      title: 'SOC 2',
+      subtitle: 'Ready',
+      link: '/security#compliance',
     },
     {
       icon: '🛡️',
       title: '256-bit',
       subtitle: 'Encryption',
+      link: '/security#encryption',
     },
     {
       icon: '✓',
       title: 'GDPR',
-      subtitle: 'Compliant',
+      subtitle: 'Aligned',
+      link: '/security#privacy',
     },
     {
       icon: '🏆',
       title: '99.9%',
-      subtitle: 'Uptime SLA',
+      subtitle: 'Uptime Target',
+      link: '/security#reliability',
     },
   ];
 
@@ -27,9 +33,10 @@ export function SecurityBadges() {
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
           {badges.map((badge) => (
-            <div
+            <Link
               key={badge.title}
-              className="flex flex-col items-center space-y-2 text-center"
+              href={badge.link}
+              className="flex flex-col items-center space-y-2 text-center transition hover:opacity-80"
             >
               <div className="text-3xl">{badge.icon}</div>
               <div>
@@ -38,7 +45,7 @@ export function SecurityBadges() {
                   {badge.subtitle}
                 </p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

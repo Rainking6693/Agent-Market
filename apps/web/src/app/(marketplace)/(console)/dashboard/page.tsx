@@ -4,6 +4,7 @@ import {
   OrganizationRoiSummary,
   OrganizationRoiTimeseriesPoint,
 } from '@agent-market/sdk';
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -14,7 +15,16 @@ import { OrgOverviewCard } from '@/components/dashboard/org-overview-card';
 import { OrgRoiTimeseriesChart } from '@/components/dashboard/org-roi-timeseries-chart';
 import { QuickActions } from '@/components/dashboard/quick-actions';
 import { RecentActivityList } from '@/components/dashboard/recent-activity-list';
+import { getCurrentUser } from '@/lib/auth-guard';
 import { getAgentMarketClient } from '@/lib/server-client';
+
+export const metadata: Metadata = {
+  title: 'Dashboard',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 const recentPrompts = [
   { name: 'Go-to-market briefing', updated: 'Sep 21, 2025' },
@@ -31,6 +41,7 @@ const statusPills = [
 export default async function HomePage() {
   const client = getAgentMarketClient();
   const orgSlug = process.env.NEXT_PUBLIC_DEFAULT_ORG_SLUG ?? 'genesis';
+  const currentUser = await getCurrentUser();
 
   let orgSummary: OrganizationRoiSummary | null = null;
   let orgTimeseries: OrganizationRoiTimeseriesPoint[] = [];
@@ -48,13 +59,18 @@ export default async function HomePage() {
     console.warn('Dashboard data unavailable during build', error);
   }
 
+  // Get greeting based on time of day
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  const userName = currentUser?.displayName || 'there';
+
   return (
     <div className="space-y-12">
       <header className="glass-card flex flex-col gap-8 p-8">
         <div className="flex flex-wrap items-center justify-between gap-6">
           <div>
             <p className="text-sm uppercase tracking-[0.35em] text-brass/70">Dashboard</p>
-            <h1 className="mt-2 text-4xl font-headline text-ink">Good morning, Ben</h1>
+            <h1 className="mt-2 text-4xl font-headline text-ink">{greeting}, {userName}</h1>
             <p className="mt-2 max-w-2xl text-sm text-ink-muted">
               Track your marketplace usage, discover verified agents, and keep credits under control
               from a single console.
@@ -62,14 +78,13 @@ export default async function HomePage() {
             <div className="mt-4">
               <div className="mt-4 flex items-center">
                 <Image
-                  src="/logos/swarmsync-logo-new.png"
+                  src="/logos/logo-filled.png"
                   alt="Swarm Sync logo"
-                  width={40}
+                  width={160}
                   height={40}
                   className="h-10 w-auto object-contain"
                   priority
                 />
-                <span className="ml-3 text-xl font-bold tracking-tight text-[#6B46C1]">Swarm Sync</span>
               </div>
             </div>
           </div>
