@@ -48,7 +48,7 @@ export function Sidebar() {
     <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-outline/40 bg-sidebar p-6 text-carrara lg:flex">
       <div className="space-y-8">
         <div className="space-y-2">
-          <BrandLogo className="h-16 w-auto" size={512} priority />
+          <BrandLogo className="h-20 w-auto" size={640} priority />
         </div>
 
         {sections.map((section) => (

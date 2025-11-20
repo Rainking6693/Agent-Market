@@ -15,10 +15,32 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', 4000);
-  const webUrl = configService.get<string>('WEB_URL', 'http://localhost:3000');
+  const corsOrigins =
+    configService.get<string>('CORS_ALLOWED_ORIGINS') ??
+    configService.get<string>('WEB_URL', 'http://localhost:3000');
+  const normalizeOrigin = (value: string) => value.trim().replace(/\/$/, '');
+  const defaultOrigins = ['http://localhost:3000'];
+  if (process.env.NODE_ENV === 'production') {
+    defaultOrigins.push('https://swarmsync.ai', 'https://www.swarmsync.ai');
+  }
+  const allowedOrigins = [
+    ...defaultOrigins,
+    ...corsOrigins.split(',').map(normalizeOrigin).filter(Boolean),
+  ].map(normalizeOrigin);
 
   app.enableCors({
-    origin: webUrl,
+    origin: (origin, callback) => {
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+      const normalized = normalizeOrigin(origin);
+      if (allowedOrigins.includes(normalized)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Origin ${origin} not allowed by CORS`));
+      }
+    },
     credentials: true,
   });
 
