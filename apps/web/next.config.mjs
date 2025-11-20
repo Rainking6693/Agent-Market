@@ -4,6 +4,26 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const asyncStorageShim = path.join(__dirname, 'src/shims/async-storage.ts');
 
+const connectSrcHosts = [
+  "'self'",
+  'https://api.swarmsync.ai',
+  'https://*.stripe.com',
+  'https://accounts.google.com',
+  'https://oauth2.googleapis.com',
+];
+
+const configuredApiUrl = process.env.NEXT_PUBLIC_API_URL ?? process.env.API_URL ?? '';
+if (configuredApiUrl) {
+  try {
+    const apiOrigin = new URL(configuredApiUrl).origin;
+    if (!connectSrcHosts.includes(apiOrigin)) {
+      connectSrcHosts.push(apiOrigin);
+    }
+  } catch {
+    // Ignore invalid URLs – the fallback origin list already includes localhost/self.
+  }
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -52,7 +72,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com",
               "img-src 'self' data: https: blob:",
               "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://api.swarmsync.ai https://*.stripe.com https://accounts.google.com https://oauth2.googleapis.com",
+              `connect-src ${connectSrcHosts.join(' ')}`,
               "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://accounts.google.com",
               "object-src 'none'",
               "base-uri 'self'",

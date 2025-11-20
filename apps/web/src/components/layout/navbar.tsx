@@ -1,11 +1,11 @@
 'use client';
 
 import { Menu } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
+import { BrandLogo } from '@/components/brand/brand-logo';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
 import { cn } from '@/lib/utils';
@@ -23,14 +23,7 @@ export function Navbar() {
     <header className="sticky top-0 z-40 border-b border-white/60 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:py-5">
         <Link href="/" className="flex items-center" aria-label="Swarm Sync homepage">
-          <Image
-            src="/logos/logo-transparent.png"
-            alt="Swarm Sync logo"
-            width={240}
-            height={54}
-            className="h-12 w-auto object-contain md:h-16"
-            priority
-          />
+          <BrandLogo className="h-16 w-auto md:h-20" priority size={512} />
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground md:flex">

@@ -1,9 +1,9 @@
 'use client';
 
 import { ArrowRight, Check } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 
+import { BrandLogo } from '@/components/brand/brand-logo';
 import { Button } from '@/components/ui/button';
 
 const features = [
@@ -41,14 +41,7 @@ export function MarketplaceHero() {
         <div className="mx-auto max-w-3xl space-y-8">
           {/* Logo */}
           <div className="flex justify-center">
-            <Image
-              src="/logos/swarm-sync-wordmark-transparent.svg"
-              alt="Swarm Sync"
-              width={180}
-              height={54}
-              priority
-              className="h-auto w-auto max-w-[180px]"
-            />
+            <BrandLogo className="h-20 w-auto" size={420} priority />
           </div>
 
           {/* Headline */}

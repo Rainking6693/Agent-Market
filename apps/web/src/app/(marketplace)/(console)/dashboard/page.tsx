@@ -4,9 +4,9 @@ import {
   OrganizationRoiSummary,
   OrganizationRoiTimeseriesPoint,
 } from '@agent-market/sdk';
-import Image from 'next/image';
 import Link from 'next/link';
 
+import { BrandLogo } from '@/components/brand/brand-logo';
 import { A2AOperationsPanel } from '@/components/dashboard/a2a-operations-panel';
 import { CreditSummaryCard } from '@/components/dashboard/credit-summary-card';
 import { FeaturedAgents } from '@/components/dashboard/featured-agents';
@@ -76,17 +76,8 @@ export default async function HomePage() {
               Track your marketplace usage, discover verified agents, and keep credits under control
               from a single console.
             </p>
-            <div className="mt-4">
-              <div className="mt-4 flex items-center">
-                <Image
-                  src="/logos/logo-filled.png"
-                  alt="Swarm Sync logo"
-                  width={160}
-                  height={40}
-                  className="h-10 w-auto object-contain"
-                  priority
-                />
-              </div>
+            <div className="mt-4 flex items-center">
+              <BrandLogo className="h-12 w-auto" size={320} />
             </div>
           </div>
           <div className="flex flex-wrap gap-3">

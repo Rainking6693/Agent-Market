@@ -1,9 +1,11 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment } from 'react';
+
+import { BrandLogo } from '@/components/brand/brand-logo';
+import { useAuth } from '@/hooks/use-auth';
 
 const sections = [
   {
@@ -38,8 +40,6 @@ const sections = [
 
 const navItemClass = 'block rounded-lg px-3 py-2 text-sm transition-colors hover:bg-carrara/10';
 
-import { useAuth } from '@/hooks/use-auth';
-
 export function Sidebar() {
   const pathname = usePathname();
   const { user } = useAuth();
@@ -48,14 +48,7 @@ export function Sidebar() {
     <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-outline/40 bg-sidebar p-6 text-carrara lg:flex">
       <div className="space-y-8">
         <div className="space-y-2">
-          <Image
-            src="/logos/logo-filled.png"
-            alt="Swarm Sync logo"
-            width={180}
-            height={48}
-            className="h-12 w-auto object-contain"
-            priority
-          />
+          <BrandLogo className="h-12 w-auto" size={320} priority />
         </div>
 
         {sections.map((section) => (

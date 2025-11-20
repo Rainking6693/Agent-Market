@@ -50,7 +50,11 @@ export interface Ap2NegotiationPayload {
   notes?: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+const envApiUrl =
+  process.env.NEXT_PUBLIC_API_URL ??
+  process.env.API_URL ??
+  (typeof window !== 'undefined' ? window.location.origin : undefined);
+const API_BASE_URL = envApiUrl?.replace(/\/$/, '') ?? 'http://localhost:4000';
 
 const api = ky.create({
   prefixUrl: API_BASE_URL,
