@@ -28,7 +28,8 @@ export function GitHubSignInButton({
     }
 
     // GitHub OAuth flow
-    const redirectUri = `${window.location.origin}/auth/github/callback`;
+    // Always use www.swarmsync.ai to match the single callback URL GitHub allows
+    const redirectUri = 'https://www.swarmsync.ai/auth/github/callback';
     const scope = 'user:email';
     const state = Math.random().toString(36).substring(7);
     sessionStorage.setItem('github_oauth_state', state);

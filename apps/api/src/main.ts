@@ -1,3 +1,4 @@
+import 'tsconfig-paths/register';
 import 'reflect-metadata';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
