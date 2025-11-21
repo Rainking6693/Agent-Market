@@ -1,81 +1,64 @@
-# syntax = docker/dockerfile:1
+# Multi-stage build for NestJS backend in monorepo
 
-# Adjust NODE_VERSION as desired
-ARG NODE_VERSION=20.18.1
-FROM node:${NODE_VERSION}-slim AS base
-
-LABEL fly_launch_runtime="NestJS/Prisma"
-
-# NestJS/Prisma app lives here
+# Stage 1: Dependencies
+FROM node:20-alpine AS deps
 WORKDIR /app
 
-# Set production environment
-ENV NODE_ENV="production"
+# Copy package files from root and workspace
+COPY package*.json ./
+COPY packages/sdk/package*.json ./packages/sdk/
+COPY apps/api/package*.json ./apps/api/
 
-
-# Throw-away build stage to reduce size of final image
-FROM base AS build
-
-# Install packages needed to build node modules
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential node-gyp openssl pkg-config python-is-python3
-
-# Copy root package files for workspace setup
-COPY package.json package-lock.json ./
-COPY apps/api/package.json apps/api/
-COPY packages/config/package.json packages/config/
-COPY packages/sdk/package.json packages/sdk/
-
-# Install all dependencies (including workspace packages)
+# Install dependencies for entire monorepo
 RUN npm ci
 
-# Build workspace packages first
-COPY packages/config packages/config
-COPY packages/sdk packages/sdk
-RUN npm run build --workspace @agent-market/config && \
-    npm run build --workspace @agent-market/sdk
+# Stage 2: Builder
+FROM node:20-alpine AS builder
+WORKDIR /app
 
-# Generate Prisma Client
-COPY apps/api/prisma apps/api/prisma
-RUN cd apps/api && npx prisma generate
+# Copy dependencies from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/packages/sdk/node_modules ./packages/sdk/node_modules
+COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
 
-# Copy API application code
-COPY apps/api apps/api
+# Copy entire monorepo (needed for workspace structure)
+COPY . .
 
-# Build API application
-RUN cd apps/api && npm run build
+# Build SDK first (api depends on it)
+RUN npm run build --workspace @agent-market/sdk
 
+# Build API
+ENV NODE_ENV=production
+RUN npm run build --workspace @agent-market/api
 
-# Final stage for app image
-FROM base
+# Stage 3: Runner
+FROM node:20-alpine AS runner
+WORKDIR /app
 
-# Install packages needed for deployment
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y openssl && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+ENV NODE_ENV=production
 
-# Copy package files
-COPY --from=build /app/package.json /app/package-lock.json ./
-COPY --from=build /app/apps/api/package.json ./apps/api/
-COPY --from=build /app/packages/config/package.json ./packages/config/
-COPY --from=build /app/packages/sdk/package.json ./packages/sdk/
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nestjs
 
-# Install only production dependencies
-RUN npm ci --omit=dev
+# Copy necessary files
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
 
-# Copy built packages (dist folders)
-COPY --from=build /app/packages/config/dist ./packages/config/dist
-COPY --from=build /app/packages/sdk/dist ./packages/sdk/dist
+# Copy SDK build output
+COPY --from=builder /app/packages/sdk/dist ./packages/sdk/dist
+COPY --from=builder /app/packages/sdk/package*.json ./packages/sdk/
 
-# Copy built API application and Prisma schema
-COPY --from=build /app/apps/api/dist ./apps/api/dist
-COPY --from=build /app/apps/api/prisma ./apps/api/prisma
+# Copy API build output
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/apps/api/package*.json ./apps/api/
+COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
 
-# Copy Prisma generated client from build stage
-COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=build /app/node_modules/@prisma ./node_modules/@prisma
+USER nestjs
 
-# Start the server by default, this can be overwritten at runtime
-EXPOSE 3000
-WORKDIR /app/apps/api
-CMD [ "node", "dist/main.js" ]
+EXPOSE 4000
+
+ENV PORT=4000
+
+# Start NestJS
+CMD ["node", "apps/api/dist/main.js"]
