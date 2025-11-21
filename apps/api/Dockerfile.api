@@ -59,6 +59,9 @@ RUN cd apps/api && npm run build
 # Final stage for app image
 FROM base
 
+# Disable husky in final stage
+ENV HUSKY="0"
+
 # Install packages needed for deployment
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y openssl && \
@@ -70,8 +73,8 @@ COPY --from=build /app/apps/api/package.json ./apps/api/
 COPY --from=build /app/packages/config/package.json ./packages/config/
 COPY --from=build /app/packages/sdk/package.json ./packages/sdk/
 
-# Install only production dependencies
-RUN npm ci --omit=dev
+# Install only production dependencies (skip prepare scripts)
+RUN npm ci --omit=dev --ignore-scripts
 
 # Copy built packages (dist folders)
 COPY --from=build /app/packages/config/dist ./packages/config/dist
