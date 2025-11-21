@@ -1,11 +1,4 @@
 {
-  "buildCommand": "npm run build",
-  "framework": "nextjs",
-  "installCommand": "npm install",
-  "env": {
-    "NEXT_PUBLIC_API_URL": "https://api.swarmsync.ai",
-    "NEXT_PUBLIC_APP_URL": "https://www.swarmsync.ai",
-    "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "613361321402-93vrb6pgg1ebt1taao606fgdr75r0r3c.apps.googleusercontent.com",
-    "NEXT_PUBLIC_GITHUB_CLIENT_ID": "Ov23lifZqAEEJxZmMD84"
-  }
+  "buildCommand": "npm install --legacy-peer-deps && npm run build",
+  "installCommand": "npm install --legacy-peer-deps"
 }
