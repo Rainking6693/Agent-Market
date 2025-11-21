@@ -1,11 +1,11 @@
 services:
   - type: web
     name: swarmsync-web
-    runtime: node
+    runtime: docker
     region: oregon
     plan: free
-    buildCommand: npm ci && npm run build --workspace @agent-market/sdk && npm run build --workspace @agent-market/web
-    startCommand: cd apps/web && npm run start
+    dockerfilePath: ./apps/web/Dockerfile
+    dockerContext: .
     envVars:
       - key: NODE_VERSION
         value: 20.18.1
@@ -20,11 +20,11 @@ services:
 
   - type: web
     name: swarmsync-api
-    runtime: node
+    runtime: docker
     region: oregon
     plan: free
-    buildCommand: npm ci && npm run build --workspace @agent-market/sdk && npm run build --workspace @agent-market/api
-    startCommand: cd apps/api && npm run start:prod
+    dockerfilePath: ./apps/api/Dockerfile
+    dockerContext: .
     envVars:
       - key: NODE_ENV
         value: production
