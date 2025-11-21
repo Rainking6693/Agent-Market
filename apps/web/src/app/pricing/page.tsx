@@ -225,20 +225,20 @@ export default function PricingPage() {
                                     </ul>
 
                                     <div className="pt-6 space-y-2">
-                                        <Button asChild className="w-full" variant={tier.popular ? 'default' : 'outline'}>
-                                            <Link href={tier.ctaLink}>{tier.cta}</Link>
-                                        </Button>
+                                        {tier.stripeLink ? (
+                                            <Button asChild className="w-full" variant={tier.popular ? 'default' : 'outline'}>
+                                                <a href={tier.stripeLink} target="_blank" rel="noopener noreferrer">
+                                                    {tier.cta}
+                                                </a>
+                                            </Button>
+                                        ) : (
+                                            <Button asChild className="w-full" variant={tier.popular ? 'default' : 'outline'}>
+                                                <Link href={tier.ctaLink}>{tier.cta}</Link>
+                                            </Button>
+                                        )}
                                         {tier.stripeLink && (
                                             <p className="text-center text-xs text-muted-foreground">
-                                                Secure payment via{' '}
-                                                <a
-                                                    href={tier.stripeLink}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-brass hover:underline font-medium"
-                                                >
-                                                    Stripe
-                                                </a>
+                                                Secure payment via Stripe
                                             </p>
                                         )}
                                     </div>

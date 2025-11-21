@@ -10,6 +10,7 @@ const connectSrcHosts = [
   'https://*.stripe.com',
   'https://accounts.google.com',
   'https://oauth2.googleapis.com',
+  'https://www.googleapis.com',
 ];
 
 const configuredApiUrl = process.env.NEXT_PUBLIC_API_URL ?? process.env.API_URL ?? '';
@@ -63,6 +64,10 @@ const nextConfig = {
           {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=()'
+          },
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin-allow-popups'
           },
           {
             key: 'Content-Security-Policy',

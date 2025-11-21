@@ -64,7 +64,7 @@ export function GoogleSignInButton({
         ) : !googleConfigured ? (
           'Google login unavailable'
         ) : (
-          <span className="flex w-full items-center justify-center gap-2">
+          <span className="flex w-full items-center justify-center gap-3">
             <GoogleGlyph />
             {label}
           </span>
@@ -82,7 +82,7 @@ export function GoogleSignInButton({
 
 function GoogleGlyph() {
   return (
-    <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+    <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
       <path
         fill="#4285F4"
         d="M23.49 12.27c0-.78-.07-1.53-.2-2.27H12v4.3h6.48c-.28 1.48-1.12 2.73-2.38 3.57v2.96h3.85c2.25-2.08 3.54-5.15 3.54-8.56z"
