@@ -1,11 +1,10 @@
-import { randomUUID } from 'node:crypto';
-
 import { Injectable, Optional, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { hash, verify } from 'argon2';
 import { OAuth2Client } from 'google-auth-library';
 
+import { PrismaService } from '../database/prisma.service.js';
 import { GitHubLoginDto } from './dto/github-login.dto.js';
 import { GoogleLoginDto } from './dto/google-login.dto.js';
 import { LoginDto } from './dto/login.dto.js';
@@ -24,13 +23,12 @@ export interface AuthenticatedUser {
 
 @Injectable()
 export class AuthService {
-  private readonly users = new Map<string, { user: AuthenticatedUser; passwordHash: string }>();
-
   private readonly googleClientId?: string;
   private oauthClient?: OAuth2Client;
 
   constructor(
     private readonly jwtService: JwtService,
+    private readonly prisma: PrismaService,
     @Optional() private readonly configService?: ConfigService,
   ) {
     this.googleClientId =
@@ -44,28 +42,45 @@ export class AuthService {
   async register(data: RegisterUserDto) {
     const { email, password, displayName } = data;
 
-    if (this.users.has(email)) {
+    // Check if user already exists
+    const existing = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existing) {
       throw new UnauthorizedException('Email already registered');
     }
 
+    // Hash password and create user
     const passwordHash = await hash(password);
-    const user = this.createUserRecord(email, displayName, passwordHash);
+    const dbUser = await this.prisma.user.create({
+      data: {
+        email,
+        displayName,
+        password: passwordHash,
+      },
+    });
+
+    const user = this.dbUserToAuthUser(dbUser);
     return this.buildAuthResponse(user);
   }
 
   async login(data: LoginDto) {
-    const existing = this.users.get(data.email);
+    const dbUser = await this.prisma.user.findUnique({
+      where: { email: data.email },
+    });
 
-    if (!existing) {
+    if (!dbUser) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const passwordValid = await verify(existing.passwordHash, data.password);
+    const passwordValid = await verify(dbUser.password, data.password);
     if (!passwordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    return this.buildAuthResponse(existing.user);
+    const user = this.dbUserToAuthUser(dbUser);
+    return this.buildAuthResponse(user);
   }
 
   async loginWithGoogle(data: GoogleLoginDto) {
@@ -80,7 +95,7 @@ export class AuthService {
     }
 
     const displayName = payload.name || email.split('@')[0];
-    const user = this.ensureUser(email, displayName);
+    const user = await this.ensureUser(email, displayName);
 
     return this.buildAuthResponse(user);
   }
@@ -99,7 +114,7 @@ export class AuthService {
     }
 
     const displayName = userInfo.name || userInfo.login || email.split('@')[0];
-    const user = this.ensureUser(email, displayName);
+    const user = await this.ensureUser(email, displayName);
 
     return this.buildAuthResponse(user);
   }
@@ -186,23 +201,33 @@ export class AuthService {
     return payload;
   }
 
-  private ensureUser(email: string, displayName: string) {
-    const existing = this.users.get(email);
-    if (existing) {
-      return existing.user;
+  private async ensureUser(email: string, displayName: string) {
+    // Try to find existing user
+    let dbUser = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    // Create if doesn't exist (OAuth users don't have passwords)
+    if (!dbUser) {
+      dbUser = await this.prisma.user.create({
+        data: {
+          email,
+          displayName,
+          password: '', // OAuth users don't need a password
+        },
+      });
     }
-    return this.createUserRecord(email, displayName, '');
+
+    return this.dbUserToAuthUser(dbUser);
   }
 
-  private createUserRecord(email: string, displayName: string, passwordHash: string) {
-    const user: AuthenticatedUser = {
-      id: randomUUID(),
-      email,
-      displayName,
+  private dbUserToAuthUser(dbUser: { id: string; email: string; displayName: string }): AuthenticatedUser {
+    return {
+      id: dbUser.id,
+      email: dbUser.email,
+      displayName: dbUser.displayName,
       kind: 'user',
     };
-    this.users.set(email, { user, passwordHash });
-    return user;
   }
 
   private buildAuthResponse(user: AuthenticatedUser) {
