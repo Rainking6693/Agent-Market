@@ -42,7 +42,7 @@
   },
   "lint-staged": {
     "{apps,packages}/**/*.{ts,tsx,js,jsx}": [
-      "eslint --max-warnings=0 --fix"
+      "ESLINT_USE_FLAT_CONFIG=false eslint --config .eslintrc.cjs --max-warnings=0 --fix"
     ],
     "*.{json,md,yml,yaml}": [
       "prettier --write"

@@ -1,16 +1,22 @@
 import { PrismaClient, AgentVisibility, WalletOwnerType } from '@prisma/client';
+import { hash } from 'argon2';
 
 const prisma = new PrismaClient();
 
 async function main() {
   const userEmail = 'seed-agent@example.com';
+  // Hash the password before storing
+  const passwordHash = await hash('temporary-password');
   const user = await prisma.user.upsert({
     where: { email: userEmail },
-    update: {},
+    update: {
+      // If user exists, update password if it's not hashed
+      password: passwordHash,
+    },
     create: {
       email: userEmail,
       displayName: 'Seed Agent Owner',
-      password: 'temporary-password',
+      password: passwordHash,
     },
   });
 

@@ -26,9 +26,12 @@ COPY apps/api/package.json apps/api/
 COPY packages/config/package.json packages/config/
 COPY packages/sdk/package.json packages/sdk/
 
-# Install all dependencies (including workspace packages)
+# Copy tsconfig.base.json needed for package builds
+COPY tsconfig.base.json ./
+
+# Install all dependencies (including workspace packages and dev dependencies for building)
 # Skip prepare scripts (husky) during install
-RUN npm ci --ignore-scripts
+RUN npm ci --ignore-scripts --include=dev
 
 # Build workspace packages first
 COPY packages/config packages/config
@@ -61,8 +64,8 @@ COPY --from=build /app/apps/api/package.json ./apps/api/
 COPY --from=build /app/packages/config/package.json ./packages/config/
 COPY --from=build /app/packages/sdk/package.json ./packages/sdk/
 
-# Install only production dependencies
-RUN npm ci --omit=dev
+# Install only production dependencies (skip prepare scripts like husky)
+RUN npm ci --omit=dev --ignore-scripts
 
 # Copy built packages (dist folders)
 COPY --from=build /app/packages/config/dist ./packages/config/dist

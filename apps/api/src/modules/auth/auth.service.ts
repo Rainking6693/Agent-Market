@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { hash, verify } from 'argon2';
 
@@ -19,6 +19,8 @@ export interface AuthenticatedUser {
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
@@ -27,45 +29,83 @@ export class AuthService {
   async register(data: RegisterUserDto) {
     const { email, password, displayName } = data;
 
-    // Check if user already exists
-    const existing = await this.prisma.user.findUnique({
-      where: { email },
-    });
+    try {
+      // Check if user already exists
+      const existing = await this.prisma.user.findUnique({
+        where: { email },
+      });
 
-    if (existing) {
-      throw new UnauthorizedException('Email already registered');
+      if (existing) {
+        throw new UnauthorizedException('Email already registered');
+      }
+
+      // Hash password and create user
+      const passwordHash = await hash(password);
+      const dbUser = await this.prisma.user.create({
+        data: {
+          email,
+          displayName,
+          password: passwordHash,
+        },
+      });
+
+      const user = this.dbUserToAuthUser(dbUser);
+      return this.buildAuthResponse(user);
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      this.logger.error(`Registration error for email: ${email}`, error.stack);
+      throw new InternalServerErrorException('Registration failed. Please try again.');
     }
-
-    // Hash password and create user
-    const passwordHash = await hash(password);
-    const dbUser = await this.prisma.user.create({
-      data: {
-        email,
-        displayName,
-        password: passwordHash,
-      },
-    });
-
-    const user = this.dbUserToAuthUser(dbUser);
-    return this.buildAuthResponse(user);
   }
 
   async login(data: LoginDto) {
-    const dbUser = await this.prisma.user.findUnique({
-      where: { email: data.email },
-    });
+    try {
+      const dbUser = await this.prisma.user.findUnique({
+        where: { email: data.email },
+      });
 
-    if (!dbUser) {
-      throw new UnauthorizedException('Invalid credentials');
+      if (!dbUser) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+
+      // Check if password is in PHC format (starts with $)
+      // If not, it's likely a plain text password from old seed data
+      const isHashed = dbUser.password.startsWith('$');
+      
+      let passwordValid: boolean;
+      if (isHashed) {
+        // Normal verification for hashed passwords
+        passwordValid = await verify(dbUser.password, data.password);
+      } else {
+        // For backward compatibility: if password is plain text, compare directly
+        // Then re-hash it for future logins
+        passwordValid = dbUser.password === data.password;
+        if (passwordValid) {
+          // Re-hash the password and update the database
+          const passwordHash = await hash(data.password);
+          await this.prisma.user.update({
+            where: { id: dbUser.id },
+            data: { password: passwordHash },
+          });
+          this.logger.log(`Re-hashed password for user: ${data.email}`);
+        }
+      }
+
+      if (!passwordValid) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+
+      const user = this.dbUserToAuthUser(dbUser);
+      return this.buildAuthResponse(user);
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      this.logger.error(`Login error for email: ${data.email}`, error.stack);
+      throw new InternalServerErrorException('Login failed. Please try again.');
     }
-
-    const passwordValid = await verify(dbUser.password, data.password);
-    if (!passwordValid) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-
-    const user = this.dbUserToAuthUser(dbUser);
-    return this.buildAuthResponse(user);
   }
 
   private dbUserToAuthUser(dbUser: { id: string; email: string; displayName: string }): AuthenticatedUser {
@@ -78,19 +118,24 @@ export class AuthService {
   }
 
   private buildAuthResponse(user: AuthenticatedUser) {
-    const payload = {
-      sub: user.id,
-      email: user.email,
-      displayName: user.displayName,
-      kind: user.kind ?? 'user',
-    };
+    try {
+      const payload = {
+        sub: user.id,
+        email: user.email,
+        displayName: user.displayName,
+        kind: user.kind ?? 'user',
+      };
 
-    const accessToken = this.jwtService.sign(payload);
+      const accessToken = this.jwtService.sign(payload);
 
-    return {
-      user,
-      accessToken,
-      expiresIn: 3600,
-    };
+      return {
+        user,
+        accessToken,
+        expiresIn: 3600,
+      };
+    } catch (error) {
+      this.logger.error('Failed to build auth response', error.stack);
+      throw new InternalServerErrorException('Failed to generate authentication token');
+    }
   }
 }
