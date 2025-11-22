@@ -19,14 +19,19 @@ async function bootstrap() {
     configService.get<string>('CORS_ALLOWED_ORIGINS') ??
     configService.get<string>('WEB_URL', 'http://localhost:3000');
   const normalizeOrigin = (value: string) => value.trim().replace(/\/$/, '');
-  const defaultOrigins = ['http://localhost:3000'];
-  if (process.env.NODE_ENV === 'production') {
-    defaultOrigins.push('https://swarmsync.ai', 'https://www.swarmsync.ai');
-  }
+  const fallbackOrigins = [
+    'http://localhost:3000',
+    ...(process.env.NODE_ENV === 'production'
+      ? ['https://agent-market.fly.dev', 'https://swarmsync.ai', 'https://www.swarmsync.ai']
+      : []),
+  ];
   const allowedOrigins = [
-    ...defaultOrigins,
+    ...fallbackOrigins,
     ...corsOrigins.split(',').map(normalizeOrigin).filter(Boolean),
-  ].map(normalizeOrigin);
+  ]
+    .map(normalizeOrigin)
+    .filter(Boolean);
+  const uniqueAllowedOrigins = [...new Set(allowedOrigins)];
 
   app.enableCors({
     origin: (origin, callback) => {
@@ -35,7 +40,7 @@ async function bootstrap() {
         return;
       }
       const normalized = normalizeOrigin(origin);
-      if (allowedOrigins.includes(normalized)) {
+      if (uniqueAllowedOrigins.includes(normalized)) {
         callback(null, true);
       } else {
         callback(new Error(`Origin ${origin} not allowed by CORS`));

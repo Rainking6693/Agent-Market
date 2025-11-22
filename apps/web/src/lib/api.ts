@@ -50,12 +50,22 @@ export interface Ap2NegotiationPayload {
   notes?: string;
 }
 
+const DEFAULT_PRODUCTION_API_ORIGIN = 'https://agent-market-api-divine-star-3849.fly.dev';
+
 function inferRuntimeApiOrigin() {
   if (typeof window === 'undefined') {
     return undefined;
   }
   const origin = window.location.origin;
-  if (window.location.hostname.endsWith('swarmsync.ai')) {
+  const hostname = window.location.hostname;
+  if (
+    hostname === 'agent-market.fly.dev' ||
+    hostname.endsWith('.agent-market.fly.dev') ||
+    hostname.endsWith('agent-market.ai')
+  ) {
+    return DEFAULT_PRODUCTION_API_ORIGIN;
+  }
+  if (hostname.endsWith('swarmsync.ai')) {
     return 'https://api.swarmsync.ai';
   }
   return origin;
@@ -64,7 +74,7 @@ function inferRuntimeApiOrigin() {
 const envApiUrl =
   process.env.NEXT_PUBLIC_API_URL ??
   process.env.API_URL ??
-  (process.env.NODE_ENV === 'production' ? 'https://api.swarmsync.ai' : undefined) ??
+  (process.env.NODE_ENV === 'production' ? DEFAULT_PRODUCTION_API_ORIGIN : undefined) ??
   inferRuntimeApiOrigin();
 
 const API_BASE_URL = envApiUrl?.replace(/\/$/, '') ?? 'http://localhost:4000';

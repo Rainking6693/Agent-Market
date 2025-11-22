@@ -7,6 +7,7 @@ const asyncStorageShim = path.join(__dirname, 'src/shims/async-storage.ts');
 const connectSrcHosts = [
   "'self'",
   'https://api.swarmsync.ai',
+  'https://agent-market-api-divine-star-3849.fly.dev',
   'https://*.stripe.com',
   'https://accounts.google.com',
   'https://oauth2.googleapis.com',
