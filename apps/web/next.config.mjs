@@ -9,9 +9,6 @@ const connectSrcHosts = [
   'https://api.swarmsync.ai',
   'https://agent-market-api-divine-star-3849.fly.dev',
   'https://*.stripe.com',
-  'https://accounts.google.com',
-  'https://oauth2.googleapis.com',
-  'https://www.googleapis.com',
 ];
 
 const configuredApiUrl = process.env.NEXT_PUBLIC_API_URL ?? process.env.API_URL ?? '';
@@ -67,19 +64,15 @@ const nextConfig = {
             value: 'camera=(), microphone=(), geolocation=()'
           },
           {
-            key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin-allow-popups'
-          },
-          {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://accounts.google.com https://apis.google.com",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com",
+              "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob:",
-              "font-src 'self' https://fonts.gstatic.com",
+              "font-src 'self'",
               `connect-src ${connectSrcHosts.join(' ')}`,
-              "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://accounts.google.com",
+              "frame-src 'self' https://js.stripe.com https://hooks.stripe.com",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
