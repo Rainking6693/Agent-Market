@@ -43,9 +43,29 @@ export function LoginForm() {
       if (loginError) {
         // ky HTTPError has a response property with json() method
         const httpError = loginError as unknown as {
-          response?: { json?: () => Promise<{ message?: string }> };
+          response?: { 
+            json?: () => Promise<{ message?: string }>;
+            status?: number;
+          };
           message?: string;
         };
+        
+        // Check for CORS errors
+        const errorMessageLower = httpError.message?.toLowerCase() || '';
+        if (
+          errorMessageLower.includes('cors') ||
+          errorMessageLower.includes('access-control') ||
+          errorMessageLower === 'failed to fetch' ||
+          (httpError.response?.status === 0 && !httpError.response?.json)
+        ) {
+          errorMessage =
+            'Connection error: Unable to reach the server. This may be a CORS configuration issue. Please contact support if this persists.';
+          setError('root', {
+            type: 'manual',
+            message: errorMessage,
+          });
+          return;
+        }
         
         if (httpError.response?.json) {
           httpError.response

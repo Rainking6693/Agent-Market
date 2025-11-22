@@ -8,18 +8,31 @@ import { ReactNode, useMemo, useState } from 'react';
 import { WagmiProvider, http } from 'wagmi';
 import { base } from 'wagmi/chains';
 
-const walletConnectProjectId =
-  process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'demo-agent-market';
+const walletConnectProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
 const baseRpcUrl = process.env.NEXT_PUBLIC_BASE_RPC_URL || 'https://mainnet.base.org';
+
+// Validate project ID - must be a non-empty string and not the demo placeholder
+const isValidProjectId = walletConnectProjectId && 
+  walletConnectProjectId.trim() !== '' && 
+  walletConnectProjectId !== 'demo-agent-market';
 
 // Create wagmi config as a singleton to prevent double initialization
 let wagmiConfigSingleton: ReturnType<typeof getDefaultConfig> | null = null;
 
 function getWagmiConfig() {
-  if (!wagmiConfigSingleton) {
+  // Window-level guard to prevent double initialization across remounts
+  if (typeof window !== 'undefined') {
+    if (window.__wagmiConfigInitialized) {
+      // Return existing singleton if already initialized
+      return wagmiConfigSingleton!;
+    }
+    window.__wagmiConfigInitialized = true;
+  }
+
+  if (!wagmiConfigSingleton && isValidProjectId) {
     wagmiConfigSingleton = getDefaultConfig({
       appName: 'AgentMarket',
-      projectId: walletConnectProjectId,
+      projectId: walletConnectProjectId!,
       chains: [base],
       transports: {
         [base.id]: http(baseRpcUrl),
@@ -27,6 +40,13 @@ function getWagmiConfig() {
     });
   }
   return wagmiConfigSingleton;
+}
+
+// Extend Window interface for TypeScript
+declare global {
+  interface Window {
+    __wagmiConfigInitialized?: boolean;
+  }
 }
 
 export function Providers({ children }: { children: ReactNode }) {
@@ -44,6 +64,21 @@ export function Providers({ children }: { children: ReactNode }) {
 
   // Use useMemo to ensure config is only created once per component instance
   const wagmiConfig = useMemo(() => getWagmiConfig(), []);
+
+  // If no valid project ID, render children without WalletConnect providers
+  if (!isValidProjectId || !wagmiConfig) {
+    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+      console.warn(
+        'WalletConnect is disabled: NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is not set or is invalid. ' +
+        'Get a project ID from https://cloud.walletconnect.com'
+      );
+    }
+    return (
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    );
+  }
 
   return (
     <WagmiProvider config={wagmiConfig}>
