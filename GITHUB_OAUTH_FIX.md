@@ -1,5 +1,7 @@
 # GitHub OAuth Fix - Simple Instructions
 
+> **Status:** Deprecated (2025-11-22). GitHub OAuth was removed from SwarmSync/Agent Market — keep this doc for history only.
+
 ## The Problem
 
 GitHub only allows **ONE** callback URL, but your app was trying to use different URLs depending on whether you visit `www.swarmsync.ai` or `swarmsync.ai`.

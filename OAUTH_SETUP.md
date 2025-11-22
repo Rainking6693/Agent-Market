@@ -1,5 +1,7 @@
 # OAuth Setup Guide - Fixing Google & GitHub Login
 
+> **Status:** Deprecated (2025-11-22). Social login support was removed from the product, so this guide is retained only for historical reference.
+
 ## Current Issue
 
 The OAuth login buttons show but fail with "redirect_uri_mismatch" errors because the redirect URIs aren't configured in your Google and GitHub OAuth apps.

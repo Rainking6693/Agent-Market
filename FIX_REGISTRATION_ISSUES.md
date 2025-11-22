@@ -1,5 +1,7 @@
 # Fix Registration Issues - Step by Step
 
+> **Status:** Updated (2025-11-22). Google/GitHub login has been removed — ignore any references to social providers below; the remaining steps apply only to email/password flows.
+
 ## Problem 1: API Not Running (Why Google Login Fails After OAuth)
 
 Your backend API isn't deployed, so when Google login tries to register you, it can't connect to the server.

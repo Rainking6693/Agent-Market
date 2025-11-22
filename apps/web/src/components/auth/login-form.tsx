@@ -11,9 +11,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/use-auth';
 
-import { GitHubSignInButton } from './github-signin-button';
-import { GoogleSignInButton } from './google-signin-button';
-
 const schema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
@@ -25,10 +22,6 @@ export function LoginForm() {
   const {
     login,
     loginStatus,
-    loginWithGoogle,
-    googleLoginStatus,
-    loginWithGitHub,
-    githubLoginStatus,
   } = useAuth();
   const {
     register,
@@ -118,29 +111,6 @@ export function LoginForm() {
         )}
       </Button>
 
-      <div
-        className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-muted-foreground"
-        role="separator"
-        aria-label="or"
-      >
-        <div className="h-px flex-1 bg-border" />
-        or
-        <div className="h-px flex-1 bg-border" />
-      </div>
-
-      <GoogleSignInButton
-        status={googleLoginStatus}
-        onToken={(token) => {
-          loginWithGoogle(token);
-        }}
-      />
-
-      <GitHubSignInButton
-        status={githubLoginStatus}
-        onToken={(token) => {
-          loginWithGitHub(token);
-        }}
-      />
     </form>
   );
 }

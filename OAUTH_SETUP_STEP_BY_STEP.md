@@ -1,5 +1,7 @@
 # OAuth Setup - Complete Step-by-Step Guide
 
+> **Status:** Deprecated (2025-11-22). Google/GitHub OAuth have been removed from the live stack; keep this walkthrough only for historical tracing.
+
 ## What We're Fixing
 
 Your login buttons (Google and GitHub) don't work because the websites need to know your production website URL is allowed. We're going to add your website URL to both Google and GitHub's settings.

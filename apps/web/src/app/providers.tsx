@@ -3,7 +3,6 @@
 import '@rainbow-me/rainbowkit/styles.css';
 
 import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode, useState } from 'react';
 import { WagmiProvider, http } from 'wagmi';
@@ -35,16 +34,11 @@ export function Providers({ children }: { children: ReactNode }) {
       }),
   );
 
-  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? '';
-  const effectiveClientId = googleClientId || 'placeholder-client-id';
-
   return (
-    <GoogleOAuthProvider clientId={effectiveClientId}>
-      <WagmiProvider config={wagmiConfig}>
-        <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider>{children}</RainbowKitProvider>
-        </QueryClientProvider>
-      </WagmiProvider>
-    </GoogleOAuthProvider>
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider>{children}</RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }

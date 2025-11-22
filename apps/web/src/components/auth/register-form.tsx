@@ -11,9 +11,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/use-auth';
 
-import { GitHubSignInButton } from './github-signin-button';
-import { GoogleSignInButton } from './google-signin-button';
-
 const schema = z.object({
   displayName: z.string().min(3, 'Name must be at least 3 characters'),
   email: z.string().email('Invalid email address'),
@@ -27,10 +24,6 @@ export function RegisterForm({ selectedPlan }: { selectedPlan?: string }) {
   const {
     register: registerUser,
     registerStatus,
-    loginWithGoogle,
-    googleLoginStatus,
-    loginWithGitHub,
-    githubLoginStatus,
   } = useAuth();
   const {
     register,
@@ -148,28 +141,6 @@ export function RegisterForm({ selectedPlan }: { selectedPlan?: string }) {
           'Create account'
         )}
       </Button>
-
-      <div
-        className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-muted-foreground"
-        role="separator"
-        aria-label="or"
-      >
-        <div className="h-px flex-1 bg-border" />
-        or
-        <div className="h-px flex-1 bg-border" />
-      </div>
-
-      <GoogleSignInButton
-        label="Sign up with Google"
-        status={googleLoginStatus}
-        onToken={(token) => loginWithGoogle(token)}
-      />
-
-      <GitHubSignInButton
-        label="Sign up with GitHub"
-        status={githubLoginStatus}
-        onToken={(token) => loginWithGitHub(token)}
-      />
 
       <p className="text-xs text-muted-foreground text-center mt-4">
         By creating an account, you agree to our{' '}

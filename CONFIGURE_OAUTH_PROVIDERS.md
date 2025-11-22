@@ -1,6 +1,6 @@
 # Configure OAuth Providers - Step-by-Step Guide
 
-**IMPORTANT**: These steps must be completed for Google and GitHub login to work on your website.
+> **Status:** Deprecated (2025-11-22). Google and GitHub sign-in have been removed from SwarmSync/Agent Market; keep this doc for historical reference only.
 
 ---
 

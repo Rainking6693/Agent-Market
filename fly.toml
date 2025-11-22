@@ -10,8 +10,6 @@ primary_region = 'dfw'
   [build.args]
     NEXT_PUBLIC_API_URL = "https://agent-market-api-divine-star-3849.fly.dev"
     NEXT_PUBLIC_APP_URL = "https://agent-market.fly.dev"
-    NEXT_PUBLIC_GOOGLE_CLIENT_ID = "613361321402-93vrb6pgg1ebt1taao606fgdr75r0r3c.apps.googleusercontent.com"
-    NEXT_PUBLIC_GITHUB_CLIENT_ID = "Ov23lifZqAEEJxZmMD84"
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = "pk_live_51RyJPcPQdMywmVkHwdLQtTRV8YV9fXjdJtrxEwnYCFTn3Wqt4q82g0o1UMhP4Nr3GchadbVvUKXAMkKvxijlRRoF00Zm32Fgms"
 
 [http_service]

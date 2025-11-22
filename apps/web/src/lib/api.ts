@@ -136,18 +136,6 @@ export const authApi = {
         json: data,
       })
       .json<AuthResponse>(),
-  googleLogin: (token: string) =>
-    api
-      .post('auth/google', {
-        json: { token },
-      })
-      .json<AuthResponse>(),
-  githubLogin: (token: string) =>
-    api
-      .post('auth/github', {
-        json: { token },
-      })
-      .json<AuthResponse>(),
 };
 
 export const agentsApi = {

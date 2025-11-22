@@ -25,17 +25,6 @@
       },
       { "key": "JWT_SECRET", "value": "NYs0Ts_M8XDa0hBgjELcA4i_FfqLlP_eapMQUbKeaoA" },
       {
-        "key": "GOOGLE_OAUTH_CLIENT_ID",
-        "value": "613361321402-93vrb6pgg1ebt1taao606fgdr75r0r3c.apps.googleusercontent.com"
-      },
-      {
-        "key": "GOOGLE_CLIENT_ID",
-        "value": "613361321402-93vrb6pgg1ebt1taao606fgdr75r0r3c.apps.googleusercontent.com"
-      },
-      { "key": "GOOGLE_CLIENT_SECRET", "value": "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" },
-      { "key": "GITHUB_CLIENT_ID", "value": "Ov23lifZqAEEJxZmMD84" },
-      { "key": "GITHUB_CLIENT_SECRET", "value": "b01b7afd70fa78e382c57565fb41898d0ddc9157" },
-      {
         "key": "STRIPE_SECRET_KEY",
         "value": "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"
       },
