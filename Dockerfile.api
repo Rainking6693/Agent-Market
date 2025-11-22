@@ -27,7 +27,8 @@ COPY packages/config/package.json packages/config/
 COPY packages/sdk/package.json packages/sdk/
 
 # Install all dependencies (including workspace packages)
-RUN npm ci
+# Skip prepare scripts (husky) during install
+RUN npm ci --ignore-scripts
 
 # Build workspace packages first
 COPY packages/config packages/config
