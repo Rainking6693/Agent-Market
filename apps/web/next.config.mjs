@@ -9,6 +9,10 @@ const connectSrcHosts = [
   'https://api.swarmsync.ai',
   'https://agent-market-api-divine-star-3849.fly.dev',
   'https://*.stripe.com',
+  'wss://www.walletlink.org',
+  'https://pulse.walletconnect.org',
+  'https://api.web3modal.org',
+  'https://*.walletconnect.org',
 ];
 
 const configuredApiUrl = process.env.NEXT_PUBLIC_API_URL ?? process.env.API_URL ?? '';

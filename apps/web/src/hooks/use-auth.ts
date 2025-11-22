@@ -67,8 +67,10 @@ export function useAuth() {
     isLoading: !initialized,
     login: loginMutation.mutate,
     loginStatus: loginMutation.status,
+    loginError: loginMutation.error,
     register: registerMutation.mutate,
     registerStatus: registerMutation.status,
+    registerError: registerMutation.error,
     logout,
   };
 }

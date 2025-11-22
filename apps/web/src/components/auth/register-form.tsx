@@ -11,12 +11,26 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/use-auth';
 
-const schema = z.object({
-  displayName: z.string().min(3, 'Name must be at least 3 characters'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  plan: z.string().optional(),
-});
+const passwordSchema = z
+  .string()
+  .min(8, 'Password must be at least 8 characters')
+  .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+  .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+  .regex(/[0-9]/, 'Password must contain at least one number')
+  .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character');
+
+const schema = z
+  .object({
+    displayName: z.string().min(3, 'Name must be at least 3 characters'),
+    email: z.string().email('Invalid email address'),
+    password: passwordSchema,
+    confirmPassword: z.string(),
+    plan: z.string().optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
 
 type FormData = z.infer<typeof schema>;
 
@@ -24,6 +38,7 @@ export function RegisterForm({ selectedPlan }: { selectedPlan?: string }) {
   const {
     register: registerUser,
     registerStatus,
+    registerError,
   } = useAuth();
   const {
     register,
@@ -48,16 +63,63 @@ export function RegisterForm({ selectedPlan }: { selectedPlan?: string }) {
   // Watch for registration errors and display them
   useEffect(() => {
     if (registerStatus === 'error') {
+      let errorMessage =
+        'Registration failed. Please ensure all fields are correct and try again. If the problem persists, please contact support.';
+      
+      // Try to extract a more specific error message from the API response
+      if (registerError) {
+        // ky HTTPError has a response property with json() method
+        const httpError = registerError as unknown as {
+          response?: { json?: () => Promise<{ message?: string }> };
+          message?: string;
+        };
+        
+        if (httpError.response?.json) {
+          httpError.response
+            .json()
+            .then((body) => {
+              if (body?.message) {
+                setError('root', {
+                  type: 'manual',
+                  message: body.message,
+                });
+              } else {
+                setError('root', {
+                  type: 'manual',
+                  message: errorMessage,
+                });
+              }
+            })
+            .catch(() => {
+              // Fall through to default message
+              setError('root', {
+                type: 'manual',
+                message: errorMessage,
+              });
+            });
+          return; // Early return since we're handling async
+        }
+        
+        // If we have a message in the error itself, use it
+        if (httpError.message && httpError.message !== 'Failed to fetch') {
+          errorMessage = httpError.message;
+        }
+      }
+      
       setError('root', {
         type: 'manual',
-        message:
-          'Registration failed. Please ensure all fields are correct and try again. If the problem persists, please contact support.',
+        message: errorMessage,
       });
     }
-  }, [registerStatus, setError]);
+  }, [registerStatus, registerError, setError]);
 
   const onSubmit = (data: FormData) => {
-    registerUser(data);
+    // Extract only the fields needed for registration (exclude confirmPassword)
+    registerUser({
+      email: data.email,
+      password: data.password,
+      displayName: data.displayName,
+    });
   };
 
   return (
@@ -122,6 +184,28 @@ export function RegisterForm({ selectedPlan }: { selectedPlan?: string }) {
         {errors.password && (
           <p id="password-error" className="text-sm text-destructive" role="alert">
             {errors.password.message}
+          </p>
+        )}
+        <p className="text-xs text-muted-foreground">
+          Must be at least 8 characters with uppercase, lowercase, number, and special character
+        </p>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="confirmPassword">Confirm Password</Label>
+        <Input
+          id="confirmPassword"
+          type="password"
+          placeholder="Confirm your password"
+          autoComplete="new-password"
+          aria-required="true"
+          aria-invalid={!!errors.confirmPassword}
+          aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined}
+          {...register('confirmPassword')}
+        />
+        {errors.confirmPassword && (
+          <p id="confirmPassword-error" className="text-sm text-destructive" role="alert">
+            {errors.confirmPassword.message}
           </p>
         )}
       </div>

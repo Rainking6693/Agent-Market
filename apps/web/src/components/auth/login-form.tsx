@@ -22,6 +22,7 @@ export function LoginForm() {
   const {
     login,
     loginStatus,
+    loginError,
   } = useAuth();
   const {
     register,
@@ -35,13 +36,55 @@ export function LoginForm() {
   // Watch for login errors and display them
   useEffect(() => {
     if (loginStatus === 'error') {
+      let errorMessage =
+        'Login failed. Please check your email and password and try again. If you forgot your password, contact support.';
+      
+      // Try to extract a more specific error message from the API response
+      if (loginError) {
+        // ky HTTPError has a response property with json() method
+        const httpError = loginError as unknown as {
+          response?: { json?: () => Promise<{ message?: string }> };
+          message?: string;
+        };
+        
+        if (httpError.response?.json) {
+          httpError.response
+            .json()
+            .then((body) => {
+              if (body?.message) {
+                setError('root', {
+                  type: 'manual',
+                  message: body.message,
+                });
+              } else {
+                setError('root', {
+                  type: 'manual',
+                  message: errorMessage,
+                });
+              }
+            })
+            .catch(() => {
+              // Fall through to default message
+              setError('root', {
+                type: 'manual',
+                message: errorMessage,
+              });
+            });
+          return; // Early return since we're handling async
+        }
+        
+        // If we have a message in the error itself, use it
+        if (httpError.message && httpError.message !== 'Failed to fetch') {
+          errorMessage = httpError.message;
+        }
+      }
+      
       setError('root', {
         type: 'manual',
-        message:
-          'Login failed. Please check your email and password and try again. If you forgot your password, contact support.',
+        message: errorMessage,
       });
     }
-  }, [loginStatus, setError]);
+  }, [loginStatus, loginError, setError]);
 
   const onSubmit = (data: FormData) => {
     login(data);
