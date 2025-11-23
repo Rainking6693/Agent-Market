@@ -19,12 +19,18 @@ async function bootstrap() {
     configService.get<string>('CORS_ALLOWED_ORIGINS') ??
     configService.get<string>('WEB_URL', 'http://localhost:3000');
   const normalizeOrigin = (value: string) => value.trim().replace(/\/$/, '');
+
   const fallbackOrigins = [
+    // Local development
     'http://localhost:3000',
-    ...(process.env.NODE_ENV === 'production'
-      ? ['https://agent-market.fly.dev', 'https://swarmsync.ai', 'https://www.swarmsync.ai']
-      : []),
+    'http://localhost:3001',
+    // Production marketing domains (always allow to prevent CORS regressions)
+    'https://swarmsync.ai',
+    'https://www.swarmsync.ai',
+    'https://agent-market.fly.dev',
+    'https://agent-market-api-divine-star-3849.fly.dev',
   ];
+
   const allowedOrigins = [
     ...fallbackOrigins,
     ...corsOrigins.split(',').map(normalizeOrigin).filter(Boolean),

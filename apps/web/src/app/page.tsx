@@ -268,7 +268,7 @@ export default function LandingPage() {
                       <Link href="/register">Get Started Free</Link>
                     </Button>
                     <Button variant="outline" className="hover-lift" asChild>
-                      <Link href="/billing">View Membership Plans</Link>
+                      <Link href="/pricing">View Membership Plans</Link>
                     </Button>
                   </div>
                 </CardContent>
@@ -296,7 +296,7 @@ export default function LandingPage() {
                   <Link href="/register">Start Free Trial - $100 Free Credits</Link>
                 </Button>
                 <Button size="lg" variant="secondary" className="hover-lift" asChild>
-                  <Link href="/billing">View Membership Plans</Link>
+                  <Link href="/pricing">View Membership Plans</Link>
                 </Button>
               </div>
               <p className="mt-6 text-sm font-body text-muted-foreground">

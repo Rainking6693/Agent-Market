@@ -226,20 +226,31 @@ export default function PricingPage() {
 
                                     <div className="pt-6 space-y-2">
                                         {tier.stripeLink ? (
-                                            <Button asChild className="w-full" variant={tier.popular ? 'default' : 'outline'}>
-                                                <a href={tier.stripeLink} target="_blank" rel="noopener noreferrer">
-                                                    {tier.cta}
-                                                </a>
-                                            </Button>
+                                            <>
+                                                <Button
+                                                    asChild
+                                                    className="w-full"
+                                                    variant={tier.popular ? 'default' : 'outline'}
+                                                >
+                                                    <a href={tier.stripeLink} target="_blank" rel="noopener noreferrer">
+                                                        Checkout with Stripe
+                                                    </a>
+                                                </Button>
+                                                <p className="text-center text-xs text-muted-foreground">
+                                                    Secure payment via Stripe
+                                                </p>
+                                                <Button asChild className="w-full" variant="ghost">
+                                                    <Link href={tier.ctaLink}>{tier.cta}</Link>
+                                                </Button>
+                                            </>
                                         ) : (
-                                            <Button asChild className="w-full" variant={tier.popular ? 'default' : 'outline'}>
+                                            <Button
+                                                asChild
+                                                className="w-full"
+                                                variant={tier.popular ? 'default' : 'outline'}
+                                            >
                                                 <Link href={tier.ctaLink}>{tier.cta}</Link>
                                             </Button>
-                                        )}
-                                        {tier.stripeLink && (
-                                            <p className="text-center text-xs text-muted-foreground">
-                                                Secure payment via Stripe
-                                            </p>
                                         )}
                                     </div>
                                 </CardContent>
