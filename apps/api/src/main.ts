@@ -33,8 +33,13 @@ async function bootstrap() {
     .filter(Boolean);
   const uniqueAllowedOrigins = [...new Set(allowedOrigins)];
 
+  // Log allowed origins for debugging
+  // eslint-disable-next-line no-console
+  console.log('CORS allowed origins:', uniqueAllowedOrigins);
+
   app.enableCors({
     origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) {
         callback(null, true);
         return;
@@ -43,6 +48,8 @@ async function bootstrap() {
       if (uniqueAllowedOrigins.includes(normalized)) {
         callback(null, true);
       } else {
+        // eslint-disable-next-line no-console
+        console.warn(`CORS blocked origin: ${origin} (normalized: ${normalized})`);
         callback(new Error(`Origin ${origin} not allowed by CORS`));
       }
     },
@@ -50,9 +57,17 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   });
 
-  app.use(helmet());
+  // Configure Helmet to not interfere with CORS
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+      crossOriginEmbedderPolicy: false,
+    }),
+  );
   // Global JSON body parser
   app.use(express.json());
   app.use('/stripe/webhook', express.raw({ type: '*/*' }));
