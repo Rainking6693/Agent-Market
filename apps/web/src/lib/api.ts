@@ -50,7 +50,7 @@ export interface Ap2NegotiationPayload {
   notes?: string;
 }
 
-const DEFAULT_PRODUCTION_API_ORIGIN = 'https://agent-market-api-divine-star-3849.fly.dev';
+const DEFAULT_PRODUCTION_API_ORIGIN = 'https://swarmsync-api-production.up.railway.app';
 
 function inferRuntimeApiOrigin() {
   if (typeof window === 'undefined') {

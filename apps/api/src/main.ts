@@ -27,8 +27,7 @@ async function bootstrap() {
     // Production marketing domains (always allow to prevent CORS regressions)
     'https://swarmsync.ai',
     'https://www.swarmsync.ai',
-    'https://agent-market.fly.dev',
-    'https://agent-market-api-divine-star-3849.fly.dev',
+    'https://swarmsync-api-production.up.railway.app',
   ];
 
   const allowedOrigins = [
