@@ -18,9 +18,7 @@
 
 # Use Netlify's Next.js plugin for proper routing and serverless functions
 # This plugin will handle the Next.js build automatically
+# Note: The plugin will detect Next.js in apps/web automatically
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-  [plugins.inputs]
-    # Tell the plugin where the Next.js app is located
-    nextAppDir = "apps/web"
 
