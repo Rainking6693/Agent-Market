@@ -1,10 +1,10 @@
 [build]
-  # Base directory - set to root for monorepo dependency installation
-  base = "."
-  # Build command - install deps, build SDK, then build Next.js as static export
-  command = "npm install --legacy-peer-deps && npm run build --workspace @agent-market/sdk && cd apps/web && npm run build"
-  # Publish directory - Next.js static export output
-  publish = "apps/web/out"
+  # Base directory - set to Next.js app directory so plugin can detect Next.js
+  base = "apps/web"
+  # Build command - go to root, install deps, build SDK, then plugin builds Next.js
+  command = "cd ../.. && npm install --legacy-peer-deps && npm run build --workspace @agent-market/sdk"
+  # Publish directory - Next.js plugin will handle this
+  publish = "."
 
 [build.environment]
   # Node version
@@ -13,10 +13,8 @@
   HUSKY = "0"
   # Disable Next.js telemetry
   NEXT_TELEMETRY_DISABLED = "1"
-  # Set the base directory for Next.js plugin
-  NEXT_PRIVATE_STANDALONE = "false"
 
-# Using static export, so no Next.js plugin needed
-# Note: Static export means no server-side features (API routes, SSR, etc.)
-# If you need those, you'll need to configure the plugin differently
+# Use Netlify's Next.js plugin for proper routing and serverless functions
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 

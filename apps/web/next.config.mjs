@@ -31,7 +31,7 @@ if (configuredApiUrl) {
 const nextConfig = {
   reactStrictMode: true,
   // Use standard output for Netlify (standalone is for Docker/self-hosted)
-  output: 'export', // Static export for Netlify
+  // output: 'export', // Commented out - let Netlify plugin handle it
   transpilePackages: ['@agent-market/sdk'],
   env: {
     API_URL: process.env.API_URL ?? 'http://localhost:4000',
