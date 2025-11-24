@@ -6,8 +6,8 @@
     "module": "NodeNext",
     "paths": {
       "@app/*": ["src/*"],
-      "@agent-market/sdk": ["../../packages/sdk/dist"],
-      "@agent-market/config": ["../../packages/config/dist"]
+      "@agent-market/sdk": ["../../packages/sdk/src"],
+      "@agent-market/config": ["../../packages/config/src"]
     },
     "strict": false
   },
