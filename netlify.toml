@@ -1,8 +1,6 @@
 [build]
   # Base directory - set to root for monorepo dependency installation
   base = "."
-  # Build command - build SDK then Next.js
-  command = "bash scripts/netlify-build.sh"
   # Publish directory - Next.js plugin will override this automatically
   publish = "apps/web"
 
@@ -15,6 +13,9 @@
   NEXT_TELEMETRY_DISABLED = "1"
 
 # Use Netlify's Next.js plugin for proper routing and serverless functions
-# The plugin will automatically detect Next.js in apps/web and build it
+# Configure it to build SDK first, then Next.js
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+  [plugins.inputs]
+    # Custom build command that builds SDK first, then Next.js
+    buildCommand = "npm run build --workspace @agent-market/sdk && cd apps/web && next build"
