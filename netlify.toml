@@ -14,8 +14,6 @@
   HUSKY = "0"
   # Disable Next.js telemetry
   NEXT_TELEMETRY_DISABLED = "1"
-  # Use legacy peer deps for npm install (handles peer dependency conflicts)
-  NPM_FLAGS = "--legacy-peer-deps"
 
 # Use Netlify's Next.js plugin for proper routing and serverless functions
 # The plugin will automatically detect Next.js in apps/web and build it
