@@ -1,0 +1,15 @@
+# Python test dependencies - not needed for Netlify build
+requirements.txt
+**/pyproject.toml
+**/poetry.lock
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.Python
+**/pip-log.txt
+**/pip-delete-this-directory.txt
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+
