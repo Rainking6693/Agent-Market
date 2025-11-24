@@ -48,6 +48,8 @@ export function RegisterForm({ selectedPlan }: { selectedPlan?: string }) {
     setValue,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    mode: 'onSubmit', // Only validate on submit, not on blur/change
+    reValidateMode: 'onSubmit', // Only re-validate on submit after error
     defaultValues: {
       plan: selectedPlan,
     },

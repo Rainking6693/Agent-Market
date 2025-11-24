@@ -66,7 +66,8 @@ function inferRuntimeApiOrigin() {
     return DEFAULT_PRODUCTION_API_ORIGIN;
   }
   if (hostname.endsWith('swarmsync.ai')) {
-    return 'https://api.swarmsync.ai';
+    // Use the actual backend API, not api.swarmsync.ai which points to Next.js frontend
+    return DEFAULT_PRODUCTION_API_ORIGIN;
   }
   return origin;
 }
