@@ -1,0 +1,26 @@
+[build]
+  # Base directory for the monorepo
+  base = "."
+  # Install command - install all dependencies
+  command = "npm ci --legacy-peer-deps && npm run build --workspace @agent-market/sdk"
+  # Publish directory - Next.js will be handled by the plugin
+  publish = "apps/web"
+
+[build.environment]
+  # Node version
+  NODE_VERSION = "20.18.1"
+  # Skip husky during install
+  HUSKY = "0"
+  # Disable Next.js telemetry
+  NEXT_TELEMETRY_DISABLED = "1"
+  # Set the base directory for Next.js plugin
+  NEXT_PRIVATE_STANDALONE = "false"
+
+# Use Netlify's Next.js plugin for proper routing and serverless functions
+# This plugin will handle the Next.js build automatically
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+  [plugins.inputs]
+    # Tell the plugin where the Next.js app is located
+    nextAppDir = "apps/web"
+
