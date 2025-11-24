@@ -22,7 +22,7 @@ uvicorn==0.24.0
 pydantic==2.5.0
 
 # NEW: x402 dependencies
-x402-fastapi==0.3.0
+#x402-fastapi==0.3.0
 web3==6.11.3
 eth-account==0.10.0
 python-dotenv==1.0.0
