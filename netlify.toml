@@ -1,9 +1,8 @@
 [build]
   # Base directory - set to root for monorepo dependency installation
   base = "."
-  # Build command - build SDK dependency (Netlify will install deps automatically)
-  # The Next.js plugin will automatically detect and build the Next.js app in apps/web
-  command = "npm run build --workspace @agent-market/sdk"
+  # Build command - Next.js plugin will run 'next build' which includes SDK build
+  # The SDK is built as part of the Next.js build script in apps/web/package.json
   # Publish directory - Next.js plugin will override this automatically
   publish = "apps/web"
 
