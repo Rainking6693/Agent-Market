@@ -1,10 +1,10 @@
 [build]
-  # Base directory - set to root for monorepo dependency installation
-  base = "."
-  # Build command - install deps, build SDK (dependency), then let Next.js plugin build the app
-  command = "npm ci --legacy-peer-deps && npm run build --workspace @agent-market/sdk"
+  # Base directory - set to Next.js app directory so plugin can detect it
+  base = "apps/web"
+  # Build command - go to root, install deps, build SDK, then return to apps/web for Next.js build
+  command = "cd ../.. && npm ci --legacy-peer-deps && npm run build --workspace @agent-market/sdk"
   # Publish directory - Next.js plugin will handle this
-  publish = "apps/web"
+  publish = "."
 
 [build.environment]
   # Node version
