@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "npm run build --workspace @agent-market/sdk && next build",
+    "build": "cd ../.. && npm run build --workspace @agent-market/sdk && cd apps/web && next build",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
