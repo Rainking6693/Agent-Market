@@ -1,10 +1,11 @@
 [build]
   # Base directory - set to root for monorepo dependency installation
   base = "."
-  # Build command - install deps, build SDK (dependency), then build Next.js
-  command = "npm ci --legacy-peer-deps && npm run build --workspace @agent-market/sdk && cd apps/web && npm run build"
-  # Publish directory - Next.js output
-  publish = "apps/web/.next"
+  # Build command - install deps and build SDK (dependency)
+  # The Next.js plugin will handle building Next.js, but it needs to find it
+  command = "npm ci --legacy-peer-deps && npm run build --workspace @agent-market/sdk"
+  # Publish directory - Next.js plugin will handle this
+  publish = "apps/web"
 
 [build.environment]
   # Node version
@@ -16,6 +17,8 @@
   # Set the base directory for Next.js plugin
   NEXT_PRIVATE_STANDALONE = "false"
 
-# Note: Building Next.js manually, so we don't use the plugin
-# The plugin is mainly for automatic builds, but we need manual control for monorepo
+# Use Netlify's Next.js plugin for proper routing and serverless functions
+# The plugin should detect Next.js in apps/web subdirectory
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
