@@ -1,22 +1,6 @@
 [build]
-  # Base directory - set to root for monorepo dependency installation
-  base = "."
-  # Publish directory - Next.js plugin will override this automatically
-  publish = "apps/web"
+  command = "npm ci && turbo run build --filter @agent-market/web"
+  publish = "apps/web/.next"
 
-[build.environment]
-  # Node version
-  NODE_VERSION = "20.18.1"
-  # Skip husky during install
-  HUSKY = "0"
-  # Disable Next.js telemetry
-  NEXT_TELEMETRY_DISABLED = "1"
-
-# Use Netlify's Next.js plugin for proper routing and serverless functions
-# Configure it to build SDK first, then Next.js
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-  [plugins.inputs]
-    # Custom build command that builds SDK first from root, then Next.js
-    # The plugin runs from apps/web, so we need to go to root first
-    buildCommand = "cd ../.. && npm run build --workspace @agent-market/sdk && cd apps/web && next build"

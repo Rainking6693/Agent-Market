@@ -21,3 +21,6 @@ tmp/
 .cursor\rules\codacy.mdc
 Logos/DiscordSetup.exe
 .vercel
+
+# Local Netlify folder
+.netlify
