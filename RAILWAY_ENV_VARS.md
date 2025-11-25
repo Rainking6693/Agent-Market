@@ -1,5 +1,7 @@
 # Railway Environment Variables Setup
 
+**Railway API URL:** `https://swarmsync-api.up.railway.app`
+
 Add these environment variables to your Railway `swarmsync-api` service:
 
 ## Required Variables

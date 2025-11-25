@@ -28,7 +28,7 @@ async function bootstrap() {
     'https://swarmsync.ai',
     'https://www.swarmsync.ai',
     'https://swarmsync.netlify.app', // Netlify deploy URL
-    'https://swarmsync-api-production.up.railway.app',
+    'https://swarmsync-api.up.railway.app',
   ];
 
   const allowedOrigins = [
