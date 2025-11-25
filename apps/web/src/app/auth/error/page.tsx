@@ -1,27 +1,18 @@
-'use client';
+import { Suspense } from 'react';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-
-import { Button } from '@/components/ui/button';
+import ErrorContent from './error-content';
 
 export default function AuthErrorPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const errorMessage = searchParams.get('message') || 'An error occurred during authentication';
-
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md space-y-4 rounded-lg border p-6 text-center">
-        <h1 className="text-2xl font-bold">Authentication Error</h1>
-        <p className="text-muted-foreground">{errorMessage}</p>
-        <div className="flex gap-4 justify-center">
-          <Button onClick={() => router.push('/auth/login')}>Try Again</Button>
-          <Button variant="outline" onClick={() => router.push('/')}>
-            Go Home
-          </Button>
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
+          <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
-    </div>
+    }>
+      <ErrorContent />
+    </Suspense>
   );
 }
-
