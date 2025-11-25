@@ -75,10 +75,33 @@ export function EmailRegisterForm({ selectedPlan }: EmailRegisterFormProps) {
         router.push('/dashboard');
       }
     } catch (err: unknown) {
-      const message =
-        err instanceof Error
-          ? err.message
-          : 'Registration failed. Please try again.';
+      console.error('Registration error:', err);
+      let message = 'Registration failed. Please try again.';
+      
+      if (err && typeof err === 'object') {
+        // Handle ky HTTPError
+        if ('response' in err && err.response && typeof err.response === 'object') {
+          const httpError = err as { response: { status: number; statusText: string } };
+          const status = httpError.response.status;
+          
+          if (status === 401 || status === 409) {
+            message = 'Email already registered. Please sign in instead.';
+          } else if (status === 400) {
+            message = 'Invalid registration data. Please check your information.';
+          } else if (status >= 500) {
+            message = 'Server error. Please try again later.';
+          } else {
+            message = httpError.response.statusText || 'Registration failed. Please try again.';
+          }
+        } else if ('message' in err && typeof err.message === 'string') {
+          message = err.message;
+        } else if (err instanceof Error) {
+          message = err.message;
+        }
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
+      
       setError(message);
       setIsLoading(false);
     }

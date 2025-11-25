@@ -65,7 +65,7 @@ function inferRuntimeApiOrigin() {
   ) {
     return DEFAULT_PRODUCTION_API_ORIGIN;
   }
-  if (hostname.endsWith('swarmsync.ai')) {
+  if (hostname.endsWith('swarmsync.ai') || hostname.endsWith('swarmsync.netlify.app')) {
     // Use the actual backend API, not api.swarmsync.ai which points to Next.js frontend
     return DEFAULT_PRODUCTION_API_ORIGIN;
   }
