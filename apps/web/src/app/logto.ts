@@ -1,6 +1,6 @@
 /**
  * Logto configuration for Next.js App Router
- * 
+ *
  * Environment variables (set in Netlify):
  * - LOGTO_ENDPOINT: Your Logto tenant endpoint (e.g., https://4yl56u.logto.app/)
  * - LOGTO_APP_ID: Your Logto application ID
@@ -10,8 +10,12 @@
  */
 
 function getBaseUrl() {
-  // Server-side: use environment variable or default
+  // Server-side: use environment variable or hardcoded production URL
   if (typeof window === 'undefined') {
+    // In production, always use the production URL
+    if (process.env.NODE_ENV === 'production') {
+      return process.env.NEXT_PUBLIC_BASE_URL || 'https://swarmsync.ai';
+    }
     return (
       process.env.NEXT_PUBLIC_BASE_URL ||
       process.env.WEB_URL ||
