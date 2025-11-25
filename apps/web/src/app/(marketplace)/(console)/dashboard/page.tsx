@@ -27,6 +27,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const dynamic = 'force-dynamic';
+
 const recentPrompts = [
   { name: 'Go-to-market briefing', updated: 'Sep 21, 2025' },
   { name: 'Agent orchestration outline', updated: 'Aug 27, 2025' },
