@@ -1,19 +1,19 @@
 'use client';
 
-import { signIn } from '@logto/next/server-actions';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
-import { logtoConfig } from '@/app/logto';
+import { handleSignIn } from '@/app/actions/auth';
 import { Button } from '@/components/ui/button';
 
 export function SignInButton() {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSignIn = async () => {
+  const onSignIn = async () => {
     setIsLoading(true);
     try {
-      await signIn(logtoConfig);
+      await handleSignIn();
+      // handleSignIn will redirect, so we don't need to reset loading state
     } catch (error) {
       console.error('Sign in failed:', error);
       setIsLoading(false);
@@ -24,7 +24,7 @@ export function SignInButton() {
     <Button
       type="button"
       className="w-full"
-      onClick={handleSignIn}
+      onClick={onSignIn}
       disabled={isLoading}
       aria-busy={isLoading}
     >

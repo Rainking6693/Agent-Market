@@ -1,6 +1,6 @@
 'use server';
 
-import { getLogtoContext, signOut } from '@logto/next/server-actions';
+import { getLogtoContext, signIn, signOut } from '@logto/next/server-actions';
 
 import { logtoConfig } from '../logto';
 
@@ -19,6 +19,14 @@ export async function getAuthStatus() {
         }
       : null,
   };
+}
+
+/**
+ * Server action to sign in
+ * This redirects to Logto's sign-in page
+ */
+export async function handleSignIn() {
+  await signIn(logtoConfig);
 }
 
 /**

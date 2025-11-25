@@ -23,7 +23,7 @@ export function Navbar() {
     <header className="sticky top-0 z-40 border-b border-white/60 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:py-5">
         <Link href="/" className="flex items-center" aria-label="Swarm Sync homepage">
-          <BrandLogo className="h-24 w-auto md:h-32" priority size={960} />
+          <BrandLogo className="h-32 w-auto md:h-40" priority size={1280} />
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground md:flex">

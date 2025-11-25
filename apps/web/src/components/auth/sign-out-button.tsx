@@ -1,19 +1,19 @@
 'use client';
 
-import { signOut } from '@logto/next/server-actions';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
-import { logtoConfig } from '@/app/logto';
+import { handleSignOut } from '@/app/actions/auth';
 import { Button } from '@/components/ui/button';
 
 export function SignOutButton() {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSignOut = async () => {
+  const onSignOut = async () => {
     setIsLoading(true);
     try {
-      await signOut(logtoConfig);
+      await handleSignOut();
+      // handleSignOut will redirect, so we don't need to reset loading state
     } catch (error) {
       console.error('Sign out failed:', error);
       setIsLoading(false);
@@ -24,7 +24,7 @@ export function SignOutButton() {
     <Button
       type="button"
       variant="outline"
-      onClick={handleSignOut}
+      onClick={onSignOut}
       disabled={isLoading}
       aria-busy={isLoading}
     >

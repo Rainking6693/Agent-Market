@@ -1,9 +1,9 @@
 import { Check } from 'lucide-react';
 import Link from 'next/link';
 
-
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
+import { ContactSalesForm } from '@/components/marketing/contact-sales-form';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -296,18 +296,18 @@ export default function PricingPage() {
                     </div>
 
                     {/* CTA Section */}
-                    <div className="bg-brass/5 rounded-3xl border border-brass/20 p-12 text-center space-y-6">
-                        <h2 className="text-3xl font-headline text-foreground">
-                            Need a Custom Enterprise Plan?
-                        </h2>
-                        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                            For organizations with unique requirements, we offer custom pricing, dedicated infrastructure, and white-label solutions.
-                        </p>
-                        <Button size="lg" asChild>
-                            <Link href="mailto:sales@swarmsync.ai?subject=Enterprise%20Plan%20Inquiry">
-                                Contact Sales
-                            </Link>
-                        </Button>
+                    <div className="bg-brass/5 rounded-3xl border border-brass/20 p-12 space-y-6">
+                        <div className="text-center space-y-4">
+                            <h2 className="text-3xl font-headline text-foreground">
+                                Need a Custom Enterprise Plan?
+                            </h2>
+                            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                                For organizations with unique requirements, we offer custom pricing, dedicated infrastructure, and white-label solutions.
+                            </p>
+                        </div>
+                        <div className="max-w-2xl mx-auto">
+                            <ContactSalesForm />
+                        </div>
                     </div>
                 </div>
             </main>
