@@ -2,7 +2,16 @@
 
 import { SignInButton } from '@/components/auth/sign-in-button';
 
-export function RegisterForm() {
+interface RegisterFormProps {
+  selectedPlan?: string;
+}
+
+export function RegisterForm({ selectedPlan }: RegisterFormProps) {
+  // selectedPlan is available but not used since Logto handles registration
+  // Keeping it for API compatibility
+  if (selectedPlan) {
+    // Could store this in sessionStorage or pass to Logto if needed
+  }
   return (
     <div className="space-y-5">
       <div className="text-center">
