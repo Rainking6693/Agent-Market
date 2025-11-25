@@ -12,6 +12,11 @@ export const persistAuth = (user: StoredAuthUser, token: string) => {
   }
   window.localStorage.setItem(AUTH_TOKEN_KEY, token);
   window.localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
+
+  // Also set cookie for server-side auth checks
+  // Cookie expires in 1 hour (matching JWT expiry)
+  const maxAge = 60 * 60; // 1 hour in seconds
+  document.cookie = `auth_token=${token}; path=/; max-age=${maxAge}; SameSite=Lax`;
 };
 
 export const clearStoredAuth = () => {
@@ -20,6 +25,9 @@ export const clearStoredAuth = () => {
   }
   window.localStorage.removeItem(AUTH_TOKEN_KEY);
   window.localStorage.removeItem(AUTH_USER_KEY);
+
+  // Also clear the auth cookie
+  document.cookie = 'auth_token=; path=/; max-age=0; SameSite=Lax';
 };
 
 export const getStoredAuth = () => {

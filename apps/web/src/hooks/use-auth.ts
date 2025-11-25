@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { getAuthStatus, handleSignOut } from '@/app/actions/auth';
+import { clearStoredAuth } from '@/lib/auth';
 import { AUTH_TOKEN_KEY } from '@/lib/constants';
 import { useAuthStore } from '@/stores/auth-store';
 
@@ -64,27 +65,23 @@ export function useAuth() {
 
   const logout = async () => {
     try {
-      // Clear JWT token
-      if (typeof window !== 'undefined') {
-        window.localStorage.removeItem(AUTH_TOKEN_KEY);
-      }
-      
+      // Clear JWT token from localStorage and cookie
+      clearStoredAuth();
+
       // Try Logto logout (for social login users)
       try {
         await handleSignOut();
       } catch {
         // Ignore Logto logout errors
       }
-      
+
       clearAuth();
       setIsAuthenticated(false);
       router.push('/');
     } catch (error) {
       console.error('Logout failed:', error);
       clearAuth();
-      if (typeof window !== 'undefined') {
-        window.localStorage.removeItem(AUTH_TOKEN_KEY);
-      }
+      clearStoredAuth();
       router.push('/');
     }
   };

@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { authApi } from '@/lib/api';
-import { AUTH_TOKEN_KEY } from '@/lib/constants';
+import { persistAuth } from '@/lib/auth';
 import { useAuthStore } from '@/stores/auth-store';
 
 const registerSchema = z
@@ -60,10 +60,8 @@ export function EmailRegisterForm({ selectedPlan }: EmailRegisterFormProps) {
         displayName: data.displayName,
       });
 
-      // Store token
-      if (typeof window !== 'undefined' && response.accessToken) {
-        window.localStorage.setItem(AUTH_TOKEN_KEY, response.accessToken);
-      }
+      // Store token in localStorage and cookie
+      persistAuth(response.user, response.accessToken);
 
       // Update auth store
       setAuth(response.user, response.accessToken);
