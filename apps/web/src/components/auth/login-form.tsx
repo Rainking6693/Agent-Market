@@ -1,18 +1,13 @@
 'use client';
 
-import { SignInButton } from '@/components/auth/sign-in-button';
+import { EmailLoginForm } from '@/components/auth/email-login-form';
+import { SocialLoginButtons } from '@/components/auth/social-login-buttons';
 
 export function LoginForm() {
   return (
     <div className="space-y-5">
-      <div className="text-center">
-        <p className="text-sm text-muted-foreground">
-          Sign in with your account to continue
-        </p>
-      </div>
-
-      <SignInButton />
-
+      <EmailLoginForm />
+      <SocialLoginButtons />
       <p className="text-xs text-center text-muted-foreground">
         By signing in, you agree to our{' '}
         <a href="/terms" className="text-brass hover:underline font-medium">

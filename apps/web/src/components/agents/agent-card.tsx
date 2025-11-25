@@ -15,8 +15,20 @@ interface AgentCardProps {
   agent: Agent;
 }
 
-const ratingFromTrust = (trustScore: number) =>
-  Math.max(3.5, Math.min(5, +(trustScore / 20).toFixed(1)));
+const calculateRating = (trustScore: number, successCount: number, failureCount: number) => {
+  // Calculate rating from success rate and trust score
+  const totalRuns = successCount + failureCount;
+  if (totalRuns === 0) {
+    // No runs yet, use trust score as base
+    return Math.max(3.5, Math.min(5, +(trustScore / 20).toFixed(1)));
+  }
+  
+  const successRate = successCount / totalRuns;
+  // Combine success rate (0-1) with trust score (0-100)
+  // Success rate contributes 70%, trust score contributes 30%
+  const combinedScore = (successRate * 0.7 + (trustScore / 100) * 0.3) * 5;
+  return Math.max(3.0, Math.min(5.0, +combinedScore.toFixed(1)));
+};
 
 const priceFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -30,7 +42,7 @@ export function AgentCard({ agent }: AgentCardProps) {
   const toggleFavorite = useMarketplaceStore((state) => state.toggleFavorite);
   const toggleCompare = useMarketplaceStore((state) => state.toggleCompare);
 
-  const rating = ratingFromTrust(agent.trustScore);
+  const rating = calculateRating(agent.trustScore, agent.successCount, agent.failureCount);
   const categories = agent.categories.length ? agent.categories : ['Generalist'];
   const priceLabel =
     typeof agent.basePriceCents === 'number'

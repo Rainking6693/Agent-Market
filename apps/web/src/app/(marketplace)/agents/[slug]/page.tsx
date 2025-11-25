@@ -87,7 +87,7 @@ export default async function AgentDetailPage({ params }: { params: { slug: stri
           </header>
 
           <section className="grid gap-4 md:grid-cols-3">
-            <StatCard label="Trust rating" value={`${ratingFromTrust(agent.trustScore)} / 5`} />
+            <StatCard label="Trust rating" value={`${calculateRating(agent.trustScore, agent.successCount, agent.failureCount)} / 5`} />
             <StatCard
               label="Successful runs"
               value={agent.successCount.toLocaleString()}
@@ -196,8 +196,14 @@ function BudgetMetric({ label, value, hint }: { label: string; value: string; hi
   );
 }
 
-function ratingFromTrust(trust: number) {
-  return Math.max(3.5, Math.min(5, +(trust / 20).toFixed(1)));
+function calculateRating(trustScore: number, successCount: number, failureCount: number) {
+  const totalRuns = successCount + failureCount;
+  if (totalRuns === 0) {
+    return Math.max(3.5, Math.min(5, +(trustScore / 20).toFixed(1)));
+  }
+  const successRate = successCount / totalRuns;
+  const combinedScore = (successRate * 0.7 + (trustScore / 100) * 0.3) * 5;
+  return Math.max(3.0, Math.min(5.0, +combinedScore.toFixed(1)));
 }
 
 function formatTag(tag: string) {
