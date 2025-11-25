@@ -27,6 +27,7 @@ async function bootstrap() {
     // Production marketing domains (always allow to prevent CORS regressions)
     'https://swarmsync.ai',
     'https://www.swarmsync.ai',
+    'https://swarmsync.netlify.app', // Netlify deploy URL
     'https://swarmsync-api-production.up.railway.app',
   ];
 
