@@ -1,10 +1,9 @@
 import { Check } from 'lucide-react';
-import Link from 'next/link';
 
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
 import { ContactSalesForm } from '@/components/marketing/contact-sales-form';
-import { Button } from '@/components/ui/button';
+import { CheckoutButton } from '@/components/pricing/checkout-button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 import type { Metadata } from 'next';
@@ -224,34 +223,14 @@ export default function PricingPage() {
                                         ))}
                                     </ul>
 
-                                    <div className="pt-6 space-y-2">
-                                        {tier.stripeLink ? (
-                                            <>
-                                                <Button
-                                                    asChild
-                                                    className="w-full"
-                                                    variant={tier.popular ? 'default' : 'outline'}
-                                                >
-                                                    <a href={tier.stripeLink} target="_blank" rel="noopener noreferrer">
-                                                        Checkout with Stripe
-                                                    </a>
-                                                </Button>
-                                                <p className="text-center text-xs text-muted-foreground">
-                                                    Secure payment via Stripe
-                                                </p>
-                                                <Button asChild className="w-full" variant="ghost">
-                                                    <Link href={tier.ctaLink}>{tier.cta}</Link>
-                                                </Button>
-                                            </>
-                                        ) : (
-                                            <Button
-                                                asChild
-                                                className="w-full"
-                                                variant={tier.popular ? 'default' : 'outline'}
-                                            >
-                                                <Link href={tier.ctaLink}>{tier.cta}</Link>
-                                            </Button>
-                                        )}
+                                    <div className="pt-6">
+                                        <CheckoutButton
+                                            planSlug={tier.name === 'Starter Swarm' ? 'starter' : tier.name.toLowerCase()}
+                                            stripeLink={tier.stripeLink}
+                                            ctaLink={tier.ctaLink}
+                                            cta={tier.cta}
+                                            popular={tier.popular}
+                                        />
                                     </div>
                                 </CardContent>
                             </Card>
