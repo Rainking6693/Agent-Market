@@ -1,76 +1,74 @@
 'use client';
 
-import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { authApi } from '@/lib/api';
-import { clearStoredAuth, getStoredAuth, persistAuth } from '@/lib/auth';
+import { getAuthStatus, handleSignOut } from '@/app/actions/auth';
 import { useAuthStore } from '@/stores/auth-store';
-
-interface LoginPayload {
-  email: string;
-  password: string;
-}
-
-interface RegisterPayload {
-  email: string;
-  password: string;
-  displayName: string;
-}
 
 export function useAuth() {
   const router = useRouter();
-  const { user, token, setAuth, clearAuth } = useAuthStore();
-  const [initialized, setInitialized] = useState(false);
+  const { user, setAuth, clearAuth } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // Check auth status on mount and periodically
   useEffect(() => {
-    if (initialized || typeof window === 'undefined') {
-      return;
+    const checkAuth = async () => {
+      try {
+        const { isAuthenticated: authStatus, user: authUser } = await getAuthStatus();
+        setIsAuthenticated(authStatus);
+        if (authStatus && authUser) {
+          setAuth(authUser, ''); // Logto handles tokens via cookies
+        } else {
+          clearAuth();
+        }
+      } catch (error) {
+        console.error('Failed to check auth status:', error);
+        clearAuth();
+        setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+
+    // Check auth status every 30 seconds
+    const interval = setInterval(checkAuth, 30000);
+    return () => clearInterval(interval);
+  }, [setAuth, clearAuth]);
+
+  const logout = async () => {
+    try {
+      await handleSignOut();
+      clearAuth();
+      setIsAuthenticated(false);
+      router.push('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      clearAuth();
+      router.push('/');
     }
-    const stored = getStoredAuth();
-    if (stored) {
-      setAuth(stored.user, stored.token);
-    }
-    setInitialized(true);
-  }, [initialized, setAuth]);
-
-  const handleSuccess = useCallback(
-    (data: Awaited<ReturnType<typeof authApi.login>>) => {
-      setAuth(data.user, data.accessToken);
-      persistAuth(data.user, data.accessToken);
-      router.push('/dashboard');
-    },
-    [router, setAuth],
-  );
-
-  const loginMutation = useMutation({
-    mutationFn: (payload: LoginPayload) => authApi.login(payload.email, payload.password),
-    onSuccess: handleSuccess,
-  });
-
-  const registerMutation = useMutation({
-    mutationFn: (payload: RegisterPayload) => authApi.register(payload),
-    onSuccess: handleSuccess,
-  });
-
-  const logout = useCallback(() => {
-    clearAuth();
-    clearStoredAuth();
-    router.push('/');
-  }, [clearAuth, router]);
+  };
 
   return {
     user,
-    token,
-    isAuthenticated: Boolean(user && token),
-    isLoading: !initialized,
-    login: loginMutation.mutate,
-    loginStatus: loginMutation.status,
-    loginError: loginMutation.error,
-    register: registerMutation.mutate,
-    registerStatus: registerMutation.status,
-    registerError: registerMutation.error,
+    token: null, // Logto handles tokens via cookies
+    isAuthenticated,
+    isLoading,
+    login: () => {
+      // Login is handled by SignInButton component
+      console.warn('Use SignInButton component for login');
+    },
+    loginStatus: 'idle' as const,
+    loginError: null,
+    register: () => {
+      // Registration is handled by SignInButton component
+      console.warn('Use SignInButton component for registration');
+    },
+    registerStatus: 'idle' as const,
+    registerError: null,
     logout,
   };
 }
