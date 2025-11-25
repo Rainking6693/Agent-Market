@@ -17,9 +17,8 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy dependencies from deps stage
+# In npm workspaces, all dependencies are hoisted to root node_modules
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages/sdk/node_modules ./packages/sdk/node_modules
-COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
 
 # Copy entire monorepo (needed for workspace structure)
 COPY . .
@@ -52,7 +51,7 @@ COPY --from=builder /app/packages/sdk/package*.json ./packages/sdk/
 # Copy API build output
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/apps/api/package*.json ./apps/api/
-COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
+# Note: node_modules are already copied from root, no need for workspace-specific copies
 
 USER nestjs
 
