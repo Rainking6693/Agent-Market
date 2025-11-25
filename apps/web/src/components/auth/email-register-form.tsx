@@ -61,13 +61,12 @@ export function EmailRegisterForm({ selectedPlan }: EmailRegisterFormProps) {
       });
 
       // Store token
-      const token = response.accessToken || response.token;
-      if (typeof window !== 'undefined' && token) {
-        window.localStorage.setItem(AUTH_TOKEN_KEY, token);
+      if (typeof window !== 'undefined' && response.accessToken) {
+        window.localStorage.setItem(AUTH_TOKEN_KEY, response.accessToken);
       }
 
       // Update auth store
-      setAuth(response.user, token);
+      setAuth(response.user, response.accessToken);
 
       // Redirect to dashboard (or pricing if plan was selected)
       if (selectedPlan || searchParams.get('plan')) {
