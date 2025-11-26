@@ -1,19 +1,42 @@
 'use client';
 
+import { useRef, useState } from 'react';
+
 import { initiateGitHubLogin, initiateGoogleLogin } from '@/app/actions/oauth';
 import { Button } from '@/components/ui/button';
 
 export function SocialLoginButtons() {
+  // Guard against double calls (React StrictMode, double clicks, etc.)
+  const isProcessingRef = useRef(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSocialLogin = async (provider: 'google' | 'github') => {
+    // Prevent double calls - this is critical to avoid empty state
+    if (isProcessingRef.current || isLoading) {
+      console.warn(`Already processing ${provider} login, ignoring duplicate call`);
+      return;
+    }
+
+    isProcessingRef.current = true;
+    setIsLoading(true);
+
     try {
-      // Use server action to get OAuth URL, then redirect client-side
-      const oauthUrl =
-        provider === 'google' ? await initiateGoogleLogin() : await initiateGitHubLogin();
+      console.log(`Initiating ${provider} login, current location:`, window.location.href);
       
-      // Perform client-side redirect
-      window.location.href = oauthUrl;
+      // Call server action which uses Logto's signIn() function
+      // This properly handles state generation and will redirect
+      if (provider === 'google') {
+        await initiateGoogleLogin();
+      } else {
+        await initiateGitHubLogin();
+      }
+      
+      // Note: The server action will redirect, so we shouldn't reach here
+      // But if we do, it means something went wrong
     } catch (error) {
       console.error(`Failed to initiate ${provider} login:`, error);
+      isProcessingRef.current = false;
+      setIsLoading(false);
     }
   };
 
@@ -33,6 +56,7 @@ export function SocialLoginButtons() {
           type="button"
           variant="outline"
           className="w-full"
+          disabled={isLoading}
           onClick={() => handleSocialLogin('google')}
         >
           <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
@@ -60,6 +84,7 @@ export function SocialLoginButtons() {
           type="button"
           variant="outline"
           className="w-full"
+          disabled={isLoading}
           onClick={() => handleSocialLogin('github')}
         >
           <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">

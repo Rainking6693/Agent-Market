@@ -1,6 +1,8 @@
 'use server';
 
+import { signIn } from '@logto/next/server-actions';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 import { logtoConfig } from '../logto';
 
@@ -22,7 +24,6 @@ function getCookieDomain(): string | undefined {
 
 /**
  * Store OAuth provider in secure HTTP-only cookie for tracking
- * Note: Logto handles state parameter internally, so we don't need to manage it
  */
 async function setOAuthProvider(provider: 'google' | 'github') {
   const cookieStore = await cookies();
@@ -60,58 +61,94 @@ export async function deleteOAuthProvider() {
 }
 
 /**
- * Initiate Google OAuth login
- * Logto handles state parameter and PKCE internally via SDK
- * Returns the OAuth URL for client-side redirect
+ * Get hardcoded redirect URI to prevent undefined/empty state
+ * This ensures the state parameter is always properly set
+ * 
+ * CRITICAL: Must return a valid URL string, never undefined or empty
  */
-export async function initiateGoogleLogin(): Promise<string> {
-  // Store provider for tracking (optional, for analytics/logging)
-  await setOAuthProvider('google');
-
-  const signInUrl = new URL(`${logtoConfig.endpoint}oidc/auth`);
-  signInUrl.searchParams.set('client_id', logtoConfig.appId);
-  signInUrl.searchParams.set('redirect_uri', `${logtoConfig.baseUrl}/callback`);
-  signInUrl.searchParams.set('response_type', 'code');
-  signInUrl.searchParams.set('scope', 'openid profile email');
-  signInUrl.searchParams.set('prompt', 'consent');
-  signInUrl.searchParams.set('interaction_hint', 'google');
-  // Note: Logto SDK handles 'state' and PKCE (code_challenge) internally
-  // We don't add them manually - the SDK's handleSignIn will validate them
-
-  console.log('Initiating Google OAuth:', {
-    redirectUri: `${logtoConfig.baseUrl}/callback`,
-    baseUrl: logtoConfig.baseUrl,
-    hostname: typeof window !== 'undefined' ? window.location.hostname : 'server',
-  });
-
-  return signInUrl.toString();
+function getRedirectUri(): string {
+  // Hardcode production URL to prevent undefined/empty state
+  if (process.env.NODE_ENV === 'production') {
+    // Use environment variable if set, otherwise default to swarmsync.ai
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://swarmsync.ai';
+    // Ensure it's a valid URL (no trailing slash, proper protocol)
+    const cleanUrl = baseUrl.replace(/\/$/, '');
+    return `${cleanUrl}/callback`;
+  }
+  // Development - always return a valid URL
+  const devUrl = process.env.WEB_URL || 'http://localhost:3000';
+  return `${devUrl}/callback`;
 }
 
 /**
- * Initiate GitHub OAuth login
- * Logto handles state parameter and PKCE internally via SDK
- * Returns the OAuth URL for client-side redirect
+ * Initiate Google OAuth login using Logto's signIn() function
+ * This properly handles state generation and PKCE
+ * 
+ * CRITICAL: This must be called only once per click to prevent empty state
  */
-export async function initiateGitHubLogin(): Promise<string> {
-  // Store provider for tracking (optional, for analytics/logging)
-  await setOAuthProvider('github');
+export async function initiateGoogleLogin() {
+  // Store provider for tracking
+  await setOAuthProvider('google');
 
-  const signInUrl = new URL(`${logtoConfig.endpoint}oidc/auth`);
-  signInUrl.searchParams.set('client_id', logtoConfig.appId);
-  signInUrl.searchParams.set('redirect_uri', `${logtoConfig.baseUrl}/callback`);
-  signInUrl.searchParams.set('response_type', 'code');
-  signInUrl.searchParams.set('scope', 'openid profile email');
-  signInUrl.searchParams.set('prompt', 'consent');
-  signInUrl.searchParams.set('interaction_hint', 'github');
-  // Note: Logto SDK handles 'state' and PKCE (code_challenge) internally
-  // We don't add them manually - the SDK's handleSignIn will validate them
-
-  console.log('Initiating GitHub OAuth:', {
-    redirectUri: `${logtoConfig.baseUrl}/callback`,
+  // Hardcode redirect URI to prevent undefined/empty state
+  const redirectUri = getRedirectUri();
+  
+  console.log('Initiating Google OAuth with Logto signIn():', {
+    redirectUri,
     baseUrl: logtoConfig.baseUrl,
-    hostname: typeof window !== 'undefined' ? window.location.hostname : 'server',
+    endpoint: logtoConfig.endpoint,
+    nodeEnv: process.env.NODE_ENV,
   });
 
-  return signInUrl.toString();
+  // Validate redirectUri is not empty (critical for state generation)
+  if (!redirectUri || redirectUri.trim() === '') {
+    throw new Error('Redirect URI cannot be empty - this would cause empty state parameter');
+  }
+
+  // Use Logto's signIn() function which handles state and PKCE automatically
+  // Note: Logto SDK's signIn() handles state generation internally
+  // If interaction_hint is needed, user will select Google on Logto's sign-in page
+  await signIn(logtoConfig, {
+    redirectUri,
+  });
+  
+  // signIn() will redirect via Next.js redirect(), so this line should never execute
+  // But we include it as a fallback
+  redirect(redirectUri);
+}
+
+/**
+ * Initiate GitHub OAuth login using Logto's signIn() function
+ * This properly handles state generation and PKCE
+ * 
+ * CRITICAL: This must be called only once per click to prevent empty state
+ */
+export async function initiateGitHubLogin() {
+  // Store provider for tracking
+  await setOAuthProvider('github');
+
+  // Hardcode redirect URI to prevent undefined/empty state
+  const redirectUri = getRedirectUri();
+  
+  console.log('Initiating GitHub OAuth with Logto signIn():', {
+    redirectUri,
+    baseUrl: logtoConfig.baseUrl,
+    endpoint: logtoConfig.endpoint,
+    nodeEnv: process.env.NODE_ENV,
+  });
+
+  // Validate redirectUri is not empty (critical for state generation)
+  if (!redirectUri || redirectUri.trim() === '') {
+    throw new Error('Redirect URI cannot be empty - this would cause empty state parameter');
+  }
+
+  // Use Logto's signIn() function which handles state and PKCE automatically
+  await signIn(logtoConfig, {
+    redirectUri,
+  });
+  
+  // signIn() will redirect via Next.js redirect(), so this line should never execute
+  // But we include it as a fallback
+  redirect(redirectUri);
 }
 
