@@ -2,7 +2,7 @@
  * Logto configuration for Next.js App Router
  *
  * Environment variables (set in Netlify):
- * - LOGTO_ENDPOINT: Your Logto tenant endpoint (e.g., https://4yl56u.logto.app/)
+ * - LOGTO_ENDPOINT: Your Logto tenant endpoint 
  * - LOGTO_APP_ID: Your Logto application ID
  * - LOGTO_APP_SECRET: Your Logto application secret
  * - LOGTO_COOKIE_SECRET: A random 32-character secret for cookie encryption
