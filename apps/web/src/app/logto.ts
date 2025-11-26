@@ -34,4 +34,6 @@ export const logtoConfig = {
   cookieSecret:
     process.env.LOGTO_COOKIE_SECRET || 'HNT0jWSyAGYkf3DAaUgpIUgfJdY7jwMW',
   cookieSecure: process.env.NODE_ENV === 'production',
+  // Note: @logto/next SDK handles cookies internally via Next.js cookies() API
+  // Cookie domain is set in server actions using cookies().set() with domain option
 };

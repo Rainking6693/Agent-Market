@@ -14,21 +14,34 @@ import { logtoConfig } from '../logto';
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
 
-  // Log configuration for debugging
+  // Enhanced logging for debugging OAuth callback issues
+  const state = searchParams.get('state');
+  const code = searchParams.get('code');
+  const error = searchParams.get('error');
+  const errorDescription = searchParams.get('error_description');
+  
   console.log('Logto callback received:', {
     url: request.url,
+    hostname: request.nextUrl.hostname,
+    origin: request.headers.get('origin'),
+    referer: request.headers.get('referer'),
     searchParams: Object.fromEntries(searchParams.entries()),
+    hasState: !!state,
+    hasCode: !!code,
+    hasError: !!error,
     logtoConfig: {
       endpoint: logtoConfig.endpoint,
       appId: logtoConfig.appId,
       baseUrl: logtoConfig.baseUrl,
       // Don't log secrets
     },
+    cookies: {
+      // Log cookie names (not values) for debugging
+      cookieHeader: request.headers.get('cookie')?.split(';').map(c => c.split('=')[0].trim()) || [],
+    },
   });
 
   // Check for OAuth error in query params
-  const error = searchParams.get('error');
-  const errorDescription = searchParams.get('error_description');
   if (error) {
     console.error('OAuth error from Logto:', { error, errorDescription });
     // Clean up provider cookie on error

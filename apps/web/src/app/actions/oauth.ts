@@ -8,17 +8,33 @@ const OAUTH_PROVIDER_COOKIE = 'oauth_provider';
 const OAUTH_PROVIDER_MAX_AGE = 600; // 10 minutes
 
 /**
+ * Get cookie domain for production
+ */
+function getCookieDomain(): string | undefined {
+  if (process.env.NODE_ENV === 'production') {
+    // Use .swarmsync.ai to cover both www and non-www
+    // For Netlify, we'd need to detect the hostname, but cookies() API
+    // in Next.js handles domain automatically based on request
+    return '.swarmsync.ai';
+  }
+  return undefined; // localhost
+}
+
+/**
  * Store OAuth provider in secure HTTP-only cookie for tracking
  * Note: Logto handles state parameter internally, so we don't need to manage it
  */
 async function setOAuthProvider(provider: 'google' | 'github') {
   const cookieStore = await cookies();
+  const cookieDomain = getCookieDomain();
+  
   cookieStore.set(OAUTH_PROVIDER_COOKIE, provider, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: OAUTH_PROVIDER_MAX_AGE,
     path: '/',
+    ...(cookieDomain && { domain: cookieDomain }),
   });
 }
 
@@ -45,7 +61,7 @@ export async function deleteOAuthProvider() {
 
 /**
  * Initiate Google OAuth login
- * Logto handles state parameter internally, so we don't add our own
+ * Logto handles state parameter and PKCE internally via SDK
  * Returns the OAuth URL for client-side redirect
  */
 export async function initiateGoogleLogin(): Promise<string> {
@@ -59,14 +75,21 @@ export async function initiateGoogleLogin(): Promise<string> {
   signInUrl.searchParams.set('scope', 'openid profile email');
   signInUrl.searchParams.set('prompt', 'consent');
   signInUrl.searchParams.set('interaction_hint', 'google');
-  // Note: We don't add 'state' parameter - Logto handles it internally
+  // Note: Logto SDK handles 'state' and PKCE (code_challenge) internally
+  // We don't add them manually - the SDK's handleSignIn will validate them
+
+  console.log('Initiating Google OAuth:', {
+    redirectUri: `${logtoConfig.baseUrl}/callback`,
+    baseUrl: logtoConfig.baseUrl,
+    hostname: typeof window !== 'undefined' ? window.location.hostname : 'server',
+  });
 
   return signInUrl.toString();
 }
 
 /**
  * Initiate GitHub OAuth login
- * Logto handles state parameter internally, so we don't add our own
+ * Logto handles state parameter and PKCE internally via SDK
  * Returns the OAuth URL for client-side redirect
  */
 export async function initiateGitHubLogin(): Promise<string> {
@@ -80,7 +103,14 @@ export async function initiateGitHubLogin(): Promise<string> {
   signInUrl.searchParams.set('scope', 'openid profile email');
   signInUrl.searchParams.set('prompt', 'consent');
   signInUrl.searchParams.set('interaction_hint', 'github');
-  // Note: We don't add 'state' parameter - Logto handles it internally
+  // Note: Logto SDK handles 'state' and PKCE (code_challenge) internally
+  // We don't add them manually - the SDK's handleSignIn will validate them
+
+  console.log('Initiating GitHub OAuth:', {
+    redirectUri: `${logtoConfig.baseUrl}/callback`,
+    baseUrl: logtoConfig.baseUrl,
+    hostname: typeof window !== 'undefined' ? window.location.hostname : 'server',
+  });
 
   return signInUrl.toString();
 }
