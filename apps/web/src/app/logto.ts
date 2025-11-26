@@ -16,9 +16,9 @@ function getBaseUrl() {
     if (process.env.NEXT_PUBLIC_BASE_URL) {
       return process.env.NEXT_PUBLIC_BASE_URL;
     }
-    // Fallback: use swarmsync.netlify.app for Netlify deployments
+    // Fallback: use swarmsync.ai as primary production domain
     if (process.env.NODE_ENV === 'production') {
-      return 'https://swarmsync.netlify.app';
+      return 'https://swarmsync.ai';
     }
     return process.env.WEB_URL || 'http://localhost:3000';
   }
