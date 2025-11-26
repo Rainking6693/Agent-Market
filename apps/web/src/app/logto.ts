@@ -10,19 +10,19 @@
  */
 
 function getBaseUrl() {
-  // Server-side: use environment variable or hardcoded production URL
+  // Server-side: use environment variable or infer from request
   if (typeof window === 'undefined') {
-    // In production, always use the production URL
-    if (process.env.NODE_ENV === 'production') {
-      return process.env.NEXT_PUBLIC_BASE_URL || 'https://swarmsync.ai';
+    // In production, check for NEXT_PUBLIC_BASE_URL first
+    if (process.env.NEXT_PUBLIC_BASE_URL) {
+      return process.env.NEXT_PUBLIC_BASE_URL;
     }
-    return (
-      process.env.NEXT_PUBLIC_BASE_URL ||
-      process.env.WEB_URL ||
-      'http://localhost:3000'
-    );
+    // Fallback: use swarmsync.netlify.app for Netlify deployments
+    if (process.env.NODE_ENV === 'production') {
+      return 'https://swarmsync.netlify.app';
+    }
+    return process.env.WEB_URL || 'http://localhost:3000';
   }
-  // Client-side: use current origin
+  // Client-side: use current origin (this is what actually matters for redirects)
   return window.location.origin;
 }
 
