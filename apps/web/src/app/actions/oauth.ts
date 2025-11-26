@@ -1,57 +1,32 @@
 'use server';
 
-import crypto from 'crypto';
-
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { logtoConfig } from '../logto';
 
-const OAUTH_STATE_COOKIE = 'oauth_state';
 const OAUTH_PROVIDER_COOKIE = 'oauth_provider';
-const OAUTH_STATE_MAX_AGE = 600; // 10 minutes
+const OAUTH_PROVIDER_MAX_AGE = 600; // 10 minutes
 
 /**
- * Generate a secure random state parameter for OAuth
+ * Store OAuth provider in secure HTTP-only cookie for tracking
+ * Note: Logto handles state parameter internally, so we don't need to manage it
  */
-function generateState(): string {
-  return crypto.randomBytes(32).toString('hex');
-}
-
-/**
- * Store OAuth state and provider in secure HTTP-only cookies
- */
-async function setOAuthState(state: string, provider: 'google' | 'github') {
+async function setOAuthProvider(provider: 'google' | 'github') {
   const cookieStore = await cookies();
-  cookieStore.set(`${OAUTH_STATE_COOKIE}`, state, {
+  cookieStore.set(OAUTH_PROVIDER_COOKIE, provider, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    maxAge: OAUTH_STATE_MAX_AGE,
+    maxAge: OAUTH_PROVIDER_MAX_AGE,
     path: '/',
   });
-  cookieStore.set(`${OAUTH_PROVIDER_COOKIE}`, provider, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: OAUTH_STATE_MAX_AGE,
-    path: '/',
-  });
-}
-
-/**
- * Get OAuth state from cookie
- */
-export async function getOAuthState(): Promise<string | null> {
-  const cookieStore = await cookies();
-  const state = cookieStore.get(OAUTH_STATE_COOKIE);
-  return state?.value || null;
 }
 
 /**
  * Get OAuth provider from cookie
  */
-async function getOAuthProvider(): Promise<'google' | 'github' | null> {
+export async function getOAuthProvider(): Promise<'google' | 'github' | null> {
   const cookieStore = await cookies();
   const provider = cookieStore.get(OAUTH_PROVIDER_COOKIE);
   const value = provider?.value;
@@ -62,20 +37,20 @@ async function getOAuthProvider(): Promise<'google' | 'github' | null> {
 }
 
 /**
- * Delete OAuth state and provider cookies after validation
+ * Delete OAuth provider cookie after use
  */
-export async function deleteOAuthCookies() {
+export async function deleteOAuthProvider() {
   const cookieStore = await cookies();
-  cookieStore.delete(OAUTH_STATE_COOKIE);
   cookieStore.delete(OAUTH_PROVIDER_COOKIE);
 }
 
 /**
- * Initiate Google OAuth login with state parameter
+ * Initiate Google OAuth login
+ * Logto handles state parameter internally, so we don't add our own
  */
 export async function initiateGoogleLogin() {
-  const state = generateState();
-  await setOAuthState(state, 'google');
+  // Store provider for tracking (optional, for analytics/logging)
+  await setOAuthProvider('google');
 
   const signInUrl = new URL(`${logtoConfig.endpoint}oidc/auth`);
   signInUrl.searchParams.set('client_id', logtoConfig.appId);
@@ -84,17 +59,18 @@ export async function initiateGoogleLogin() {
   signInUrl.searchParams.set('scope', 'openid profile email');
   signInUrl.searchParams.set('prompt', 'consent');
   signInUrl.searchParams.set('interaction_hint', 'google');
-  signInUrl.searchParams.set('state', state);
+  // Note: We don't add 'state' parameter - Logto handles it internally
 
   redirect(signInUrl.toString());
 }
 
 /**
- * Initiate GitHub OAuth login with state parameter
+ * Initiate GitHub OAuth login
+ * Logto handles state parameter internally, so we don't add our own
  */
 export async function initiateGitHubLogin() {
-  const state = generateState();
-  await setOAuthState(state, 'github');
+  // Store provider for tracking (optional, for analytics/logging)
+  await setOAuthProvider('github');
 
   const signInUrl = new URL(`${logtoConfig.endpoint}oidc/auth`);
   signInUrl.searchParams.set('client_id', logtoConfig.appId);
@@ -103,43 +79,8 @@ export async function initiateGitHubLogin() {
   signInUrl.searchParams.set('scope', 'openid profile email');
   signInUrl.searchParams.set('prompt', 'consent');
   signInUrl.searchParams.set('interaction_hint', 'github');
-  signInUrl.searchParams.set('state', state);
+  // Note: We don't add 'state' parameter - Logto handles it internally
 
   redirect(signInUrl.toString());
-}
-
-/**
- * Validate OAuth state parameter from callback
- * Returns the provider if state is valid, null otherwise
- */
-export async function validateOAuthState(
-  receivedState: string | null,
-): Promise<'google' | 'github' | null> {
-  if (!receivedState) {
-    return null;
-  }
-
-  const storedState = await getOAuthState();
-  if (!storedState) {
-    return null;
-  }
-
-  // Use constant-time comparison to prevent timing attacks
-  const isValid = crypto.timingSafeEqual(
-    Buffer.from(receivedState),
-    Buffer.from(storedState),
-  );
-
-  if (!isValid) {
-    return null;
-  }
-
-  // Get the provider from cookie
-  const provider = await getOAuthProvider();
-  
-  // Delete the state and provider cookies after successful validation
-  await deleteOAuthCookies();
-
-  return provider;
 }
 
