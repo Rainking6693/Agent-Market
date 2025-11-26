@@ -6,10 +6,11 @@
       "@/*": ["./src/*"],
       "@agent-market/sdk": ["../../packages/sdk/src"],
 
-      // This is the correct one for your project (shadcn style)
-      "@/components/*": ["../../packages/shadcn/components/*"],
-      "@/lib/*": ["../../packages/shadcn/lib/*"],
-      "@/hooks/*": ["../../packages/shadcn/hooks/*"]
+      // THIS IS THE REAL PATH IN YOUR REPO
+      "@/components/*": ["../../packages/shadcn/src/components/*"],
+      "@/components/ui/*": ["../../packages/shadcn/src/components/ui/*"],
+      "@/lib/*": ["../../packages/shadcn/src/lib/*"],
+      "@/hooks/*": ["../../packages/shadcn/src/hooks/*"]
     },
     "types": ["@types/node"],
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -28,7 +29,8 @@
     "src/**/*",
     "src/**/*.tsx",
     "next.config.mjs",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "../../packages/shadcn/src/**/*"
   ],
   "exclude": ["node_modules"]
 }
