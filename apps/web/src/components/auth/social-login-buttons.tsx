@@ -6,12 +6,12 @@ import { Button } from '@/components/ui/button';
 export function SocialLoginButtons() {
   const handleSocialLogin = async (provider: 'google' | 'github') => {
     try {
-      // Use server action to generate state and initiate OAuth
-      if (provider === 'google') {
-        await initiateGoogleLogin();
-      } else {
-        await initiateGitHubLogin();
-      }
+      // Use server action to get OAuth URL, then redirect client-side
+      const oauthUrl =
+        provider === 'google' ? await initiateGoogleLogin() : await initiateGitHubLogin();
+      
+      // Perform client-side redirect
+      window.location.href = oauthUrl;
     } catch (error) {
       console.error(`Failed to initiate ${provider} login:`, error);
     }

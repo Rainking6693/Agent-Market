@@ -1,7 +1,6 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 
 import { logtoConfig } from '../logto';
 
@@ -47,8 +46,9 @@ export async function deleteOAuthProvider() {
 /**
  * Initiate Google OAuth login
  * Logto handles state parameter internally, so we don't add our own
+ * Returns the OAuth URL for client-side redirect
  */
-export async function initiateGoogleLogin() {
+export async function initiateGoogleLogin(): Promise<string> {
   // Store provider for tracking (optional, for analytics/logging)
   await setOAuthProvider('google');
 
@@ -61,14 +61,15 @@ export async function initiateGoogleLogin() {
   signInUrl.searchParams.set('interaction_hint', 'google');
   // Note: We don't add 'state' parameter - Logto handles it internally
 
-  redirect(signInUrl.toString());
+  return signInUrl.toString();
 }
 
 /**
  * Initiate GitHub OAuth login
  * Logto handles state parameter internally, so we don't add our own
+ * Returns the OAuth URL for client-side redirect
  */
-export async function initiateGitHubLogin() {
+export async function initiateGitHubLogin(): Promise<string> {
   // Store provider for tracking (optional, for analytics/logging)
   await setOAuthProvider('github');
 
@@ -81,6 +82,6 @@ export async function initiateGitHubLogin() {
   signInUrl.searchParams.set('interaction_hint', 'github');
   // Note: We don't add 'state' parameter - Logto handles it internally
 
-  redirect(signInUrl.toString());
+  return signInUrl.toString();
 }
 
