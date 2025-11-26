@@ -6,12 +6,10 @@
       "@/*": ["./src/*"],
       "@agent-market/sdk": ["../../packages/sdk/src"],
 
-      // These three lines fix the Vercel build error
-      "@/components/*": ["../../packages/ui/components/*"],
-      "@/lib/*": ["../../packages/ui/lib/*"],
-      "@/hooks/*": ["../../packages/ui/hooks/*"]
-      // Add more lines here if you have other folders inside packages/ui
-      // e.g. "@/utils/*": ["../../packages/ui/utils/*"]
+      // This is the correct one for your project (shadcn style)
+      "@/components/*": ["../../packages/shadcn/components/*"],
+      "@/lib/*": ["../../packages/shadcn/lib/*"],
+      "@/hooks/*": ["../../packages/shadcn/hooks/*"]
     },
     "types": ["@types/node"],
     "lib": ["dom", "dom.iterable", "esnext"],
