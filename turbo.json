@@ -1,20 +1,12 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "tasks": {
+  "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "build/**"]
+      "outputs": [".next/**", "dist/**", "build/**"]
     },
     "dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "lint": {
-      "outputs": []
-    },
-    "test": {
-      "outputs": ["coverage/**"]
+      "cache": false
     }
-  },
-  "globalEnv": ["NEXT_PUBLIC_APP_URL", "NEXT_PUBLIC_API_URL"]
+  }
 }
