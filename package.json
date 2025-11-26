@@ -1,6 +1,26 @@
 {
   "name": "agent-market",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "turbo": {
+    "pipeline": {
+      "build": {
+        "dependsOn": [
+          "^build"
+        ],
+        "outputs": [
+          ".next/**",
+          "dist/**"
+        ]
+      },
+      "dev": {
+        "cache": false
+      }
+    }
+  },
   "version": "0.1.0",
   "description": "AgentMarket monorepo for agent-to-agent marketplace MVP",
   "license": "MIT",
