@@ -27,7 +27,7 @@ function getBaseUrl() {
 }
 
 export const logtoConfig = {
-  endpoint: process.env.LOGTO_ENDPOINT || 'https://4yl56u.logto.app/',
+  endpoint: process.env.LOGTO_ENDPOINT || 'https://wbeku3.logto.app/',
   appId: process.env.LOGTO_APP_ID || '6spemk59pwj9csi6b9i46',
   appSecret: process.env.LOGTO_APP_SECRET || 's9ocgmCjFj8Mzjmfk2wNmQbX5Us5Y2gz',
   baseUrl: getBaseUrl(),
