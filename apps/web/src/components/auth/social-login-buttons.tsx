@@ -1,22 +1,17 @@
 'use client';
 
-import { logtoConfig } from '@/app/logto';
+import { initiateGitHubLogin, initiateGoogleLogin } from '@/app/actions/oauth';
 import { Button } from '@/components/ui/button';
 
 export function SocialLoginButtons() {
   const handleSocialLogin = async (provider: 'google' | 'github') => {
     try {
-      // Use Logto's signIn with interaction hint for provider
-      // Logto will redirect to their hosted page with the provider pre-selected
-      const signInUrl = new URL(`${logtoConfig.endpoint}oidc/auth`);
-      signInUrl.searchParams.set('client_id', logtoConfig.appId);
-      signInUrl.searchParams.set('redirect_uri', `${logtoConfig.baseUrl}/callback`);
-      signInUrl.searchParams.set('response_type', 'code');
-      signInUrl.searchParams.set('scope', 'openid profile email');
-      signInUrl.searchParams.set('prompt', 'consent');
-      signInUrl.searchParams.set('interaction_hint', provider);
-      
-      window.location.href = signInUrl.toString();
+      // Use server action to generate state and initiate OAuth
+      if (provider === 'google') {
+        await initiateGoogleLogin();
+      } else {
+        await initiateGitHubLogin();
+      }
     } catch (error) {
       console.error(`Failed to initiate ${provider} login:`, error);
     }
