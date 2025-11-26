@@ -1,37 +1,61 @@
-"""
-Backend Revenue API Tests - Ported from Genesis-Rebuild
+from pathlib import Path
+import sys
 
-Tests revenue-related API endpoints:
-- Revenue metrics
-- Analytics data
-- Business performance
-"""
+from fastapi.testclient import TestClient
 
-from __future__ import annotations
+# Ensure backend package is importable
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+BACKEND_ROOT = PROJECT_ROOT / "genesis-dashboard"
+if str(BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(BACKEND_ROOT))
 
-import pytest
-from typing import Dict
-
-from agentmarket_testkit.sdk import AgentMarketSDK
+from backend.api import app  # type: ignore  # noqa: E402
 
 
-class TestRevenueAPI:
-    """"Test suite for revenue API endpoints"""
+client = TestClient(app)
 
-    def test_revenue_metrics_endpoint(self):
-        """Test revenue metrics endpoint"""
-        # This would test the revenue metrics endpoint
-        # Actual implementation would depend on AgentMarket's API structure
-        assert True
 
-    def test_revenue_analytics_endpoint(self):
-        """Test revenue analytics endpoint"""
-        # This would test the revenue analytics endpoint
-        # Actual implementation would depend on AgentMarket's API structure
-        assert True
+def test_revenue_metrics_endpoint():
+    response = client.get("/api/revenue/metrics")
+    assert response.status_code == 200
+    payload = response.json()
 
-    def test_business_performance_endpoint(self):
-        """Test business performance endpoint"""
-        # This would test the business performance endpoint
-        # Actual implementation would depend on AgentMarket's API structure
-        assert True
+    assert "metrics" in payload
+    assert "businesses" in payload
+    assert "trends" in payload
+
+    metrics = payload["metrics"]
+    assert metrics["total_revenue"] >= 0
+    assert metrics["mrr"] >= 0
+    assert isinstance(metrics["last_updated"], str)
+
+    businesses = payload["businesses"]
+    assert businesses, "expected at least one business entry"
+    required_keys = {
+        "business_id",
+        "business_name",
+        "business_type",
+        "revenue_total",
+        "revenue_current_month",
+        "projected_mrr",
+        "confidence_score",
+        "payment_count",
+        "status",
+    }
+    for entry in businesses:
+        assert required_keys.issubset(entry.keys())
+
+
+def test_revenue_analytics_endpoint():
+    response = client.get("/api/revenue/analytics")
+    assert response.status_code == 200
+    payload = response.json()
+
+    assert "roi_by_business" in payload
+    assert payload["roi_by_business"], "expected ROI entries"
+    assert "revenue_forecast" in payload
+    assert payload["revenue_forecast"], "expected forecast entries"
+
+    churn = payload["churn_analysis"]
+    assert churn["total_businesses"] >= churn["active_businesses"]
+    assert 0 <= churn["retention_rate"] <= 100

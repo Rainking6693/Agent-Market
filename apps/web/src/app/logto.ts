@@ -28,8 +28,8 @@ function getBaseUrl() {
 
 export const logtoConfig = {
   endpoint: process.env.LOGTO_ENDPOINT || 'https://wbeku3.logto.app/',
-  appId: process.env.LOGTO_APP_ID || '6spemk59pwj9csi6b9i46',
-  appSecret: process.env.LOGTO_APP_SECRET || 's9ocgmCjFj8Mzjmfk2wNmQbX5Us5Y2gz',
+  appId: process.env.LOGTO_APP_ID || 'gkwlntczeh35ranqz3jl8',
+  appSecret: process.env.LOGTO_APP_SECRET || 'ZSXIjNZ4sxPUlU78h8rU68k47A7O7vs7',
   baseUrl: getBaseUrl(),
   cookieSecret:
     process.env.LOGTO_COOKIE_SECRET || 'HNT0jWSyAGYkf3DAaUgpIUgfJdY7jwMW',

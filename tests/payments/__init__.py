@@ -1,0 +1,2 @@
+"""Payment infrastructure tests."""
+
