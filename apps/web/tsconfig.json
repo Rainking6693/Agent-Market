@@ -4,13 +4,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@agent-market/sdk": ["../../packages/sdk/src"],
-
-      // THIS IS THE REAL PATH IN YOUR REPO
-      "@/components/*": ["../../packages/shadcn/src/components/*"],
-      "@/components/ui/*": ["../../packages/shadcn/src/components/ui/*"],
-      "@/lib/*": ["../../packages/shadcn/src/lib/*"],
-      "@/hooks/*": ["../../packages/shadcn/src/hooks/*"]
+      "@agent-market/sdk": ["../../packages/sdk/src"]
     },
     "types": ["@types/node"],
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -29,8 +23,7 @@
     "src/**/*",
     "src/**/*.tsx",
     "next.config.mjs",
-    ".next/types/**/*.ts",
-    "../../packages/shadcn/src/**/*"
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
