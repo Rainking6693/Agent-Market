@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { NextRequest } from 'next/server';
 
 import { deleteOAuthProvider, getOAuthProvider } from '../actions/oauth';
-import { logtoConfig } from '../logto';
+import { logtoConfig, isLogtoConfigured } from '../logto';
 
 /**
  * OAuth callback route handler
@@ -12,6 +12,13 @@ import { logtoConfig } from '../logto';
  * Note: Logto handles state parameter validation internally via handleSignIn
  */
 export async function GET(request: NextRequest) {
+  // Check if Logto is properly configured
+  if (!isLogtoConfigured) {
+    console.error('Logto callback received but Logto is not properly configured');
+    redirect('/auth/error?message=' + encodeURIComponent('Authentication service is not configured. Please contact support.'));
+    return;
+  }
+
   const searchParams = request.nextUrl.searchParams;
 
   // Enhanced logging for debugging OAuth callback issues
@@ -29,6 +36,7 @@ export async function GET(request: NextRequest) {
     hasState: !!state,
     hasCode: !!code,
     hasError: !!error,
+    isLogtoConfigured,
     logtoConfig: {
       endpoint: logtoConfig.endpoint,
       appId: logtoConfig.appId,

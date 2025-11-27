@@ -4,7 +4,7 @@ import { signIn } from '@logto/next/server-actions';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { logtoConfig } from '../logto';
+import { logtoConfig, isLogtoConfigured } from '../logto';
 
 const OAUTH_PROVIDER_COOKIE = 'oauth_provider';
 const OAUTH_PROVIDER_MAX_AGE = 600; // 10 minutes
@@ -87,6 +87,13 @@ function getRedirectUri(): string {
  * CRITICAL: This must be called only once per click to prevent empty state
  */
 export async function initiateGoogleLogin() {
+  // Check if Logto is properly configured
+  if (!isLogtoConfigured) {
+    console.error('Logto is not properly configured. Please check your environment variables.');
+    redirect('/auth/error?message=' + encodeURIComponent('Authentication service is not configured. Please contact support.'));
+    return;
+  }
+
   // Store provider for tracking
   await setOAuthProvider('google');
 
@@ -98,6 +105,7 @@ export async function initiateGoogleLogin() {
     baseUrl: logtoConfig.baseUrl,
     endpoint: logtoConfig.endpoint,
     nodeEnv: process.env.NODE_ENV,
+    isConfigured: isLogtoConfigured,
   });
 
   // Validate redirectUri is not empty (critical for state generation)
@@ -105,16 +113,23 @@ export async function initiateGoogleLogin() {
     throw new Error('Redirect URI cannot be empty - this would cause empty state parameter');
   }
 
-  // Use Logto's signIn() function which handles state and PKCE automatically
-  // Note: Logto SDK's signIn() handles state generation internally
-  // If interaction_hint is needed, user will select Google on Logto's sign-in page
-  await signIn(logtoConfig, {
-    redirectUri,
-  });
-  
-  // signIn() will redirect via Next.js redirect(), so this line should never execute
-  // But we include it as a fallback
-  redirect(redirectUri);
+  try {
+    // Use Logto's signIn() function which handles state and PKCE automatically
+    // Note: Logto SDK's signIn() handles state generation internally
+    // If interaction_hint is needed, user will select Google on Logto's sign-in page
+    await signIn(logtoConfig, {
+      redirectUri,
+    });
+    
+    // signIn() will redirect via Next.js redirect(), so this line should never execute
+    // But we include it as a fallback
+    redirect(redirectUri);
+  } catch (error) {
+    console.error('Failed to initiate Google login:', error);
+    await deleteOAuthProvider();
+    const errorMessage = error instanceof Error ? error.message : 'Failed to initiate Google login';
+    redirect('/auth/error?message=' + encodeURIComponent(errorMessage));
+  }
 }
 
 /**
@@ -124,6 +139,13 @@ export async function initiateGoogleLogin() {
  * CRITICAL: This must be called only once per click to prevent empty state
  */
 export async function initiateGitHubLogin() {
+  // Check if Logto is properly configured
+  if (!isLogtoConfigured) {
+    console.error('Logto is not properly configured. Please check your environment variables.');
+    redirect('/auth/error?message=' + encodeURIComponent('Authentication service is not configured. Please contact support.'));
+    return;
+  }
+
   // Store provider for tracking
   await setOAuthProvider('github');
 
@@ -135,6 +157,7 @@ export async function initiateGitHubLogin() {
     baseUrl: logtoConfig.baseUrl,
     endpoint: logtoConfig.endpoint,
     nodeEnv: process.env.NODE_ENV,
+    isConfigured: isLogtoConfigured,
   });
 
   // Validate redirectUri is not empty (critical for state generation)
@@ -142,13 +165,20 @@ export async function initiateGitHubLogin() {
     throw new Error('Redirect URI cannot be empty - this would cause empty state parameter');
   }
 
-  // Use Logto's signIn() function which handles state and PKCE automatically
-  await signIn(logtoConfig, {
-    redirectUri,
-  });
-  
-  // signIn() will redirect via Next.js redirect(), so this line should never execute
-  // But we include it as a fallback
-  redirect(redirectUri);
+  try {
+    // Use Logto's signIn() function which handles state and PKCE automatically
+    await signIn(logtoConfig, {
+      redirectUri,
+    });
+    
+    // signIn() will redirect via Next.js redirect(), so this line should never execute
+    // But we include it as a fallback
+    redirect(redirectUri);
+  } catch (error) {
+    console.error('Failed to initiate GitHub login:', error);
+    await deleteOAuthProvider();
+    const errorMessage = error instanceof Error ? error.message : 'Failed to initiate GitHub login';
+    redirect('/auth/error?message=' + encodeURIComponent(errorMessage));
+  }
 }
 
