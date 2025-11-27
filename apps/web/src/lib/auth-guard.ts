@@ -1,8 +1,8 @@
-import { getLogtoContext } from '@logto/next/server-actions';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth';
 
-import { logtoConfig } from '@/app/logto';
+import { authOptions } from '@/lib/auth-options';
 
 export interface AuthUser {
     id: string;
@@ -12,7 +12,7 @@ export interface AuthUser {
 
 /**
  * Server-side authentication guard
- * Checks both JWT token (email/password) and Logto (OAuth) authentication
+ * Checks both JWT token (email/password) and NextAuth (OAuth) authentication
  * Redirects to login if not authenticated
  */
 export async function requireAuth(redirectTo?: string) {
@@ -24,14 +24,10 @@ export async function requireAuth(redirectTo?: string) {
         return jwtToken;
     }
 
-    // Check Logto authentication (OAuth - Google/GitHub)
-    try {
-        const { isAuthenticated: logtoAuth } = await getLogtoContext(logtoConfig);
-        if (logtoAuth) {
-            return 'logto'; // Return indicator that user is authenticated via Logto
-        }
-    } catch (error) {
-        console.error('Logto auth check failed:', error);
+    // Check NextAuth session (OAuth - Google/GitHub)
+    const session = await getServerSession(authOptions);
+    if (session) {
+        return 'nextauth';
     }
 
     // Not authenticated by either method
@@ -41,7 +37,7 @@ export async function requireAuth(redirectTo?: string) {
 
 /**
  * Check if user is authenticated without redirecting
- * Checks both JWT and Logto authentication
+ * Checks both JWT and NextAuth authentication
  */
 export async function isAuthenticated(): Promise<boolean> {
     const cookieStore = await cookies();
@@ -51,18 +47,13 @@ export async function isAuthenticated(): Promise<boolean> {
         return true;
     }
 
-    // Check Logto authentication
-    try {
-        const { isAuthenticated: logtoAuth } = await getLogtoContext(logtoConfig);
-        return logtoAuth;
-    } catch {
-        return false;
-    }
+    const session = await getServerSession(authOptions);
+    return Boolean(session);
 }
 
 /**
  * Get current authenticated user
- * Checks both JWT token and Logto claims
+ * Checks both JWT token and NextAuth session
  * Returns null if not authenticated or token is invalid
  */
 export async function getCurrentUser(): Promise<AuthUser | null> {
@@ -86,18 +77,14 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
         }
     }
 
-    // Try Logto authentication (OAuth)
-    try {
-        const { isAuthenticated: logtoAuth, claims } = await getLogtoContext(logtoConfig);
-        if (logtoAuth && claims) {
-            return {
-                id: claims.sub || '',
-                email: (claims.email as string) || '',
-                displayName: (claims.name as string) || (claims.username as string) || '',
-            };
-        }
-    } catch (error) {
-        console.error('Failed to get Logto context:', error);
+    // Try NextAuth session (OAuth)
+    const session = await getServerSession(authOptions);
+    if (session?.user?.email) {
+        return {
+            id: session.user.id || session.user.email,
+            email: session.user.email,
+            displayName: session.user.name || session.user.email,
+        };
     }
 
     return null;

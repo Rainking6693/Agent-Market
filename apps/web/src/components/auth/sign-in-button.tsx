@@ -1,9 +1,9 @@
 'use client';
 
 import { Loader2 } from 'lucide-react';
+import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 
-import { handleSignIn } from '@/app/actions/auth';
 import { Button } from '@/components/ui/button';
 
 export function SignInButton() {
@@ -12,8 +12,7 @@ export function SignInButton() {
   const onSignIn = async () => {
     setIsLoading(true);
     try {
-      await handleSignIn();
-      // handleSignIn will redirect, so we don't need to reset loading state
+      await signIn(undefined, { callbackUrl: '/dashboard' });
     } catch (error) {
       console.error('Sign in failed:', error);
       setIsLoading(false);

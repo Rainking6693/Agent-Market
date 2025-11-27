@@ -1,83 +1,54 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
-import { getAuthStatus, handleSignOut } from '@/app/actions/auth';
-import { clearStoredAuth } from '@/lib/auth';
+import { clearStoredAuth, getStoredAuth } from '@/lib/auth';
 import { AUTH_TOKEN_KEY } from '@/lib/constants';
 import { useAuthStore } from '@/stores/auth-store';
 
 export function useAuth() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const { user, token, setAuth, clearAuth } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Check auth status on mount and periodically
+  const sessionUser =
+    session?.user?.email && session?.user
+      ? {
+          id: session.user.id || session.user.email,
+          email: session.user.email,
+          displayName: session.user.name || session.user.email,
+        }
+      : null;
+
+  // Keep local store in sync with NextAuth session or JWT login
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        // First check if we have a JWT token in localStorage
-        const storedToken = typeof window !== 'undefined' ? window.localStorage.getItem(AUTH_TOKEN_KEY) : null;
-        
-        if (storedToken && user) {
-          // We have a token and user in store, consider authenticated
-          setIsAuthenticated(true);
-          setIsLoading(false);
-          return;
-        }
+    const stored = getStoredAuth();
 
-        // If no token, check Logto (for social login users)
-        try {
-          const { isAuthenticated: authStatus, user: authUser } = await getAuthStatus();
-          setIsAuthenticated(authStatus);
-          if (authStatus && authUser) {
-            setAuth(authUser, ''); // Logto handles tokens via cookies
-          } else if (!storedToken) {
-            clearAuth();
-          }
-        } catch {
-          // Logto check failed, but we might still have JWT auth
-          if (!storedToken) {
-            clearAuth();
-            setIsAuthenticated(false);
-          }
-        }
-      } catch (error) {
-        console.error('Failed to check auth status:', error);
-        const storedToken = typeof window !== 'undefined' ? window.localStorage.getItem(AUTH_TOKEN_KEY) : null;
-        if (!storedToken) {
-          clearAuth();
-          setIsAuthenticated(false);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    if (status === 'authenticated' && sessionUser) {
+      setAuth(sessionUser, '');
+      setIsLoading(false);
+      return;
+    }
 
-    checkAuth();
+    if (stored) {
+      setAuth(stored.user, stored.token);
+    } else if (status === 'unauthenticated') {
+      clearAuth();
+      clearStoredAuth();
+    }
 
-    // Check auth status every 30 seconds
-    const interval = setInterval(checkAuth, 30000);
-    return () => clearInterval(interval);
-  }, [setAuth, clearAuth, user]);
+    setIsLoading(status === 'loading');
+  }, [status, sessionUser, setAuth, clearAuth]);
 
   const logout = async () => {
     try {
-      // Clear JWT token from localStorage and cookie
       clearStoredAuth();
 
-      // Try Logto logout (for social login users)
-      try {
-        await handleSignOut();
-      } catch {
-        // Ignore Logto logout errors
-      }
-
       clearAuth();
-      setIsAuthenticated(false);
-      router.push('/');
+      await signOut({ callbackUrl: '/' });
     } catch (error) {
       console.error('Logout failed:', error);
       clearAuth();
@@ -86,10 +57,15 @@ export function useAuth() {
     }
   };
 
+  const localToken =
+    typeof window !== 'undefined' ? window.localStorage.getItem(AUTH_TOKEN_KEY) : null;
+  const isAuthenticated =
+    status === 'authenticated' || !!sessionUser || !!token || !!localToken;
+
   return {
-    user,
-    token: token || (typeof window !== 'undefined' ? window.localStorage.getItem(AUTH_TOKEN_KEY) : null),
-    isAuthenticated: isAuthenticated || !!user,
+    user: sessionUser || user,
+    token: token || localToken,
+    isAuthenticated,
     isLoading,
     login: () => {
       // Login is handled by EmailLoginForm or SocialLoginButtons

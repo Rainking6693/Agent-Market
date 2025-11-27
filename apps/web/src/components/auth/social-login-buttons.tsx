@@ -1,8 +1,8 @@
 'use client';
 
+import { signIn } from 'next-auth/react';
 import { useRef, useState } from 'react';
 
-import { initiateGitHubLogin, initiateGoogleLogin } from '@/app/actions/oauth';
 import { Button } from '@/components/ui/button';
 
 export function SocialLoginButtons() {
@@ -21,18 +21,7 @@ export function SocialLoginButtons() {
     setIsLoading(true);
 
     try {
-      console.log(`Initiating ${provider} login, current location:`, window.location.href);
-      
-      // Call server action which uses Logto's signIn() function
-      // This properly handles state generation and will redirect
-      if (provider === 'google') {
-        await initiateGoogleLogin();
-      } else {
-        await initiateGitHubLogin();
-      }
-      
-      // Note: The server action will redirect, so we shouldn't reach here
-      // But if we do, it means something went wrong
+      await signIn(provider, { callbackUrl: '/dashboard' });
     } catch (error) {
       console.error(`Failed to initiate ${provider} login:`, error);
       isProcessingRef.current = false;
