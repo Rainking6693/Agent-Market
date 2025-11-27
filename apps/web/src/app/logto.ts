@@ -26,10 +26,23 @@ function getBaseUrl() {
   return window.location.origin;
 }
 
+// Validate required environment variables
+function validateLogtoConfig() {
+  const required = ['LOGTO_ENDPOINT', 'LOGTO_APP_ID', 'LOGTO_APP_SECRET'];
+  const missing = required.filter(key => !process.env[key]);
+  
+  if (missing.length > 0) {
+    console.error('Missing required Logto environment variables:', missing);
+    console.error('Please set up your Logto instance and configure these variables in .env.local');
+    return false;
+  }
+  return true;
+}
+
 export const logtoConfig = {
-  endpoint: process.env.LOGTO_ENDPOINT || 'https://wbeku3.logto.app/',
-  appId: process.env.LOGTO_APP_ID || 'gkwlntczeh35ranqz3jl8',
-  appSecret: process.env.LOGTO_APP_SECRET || 'ZSXIjNZ4sxPUlU78h8rU68k47A7O7vs7',
+  endpoint: process.env.LOGTO_ENDPOINT || 'https://demo.logto.app/',
+  appId: process.env.LOGTO_APP_ID || 'demo_app_id',
+  appSecret: process.env.LOGTO_APP_SECRET || 'demo_app_secret',
   baseUrl: getBaseUrl(),
   cookieSecret:
     process.env.LOGTO_COOKIE_SECRET || 'HNT0jWSyAGYkf3DAaUgpIUgfJdY7jwMW',
@@ -37,3 +50,6 @@ export const logtoConfig = {
   // Note: @logto/next SDK handles cookies internally via Next.js cookies() API
   // Cookie domain is set in server actions using cookies().set() with domain option
 };
+
+// Check configuration on module load
+export const isLogtoConfigured = validateLogtoConfig();
