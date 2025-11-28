@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+
 import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 
@@ -21,8 +23,19 @@ const githubClientId =
 const githubClientSecret =
   process.env.GITHUB_SECRET ?? process.env.GITHUB_CLIENT_SECRET;
 
+const nextAuthSecret =
+  process.env.NEXTAUTH_SECRET ??
+  process.env.JWT_SECRET ??
+  crypto.randomBytes(32).toString('hex');
+
+if (!process.env.NEXTAUTH_SECRET) {
+  console.warn(
+    'NEXTAUTH_SECRET is not set; using fallback secret. Set NEXTAUTH_SECRET in your environment for stable sessions.',
+  );
+}
+
 export const authOptions: NextAuthOptions = {
-  secret: requireEnv(process.env.NEXTAUTH_SECRET, 'NEXTAUTH_SECRET'),
+  secret: nextAuthSecret,
   session: {
     strategy: 'jwt',
   },
