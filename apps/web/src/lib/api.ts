@@ -210,4 +210,97 @@ export const walletsApi = {
       .json(),
 };
 
+export interface TestSuite {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  category: string;
+  recommendedAgentTypes: string[];
+  estimatedDurationSec: number;
+  approximateCostUsd: number;
+  isRecommended: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TestRun {
+  id: string;
+  agentId: string;
+  suiteId: string;
+  userId: string;
+  status: 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
+  score: number | null;
+  startedAt: string | null;
+  completedAt: string | null;
+  rawResults: unknown;
+  metadata: unknown;
+  suite: {
+    id: string;
+    name: string;
+    slug: string;
+    category: string;
+  };
+  agent: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TestRunListResponse {
+  runs: TestRun[];
+  total: number;
+}
+
+export interface StartTestRunPayload {
+  agentId: string | string[];
+  suiteId: string | string[];
+}
+
+export interface StartTestRunResponse {
+  runs: Array<{ id: string; agentId: string; suiteId: string }>;
+}
+
+export const testingApi = {
+  listSuites: (params?: { category?: string; recommended?: boolean }) =>
+    api
+      .get('api/v1/test-suites', {
+        searchParams: {
+          ...(params?.category ? { category: params.category } : {}),
+          ...(params?.recommended !== undefined ? { recommended: String(params.recommended) } : {}),
+        },
+      })
+      .json<TestSuite[]>(),
+  getRecommendedSuites: () => api.get('api/v1/test-suites/recommended').json<TestSuite[]>(),
+  startRun: (payload: StartTestRunPayload) =>
+    api
+      .post('api/v1/test-runs', {
+        json: payload,
+      })
+      .json<StartTestRunResponse>(),
+  getRun: (runId: string) => api.get(`api/v1/test-runs/${runId}`).json<TestRun>(),
+  listRuns: (params?: {
+    agentId?: string;
+    suiteId?: string;
+    status?: string;
+    limit?: number;
+    offset?: number;
+  }) =>
+    api
+      .get('api/v1/test-runs', {
+        searchParams: {
+          ...(params?.agentId ? { agentId: params.agentId } : {}),
+          ...(params?.suiteId ? { suiteId: params.suiteId } : {}),
+          ...(params?.status ? { status: params.status } : {}),
+          ...(params?.limit ? { limit: String(params.limit) } : {}),
+          ...(params?.offset ? { offset: String(params.offset) } : {}),
+        },
+      })
+      .json<TestRunListResponse>(),
+  cancelRun: (runId: string) => api.delete(`api/v1/test-runs/${runId}`).json<TestRun>(),
+};
+
 export { API_BASE_URL, api };

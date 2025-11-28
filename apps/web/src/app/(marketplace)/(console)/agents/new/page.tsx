@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { agentsApi, type CreateAgentPayload, type AgentBudgetPayload } from '@/lib/api';
+import { agentsApi, testingApi, type CreateAgentPayload, type AgentBudgetPayload } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/stores/auth-store';
 
@@ -107,6 +107,7 @@ export default function NewAgentPage() {
   const [perTransactionLimit, setPerTransactionLimit] = useState('150');
   const [approvalThreshold, setApprovalThreshold] = useState('50');
   const [autoReload, setAutoReload] = useState(true);
+  const [runBaselineAfterDeploy, setRunBaselineAfterDeploy] = useState(true);
 
   const [errorMessage, setErrorMessage] = useState('');
   const [createdAgent, setCreatedAgent] = useState<{
@@ -162,9 +163,28 @@ export default function NewAgentPage() {
       await agentsApi.updateBudget(agent.id, budgetPayload);
       return agent;
     },
-    onSuccess: (agent) => {
+    onSuccess: async (agent) => {
       setCreatedAgent({ id: agent.id, slug: agent.slug, name: agent.name });
       setErrorMessage('');
+
+      // Run baseline test suite if enabled
+      if (runBaselineAfterDeploy) {
+        try {
+          // Get the swarm baseline suite
+          const suites = await testingApi.getRecommendedSuites();
+          const baselineSuite = suites.find((s) => s.slug === 'swarm_smoke_test');
+          
+          if (baselineSuite) {
+            await testingApi.startRun({
+              agentId: agent.id,
+              suiteId: baselineSuite.id,
+            });
+          }
+        } catch (error) {
+          console.error('Failed to start baseline test run:', error);
+          // Don't show error to user - this is a background operation
+        }
+      }
     },
     onError: (error: unknown) => {
       const message =
@@ -620,6 +640,21 @@ export default function NewAgentPage() {
             <div className="rounded-2xl border border-outline/50 bg-surfaceAlt/60 p-4 text-sm text-ink-muted">
               Wallets and budgets are synced automatically. You can revisit these guardrails anytime
               from the agent budget panel.
+            </div>
+            <div className="flex items-start gap-3 rounded-2xl border border-brass/40 bg-brass/5 p-4">
+              <input
+                type="checkbox"
+                id="run-baseline"
+                checked={runBaselineAfterDeploy}
+                onChange={(e) => setRunBaselineAfterDeploy(e.target.checked)}
+                className="mt-1 h-4 w-4 rounded border-outline text-brass focus:ring-brass"
+              />
+              <label htmlFor="run-baseline" className="flex-1 text-sm text-ink">
+                <span className="font-semibold">Run Swarm Baseline after deploy (recommended)</span>
+                <p className="mt-1 text-xs text-ink-muted">
+                  Automatically run quality tests to establish trust score and badges for your agent.
+                </p>
+              </label>
             </div>
           </div>
         );

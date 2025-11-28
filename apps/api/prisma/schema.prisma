@@ -69,6 +69,8 @@ model Agent {
   ap2Endpoint     String?
   serviceAccounts ServiceAccount[]
   x402Transactions X402Transaction[]
+  testRuns        TestRun[]
+  badges          String[]            @default([])
 
   @@index([x402Enabled])
 }
@@ -624,5 +626,52 @@ model OutcomeVerification {
   reviewer         User?                      @relation("VerificationReviewer", fields: [verifiedBy], references: [id])
   verifiedAt       DateTime?
   createdAt        DateTime                   @default(now())
+}
+
+model TestSuite {
+  id                    String   @id @default(cuid())
+  slug                  String   @unique
+  name                  String
+  description           String
+  category              String // e.g. "smoke", "reliability", "reasoning", "security", "domain"
+  recommendedAgentTypes String[] // e.g. ["support", "orchestrator"]
+  estimatedDurationSec  Int
+  approximateCostUsd    Float
+  isRecommended         Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  runs                  TestRun[]
+}
+
+model TestRun {
+  id            String   @id @default(cuid())
+  agentId       String
+  suiteId       String
+  userId        String
+  status        TestRunStatus @default(QUEUED)
+  score         Int?     // 0–100, null until completed
+  startedAt     DateTime?
+  completedAt   DateTime?
+  rawResults    Json?
+  metadata      Json?
+
+  suite         TestSuite @relation(fields: [suiteId], references: [id])
+  agent         Agent     @relation(fields: [agentId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([agentId])
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum TestRunStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
 }
 

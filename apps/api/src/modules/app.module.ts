@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
+
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
 import { AgentsModule } from './agents/agents.module.js';
 import { AP2Module } from './ap2/ap2.module.js';
@@ -15,6 +16,7 @@ import { QualityModule } from './quality/quality.module.js';
 import { TrustModule } from './trust/trust.module.js';
 import { WorkflowsModule } from './workflows/workflows.module.js';
 import { X402Module } from './x402/x402.module.js';
+import { TestingModule } from '../testing/testing.module.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -39,6 +41,7 @@ const rootEnvPath = join(__dirname, '..', '..', '..', '..', '.env');
     AuthModule,
     HealthModule,
     X402Module,
+    TestingModule,
   ],
 })
 export class AppModule {}
