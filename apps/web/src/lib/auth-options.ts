@@ -5,34 +5,62 @@ import GoogleProvider from 'next-auth/providers/google';
 
 import type { NextAuthOptions } from 'next-auth';
 
-function requireEnv(value: string | undefined, name: string) {
-  if (!value) {
-    throw new Error(`${name} is not set`);
+function resolveEnv(
+  label: string,
+  keys: string[],
+  fallbackValue: string,
+) {
+  for (const key of keys) {
+    const val = process.env[key];
+    if (val) {
+      return val;
+    }
   }
-  return value;
-}
-
-const googleClientId =
-  process.env.GOOGLE_CLIENT_ID ?? process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
-
-const githubClientId =
-  process.env.GITHUB_ID ??
-  process.env.GITHUB_CLIENT_ID ??
-  process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
-const githubClientSecret =
-  process.env.GITHUB_SECRET ?? process.env.GITHUB_CLIENT_SECRET;
-
-const nextAuthSecret =
-  process.env.NEXTAUTH_SECRET ??
-  process.env.JWT_SECRET ??
-  crypto.randomBytes(32).toString('hex');
-
-if (!process.env.NEXTAUTH_SECRET) {
   console.warn(
-    'NEXTAUTH_SECRET is not set; using fallback secret. Set NEXTAUTH_SECRET in your environment for stable sessions.',
+    `[auth] ${label} is not set. Checked: ${keys.join(
+      ', ',
+    )}. Using fallback; set the real secret in env for production.`,
   );
+  return fallbackValue;
 }
+
+const googleClientId = resolveEnv(
+  'GOOGLE_CLIENT_ID',
+  [
+    'GOOGLE_CLIENT_ID',
+    'NEXT_PUBLIC_GOOGLE_CLIENT_ID',
+    'NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID',
+  ],
+  'missing-google-client-id',
+);
+
+const googleClientSecret = resolveEnv(
+  'GOOGLE_CLIENT_SECRET',
+  [
+    'GOOGLE_CLIENT_SECRET',
+    'GOOGLE_OAUTH_CLIENT_SECRET',
+    'NEXT_PUBLIC_GOOGLE_CLIENT_SECRET',
+  ],
+  'missing-google-client-secret',
+);
+
+const githubClientId = resolveEnv(
+  'GITHUB_CLIENT_ID',
+  ['GITHUB_ID', 'GITHUB_CLIENT_ID', 'NEXT_PUBLIC_GITHUB_CLIENT_ID'],
+  'missing-github-client-id',
+);
+
+const githubClientSecret = resolveEnv(
+  'GITHUB_CLIENT_SECRET',
+  ['GITHUB_SECRET', 'GITHUB_CLIENT_SECRET', 'NEXT_PUBLIC_GITHUB_CLIENT_SECRET'],
+  'missing-github-client-secret',
+);
+
+const nextAuthSecret = resolveEnv(
+  'NEXTAUTH_SECRET',
+  ['NEXTAUTH_SECRET', 'JWT_SECRET'],
+  crypto.randomBytes(32).toString('hex'),
+);
 
 export const authOptions: NextAuthOptions = {
   secret: nextAuthSecret,
@@ -41,18 +69,12 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     GoogleProvider({
-      clientId: requireEnv(googleClientId, 'GOOGLE_CLIENT_ID'),
-      clientSecret: requireEnv(
-        googleClientSecret,
-        'GOOGLE_CLIENT_SECRET',
-      ),
+      clientId: googleClientId,
+      clientSecret: googleClientSecret,
     }),
     GithubProvider({
-      clientId: requireEnv(githubClientId, 'GITHUB_CLIENT_ID'),
-      clientSecret: requireEnv(
-        githubClientSecret,
-        'GITHUB_CLIENT_SECRET',
-      ),
+      clientId: githubClientId,
+      clientSecret: githubClientSecret,
     }),
   ],
   callbacks: {
