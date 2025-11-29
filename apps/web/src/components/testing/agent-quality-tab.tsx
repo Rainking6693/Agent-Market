@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { testingApi, type TestRun } from '@/lib/api';
+import { testingApi, type TestRun, type Agent, type TestSuite } from '@/lib/api';
 
 import { TestWizardModal } from './test-wizard-modal';
 
@@ -20,8 +20,8 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
   const [runs, setRuns] = useState<TestRun[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isWizardOpen, setIsWizardOpen] = useState(false);
-  const [agents, setAgents] = useState<Array<{ id: string; name: string }>>([]);
-  const [suites, setSuites] = useState<Array<{ id: string; name: string; slug: string }>>([]);
+  const [agents, setAgents] = useState<Agent[]>([]);
+  const [suites, setSuites] = useState<TestSuite[]>([]);
 
   useEffect(() => {
     testingApi
@@ -40,10 +40,31 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
     if (isWizardOpen) {
       Promise.all([testingApi.listSuites()]).then(([suitesData]) => {
         setSuites(suitesData);
-        setAgents([{ id: agentId, name: agentName }]);
+        // Create a minimal Agent object for the wizard
+        const now = new Date().toISOString();
+        setAgents([
+          {
+            id: agentId,
+            slug: agentId,
+            name: agentName,
+            description: '',
+            status: 'APPROVED',
+            visibility: 'PUBLIC',
+            categories: [],
+            tags: [],
+            pricingModel: '',
+            creatorId: '',
+            createdAt: now,
+            updatedAt: now,
+            verificationStatus: 'VERIFIED',
+            trustScore,
+            successCount: 0,
+            failureCount: 0,
+          } as Agent,
+        ]);
       });
     }
-  }, [isWizardOpen, agentId, agentName]);
+  }, [isWizardOpen, agentId, agentName, trustScore]);
 
   const getStatusIcon = (status: TestRun['status']) => {
     switch (status) {

@@ -4,6 +4,8 @@ import { AUTH_TOKEN_KEY } from '@/lib/constants';
 
 import type { Agent } from '@agent-market/sdk';
 
+export type { Agent };
+
 export interface AgentBudgetSnapshot {
   agentId: string;
   walletId: string;

@@ -16,9 +16,9 @@ import { NegotiationRequestDto } from './dto/negotiation-request.dto.js';
 import { RespondNegotiationDto } from './dto/respond-negotiation.dto.js';
 import { ServiceDeliveryDto } from './dto/service-delivery.dto.js';
 import { AgentTransactionsQueryDto } from './dto/transactions-query.dto.js';
-import { AuthenticatedUser } from '../auth/auth.service.js';
 import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
+import { AuthenticatedUser } from '../auth/types.js';
 
 @Controller('ap2')
 @UseGuards(JwtAuthGuard)
