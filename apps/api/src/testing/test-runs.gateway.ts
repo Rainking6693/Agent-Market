@@ -21,12 +21,14 @@ export class TestRunsGateway implements OnGatewayConnection, OnGatewayDisconnect
   server: Server;
 
   private readonly logger = new Logger(TestRunsGateway.name);
-  private redis: Redis;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private redis: any;
   private subscribers: Map<string, Set<string>> = new Map(); // runId -> Set of socket IDs
 
   constructor() {
     // Initialize Redis subscriber
-    this.redis = new Redis({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.redis = new (Redis as any)({
       host: process.env.REDIS_HOST || 'localhost',
       port: parseInt(process.env.REDIS_PORT || '6379', 10),
       password: process.env.REDIS_PASSWORD,

@@ -8,11 +8,11 @@ import { PrismaService } from '../../modules/database/prisma.service.js';
 import { getSuiteBySlug } from '../suites/index.js';
 import { TestRunProgress, TestRunner } from '../types.js';
 
-
 export class RunTestSuiteWorker {
   private readonly logger = new Logger(RunTestSuiteWorker.name);
   private worker: Worker | null = null;
-  private redis: Redis | null = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private redis: any;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -28,7 +28,8 @@ export class RunTestSuiteWorker {
     }
 
     // Initialize Redis for pub/sub
-    this.redis = new Redis({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.redis = new (Redis as any)({
       host: process.env.REDIS_HOST || 'localhost',
       port: parseInt(process.env.REDIS_PORT || '6379', 10),
       password: process.env.REDIS_PASSWORD,
@@ -58,7 +59,8 @@ export class RunTestSuiteWorker {
       this.logger.error(`Test run ${job?.id} failed: ${err.message}`);
     });
     // Initialize Redis for pub/sub
-    this.redis = new Redis({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.redis = new (Redis as any)({
       host: process.env.REDIS_HOST || 'localhost',
       port: parseInt(process.env.REDIS_PORT || '6379', 10),
       password: process.env.REDIS_PASSWORD,
@@ -187,12 +189,21 @@ export class RunTestSuiteWorker {
           // Dynamically import and run the test
           const testModule = await testDef.runner();
           // Handle both module with default export and direct TestRunner
-          let testRunner: TestRunner =
-            'default' in testModule ? (testModule.default as TestRunner) : (testModule as TestRunner);
-
-          // If it's a class constructor, instantiate it with dependencies
-          if (typeof testRunner === 'function' && testRunner.prototype && testRunner.prototype.run) {
-            testRunner = new testRunner(this.agentsService);
+          const testRunnerOrModule = 'default' in testModule ? testModule.default : testModule;
+          
+          // Extract the actual TestRunner instance
+          // If it's already an instance (has run method), use it directly
+          // If it's a class constructor, instantiate it
+          let testRunner: TestRunner;
+          if (typeof testRunnerOrModule === 'object' && testRunnerOrModule !== null && 'run' in testRunnerOrModule) {
+            // It's already an instance
+            testRunner = testRunnerOrModule as TestRunner;
+          } else if (typeof testRunnerOrModule === 'function') {
+            // It's a class constructor, instantiate it
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            testRunner = new (testRunnerOrModule as any)(this.agentsService);
+          } else {
+            throw new Error(`Invalid test runner for test ${testDef.id}`);
           }
 
           const testResult = await testRunner.run({
