@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { clearStoredAuth, getStoredAuth } from '@/lib/auth';
 import { AUTH_TOKEN_KEY } from '@/lib/constants';
@@ -14,34 +14,55 @@ export function useAuth() {
   const { user, token, setAuth, clearAuth } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
 
-  const sessionUser =
-    session?.user?.email && session?.user
-      ? {
-          id: session.user.id || session.user.email,
-          email: session.user.email,
-          displayName: session.user.name || session.user.email,
-        }
-      : null;
+  // Memoize sessionUser to prevent infinite loops
+  const sessionUser = useMemo(() => {
+    if (session?.user?.email && session?.user) {
+      return {
+        id: session.user.id || session.user.email,
+        email: session.user.email,
+        displayName: session.user.name || session.user.email,
+      };
+    }
+    return null;
+  }, [session?.user?.email, session?.user?.id, session?.user?.name]);
 
   // Keep local store in sync with NextAuth session or JWT login
   useEffect(() => {
     const stored = getStoredAuth();
 
     if (status === 'authenticated' && sessionUser) {
-      setAuth(sessionUser, '');
+      // Only update if user has changed to prevent infinite loops
+      if (!user || user.id !== sessionUser.id || user.email !== sessionUser.email) {
+        setAuth(sessionUser, '');
+      }
       setIsLoading(false);
       return;
     }
 
     if (stored) {
-      setAuth(stored.user, stored.token);
+      // Only update if stored auth differs from current
+      if (!user || user.id !== stored.user.id || user.email !== stored.user.email) {
+        setAuth(stored.user, stored.token);
+      }
     } else if (status === 'unauthenticated') {
-      clearAuth();
-      clearStoredAuth();
+      if (user || token) {
+        clearAuth();
+        clearStoredAuth();
+      }
     }
 
     setIsLoading(status === 'loading');
-  }, [status, sessionUser, setAuth, clearAuth]);
+  }, [
+    status,
+    session?.user?.email,
+    session?.user?.id,
+    session?.user?.name,
+    sessionUser,
+    user,
+    token,
+    setAuth,
+    clearAuth,
+  ]);
 
   const logout = async () => {
     try {

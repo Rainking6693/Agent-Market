@@ -7,11 +7,12 @@ import { TestRunsGateway } from './test-runs.gateway.js';
 import { TestSuitesController } from './test-suites.controller.js';
 import { RunTestSuiteWorker } from './workers/run-test-suite.worker.js';
 import { AgentsModule } from '../modules/agents/agents.module.js';
+import { AuthModule } from '../modules/auth/auth.module.js';
 import { DatabaseModule } from '../modules/database/database.module.js';
 import { PrismaService } from '../modules/database/prisma.service.js';
 
 @Module({
-  imports: [DatabaseModule, AgentsModule],
+  imports: [DatabaseModule, AgentsModule, AuthModule],
   controllers: [TestRunsController, TestSuitesController],
   providers: [TestRunService, RunTestSuiteWorker, TestRunsGateway],
   exports: [TestRunService],

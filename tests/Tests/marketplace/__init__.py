@@ -1,2 +1,0 @@
-"""Marketplace infrastructure tests."""
-
