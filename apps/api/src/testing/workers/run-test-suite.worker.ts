@@ -6,7 +6,7 @@ import Redis from 'ioredis';
 import { AgentsService } from '../../modules/agents/agents.service.js';
 import { PrismaService } from '../../modules/database/prisma.service.js';
 import { getSuiteBySlug } from '../suites/index.js';
-import { TestRunProgress } from '../types.js';
+import { TestRunProgress, TestRunner } from '../types.js';
 
 
 export class RunTestSuiteWorker {
@@ -186,7 +186,9 @@ export class RunTestSuiteWorker {
         try {
           // Dynamically import and run the test
           const testModule = await testDef.runner();
-          let testRunner = testModule.default || testModule;
+          // Handle both module with default export and direct TestRunner
+          let testRunner: TestRunner =
+            'default' in testModule ? (testModule.default as TestRunner) : (testModule as TestRunner);
 
           // If it's a class constructor, instantiate it with dependencies
           if (typeof testRunner === 'function' && testRunner.prototype && testRunner.prototype.run) {

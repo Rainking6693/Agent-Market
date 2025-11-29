@@ -17,7 +17,7 @@ export interface SuiteDefinition {
 
 export interface TestDefinition {
   id: string;
-  runner: () => Promise<TestRunner>;
+  runner: () => Promise<{ default: TestRunner } | TestRunner>;
 }
 
 export interface TestRunner {
