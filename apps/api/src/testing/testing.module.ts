@@ -24,9 +24,14 @@ export class TestingModule implements OnModuleInit, OnModuleDestroy {
   ) {}
 
   async onModuleInit() {
-    // Upsert all test suites on startup
-    await upsertTestSuites(this.prisma);
-    // Initialize worker
+    // Upsert all test suites on startup (gracefully handles missing table)
+    try {
+      await upsertTestSuites(this.prisma);
+    } catch (error) {
+      // Log but don't fail startup if test suites can't be registered
+      console.warn('Failed to register test suites:', error instanceof Error ? error.message : 'Unknown error');
+    }
+    // Initialize worker (will skip if Redis not configured)
     this.worker.initialize();
   }
 

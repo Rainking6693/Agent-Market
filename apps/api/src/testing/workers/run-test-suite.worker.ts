@@ -27,44 +27,57 @@ export class RunTestSuiteWorker {
       return; // Already initialized
     }
 
-    // Initialize Redis for pub/sub
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.redis = new (Redis as any)({
-      host: process.env.REDIS_HOST || 'localhost',
-      port: parseInt(process.env.REDIS_PORT || '6379', 10),
-      password: process.env.REDIS_PASSWORD,
-    });
+    const redisHost = process.env.REDIS_HOST;
+    if (!redisHost) {
+      this.logger.warn('Redis not configured - test run worker will not start');
+      return;
+    }
 
-    // Initialize BullMQ worker
-    this.worker = new Worker(
-      'run-test-suite',
-      async (job: Job) => {
-        await this.processJob(job);
-      },
-      {
-        connection: {
-          host: process.env.REDIS_HOST || 'localhost',
-          port: parseInt(process.env.REDIS_PORT || '6379', 10),
-          password: process.env.REDIS_PASSWORD,
+    try {
+      // Initialize Redis for pub/sub
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.redis = new (Redis as any)({
+        host: redisHost,
+        port: parseInt(process.env.REDIS_PORT || '6379', 10),
+        password: process.env.REDIS_PASSWORD,
+        retryStrategy: () => null, // Don't retry on connection failure
+        maxRetriesPerRequest: null,
+        lazyConnect: true,
+      });
+
+      // Handle connection errors gracefully
+      this.redis.on('error', (err: Error) => {
+        this.logger.warn(`Redis connection error (worker): ${err.message}`);
+      });
+
+      // Initialize BullMQ worker
+      this.worker = new Worker(
+        'run-test-suite',
+        async (job: Job) => {
+          await this.processJob(job);
         },
-        concurrency: 1, // Run tests sequentially
-      },
-    );
+        {
+          connection: {
+            host: redisHost,
+            port: parseInt(process.env.REDIS_PORT || '6379', 10),
+            password: process.env.REDIS_PASSWORD,
+          },
+          concurrency: 1, // Run tests sequentially
+        },
+      );
 
-    this.worker.on('completed', (job) => {
-      this.logger.log(`Test run ${job.id} completed`);
-    });
+      this.worker.on('completed', (job) => {
+        this.logger.log(`Test run ${job.id} completed`);
+      });
 
-    this.worker.on('failed', (job, err) => {
-      this.logger.error(`Test run ${job?.id} failed: ${err.message}`);
-    });
-    // Initialize Redis for pub/sub
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.redis = new (Redis as any)({
-      host: process.env.REDIS_HOST || 'localhost',
-      port: parseInt(process.env.REDIS_PORT || '6379', 10),
-      password: process.env.REDIS_PASSWORD,
-    });
+      this.worker.on('failed', (job, err) => {
+        this.logger.error(`Test run ${job?.id} failed: ${err.message}`);
+      });
+
+      this.logger.log('Test run worker initialized');
+    } catch (err) {
+      this.logger.error(`Failed to initialize test run worker: ${err instanceof Error ? err.message : 'Unknown error'}`);
+    }
 
     // Initialize BullMQ worker
     this.worker = new Worker(
@@ -110,11 +123,17 @@ export class RunTestSuiteWorker {
    */
   private async publishProgress(runId: string, progress: TestRunProgress) {
     if (!this.redis) {
-      this.logger.warn('Redis not initialized, cannot publish progress');
+      this.logger.debug(`Redis not available, skipping progress publish for run ${runId}`);
       return;
     }
-    const channel = `test-run:${runId}`;
-    await this.redis.publish(channel, JSON.stringify(progress));
+
+    try {
+      const channel = `test-run:${runId}`;
+      await this.redis.publish(channel, JSON.stringify(progress));
+    } catch (error) {
+      // Don't fail the test run if Redis publish fails
+      this.logger.warn(`Failed to publish progress for run ${runId}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   /**

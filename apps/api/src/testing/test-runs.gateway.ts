@@ -26,29 +26,54 @@ export class TestRunsGateway implements OnGatewayConnection, OnGatewayDisconnect
   private subscribers: Map<string, Set<string>> = new Map(); // runId -> Set of socket IDs
 
   constructor() {
-    // Initialize Redis subscriber
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.redis = new (Redis as any)({
-      host: process.env.REDIS_HOST || 'localhost',
-      port: parseInt(process.env.REDIS_PORT || '6379', 10),
-      password: process.env.REDIS_PASSWORD,
-    });
-
-    // Subscribe to all test-run channels
-    this.redis.psubscribe('test-run:*');
-
-    this.redis.on('pmessage', (pattern, channel, message) => {
-      const runId = channel.replace('test-run:', '');
-      const progress = JSON.parse(message);
-
-      // Emit to all sockets subscribed to this run
-      const socketIds = this.subscribers.get(runId);
-      if (socketIds) {
-        socketIds.forEach((socketId) => {
-          this.server.to(socketId).emit('test-run-progress', progress);
+    // Initialize Redis subscriber only if Redis is configured
+    const redisHost = process.env.REDIS_HOST;
+    if (redisHost) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.redis = new (Redis as any)({
+          host: redisHost,
+          port: parseInt(process.env.REDIS_PORT || '6379', 10),
+          password: process.env.REDIS_PASSWORD,
+          retryStrategy: () => null, // Don't retry on connection failure
+          maxRetriesPerRequest: null,
+          lazyConnect: true,
         });
+
+        // Handle connection errors gracefully
+        this.redis.on('error', (err: Error) => {
+          this.logger.warn(`Redis connection error (WebSocket gateway): ${err.message}`);
+        });
+
+        // Subscribe to all test-run channels
+        this.redis
+          .connect()
+          .then(() => {
+            this.redis.psubscribe('test-run:*');
+            this.logger.log('Redis connected for test run WebSocket gateway');
+          })
+          .catch((err: Error) => {
+            this.logger.warn(`Failed to connect to Redis (WebSocket gateway): ${err.message}`);
+          });
+
+        this.redis.on('pmessage', (pattern, channel, message) => {
+          const runId = channel.replace('test-run:', '');
+          const progress = JSON.parse(message);
+
+          // Emit to all sockets subscribed to this run
+          const socketIds = this.subscribers.get(runId);
+          if (socketIds) {
+            socketIds.forEach((socketId) => {
+              this.server.to(socketId).emit('test-run-progress', progress);
+            });
+          }
+        });
+      } catch (err) {
+        this.logger.warn(`Failed to initialize Redis (WebSocket gateway): ${err instanceof Error ? err.message : 'Unknown error'}`);
       }
-    });
+    } else {
+      this.logger.warn('Redis not configured - WebSocket test run updates will not work');
+    }
   }
 
   handleConnection(client: Socket) {

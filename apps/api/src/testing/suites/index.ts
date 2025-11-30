@@ -27,32 +27,54 @@ export const ALL_SUITES: SuiteDefinition[] = [
 /**
  * Upsert all test suites into the database
  * Called on app startup to ensure all suites are registered
+ * Gracefully handles missing table (migration not run yet)
  */
 export async function upsertTestSuites(prisma: PrismaClient): Promise<void> {
+  try {
+    // Check if TestSuite table exists by trying a simple query
+    await prisma.$queryRaw`SELECT 1 FROM "TestSuite" LIMIT 1`;
+  } catch (error: unknown) {
+    // Table doesn't exist - log warning and skip
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2021') {
+      // eslint-disable-next-line no-console
+      console.warn('TestSuite table does not exist. Skipping test suite registration. Run migrations to enable testing features.');
+      return;
+    }
+    // Re-throw if it's a different error
+    throw error;
+  }
+
+  // Table exists, proceed with upserts
   for (const suite of ALL_SUITES) {
-    await prisma.testSuite.upsert({
-      where: { slug: suite.slug },
-      update: {
-        name: suite.name,
-        description: suite.description,
-        category: suite.category,
-        recommendedAgentTypes: suite.recommendedAgentTypes,
-        estimatedDurationSec: suite.estimatedDurationSec,
-        approximateCostUsd: suite.approximateCostUsd,
-        isRecommended: suite.isRecommended,
-      },
-      create: {
-        id: suite.id,
-        slug: suite.slug,
-        name: suite.name,
-        description: suite.description,
-        category: suite.category,
-        recommendedAgentTypes: suite.recommendedAgentTypes,
-        estimatedDurationSec: suite.estimatedDurationSec,
-        approximateCostUsd: suite.approximateCostUsd,
-        isRecommended: suite.isRecommended,
-      },
-    });
+    try {
+      await prisma.testSuite.upsert({
+        where: { slug: suite.slug },
+        update: {
+          name: suite.name,
+          description: suite.description,
+          category: suite.category,
+          recommendedAgentTypes: suite.recommendedAgentTypes,
+          estimatedDurationSec: suite.estimatedDurationSec,
+          approximateCostUsd: suite.approximateCostUsd,
+          isRecommended: suite.isRecommended,
+        },
+        create: {
+          id: suite.id,
+          slug: suite.slug,
+          name: suite.name,
+          description: suite.description,
+          category: suite.category,
+          recommendedAgentTypes: suite.recommendedAgentTypes,
+          estimatedDurationSec: suite.estimatedDurationSec,
+          approximateCostUsd: suite.approximateCostUsd,
+          isRecommended: suite.isRecommended,
+        },
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Failed to upsert test suite ${suite.slug}:`, error);
+      // Continue with other suites even if one fails
+    }
   }
 }
 
