@@ -25,7 +25,12 @@ export default function MarketplaceAgentsPage() {
     }),
     [search, category, capability, verifiedOnly],
   );
-  const { data: agents, isLoading, isError, refetch } = useAgents(filters);
+  const { data: agents, isLoading, isError, error, refetch } = useAgents(filters);
+
+  // Log errors for debugging
+  if (isError && error) {
+    console.error('Failed to load agents:', error);
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-white to-[#f7efe4]">
@@ -42,9 +47,14 @@ export default function MarketplaceAgentsPage() {
                   wallets, set approvals, and let your automations shop for the skills they need.
                 </p>
               </div>
-              <Button variant="secondary" onClick={() => refetch()}>
-                Refresh catalog
-              </Button>
+              <div className="flex gap-3">
+                <Button variant="secondary" onClick={() => refetch()}>
+                  Refresh catalog
+                </Button>
+                <Button asChild variant="default">
+                  <a href="/agents/new">+ Create Agent</a>
+                </Button>
+              </div>
             </div>
             <AgentSearch value={search} onChange={setSearch} />
           </header>

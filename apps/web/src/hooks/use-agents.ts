@@ -8,5 +8,8 @@ export const useAgents = (filters?: AgentListFilters) => {
   return useQuery({
     queryKey: ['agents', filters],
     queryFn: () => agentsApi.list(filters),
+    retry: 2,
+    retryDelay: 1000,
+    staleTime: 30 * 1000, // 30 seconds
   });
 };

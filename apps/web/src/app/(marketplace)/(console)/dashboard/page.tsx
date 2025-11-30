@@ -36,9 +36,24 @@ const recentPrompts = [
 ];
 
 const statusPills = [
-  { label: 'API', state: 'Operational', tone: 'bg-emerald-500/15 text-emerald-300' },
-  { label: 'Payments', state: 'Sandbox', tone: 'bg-amber-500/20 text-amber-200' },
-  { label: 'Agent Mesh', state: 'In progress', tone: 'bg-sky-500/20 text-sky-200' },
+  {
+    label: 'API',
+    state: 'Operational',
+    tone: 'bg-emerald-500/15 text-emerald-300',
+    tooltip: 'API services are running normally',
+  },
+  {
+    label: 'Payments',
+    state: 'Sandbox',
+    tone: 'bg-amber-500/20 text-amber-200',
+    tooltip: 'Payment processing is in sandbox mode (test environment)',
+  },
+  {
+    label: 'Agent Mesh',
+    state: 'In progress',
+    tone: 'bg-sky-500/20 text-sky-200',
+    tooltip: 'Agent-to-agent networking features are being developed',
+  },
 ];
 
 export default async function HomePage() {
@@ -83,11 +98,12 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link href="/workflows" className="glass-button bg-accent text-carrara shadow-accent-glow hover:bg-accent-dark">
-              + Start a run
+            <Link href="/agents/new" className="glass-button bg-accent text-carrara shadow-accent-glow hover:bg-accent-dark">
+              + Create Agent
             </Link>
+            <Link href="/workflows" className="glass-button text-ink">Launch workflow</Link>
             <Link href="/settings/team" className="glass-button text-ink">✺ Invite teammate</Link>
-            <Link href="/billing" className="glass-button">
+            <Link href="/billing" className="glass-button text-ink">
               Billing
             </Link>
           </div>
@@ -95,7 +111,11 @@ export default async function HomePage() {
 
         <div className="flex flex-wrap items-center gap-3">
           {statusPills.map((pill) => (
-            <span key={pill.label} className={`pill ${pill.tone}`}>
+            <span
+              key={pill.label}
+              className={`pill ${pill.tone} cursor-help`}
+              title={pill.tooltip}
+            >
               {pill.label}: {pill.state}
             </span>
           ))}
@@ -124,10 +144,21 @@ export default async function HomePage() {
       {agents.length > 0 ? (
         <A2AOperationsPanel agents={agents} />
       ) : (
-        <div className="glass-card p-6 text-sm text-ink-muted">
-          Add an agent to unlock the live agent-to-agent activity view, network graph, and budget
-          controls.
-        </div>
+        <section className="glass-card p-8">
+          <div className="flex flex-col items-center justify-center gap-4 text-center">
+            <h2 className="text-xl font-headline text-ink">Get Started with Your First Agent</h2>
+            <p className="max-w-md text-sm text-ink-muted">
+              Create an agent to unlock the live agent-to-agent activity view, network graph, and
+              budget controls.
+            </p>
+            <Link
+              href="/agents/new"
+              className="glass-button bg-accent text-carrara shadow-accent-glow hover:bg-accent-dark mt-2"
+            >
+              + Create Your First Agent
+            </Link>
+          </div>
+        </section>
       )}
 
       <section className="glass-card">

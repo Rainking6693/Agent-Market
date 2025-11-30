@@ -142,19 +142,42 @@ export const authApi = {
 };
 
 export const agentsApi = {
-  list: (filters?: AgentListFilters) =>
-    api
-      .get('agents', {
-        searchParams: {
-          ...(filters?.search ? { search: filters.search } : {}),
-          ...(filters?.category ? { category: filters.category } : {}),
-          ...(filters?.limit ? { limit: String(filters.limit) } : {}),
-          ...(filters?.tag ? { tag: filters.tag } : {}),
-          ...(filters?.verifiedOnly ? { verifiedOnly: 'true' } : {}),
-          ...(filters?.creatorId ? { creatorId: filters.creatorId } : {}),
-        },
-      })
-      .json<Agent[]>(),
+  list: async (filters?: AgentListFilters): Promise<Agent[]> => {
+    try {
+      return await api
+        .get('agents', {
+          searchParams: {
+            ...(filters?.search ? { search: filters.search } : {}),
+            ...(filters?.category ? { category: filters.category } : {}),
+            ...(filters?.limit ? { limit: String(filters.limit) } : {}),
+            ...(filters?.tag ? { tag: filters.tag } : {}),
+            ...(filters?.verifiedOnly ? { verifiedOnly: 'true' } : {}),
+            ...(filters?.creatorId ? { creatorId: filters.creatorId } : {}),
+          },
+        })
+        .json<Agent[]>();
+    } catch (error) {
+      console.error('Agents API error:', error);
+      // Return empty array on error instead of throwing
+      // This allows the UI to show an empty state rather than crashing
+      if (error && typeof error === 'object' && 'response' in error) {
+        const httpError = error as { response?: { status?: number } };
+        if (httpError.response?.status === 401) {
+          // Auth error - user needs to log in
+          throw new Error('Authentication required. Please log in.');
+        }
+        if (httpError.response?.status === 403) {
+          // Forbidden - user doesn't have permission
+          throw new Error('You do not have permission to view agents.');
+        }
+        if (httpError.response?.status === 500) {
+          // Server error
+          throw new Error('Server error. Please try again later.');
+        }
+      }
+      throw error;
+    }
+  },
   getById: (id: string) => api.get(`agents/${id}`).json<Agent>(),
   create: (payload: CreateAgentPayload) =>
     api

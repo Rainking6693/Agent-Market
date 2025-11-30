@@ -22,17 +22,29 @@ export function AgentGrid({ agents = [], isLoading, isError }: AgentGridProps) {
 
   if (isError) {
     return (
-      <div className="rounded-[2.5rem] border border-destructive/20 bg-destructive/5 p-12 text-center text-destructive">
-        <p className="font-semibold">Failed to load agents</p>
-        <p className="text-sm opacity-80">Please check your connection and try again.</p>
+      <div className="rounded-[2.5rem] border border-destructive/20 bg-destructive/5 p-12 text-center">
+        <p className="font-semibold text-destructive">Failed to load agents</p>
+        <p className="mt-2 text-sm text-destructive/80">
+          Please check your connection and try again.
+        </p>
+        <p className="mt-4 text-xs text-destructive/60">
+          If the problem persists, check the browser console for details or contact support.
+        </p>
       </div>
     );
   }
 
   if (!agents.length) {
     return (
-      <div className="rounded-[2.5rem] border border-dashed border-border bg-white/70 p-12 text-center text-muted-foreground">
-        No agents matched your filters. Try broadening your search.
+      <div className="rounded-[2.5rem] border border-dashed border-border bg-white/70 p-12 text-center">
+        <p className="text-muted-foreground">No agents matched your filters.</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Try broadening your search or{' '}
+          <a href="/agents/new" className="text-primary underline hover:no-underline">
+            create a new agent
+          </a>
+          .
+        </p>
       </div>
     );
   }
