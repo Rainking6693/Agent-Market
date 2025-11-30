@@ -328,4 +328,32 @@ export const testingApi = {
   cancelRun: (runId: string) => api.delete(`api/v1/test-runs/${runId}`).json<TestRun>(),
 };
 
+export interface ServiceAccount {
+  id: string;
+  name: string;
+  description?: string;
+  apiKey?: string; // Only present on creation
+  scopes: string[];
+  status: 'ACTIVE' | 'DISABLED' | 'REVOKED';
+  organizationId?: string;
+  agentId?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateServiceAccountPayload {
+  name: string;
+  description?: string;
+  scopes?: string[];
+  organizationId?: string;
+  agentId?: string;
+}
+
+export const serviceAccountsApi = {
+  list: () => api.get('api/v1/service-accounts').json<ServiceAccount[]>(),
+  create: (payload: CreateServiceAccountPayload) =>
+    api.post('api/v1/service-accounts', { json: payload }).json<ServiceAccount>(),
+  revoke: (id: string) => api.delete(`api/v1/service-accounts/${id}`).json<{ success: boolean }>(),
+};
+
 export { API_BASE_URL, api };

@@ -250,57 +250,106 @@ export default function NewAgentPage() {
       let config: Record<string, unknown>;
 
       // Try to parse as JSON first, then YAML
-      if (file.name.endsWith('.json')) {
-        config = JSON.parse(text);
-      } else {
-        // For YAML, we'd need a YAML parser library, but for now just try JSON
-        // In production, you'd use: import * as yaml from 'yaml'; config = yaml.parse(text);
+      if (file.name.endsWith('.json') || file.name.endsWith('.yaml') || file.name.endsWith('.yml')) {
         try {
           config = JSON.parse(text);
-        } catch {
-          throw new Error('YAML parsing not yet supported. Please use JSON format.');
+        } catch (parseError) {
+          throw new Error(
+            `Failed to parse JSON: ${parseError instanceof Error ? parseError.message : 'Invalid JSON format'}. Please ensure your file is valid JSON.`,
+          );
         }
+      } else {
+        throw new Error('Unsupported file type. Please upload a .json file.');
       }
 
       // Validate and map the imported config to form fields
-      if (typeof config !== 'object' || config === null) {
-        throw new Error('Invalid configuration file format');
+      if (typeof config !== 'object' || config === null || Array.isArray(config)) {
+        throw new Error('Invalid configuration file format. Expected a JSON object.');
       }
+
+      console.log('Parsed config:', config);
 
       const imported: typeof importedConfig = {};
+      let fieldsPopulated = 0;
 
-      if (typeof config.name === 'string') imported.name = config.name;
-      if (typeof config.description === 'string') imported.description = config.description;
-      if (Array.isArray(config.categories)) imported.categories = config.categories as string[];
-      if (Array.isArray(config.tags)) imported.tags = config.tags as string[];
-      if (typeof config.pricingModel === 'string') imported.pricingModel = config.pricingModel;
-      if (typeof config.basePriceCents === 'number') {
+      // Map config fields to form state
+      if (typeof config.name === 'string' && config.name.trim()) {
+        imported.name = config.name.trim();
+        setName(config.name.trim());
+        fieldsPopulated++;
+      }
+
+      if (typeof config.description === 'string' && config.description.trim()) {
+        imported.description = config.description.trim();
+        setDescription(config.description.trim());
+        fieldsPopulated++;
+      }
+
+      if (Array.isArray(config.categories) && config.categories.length > 0) {
+        imported.categories = config.categories.filter((c): c is string => typeof c === 'string');
+        if (imported.categories.length > 0) {
+          setSelectedCategories(imported.categories);
+          fieldsPopulated++;
+        }
+      }
+
+      if (Array.isArray(config.tags) && config.tags.length > 0) {
+        imported.tags = config.tags.filter((t): t is string => typeof t === 'string');
+        if (imported.tags.length > 0) {
+          setSelectedCapabilities(imported.tags);
+          fieldsPopulated++;
+        }
+      }
+
+      if (typeof config.pricingModel === 'string' && config.pricingModel.trim()) {
+        imported.pricingModel = config.pricingModel.trim();
+        setPricingModel(config.pricingModel.trim());
+        fieldsPopulated++;
+      }
+
+      if (typeof config.basePriceCents === 'number' && config.basePriceCents >= 0) {
         imported.basePriceCents = config.basePriceCents;
         setBasePrice(String(config.basePriceCents / 100));
+        fieldsPopulated++;
+      } else if (typeof config.basePrice === 'number' && config.basePrice >= 0) {
+        // Also support basePrice in dollars
+        setBasePrice(String(config.basePrice));
+        fieldsPopulated++;
       }
+
       if (config.visibility === 'PUBLIC' || config.visibility === 'PRIVATE') {
         imported.visibility = config.visibility;
         setVisibility(config.visibility);
+        fieldsPopulated++;
       }
-      if (typeof config.ap2Endpoint === 'string') imported.ap2Endpoint = config.ap2Endpoint;
-      if (config.inputSchema && typeof config.inputSchema === 'object') {
+
+      if (typeof config.ap2Endpoint === 'string' && config.ap2Endpoint.trim()) {
+        imported.ap2Endpoint = config.ap2Endpoint.trim();
+        setAp2Endpoint(config.ap2Endpoint.trim());
+        fieldsPopulated++;
+      }
+
+      if (config.inputSchema && typeof config.inputSchema === 'object' && !Array.isArray(config.inputSchema)) {
         imported.inputSchema = config.inputSchema as Record<string, unknown>;
         setInputSchemaText(JSON.stringify(config.inputSchema, null, 2));
+        fieldsPopulated++;
       }
-      if (config.outputSchema && typeof config.outputSchema === 'object') {
+
+      if (config.outputSchema && typeof config.outputSchema === 'object' && !Array.isArray(config.outputSchema)) {
         imported.outputSchema = config.outputSchema as Record<string, unknown>;
         setOutputSchemaText(JSON.stringify(config.outputSchema, null, 2));
+        fieldsPopulated++;
       }
 
       setImportedConfig(imported);
 
-      // Populate form fields
-      if (imported.name) setName(imported.name);
-      if (imported.description) setDescription(imported.description);
-      if (imported.categories) setSelectedCategories(imported.categories);
-      if (imported.tags) setSelectedCapabilities(imported.tags);
-      if (imported.pricingModel) setPricingModel(imported.pricingModel);
-      if (imported.ap2Endpoint) setAp2Endpoint(imported.ap2Endpoint);
+      console.log(`Imported ${fieldsPopulated} field(s) from config`);
+
+      if (fieldsPopulated === 0) {
+        throw new Error(
+          'No valid fields found in the configuration file. Please check that your JSON includes fields like name, description, categories, etc.',
+        );
+      }
 
       // Reset file input
       if (fileInputRef.current) {
@@ -310,6 +359,7 @@ export default function NewAgentPage() {
       const message =
         error instanceof Error ? error.message : 'Failed to parse configuration file';
       setImportError(message);
+      console.error('Import error:', error);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -367,7 +417,10 @@ export default function NewAgentPage() {
         <CardContent>
           <div className="space-y-4">
             <p className="text-sm text-ink-muted">
-              Upload a JSON or YAML file with your agent configuration to pre-fill the form.
+              Upload a JSON file with your agent configuration to pre-fill the form. The file should
+              include fields like <code className="rounded bg-surfaceAlt px-1">name</code>,{' '}
+              <code className="rounded bg-surfaceAlt px-1">description</code>,{' '}
+              <code className="rounded bg-surfaceAlt px-1">categories</code>, etc.
             </p>
             <div className="flex items-center gap-4">
               <input
@@ -377,32 +430,112 @@ export default function NewAgentPage() {
                 className="hidden"
                 onChange={handleFileUpload}
               />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-2"
-              >
-                <Upload className="h-4 w-4" />
-                Upload Config File
-              </Button>
+              <div className="flex items-center gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex items-center gap-2"
+                >
+                  <Upload className="h-4 w-4" />
+                  Upload Config File
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    const sample = {
+                      name: 'My Agent Name',
+                      description: 'A detailed description of what this agent does (must be at least 20 characters)',
+                      categories: ['sales', 'marketing'],
+                      tags: ['lead_generation', 'data_analysis'],
+                      pricingModel: 'per_execution',
+                      basePriceCents: 25000,
+                      visibility: 'PUBLIC',
+                      ap2Endpoint: 'https://api.example.com/agent',
+                      inputSchema: {
+                        type: 'object',
+                        properties: {
+                          objective: { type: 'string' },
+                          budget: { type: 'number' },
+                        },
+                        required: ['objective'],
+                      },
+                      outputSchema: {
+                        type: 'object',
+                        properties: {
+                          summary: { type: 'string' },
+                          attachments: { type: 'array', items: { type: 'string' } },
+                        },
+                      },
+                    };
+                    const blob = new Blob([JSON.stringify(sample, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'agent-config-template.json';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                  }}
+                  className="text-xs"
+                >
+                  Download Sample Template
+                </Button>
+              </div>
               {importedConfig && (
-                <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-                  <FileText className="h-4 w-4" />
-                  <span>Config loaded</span>
-                  <button
-                    type="button"
-                    onClick={clearImportedConfig}
-                    className="ml-2 rounded p-1 hover:bg-emerald-100"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                    <FileText className="h-4 w-4" />
+                    <span>Config loaded successfully</span>
+                    <button
+                      type="button"
+                      onClick={clearImportedConfig}
+                      className="ml-2 rounded p-1 hover:bg-emerald-100"
+                      title="Clear imported config"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                  <div className="text-xs text-ink-muted">
+                    {importedConfig.name && <span>✓ Name</span>}
+                    {importedConfig.description && <span className="ml-2">✓ Description</span>}
+                    {importedConfig.categories && importedConfig.categories.length > 0 && (
+                      <span className="ml-2">✓ Categories</span>
+                    )}
+                    {importedConfig.tags && importedConfig.tags.length > 0 && (
+                      <span className="ml-2">✓ Tags</span>
+                    )}
+                    {importedConfig.pricingModel && <span className="ml-2">✓ Pricing</span>}
+                    {importedConfig.ap2Endpoint && <span className="ml-2">✓ Endpoint</span>}
+                    {importedConfig.inputSchema && <span className="ml-2">✓ Input Schema</span>}
+                    {importedConfig.outputSchema && <span className="ml-2">✓ Output Schema</span>}
+                  </div>
+                  {(name.trim().length < 3 || description.trim().length < 20) && (
+                    <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
+                      <p className="font-semibold">Validation note:</p>
+                      <p className="mt-1">
+                        {name.trim().length < 3 && 'Name must be at least 3 characters. '}
+                        {description.trim().length < 20 && 'Description must be at least 20 characters. '}
+                        Please complete these fields to proceed.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
             {importError && (
               <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-                {importError}
+                <p className="font-semibold">Import failed</p>
+                <p className="mt-1">{importError}</p>
+                <p className="mt-2 text-xs">
+                  Expected JSON format:{' '}
+                  <code className="rounded bg-destructive/10 px-1 py-0.5">
+                    {'{ "name": "...", "description": "...", "categories": [...], ... }'}
+                  </code>
+                </p>
               </div>
             )}
           </div>

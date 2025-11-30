@@ -21,19 +21,19 @@ const sections = [
   {
     title: 'Analytics',
     items: [
-      { label: 'Usage', href: '#' },
-      { label: 'Cost', href: '#' },
-      { label: 'Logs', href: '#' },
-      { label: 'Batches', href: '#' },
-      { label: 'Agent Mesh', href: '#' },
+      { label: 'Usage', href: '/analytics/usage' },
+      { label: 'Cost', href: '/analytics/cost' },
+      { label: 'Logs', href: '/analytics/logs' },
+      { label: 'Batches', href: '/analytics/batches' },
+      { label: 'Agent Mesh', href: '/analytics/agent-mesh' },
     ],
   },
   {
     title: 'Manage',
     items: [
-      { label: 'API keys', href: '#' },
-      { label: 'Limits', href: '#' },
-      { label: 'Settings', href: '#' },
+      { label: 'API keys', href: '/settings/api-keys' },
+      { label: 'Limits', href: '/settings/limits' },
+      { label: 'Settings', href: '/settings/profile' },
     ],
   },
 ];
@@ -48,7 +48,9 @@ export function Sidebar() {
     <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-outline/40 bg-sidebar p-6 text-carrara lg:flex">
       <div className="space-y-8">
         <div className="space-y-2">
-          <BrandLogo className="h-28 w-auto" size={896} priority />
+          <Link href="/dashboard" className="block">
+            <BrandLogo className="h-28 w-auto cursor-pointer transition-opacity hover:opacity-80" size={896} priority />
+          </Link>
         </div>
 
         {sections.map((section) => (
@@ -78,7 +80,10 @@ export function Sidebar() {
       </div>
 
       {user && (
-        <div className="rounded-2xl border border-carrara/10 bg-carrara/5 p-4">
+        <Link
+          href="/settings/profile"
+          className="block rounded-2xl border border-carrara/10 bg-carrara/5 p-4 transition-colors hover:bg-carrara/10 cursor-pointer"
+        >
           <div className="text-[0.65rem] uppercase tracking-wide text-brass/70">Signed in as</div>
           <div className="mt-2 flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-carrara/15 text-sm font-semibold text-carrara">
@@ -89,7 +94,7 @@ export function Sidebar() {
               <div className="text-xs text-carrara/70">{user.email}</div>
             </div>
           </div>
-        </div>
+        </Link>
       )}
     </aside>
   );
