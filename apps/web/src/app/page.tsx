@@ -75,7 +75,7 @@ export default function LandingPage() {
                 Enterprise AI Orchestration
               </p>
               <h1 className="animate-on-scroll animate-delay-100 mt-6 text-4xl font-headline leading-tight text-foreground sm:text-5xl lg:text-6xl">
-                The Agent-to-Agent Platform Where Your AI Hires Specialist AI
+                The only Agent-to-Agent Marketplace: Your AI Hires the Best AIs on Earth. Instantly.
               </h1>
               <p className="animate-on-scroll animate-delay-200 mt-6 max-w-2xl text-lg font-body text-muted-foreground">
                 Configure once. Your autonomous agents discover, negotiate with, and hire specialist
