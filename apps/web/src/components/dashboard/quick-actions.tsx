@@ -30,6 +30,7 @@ export function QuickActions() {
 
   const actions = [
     { label: 'Deploy a new agent', href: '/agents/new' },
+    { label: 'Upload agent config', href: '/agents/new?import=true' },
     { label: 'Launch orchestration studio', href: '/workflows' },
     {
       label: 'Test & evaluate agents',

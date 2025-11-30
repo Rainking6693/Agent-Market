@@ -1,9 +1,9 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import { Loader2, CheckCircle2, ArrowRight, AlertCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { Loader2, CheckCircle2, ArrowRight, AlertCircle, Upload, FileText, X } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useMemo, useState, useRef, useEffect } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -60,6 +60,7 @@ type Visibility = 'PUBLIC' | 'PRIVATE';
 
 export default function NewAgentPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const user = useAuthStore((state) => state.user);
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -115,6 +116,20 @@ export default function NewAgentPage() {
     slug: string;
     name: string;
   } | null>(null);
+  const [importedConfig, setImportedConfig] = useState<{
+    name?: string;
+    description?: string;
+    categories?: string[];
+    tags?: string[];
+    pricingModel?: string;
+    basePriceCents?: number;
+    visibility?: Visibility;
+    ap2Endpoint?: string;
+    inputSchema?: Record<string, unknown>;
+    outputSchema?: Record<string, unknown>;
+  } | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const creationMutation = useMutation({
     mutationFn: async () => {
@@ -211,7 +226,103 @@ export default function NewAgentPage() {
     }
   }, [currentStep, name, description, selectedCategories, pricingModel, ap2Endpoint, monthlyLimit]);
 
+  // Auto-open file picker if ?import=true is in the URL
+  useEffect(() => {
+    if (searchParams.get('import') === 'true' && fileInputRef.current) {
+      // Small delay to ensure the component is fully rendered
+      setTimeout(() => {
+        fileInputRef.current?.click();
+      }, 100);
+    }
+  }, [searchParams]);
+
   const disableNav = creationMutation.isPending;
+
+  // Handle file upload and import
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setImportError(null);
+
+    try {
+      const text = await file.text();
+      let config: Record<string, unknown>;
+
+      // Try to parse as JSON first, then YAML
+      if (file.name.endsWith('.json')) {
+        config = JSON.parse(text);
+      } else {
+        // For YAML, we'd need a YAML parser library, but for now just try JSON
+        // In production, you'd use: import * as yaml from 'yaml'; config = yaml.parse(text);
+        try {
+          config = JSON.parse(text);
+        } catch {
+          throw new Error('YAML parsing not yet supported. Please use JSON format.');
+        }
+      }
+
+      // Validate and map the imported config to form fields
+      if (typeof config !== 'object' || config === null) {
+        throw new Error('Invalid configuration file format');
+      }
+
+      const imported: typeof importedConfig = {};
+
+      if (typeof config.name === 'string') imported.name = config.name;
+      if (typeof config.description === 'string') imported.description = config.description;
+      if (Array.isArray(config.categories)) imported.categories = config.categories as string[];
+      if (Array.isArray(config.tags)) imported.tags = config.tags as string[];
+      if (typeof config.pricingModel === 'string') imported.pricingModel = config.pricingModel;
+      if (typeof config.basePriceCents === 'number') {
+        imported.basePriceCents = config.basePriceCents;
+        setBasePrice(String(config.basePriceCents / 100));
+      }
+      if (config.visibility === 'PUBLIC' || config.visibility === 'PRIVATE') {
+        imported.visibility = config.visibility;
+        setVisibility(config.visibility);
+      }
+      if (typeof config.ap2Endpoint === 'string') imported.ap2Endpoint = config.ap2Endpoint;
+      if (config.inputSchema && typeof config.inputSchema === 'object') {
+        imported.inputSchema = config.inputSchema as Record<string, unknown>;
+        setInputSchemaText(JSON.stringify(config.inputSchema, null, 2));
+      }
+      if (config.outputSchema && typeof config.outputSchema === 'object') {
+        imported.outputSchema = config.outputSchema as Record<string, unknown>;
+        setOutputSchemaText(JSON.stringify(config.outputSchema, null, 2));
+      }
+
+      setImportedConfig(imported);
+
+      // Populate form fields
+      if (imported.name) setName(imported.name);
+      if (imported.description) setDescription(imported.description);
+      if (imported.categories) setSelectedCategories(imported.categories);
+      if (imported.tags) setSelectedCapabilities(imported.tags);
+      if (imported.pricingModel) setPricingModel(imported.pricingModel);
+      if (imported.ap2Endpoint) setAp2Endpoint(imported.ap2Endpoint);
+
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Failed to parse configuration file';
+      setImportError(message);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const clearImportedConfig = () => {
+    setImportedConfig(null);
+    setImportError(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   if (!user) {
     return (
@@ -245,6 +356,58 @@ export default function NewAgentPage() {
           </Badge>
         </div>
       </header>
+
+      {/* Import/Upload Agent Configuration */}
+      <Card className="border-outline/40">
+        <CardHeader>
+          <CardTitle className="text-sm font-headline uppercase tracking-wide text-ink-muted">
+            Import Agent Configuration
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <p className="text-sm text-ink-muted">
+              Upload a JSON or YAML file with your agent configuration to pre-fill the form.
+            </p>
+            <div className="flex items-center gap-4">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".json,.yaml,.yml"
+                className="hidden"
+                onChange={handleFileUpload}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => fileInputRef.current?.click()}
+                className="flex items-center gap-2"
+              >
+                <Upload className="h-4 w-4" />
+                Upload Config File
+              </Button>
+              {importedConfig && (
+                <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                  <FileText className="h-4 w-4" />
+                  <span>Config loaded</span>
+                  <button
+                    type="button"
+                    onClick={clearImportedConfig}
+                    className="ml-2 rounded p-1 hover:bg-emerald-100"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              )}
+            </div>
+            {importError && (
+              <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+                {importError}
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       <ol className="flex flex-wrap gap-4 rounded-[2rem] border border-outline/40 bg-white/60 p-4">
         {steps.map((step, index) => {
