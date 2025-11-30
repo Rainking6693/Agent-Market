@@ -72,7 +72,8 @@ export default function LimitsPage() {
               <div className="flex items-center justify-between">
                 <span className="text-sm text-ink-muted">Monthly Budget Limits</span>
                 <span className="text-sm font-semibold text-ink">
-                  {agents.filter((a) => a.budgets && a.budgets.length > 0).length} agents configured
+                  {/* Budgets are managed per-agent, not returned in list API */}
+                  Configure per agent
                 </span>
               </div>
             </div>
