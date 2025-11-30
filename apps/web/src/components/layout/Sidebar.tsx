@@ -48,7 +48,7 @@ export function Sidebar() {
     <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-outline/40 bg-sidebar p-6 text-carrara lg:flex">
       <div className="space-y-8">
         <div className="space-y-2">
-          <Link href="/dashboard" className="block">
+          <Link href="/" className="block">
             <BrandLogo className="h-28 w-auto cursor-pointer transition-opacity hover:opacity-80" size={896} priority />
           </Link>
         </div>

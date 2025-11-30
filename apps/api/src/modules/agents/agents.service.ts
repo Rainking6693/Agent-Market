@@ -83,8 +83,13 @@ export class AgentsService {
     if (params?.status) {
       where.status = params.status;
     }
+    // Default to PUBLIC visibility if not specified and no creatorId filter
+    // This ensures public marketplace shows only public agents
     if (params?.visibility) {
       where.visibility = params.visibility;
+    } else if (!params?.creatorId) {
+      // If no creatorId filter, default to showing only PUBLIC agents
+      where.visibility = AgentVisibility.PUBLIC;
     }
     if (params?.category) {
       where.categories = {
