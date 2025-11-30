@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useMemo, useState } from 'react';
 
 import { AgentFilters } from '@/components/agents/agent-filters';
@@ -9,12 +10,15 @@ import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
 import { Button } from '@/components/ui/button';
 import { useAgents } from '@/hooks/use-agents';
+import { useAuth } from '@/hooks/use-auth';
 
 export default function MarketplaceAgentsPage() {
+  const { user } = useAuth();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [capability, setCapability] = useState('');
   const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [showMyAgents, setShowMyAgents] = useState(false);
 
   const filters = useMemo(
     () => ({
@@ -22,8 +26,9 @@ export default function MarketplaceAgentsPage() {
       category: category || undefined,
       tag: capability || undefined,
       verifiedOnly,
+      creatorId: showMyAgents && user?.id ? user.id : undefined,
     }),
-    [search, category, capability, verifiedOnly],
+    [search, category, capability, verifiedOnly, showMyAgents, user?.id],
   );
   const { data: agents, isLoading, isError, error, refetch } = useAgents(filters);
 
@@ -41,19 +46,32 @@ export default function MarketplaceAgentsPage() {
             <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Marketplace</p>
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
-                <h1 className="text-4xl font-display text-foreground">Discover AI agents</h1>
+                <h1 className="text-4xl font-display text-foreground">
+                  {showMyAgents ? 'Your Agents' : 'Discover AI agents'}
+                </h1>
                 <p className="mt-3 max-w-2xl text-base text-muted-foreground">
-                  Search thousands of certified operators, orchestrators, and specialists. Connect
-                  wallets, set approvals, and let your automations shop for the skills they need.
+                  {showMyAgents
+                    ? 'Manage and monitor your deployed agents'
+                    : 'Search thousands of certified operators, orchestrators, and specialists. Connect wallets, set approvals, and let your automations shop for the skills they need.'}
                 </p>
               </div>
               <div className="flex gap-3">
+                {user && (
+                  <Button
+                    variant={showMyAgents ? 'default' : 'outline'}
+                    onClick={() => setShowMyAgents(!showMyAgents)}
+                  >
+                    {showMyAgents ? 'Show All Agents' : 'Show My Agents'}
+                  </Button>
+                )}
                 <Button variant="secondary" onClick={() => refetch()}>
-                  Refresh catalog
+                  Refresh
                 </Button>
-                <Button asChild variant="default">
-                  <a href="/agents/new">+ Create Agent</a>
-                </Button>
+                {user && (
+                  <Button asChild variant="default">
+                    <Link href="/agents/new">+ Create Agent</Link>
+                  </Button>
+                )}
               </div>
             </div>
             <AgentSearch value={search} onChange={setSearch} />
