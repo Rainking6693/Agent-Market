@@ -143,6 +143,27 @@ export class AgentsService {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error fetching agents:', error);
+      // Fallback: if the badges column is missing in prod DB, attempt to create it once and retry
+      const message = error instanceof Error ? error.message : '';
+      if (message.includes('Agent.badges')) {
+        // eslint-disable-next-line no-console
+        console.warn('Missing Agent.badges column detected. Attempting to add column automatically.');
+        try {
+          await this.prisma.$executeRawUnsafe(
+            'ALTER TABLE "Agent" ADD COLUMN IF NOT EXISTS "badges" TEXT[] DEFAULT ARRAY[]::TEXT[];',
+          );
+          const agents = await this.prisma.agent.findMany({
+            where,
+            orderBy: {
+              updatedAt: 'desc',
+            },
+          });
+          return agents.map(presentAgent);
+        } catch (migrateError) {
+          // eslint-disable-next-line no-console
+          console.error('Failed to auto-add badges column:', migrateError);
+        }
+      }
       // Re-throw with more context
       if (error instanceof Error) {
         throw new BadRequestException(`Failed to fetch agents: ${error.message}`);
