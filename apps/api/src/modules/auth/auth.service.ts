@@ -30,6 +30,8 @@ export class AuthService {
     const { email, password, displayName } = data;
 
     try {
+      await this.ensureUserSchema();
+
       // Check if user already exists
       const existing = await this.prisma.user.findUnique({
         where: { email },
@@ -62,6 +64,8 @@ export class AuthService {
 
   async login(data: LoginDto) {
     try {
+      await this.ensureUserSchema();
+
       const dbUser = await this.prisma.user.findUnique({
         where: { email: data.email },
       });
@@ -136,6 +140,29 @@ export class AuthService {
     } catch (error) {
       this.logger.error('Failed to build auth response', error.stack);
       throw new InternalServerErrorException('Failed to generate authentication token');
+    }
+  }
+
+  /**
+   * Ensure critical user columns exist in legacy databases.
+   */
+  private async ensureUserSchema() {
+    try {
+      // Quick feature check on the metadata table; if it fails, attempt to add missing columns.
+      await this.prisma.$queryRawUnsafe('SELECT "emailVerified" FROM "User" LIMIT 1;');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '';
+      if (message.includes('emailVerified')) {
+        this.logger.warn('Missing User.emailVerified column detected. Attempting to add it.');
+        try {
+          await this.prisma.$executeRawUnsafe(
+            'ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "emailVerified" TIMESTAMP;',
+          );
+        } catch (migrateError) {
+          this.logger.error('Failed to auto-add User.emailVerified column', migrateError);
+          // Keep going; the next calls will still surface the original error if unresolved.
+        }
+      }
     }
   }
 }
