@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
-    "test:stripe-smoke": "cross-env RUN_STRIPE_SMOKE=1 playwright test stripe-smoke --project=chromium --config=playwright.config.ts"
+    "test:stripe-smoke": "cross-env RUN_STRIPE_SMOKE=1 playwright test stripe-smoke --project=chromium --config=playwright.config.ts",
+    "postinstall": "prisma generate --schema=./prisma/schema.prisma"
   },
   "dependencies": {
     "@agent-market/sdk": "0.1.0",
