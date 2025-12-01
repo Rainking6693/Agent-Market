@@ -82,6 +82,32 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    async signIn({ user, profile }) {
+      // Normalize display name for our Prisma schema
+      const displayName =
+        (profile as { name?: string })?.name ??
+        user.name ??
+        user.email ??
+        'User';
+
+      // Upsert the user into our Prisma User table to satisfy API FKs
+      await prisma.user.upsert({
+        where: { email: user.email! },
+        update: {
+          displayName,
+          image: user.image ?? null,
+          emailVerified: new Date(),
+        },
+        create: {
+          email: user.email!,
+          displayName,
+          image: user.image ?? null,
+          emailVerified: new Date(),
+          password: null,
+        },
+      });
+      return true;
+    },
     async session({ session, user }) {
       // user is the Prisma User model when using database sessions
       if (session.user && user) {
