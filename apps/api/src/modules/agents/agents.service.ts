@@ -79,50 +79,76 @@ export class AgentsService {
     verifiedOnly?: boolean;
     creatorId?: string;
   }) {
-    const where: Prisma.AgentWhereInput = {};
-    if (params?.status) {
-      where.status = params.status;
-    }
-    // Default to PUBLIC visibility if not specified and no creatorId filter
-    // This ensures public marketplace shows only public agents
-    if (params?.visibility) {
-      where.visibility = params.visibility;
-    } else if (!params?.creatorId) {
-      // If no creatorId filter, default to showing only PUBLIC agents
-      where.visibility = AgentVisibility.PUBLIC;
-    }
-    if (params?.category) {
-      where.categories = {
-        has: params.category,
-      };
-    }
-    if (params?.tag) {
-      where.tags = {
-        has: params.tag,
-      };
-    }
-    if (params?.verifiedOnly) {
-      where.verificationStatus = VerificationStatus.VERIFIED;
-    }
-    if (params?.search?.trim()) {
-      const term = params.search.trim();
-      where.OR = [
-        { name: { contains: term, mode: 'insensitive' } },
-        { description: { contains: term, mode: 'insensitive' } },
-      ];
-    }
-    if (params?.creatorId) {
-      where.creatorId = params.creatorId;
-    }
+    try {
+      const where: Prisma.AgentWhereInput = {};
+      
+      // Status filter
+      if (params?.status) {
+        where.status = params.status;
+      }
+      
+      // Visibility filter - default to PUBLIC for public marketplace
+      if (params?.visibility !== undefined) {
+        where.visibility = params.visibility;
+      } else if (!params?.creatorId) {
+        // If no creatorId filter, default to showing only PUBLIC agents
+        where.visibility = AgentVisibility.PUBLIC;
+        // Also filter by APPROVED status for public marketplace
+        if (!params?.status) {
+          where.status = AgentStatus.APPROVED;
+        }
+      }
+      
+      // Category filter
+      if (params?.category) {
+        where.categories = {
+          has: params.category,
+        };
+      }
+      
+      // Tag filter
+      if (params?.tag) {
+        where.tags = {
+          has: params.tag,
+        };
+      }
+      
+      // Verified only filter
+      if (params?.verifiedOnly) {
+        where.verificationStatus = VerificationStatus.VERIFIED;
+      }
+      
+      // Search filter
+      if (params?.search?.trim()) {
+        const term = params.search.trim();
+        where.OR = [
+          { name: { contains: term, mode: 'insensitive' } },
+          { description: { contains: term, mode: 'insensitive' } },
+        ];
+      }
+      
+      // Creator filter
+      if (params?.creatorId) {
+        where.creatorId = params.creatorId;
+      }
 
-    const agents = await this.prisma.agent.findMany({
-      where,
-      orderBy: {
-        updatedAt: 'desc',
-      },
-    });
+      const agents = await this.prisma.agent.findMany({
+        where,
+        orderBy: {
+          updatedAt: 'desc',
+        },
+      });
 
-    return agents.map(presentAgent);
+      return agents.map(presentAgent);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error fetching agents:', error);
+      // Re-throw with more context
+      if (error instanceof Error) {
+        throw new BadRequestException(`Failed to fetch agents: ${error.message}`);
+      }
+      throw new BadRequestException('Failed to fetch agents. Please try again later.');
+    }
   }
 
   async findOne(id: string) {

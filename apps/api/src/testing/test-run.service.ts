@@ -8,19 +8,31 @@ import { PrismaService } from '../modules/database/prisma.service.js';
 @Injectable()
 export class TestRunService {
   private readonly logger = new Logger(TestRunService.name);
-  private readonly testQueue: Queue;
+  private testQueue: Queue | null;
 
   constructor(
     private readonly prisma: PrismaService,
   ) {
-    // Initialize BullMQ queue
-    this.testQueue = new Queue('run-test-suite', {
-      connection: {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: parseInt(process.env.REDIS_PORT || '6379', 10),
-        password: process.env.REDIS_PASSWORD,
-      },
-    });
+    // Initialize BullMQ queue only if Redis is configured
+    const redisHost = process.env.REDIS_HOST;
+    if (redisHost) {
+      try {
+        this.testQueue = new Queue('run-test-suite', {
+          connection: {
+            host: redisHost,
+            port: parseInt(process.env.REDIS_PORT || '6379', 10),
+            password: process.env.REDIS_PASSWORD,
+          },
+        });
+        this.logger.log('Test run queue initialized with Redis');
+      } catch (error) {
+        this.logger.warn(`Failed to initialize test run queue: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        this.testQueue = null;
+      }
+    } else {
+      this.logger.warn('Redis not configured - test run queue will not be available');
+      this.testQueue = null;
+    }
   }
 
   /**
@@ -73,19 +85,23 @@ export class TestRunService {
             },
           });
 
-          // Enqueue job
-          await this.testQueue.add(
-            'run-test-suite',
-            {
-              runId: run.id,
-              agentId,
-              suiteId: suiteBySlug.id,
-              userId: params.userId,
-            },
-            {
-              jobId: run.id,
-            },
-          );
+          // Enqueue job (if queue is available)
+          if (this.testQueue) {
+            await this.testQueue.add(
+              'run-test-suite',
+              {
+                runId: run.id,
+                agentId,
+                suiteId: suiteBySlug.id,
+                userId: params.userId,
+              },
+              {
+                jobId: run.id,
+              },
+            );
+          } else {
+            this.logger.warn('Test queue not available - test run will remain in QUEUED status');
+          }
 
           runs.push({ id: run.id, agentId, suiteId: suiteBySlug.id });
         } else {
@@ -99,19 +115,23 @@ export class TestRunService {
             },
           });
 
-          // Enqueue job
-          await this.testQueue.add(
-            'run-test-suite',
-            {
-              runId: run.id,
-              agentId,
-              suiteId: suite.id,
-              userId: params.userId,
-            },
-            {
-              jobId: run.id,
-            },
-          );
+          // Enqueue job (if queue is available)
+          if (this.testQueue) {
+            await this.testQueue.add(
+              'run-test-suite',
+              {
+                runId: run.id,
+                agentId,
+                suiteId: suite.id,
+                userId: params.userId,
+              },
+              {
+                jobId: run.id,
+              },
+            );
+          } else {
+            this.logger.warn('Test queue not available - test run will remain in QUEUED status');
+          }
 
           runs.push({ id: run.id, agentId, suiteId: suite.id });
         }
@@ -220,10 +240,14 @@ export class TestRunService {
     }
 
     // Remove from queue if still queued
-    if (run.status === TestRunStatus.QUEUED) {
-      const job = await this.testQueue.getJob(runId);
-      if (job) {
-        await job.remove();
+    if (run.status === TestRunStatus.QUEUED && this.testQueue) {
+      try {
+        const job = await this.testQueue.getJob(runId);
+        if (job) {
+          await job.remove();
+        }
+      } catch (error) {
+        this.logger.warn(`Failed to remove job from queue: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
 
