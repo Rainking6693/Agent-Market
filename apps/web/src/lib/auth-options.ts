@@ -1,7 +1,10 @@
 import crypto from 'crypto';
 
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
+
+import { prisma } from './prisma';
 
 import type { NextAuthOptions } from 'next-auth';
 
@@ -63,9 +66,10 @@ const nextAuthSecret = resolveEnv(
 );
 
 export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
   secret: nextAuthSecret,
   session: {
-    strategy: 'jwt',
+    strategy: 'database', // Use database sessions with PrismaAdapter
   },
   providers: [
     GoogleProvider({
@@ -78,23 +82,19 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, account, profile }) {
-      if (account?.provider && profile) {
-        token.provider = account.provider;
-        token.name = profile.name ?? token.name;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id =
-          (token.sub as string | undefined) ??
-          session.user.id ??
-          session.user.email ??
-          '';
-        session.user.provider = token.provider as string | undefined;
+    async session({ session, user }) {
+      // user is the Prisma User model when using database sessions
+      if (session.user && user) {
+        session.user.id = user.id;
+        session.user.email = user.email;
+        session.user.name = (user as { displayName?: string }).displayName ?? user.name ?? user.email;
+        session.user.image = user.image ?? undefined;
       }
       return session;
     },
+  },
+  pages: {
+    signIn: '/login',
+    error: '/auth/error',
   },
 };
