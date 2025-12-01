@@ -79,9 +79,8 @@ export class AgentsService {
     verifiedOnly?: boolean;
     creatorId?: string;
   }) {
+    const where: Prisma.AgentWhereInput = {};
     try {
-      const where: Prisma.AgentWhereInput = {};
-      
       // Status filter
       if (params?.status) {
         where.status = params.status;
