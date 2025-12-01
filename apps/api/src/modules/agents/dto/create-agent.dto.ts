@@ -7,7 +7,6 @@ import {
   IsObject,
   IsOptional,
   IsString,
-  IsUUID,
   Length,
   Min,
 } from 'class-validator';
@@ -37,7 +36,8 @@ export class CreateAgentDto {
   @IsEnum(AgentVisibility)
   visibility: AgentVisibility = AgentVisibility.PUBLIC;
 
-  @IsUUID()
+  @IsString()
+  @Length(1, 64)
   creatorId!: string;
 
   @IsOptional()
