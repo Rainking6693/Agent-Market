@@ -2,7 +2,14 @@ import ky from 'ky';
 
 import { AUTH_TOKEN_KEY } from '@/lib/constants';
 
-import type { Agent } from '@agent-market/sdk';
+import type {
+  Agent,
+  AgentCertificationRecord,
+  AgentQualityAnalytics,
+  AgentRoiTimeseriesPoint,
+  EvaluationResultRecord,
+  ServiceAgreementWithVerifications,
+} from '@agent-market/sdk';
 
 export type { Agent };
 
@@ -192,19 +199,19 @@ export const agentsApi = {
       })
       .json<AgentBudgetSnapshot>(),
   getQualityAnalytics: (agentId: string) =>
-    api.get(`quality/analytics/agents/${agentId}`).json(),
+    api.get(`quality/analytics/agents/${agentId}`).json<AgentQualityAnalytics>(),
   listCertifications: (agentId: string) =>
-    api.get(`agents/${agentId}/certifications`).json(),
+    api.get(`agents/${agentId}/certifications`).json<AgentCertificationRecord[]>(),
   listEvaluationResults: (agentId: string) =>
-    api.get(`agents/${agentId}/evaluations`).json(),
+    api.get(`agents/${agentId}/evaluations`).json<EvaluationResultRecord[]>(),
   listServiceAgreements: (agentId: string) =>
-    api.get(`agents/${agentId}/service-agreements`).json(),
+    api.get(`agents/${agentId}/service-agreements`).json<ServiceAgreementWithVerifications[]>(),
   getQualityTimeseries: (agentId: string, days: number) =>
     api
       .get(`quality/analytics/agents/${agentId}/timeseries`, {
         searchParams: { days: String(days) },
       })
-      .json(),
+      .json<AgentRoiTimeseriesPoint[]>(),
 };
 
 export const ap2Api = {

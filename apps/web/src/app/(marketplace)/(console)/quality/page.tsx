@@ -1,5 +1,12 @@
 'use client';
 
+import {
+  AgentCertificationRecord,
+  AgentQualityAnalytics,
+  AgentRoiTimeseriesPoint,
+  EvaluationResultRecord,
+  ServiceAgreementWithVerifications,
+} from '@agent-market/sdk';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -33,12 +40,11 @@ export default function QualityPage({ searchParams }: { searchParams: { agentId?
     setSelectedAgentId(byQuery?.id ?? agents[0].id);
   }, [agents, searchParams.agentId]);
 
-  type UnknownRecord = Record<string, unknown>;
-  const [analytics, setAnalytics] = useState<UnknownRecord | null>(null);
-  const [certifications, setCertifications] = useState<UnknownRecord[]>([]);
-  const [evaluations, setEvaluations] = useState<UnknownRecord[]>([]);
-  const [agreements, setAgreements] = useState<UnknownRecord[]>([]);
-  const [roiTimeseries, setRoiTimeseries] = useState<UnknownRecord[]>([]);
+  const [analytics, setAnalytics] = useState<AgentQualityAnalytics | null>(null);
+  const [certifications, setCertifications] = useState<AgentCertificationRecord[]>([]);
+  const [evaluations, setEvaluations] = useState<EvaluationResultRecord[]>([]);
+  const [agreements, setAgreements] = useState<ServiceAgreementWithVerifications[]>([]);
+  const [roiTimeseries, setRoiTimeseries] = useState<AgentRoiTimeseriesPoint[]>([]);
 
   useEffect(() => {
     if (!selectedAgentId) return;
@@ -57,11 +63,11 @@ export default function QualityPage({ searchParams }: { searchParams: { agentId?
           agentsApi.listServiceAgreements?.(selectedAgentId) ?? Promise.resolve([]),
           agentsApi.getQualityTimeseries?.(selectedAgentId, 14) ?? Promise.resolve([]),
         ]);
-        setAnalytics(analyticsRes);
-        setCertifications(certs);
-        setEvaluations(evals);
-        setAgreements(agreementsRes);
-        setRoiTimeseries(roi);
+        setAnalytics(analyticsRes ?? null);
+        setCertifications(certs ?? []);
+        setEvaluations(evals ?? []);
+        setAgreements(agreementsRes ?? []);
+        setRoiTimeseries(roi ?? []);
       } catch (error) {
         console.warn('Quality dashboard data unavailable', error);
       }
@@ -104,7 +110,6 @@ export default function QualityPage({ searchParams }: { searchParams: { agentId?
         <QualityAgentSelector
           agents={agents}
           selectedAgentId={selectedAgentId ?? ''}
-          onChange={setSelectedAgentId}
         />
       </div>
     );
@@ -125,7 +130,6 @@ export default function QualityPage({ searchParams }: { searchParams: { agentId?
           <QualityAgentSelector
             agents={agents}
             selectedAgentId={selectedAgentId}
-            onChange={setSelectedAgentId}
           />
         </div>
       </header>
