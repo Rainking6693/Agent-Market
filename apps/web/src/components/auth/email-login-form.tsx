@@ -34,7 +34,7 @@ export function EmailLoginForm() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     mode: 'onSubmit',
-    reValidateMode: 'onSubmit',
+    reValidateMode: 'onChange',
   });
 
   const onSubmit = async (data: LoginFormData) => {
@@ -42,7 +42,9 @@ export function EmailLoginForm() {
     setError(null);
 
     try {
+      console.log('Attempting login for:', data.email);
       const response = await authApi.login(data.email, data.password);
+      console.log('Login response received:', response);
 
       // Store token in localStorage and cookie
       persistAuth(response.user, response.accessToken);
@@ -81,6 +83,8 @@ export function EmailLoginForm() {
       }
       
       setError(message);
+      setIsLoading(false);
+    } finally {
       setIsLoading(false);
     }
   };
