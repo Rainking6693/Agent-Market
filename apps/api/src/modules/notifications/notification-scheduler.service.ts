@@ -143,51 +143,51 @@ export class NotificationSchedulerService {
   async updateLoyaltyTiers() {
     this.logger.log('Updating loyalty tiers for all agents...');
 
-    const agents = await this.prisma.agent.findMany({
-      where: {
-        status: 'APPROVED',
-      },
-      include: {
-        executions: {
-          where: { status: 'SUCCEEDED' },
-        },
-        metricsPrimary: true,
-      },
-      take: 1000, // Process in batches
-    });
+    // Note: loyaltyTier field doesn't exist in schema yet
+    // TODO: Add loyaltyTier to Agent model in Prisma schema
+    // Once added, uncomment the code below to update loyalty tiers
+    
+    // const agents = await this.prisma.agent.findMany({
+    //   where: {
+    //     status: 'APPROVED',
+    //   },
+    //   include: {
+    //     executions: {
+    //       where: { status: 'SUCCEEDED' },
+    //     },
+    //     metricsPrimary: true,
+    //   },
+    //   take: 1000, // Process in batches
+    // });
+    //
+    // let updated = 0;
+    // for (const agent of agents) {
+    //   const executionCount = agent.executions.length;
+    //   const totalSpend = agent.metricsPrimary.reduce(
+    //     (sum, metric) => sum.plus(metric.totalSpend),
+    //     new (await import('@prisma/client')).Prisma.Decimal(0),
+    //   );
+    //   const gmv = totalSpend.toNumber();
+    //
+    //   let newTier: 'NEW' | 'TRUSTED' | 'ELITE' = 'NEW';
+    //   if (executionCount >= 50 && gmv >= 1000 && (agent.trustScore || 0) >= 80) {
+    //     newTier = 'ELITE';
+    //   } else if (executionCount >= 10 && gmv >= 200 && (agent.trustScore || 0) >= 70) {
+    //     newTier = 'TRUSTED';
+    //   }
+    //
+    //   if (agent.loyaltyTier !== newTier && newTier !== 'NEW') {
+    //     await this.prisma.agent.update({
+    //       where: { id: agent.id },
+    //       data: { loyaltyTier: newTier },
+    //     });
+    //     this.logger.log(`Updated agent ${agent.id} to ${newTier} tier`);
+    //     updated++;
+    //   }
+    // }
 
-    let updated = 0;
-
-    for (const agent of agents) {
-      const executionCount = agent.executions.length;
-      const totalSpend = agent.metricsPrimary.reduce(
-        (sum, metric) => sum.plus(metric.totalSpend),
-        new (await import('@prisma/client')).Prisma.Decimal(0),
-      );
-      const gmv = totalSpend.toNumber();
-
-      let newTier: 'NEW' | 'TRUSTED' | 'ELITE' = 'NEW';
-
-      if (executionCount >= 50 && gmv >= 1000 && (agent.trustScore || 0) >= 80) {
-        newTier = 'ELITE';
-      } else if (executionCount >= 10 && gmv >= 200 && (agent.trustScore || 0) >= 70) {
-        newTier = 'TRUSTED';
-      }
-
-      if (agent.loyaltyTier !== newTier && newTier !== 'NEW') {
-        await this.prisma.agent.update({
-          where: { id: agent.id },
-          data: { loyaltyTier: newTier },
-        });
-        this.logger.log(`Updated agent ${agent.id} to ${newTier} tier`);
-        // TODO: Send tier upgrade notification
-        // await this.notificationService.sendTierUpgrade(agent.id, newTier);
-        updated++;
-      }
-    }
-
-    this.logger.log(`Updated ${updated} agent loyalty tiers`);
-    return { updated };
+    this.logger.log('Loyalty tier updates skipped - field not in schema');
+    return { updated: 0 };
   }
 }
 

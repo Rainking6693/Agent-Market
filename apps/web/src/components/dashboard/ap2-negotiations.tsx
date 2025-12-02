@@ -47,8 +47,8 @@ export function Ap2Negotiations({ agentId }: Ap2NegotiationsProps) {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between gap-4">
         <div>
-          <CardTitle className="text-base font-semibold text-ink">AP2 negotiations</CardTitle>
-          <p className="text-sm text-ink-muted">Live status of autonomous procurements.</p>
+          <CardTitle className="text-base font-semibold text-ink font-body">AP2 negotiations</CardTitle>
+          <p className="text-sm text-ink-muted font-body">Live status of autonomous procurements.</p>
         </div>
         <Button
           type="button"

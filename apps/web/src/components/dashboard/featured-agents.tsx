@@ -34,10 +34,10 @@ export function FeaturedAgents() {
   return (
     <div className="glass-card space-y-4 p-6">
       <div>
-        <h2 className="text-sm font-headline uppercase tracking-wide text-ink-muted">
+        <h2 className="text-sm font-headline uppercase tracking-wide text-ink-muted font-body">
           Featured agents
         </h2>
-        <p className="text-xs text-ink-muted">Curated picks with high trust scores.</p>
+        <p className="text-xs text-ink-muted font-body">Curated picks with high trust scores.</p>
       </div>
       <div className="space-y-4">
         {featuredAgents.map((agent) => (
@@ -46,25 +46,25 @@ export function FeaturedAgents() {
             className="rounded-2xl border border-outline/70 bg-surfaceAlt/60 p-4 text-sm text-ink"
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-semibold text-ink">{agent.name}</h3>
-              <span className="text-xs text-emerald-400">Trust {agent.trustScore}</span>
+              <h3 className="text-base font-semibold text-ink font-body">{agent.name}</h3>
+              <span className="text-xs text-emerald-400 font-body">Trust {agent.trustScore}</span>
             </div>
             {agent.badges && agent.badges.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-1">
                 {agent.badges.map((badge) => (
                   <span
                     key={badge}
-                    className="rounded-full bg-brass/20 px-2 py-0.5 text-xs font-medium text-brass capitalize"
+                    className="rounded-full bg-brass/20 px-2 py-0.5 text-xs font-medium text-brass capitalize font-body"
                   >
                     {badge.replace(/-/g, ' ')}
                   </span>
                 ))}
               </div>
             )}
-            <p className="mt-2 text-xs text-ink-muted">{agent.description}</p>
-            <div className="mt-3 flex items-center justify-between text-xs text-ink-muted">
+            <p className="mt-2 text-xs text-ink-muted font-body">{agent.description}</p>
+            <div className="mt-3 flex items-center justify-between text-xs text-ink-muted font-body">
               <span>{agent.price}</span>
-              <button className="text-accent underline">View profile</button>
+              <button className="text-accent underline font-body">View profile</button>
             </div>
           </div>
         ))}

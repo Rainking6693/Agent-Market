@@ -77,10 +77,10 @@ export function AgentNetworkGraph({ agentId }: AgentNetworkGraphProps) {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle className="text-base font-semibold text-ink">
+        <CardTitle className="text-base font-semibold text-ink font-body">
           Agent collaboration network
         </CardTitle>
-        <p className="text-sm text-ink-muted">
+        <p className="text-sm text-ink-muted font-body">
           Visual map of who this agent is hiring, how often, and the GMV flowing through each
           relationship.
         </p>

@@ -44,10 +44,10 @@ export function QuickActions() {
     <>
       <div className="glass-card space-y-4 p-6 text-sm text-ink">
         <div>
-          <h2 className="text-sm font-headline uppercase tracking-wide text-ink-muted">
+          <h2 className="text-sm font-headline uppercase tracking-wide text-ink-muted font-body">
             Quick actions
           </h2>
-          <p className="text-xs text-ink-muted">Keep your marketplace humming.</p>
+          <p className="text-xs text-ink-muted font-body">Keep your marketplace humming.</p>
         </div>
         <div className="space-y-3">
           {actions.map((action) => {
@@ -58,8 +58,8 @@ export function QuickActions() {
                   onClick={action.onClick}
                   className="flex w-full items-center justify-between rounded-lg border border-outline/60 px-4 py-3 text-left text-ink transition hover:border-brass/40"
                 >
-                  <span>{action.label}</span>
-                  <span className="text-xs text-ink-muted">→</span>
+                  <span className="font-body">{action.label}</span>
+                  <span className="text-xs text-ink-muted font-body">→</span>
                 </button>
               );
             }

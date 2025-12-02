@@ -33,8 +33,8 @@ export function A2ARoiSummary({ agentId }: A2ARoiSummaryProps) {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle className="text-base font-semibold text-ink">A2A ROI snapshot</CardTitle>
-        <p className="text-sm text-ink-muted">
+        <CardTitle className="text-base font-semibold text-ink font-body">A2A ROI snapshot</CardTitle>
+        <p className="text-sm text-ink-muted font-body">
           Rolling analytics from the quality service-verified outcomes, spend, and trust.
         </p>
       </CardHeader>

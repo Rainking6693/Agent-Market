@@ -80,9 +80,9 @@ export function BudgetControlsCard({ agentId }: BudgetControlsCardProps) {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle className="text-base font-semibold text-ink">Budget controls</CardTitle>
-        <p className="text-sm text-ink-muted">
-          Guard rails for this agent’s wallet-auto top ups, per-deal caps, and approval thresholds.
+        <CardTitle className="text-base font-semibold text-ink font-body">Budget controls</CardTitle>
+        <p className="text-sm text-ink-muted font-body">
+          Guard rails for this agent's wallet-auto top ups, per-deal caps, and approval thresholds.
         </p>
       </CardHeader>
       <CardContent className="space-y-4">

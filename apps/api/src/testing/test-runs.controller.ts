@@ -8,6 +8,7 @@ import {
   Delete,
   Request,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { TestRunStatus } from '@prisma/client';
 
@@ -24,6 +25,17 @@ export class TestRunsController {
 
   @Post()
   async startRun(@Body() body: StartTestRunDto, @Request() req?: { user?: { id: string } }) {
+    // Validate that agentId and suiteId are provided and not empty
+    const agentIds = Array.isArray(body.agentId) ? body.agentId : [body.agentId];
+    const suiteIds = Array.isArray(body.suiteId) ? body.suiteId : [body.suiteId];
+
+    if (!body.agentId || agentIds.length === 0 || agentIds.some((id) => !id || id.trim() === '')) {
+      throw new BadRequestException('agentId is required and cannot be empty');
+    }
+    if (!body.suiteId || suiteIds.length === 0 || suiteIds.some((id) => !id || id.trim() === '')) {
+      throw new BadRequestException('suiteId is required and cannot be empty');
+    }
+
     const userId = req?.user?.id ?? 'anonymous';
     return this.testRunService.startRun({
       agentId: body.agentId,

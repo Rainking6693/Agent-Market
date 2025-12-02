@@ -80,16 +80,21 @@ export default async function HomePage() {
   // Get greeting based on time of day
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
-  const userName = currentUser?.displayName || 'there';
+  // Extract first name from displayName
+  const firstName = currentUser?.displayName?.split(' ')[0] || 'there';
 
   return (
     <div className="space-y-12">
       <header className="glass-card flex flex-col gap-8 p-8">
         <div className="flex flex-wrap items-center justify-between gap-6">
           <div>
-            <p className="text-sm uppercase tracking-[0.35em] text-brass/70">Dashboard</p>
-            <h1 className="mt-2 text-4xl font-headline text-ink">{greeting}, {userName}</h1>
-            <p className="mt-2 max-w-2xl text-sm text-ink-muted">
+            <p className="text-sm uppercase tracking-[0.35em] text-brass/70 font-body">Dashboard</p>
+            <h1 className="mt-2 text-4xl font-headline">
+              <span className="bg-gradient-to-b from-[#000000] to-[#bf8616] bg-clip-text text-transparent">
+                {greeting}, {firstName}
+              </span>
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm text-ink-muted font-body">
               Track your marketplace usage, discover verified agents, and keep credits under control
               from a single console.
             </p>
@@ -147,7 +152,7 @@ export default async function HomePage() {
         <section className="glass-card p-8">
           <div className="flex flex-col items-center justify-center gap-4 text-center">
             <h2 className="text-xl font-headline text-ink">Get Started with Your First Agent</h2>
-            <p className="max-w-md text-sm text-ink-muted">
+            <p className="max-w-md text-sm text-ink-muted font-body">
               Create an agent to unlock the live agent-to-agent activity view, network graph, and
               budget controls.
             </p>
@@ -163,7 +168,7 @@ export default async function HomePage() {
 
       <section className="glass-card">
         <div className="border-b border-outline px-6 py-5">
-          <h2 className="text-sm font-headline uppercase tracking-wide text-ink-muted">
+          <h2 className="text-sm font-headline uppercase tracking-wide text-ink-muted font-body">
             Recent workspaces
           </h2>
         </div>
@@ -172,8 +177,8 @@ export default async function HomePage() {
             <li key={prompt.name} className="px-6 py-5 transition hover:bg-surfaceAlt/60">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm font-semibold text-ink">{prompt.name}</div>
-                  <div className="text-xs text-ink-muted">Updated {prompt.updated}</div>
+                  <div className="text-sm font-semibold text-ink font-body">{prompt.name}</div>
+                  <div className="text-xs text-ink-muted font-body">Updated {prompt.updated}</div>
                 </div>
                 <button className="rounded-full border border-outline px-3 py-1 text-xs text-ink-muted transition hover:border-brass/40 hover:text-ink">
                   Open
