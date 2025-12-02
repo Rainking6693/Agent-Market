@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import { useEffect, useMemo, useState } from 'react';
 
-import { clearStoredAuth, getStoredAuth } from '@/lib/auth';
+import { clearStoredAuth, ensureAuthToken, getStoredAuth } from '@/lib/auth';
 import { AUTH_TOKEN_KEY } from '@/lib/constants';
 import { useAuthStore } from '@/stores/auth-store';
 
@@ -28,6 +28,7 @@ export function useAuth() {
 
   // Keep local store in sync with NextAuth session or JWT login
   useEffect(() => {
+    const restoredToken = ensureAuthToken();
     const stored = getStoredAuth();
 
     if (status === 'authenticated' && sessionUser) {
@@ -44,6 +45,12 @@ export function useAuth() {
       if (!user || user.id !== stored.user.id || user.email !== stored.user.email) {
         setAuth(stored.user, stored.token);
       }
+    } else if (restoredToken && sessionUser) {
+      // If token was restored from cookie but store is empty, hydrate it with session data
+      setAuth(
+        sessionUser,
+        restoredToken,
+      );
     } else if (status === 'unauthenticated') {
       if (user || token) {
         clearAuth();

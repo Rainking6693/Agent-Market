@@ -1,10 +1,12 @@
 'use client';
 
 import { X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useTestRunProgress } from '@/hooks/use-test-run-progress';
+import type { StartTestRunResponse } from '@/lib/api';
 
 interface TestSuite {
   id: string;
@@ -29,7 +31,7 @@ interface TestWizardModalProps {
   agents: Agent[];
   suites: TestSuite[];
   isLoading?: boolean;
-  onStartRun: (agentIds: string[], suiteIds: string[]) => Promise<void>;
+  onStartRun: (agentIds: string[], suiteIds: string[]) => Promise<StartTestRunResponse>;
 }
 
 export function TestWizardModal({
@@ -44,6 +46,21 @@ export function TestWizardModal({
   const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
   const [selectedSuites, setSelectedSuites] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
+  const [startError, setStartError] = useState<string | null>(null);
+  const [activeRunId, setActiveRunId] = useState<string | null>(null);
+
+  const { progress } = useTestRunProgress(activeRunId);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setStep(1);
+      setSelectedAgents([]);
+      setSelectedSuites([]);
+      setIsRunning(false);
+      setStartError(null);
+      setActiveRunId(null);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -53,14 +70,30 @@ export function TestWizardModal({
     }
 
     setIsRunning(true);
+    setStartError(null);
     try {
-      await onStartRun(selectedAgents, selectedSuites);
-      onClose();
-      setStep(1);
-      setSelectedAgents([]);
-      setSelectedSuites([]);
+      const response = await onStartRun(selectedAgents, selectedSuites);
+      const firstRun = response?.runs?.[0];
+      if (firstRun?.id) {
+        setActiveRunId(firstRun.id);
+        setStep(3);
+      } else {
+        setStartError('Test run started, but no run ID was returned.');
+      }
     } catch (error) {
       console.error('Failed to start test run:', error);
+      let message = 'Failed to start test run. Please try again.';
+      const httpError = error as { response?: Response };
+      if (httpError?.response) {
+        const body = await httpError.response.clone().json().catch(() => null);
+        message =
+          (body as { message?: string })?.message ??
+          httpError.response.statusText ??
+          message;
+      } else if (error instanceof Error) {
+        message = error.message;
+      }
+      setStartError(message);
     } finally {
       setIsRunning(false);
     }
@@ -101,6 +134,12 @@ export function TestWizardModal({
         </div>
 
         <div className="max-h-[60vh] overflow-y-auto pr-1">
+          {startError && (
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+              {startError}
+            </div>
+          )}
+
           {step === 1 && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-ink">Select Agents</h3>
@@ -206,6 +245,67 @@ export function TestWizardModal({
           {step === 3 && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-ink">Review & Confirm</h3>
+              {activeRunId ? (
+                <div className="space-y-4 rounded-lg border border-outline/40 bg-surfaceAlt/60 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs uppercase text-ink-muted">Run in progress</p>
+                      <p className="text-sm font-semibold text-ink">ID: {activeRunId}</p>
+                    </div>
+                    <span
+                      className={`rounded-full px-3 py-1 text-xs font-medium ${
+                        progress?.status === 'completed'
+                          ? 'bg-green-100 text-green-800'
+                          : progress?.status === 'failed'
+                            ? 'bg-red-100 text-red-700'
+                            : 'bg-amber-100 text-amber-800'
+                      }`}
+                    >
+                      {progress?.status ?? 'queued'}
+                    </span>
+                  </div>
+
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-outline/30">
+                    <div
+                      className="h-full bg-gradient-to-r from-brass to-[#bf8616] transition-all duration-500"
+                      style={{
+                        width: `${
+                          progress?.totalTests
+                            ? Math.min(
+                                100,
+                                Math.round((progress.completedTests / progress.totalTests) * 100),
+                              )
+                            : progress?.status === 'completed'
+                              ? 100
+                              : progress?.status === 'running'
+                                ? 50
+                                : 15
+                        }%`,
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-ink-muted">
+                    <span>
+                      {progress?.status === 'completed'
+                        ? 'Completed'
+                        : progress?.status === 'failed'
+                          ? 'Failed'
+                          : progress?.status === 'running'
+                            ? `Running${progress?.currentTest ? `: ${progress.currentTest}` : ''}`
+                            : 'Queued...'}
+                    </span>
+                    {progress?.score !== undefined && progress.score !== null && (
+                      <span className="font-semibold text-ink">Score: {progress.score}</span>
+                    )}
+                  </div>
+                  {progress?.error && (
+                    <div className="rounded-md border border-red-200 bg-red-50 p-3 text-xs text-red-700">
+                      {progress.error}
+                    </div>
+                  )}
+                </div>
+              ) : null}
+
               <div className="space-y-6">
                 <div>
                   <h4 className="mb-2 text-sm font-semibold text-ink">Selected Agents</h4>

@@ -19,6 +19,30 @@ export const persistAuth = (user: StoredAuthUser, token: string) => {
   document.cookie = `auth_token=${token}; path=/; max-age=${maxAge}; SameSite=Lax`;
 };
 
+export const ensureAuthToken = () => {
+  if (typeof document === 'undefined') {
+    return null;
+  }
+
+  const existing = window.localStorage.getItem(AUTH_TOKEN_KEY);
+  if (existing) {
+    return existing;
+  }
+
+  // Try to restore from the auth cookie set during login
+  const cookies = document.cookie.split(';').map((c) => c.trim());
+  const authCookie = cookies.find((c) => c.startsWith('auth_token='));
+  if (authCookie) {
+    const token = authCookie.split('=')[1];
+    if (token) {
+      window.localStorage.setItem(AUTH_TOKEN_KEY, token);
+      return token;
+    }
+  }
+
+  return null;
+};
+
 export const clearStoredAuth = () => {
   if (typeof window === 'undefined') {
     return;

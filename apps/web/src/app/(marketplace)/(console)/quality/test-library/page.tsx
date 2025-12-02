@@ -37,7 +37,7 @@ export default function TestLibraryPage() {
     if (isWizardOpen) {
       setIsWizardLoading(true);
       agentsApi
-        .list()
+        .list({ showAll: 'true' })
         .then((data) => {
           setAgents(data);
           setIsWizardLoading(false);
@@ -169,7 +169,7 @@ export default function TestLibraryPage() {
         isLoading={isWizardLoading}
         onStartRun={async (agentIds, suiteIds) => {
           const finalSuiteIds = selectedSuite ? [selectedSuite, ...suiteIds] : suiteIds;
-          await testingApi.startRun({
+          return testingApi.startRun({
             agentId: agentIds,
             suiteId: finalSuiteIds,
           });

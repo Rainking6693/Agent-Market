@@ -85,7 +85,7 @@ export function QuickActions() {
         suites={suites}
         isLoading={isLoading}
         onStartRun={async (agentIds, suiteIds) => {
-          await testingApi.startRun({
+          return testingApi.startRun({
             agentId: agentIds,
             suiteId: suiteIds,
           });

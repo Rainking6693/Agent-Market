@@ -177,13 +177,12 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
         agents={agents}
         suites={suites}
         onStartRun={async (agentIds, suiteIds) => {
-          await testingApi.startRun({
+          const response = await testingApi.startRun({
             agentId: agentIds,
             suiteId: suiteIds,
           });
           // Refresh runs immediately
           await fetchRuns();
-          setIsWizardOpen(false);
           // Restart polling if not already running
           if (!pollingIntervalRef.current) {
             pollingIntervalRef.current = setInterval(async () => {
@@ -197,6 +196,7 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
               }
             }, 2000);
           }
+          return response;
         }}
       />
 
