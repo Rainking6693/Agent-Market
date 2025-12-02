@@ -11,12 +11,16 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { TestRunStatus } from '@prisma/client';
+import { Allow } from 'class-validator';
 
 import { TestRunService } from './test-run.service.js';
 
 class StartTestRunDto {
-  agentId: string | string[];
-  suiteId: string | string[];
+  @Allow()
+  agentId!: string | string[];
+
+  @Allow()
+  suiteId!: string | string[];
 }
 
 @Controller('api/v1/test-runs')

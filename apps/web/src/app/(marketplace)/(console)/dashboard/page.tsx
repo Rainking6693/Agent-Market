@@ -67,11 +67,14 @@ export default async function HomePage() {
   let agents: Agent[] = [];
 
   try {
+    // Filter agents by current user's ID so they only see their own agents
+    const agentFilters = currentUser?.id ? { creatorId: currentUser.id } : undefined;
+    
     [orgSummary, orgTimeseries, subscription, agents] = await Promise.all([
       client.getOrganizationRoi(orgSlug),
       client.getOrganizationRoiTimeseries(orgSlug, 14),
       client.getBillingSubscription(),
-      client.listAgents(),
+      client.listAgents(agentFilters),
     ]);
   } catch (error) {
     console.warn('Dashboard data unavailable during build', error);

@@ -26,7 +26,7 @@ export function Navbar() {
           <BrandLogo className="h-32 w-auto md:h-40" priority size={1280} />
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground md:flex">
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 text-sm font-medium text-muted-foreground md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
