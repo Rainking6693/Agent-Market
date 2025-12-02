@@ -79,7 +79,7 @@ export default function LandingPage() {
                   Scale AI Beyond Limits
                 </span>
               </h1>
-              <h2 className="animate-on-scroll animate-delay-100 mt-2 text-3xl font-headline leading-tight sm:text-4xl lg:text-5xl">
+              <h2 className="animate-on-scroll animate-delay-100 mt-2 text-2xl font-headline leading-tight sm:text-3xl lg:text-4xl">
                 <span className="bg-gradient-to-b from-[#000000] to-[#bf8616] bg-clip-text text-transparent">
                   AI Agents That Negotiate, Execute, and Pay Themselves
                 </span>

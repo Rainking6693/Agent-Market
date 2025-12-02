@@ -1,7 +1,7 @@
 'use client';
 
 import { Play, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,17 +23,41 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
   const [agents, setAgents] = useState<Agent[]>([]);
   const [suites, setSuites] = useState<TestSuite[]>([]);
 
+  const fetchRuns = async () => {
+    try {
+      const data = await testingApi.listRuns({ agentId });
+      setRuns(data.runs || []);
+      setIsLoading(false);
+      return data.runs || [];
+    } catch (error) {
+      console.error('Failed to fetch test runs:', error);
+      setIsLoading(false);
+      return [];
+    }
+  };
+
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
-    testingApi
-      .listRuns({ agentId })
-      .then((data) => {
-        setRuns(data.runs || []);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error('Failed to fetch test runs:', error);
-        setIsLoading(false);
-      });
+    fetchRuns();
+    // Poll for updates every 2 seconds
+    pollingIntervalRef.current = setInterval(async () => {
+      const currentRuns = await fetchRuns();
+      const hasActiveRuns = currentRuns.some(
+        (run) => run.status === 'QUEUED' || run.status === 'RUNNING',
+      );
+      // Stop polling if no active runs
+      if (!hasActiveRuns && pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
+    }, 2000);
+
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+      }
+    };
   }, [agentId]);
 
   useEffect(() => {
@@ -157,51 +181,120 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
             agentId: agentIds,
             suiteId: suiteIds,
           });
-          // Refresh runs
-          const data = await testingApi.listRuns({ agentId });
-          setRuns(data.runs || []);
+          // Refresh runs immediately
+          await fetchRuns();
+          setIsWizardOpen(false);
+          // Restart polling if not already running
+          if (!pollingIntervalRef.current) {
+            pollingIntervalRef.current = setInterval(async () => {
+              const currentRuns = await fetchRuns();
+              const hasActiveRuns = currentRuns.some(
+                (run) => run.status === 'QUEUED' || run.status === 'RUNNING',
+              );
+              if (!hasActiveRuns && pollingIntervalRef.current) {
+                clearInterval(pollingIntervalRef.current);
+                pollingIntervalRef.current = null;
+              }
+            }, 2000);
+          }
         }}
       />
+
+      {/* Active Test Runs with Progress */}
+      {runs.filter((run) => run.status === 'QUEUED' || run.status === 'RUNNING').length > 0 && (
+        <Card className="border-brass/40 bg-gradient-to-br from-brass/10 to-brass/5">
+          <CardHeader>
+            <CardTitle>Active Test Runs</CardTitle>
+            <CardDescription>Tests currently in progress</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {runs
+                .filter((run) => run.status === 'QUEUED' || run.status === 'RUNNING')
+                .map((run) => {
+                  const progress =
+                    run.status === 'QUEUED' ? 10 : run.status === 'RUNNING' ? 50 : 100;
+                  return (
+                    <div
+                      key={run.id}
+                      className="rounded-lg border border-outline/40 bg-surfaceAlt/60 p-4"
+                    >
+                      <div className="mb-2 flex items-center justify-between">
+                        <h4 className="font-semibold text-ink font-body">{run.suite.name}</h4>
+                        <span className={`text-xs font-medium ${getStatusColor(run.status)}`}>
+                          {run.status}
+                        </span>
+                      </div>
+                      <div className="mb-2 h-2 w-full overflow-hidden rounded-full bg-outline/30">
+                        <div
+                          className="h-full bg-gradient-to-r from-brass to-[#bf8616] transition-all duration-500"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                      <p className="text-xs text-ink-muted font-body">
+                        {run.status === 'QUEUED'
+                          ? 'Waiting to start...'
+                          : run.status === 'RUNNING'
+                            ? 'Running tests...'
+                            : 'Completed'}
+                      </p>
+                    </div>
+                  );
+                })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Test History */}
       <Card>
         <CardHeader>
-          <CardTitle>Test History</CardTitle>
-          <CardDescription>Previous test runs and results</CardDescription>
+          <CardTitle>Test Results</CardTitle>
+          <CardDescription>Completed test runs and scores</CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="py-8 text-center text-sm text-ink-muted">Loading test runs...</div>
-          ) : runs.length === 0 ? (
-            <div className="py-8 text-center text-sm text-ink-muted">
-              No test runs yet. Start a test run to see results here.
+            <div className="py-8 text-center text-sm text-ink-muted font-body">
+              Loading test runs...
+            </div>
+          ) : runs.filter((run) => run.status === 'COMPLETED' || run.status === 'FAILED').length ===
+            0 ? (
+            <div className="py-8 text-center text-sm text-ink-muted font-body">
+              No completed test runs yet. Start a test run to see results here.
             </div>
           ) : (
             <div className="space-y-3">
-              {runs.map((run) => (
-                <div
-                  key={run.id}
-                  className="flex items-center justify-between rounded-lg border border-outline/40 bg-surfaceAlt/60 p-4"
-                >
-                  <div className="flex items-center gap-4">
-                    {getStatusIcon(run.status)}
-                    <div>
-                      <h4 className="font-semibold text-ink">{run.suite.name}</h4>
-                      <p className="text-xs text-ink-muted capitalize">{run.suite.category}</p>
+              {runs
+                .filter((run) => run.status === 'COMPLETED' || run.status === 'FAILED')
+                .map((run) => (
+                  <div
+                    key={run.id}
+                    className="flex items-center justify-between rounded-lg border border-outline/40 bg-surfaceAlt/60 p-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      {getStatusIcon(run.status)}
+                      <div>
+                        <h4 className="font-semibold text-ink font-body">{run.suite.name}</h4>
+                        <p className="text-xs text-ink-muted capitalize font-body">
+                          {run.suite.category}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      {run.score !== null && (
+                        <div className="text-right">
+                          <p className="text-lg font-bold text-ink font-body">Score: {run.score}</p>
+                          <p className="text-xs text-ink-muted font-body">
+                            {new Date(run.createdAt).toLocaleString()}
+                          </p>
+                        </div>
+                      )}
+                      <span className={`text-sm font-medium ${getStatusColor(run.status)}`}>
+                        {run.status}
+                      </span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    {run.score !== null && (
-                      <div className="text-right">
-                        <p className="text-sm font-semibold text-ink">Score: {run.score}</p>
-                      </div>
-                    )}
-                    <span className={`text-sm font-medium ${getStatusColor(run.status)}`}>
-                      {run.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           )}
         </CardContent>
