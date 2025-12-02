@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 import { TestWizardModal } from '@/components/testing/test-wizard-modal';
-import { useAuth } from '@/hooks/use-auth';
 import { testingApi, agentsApi, type TestSuite, type Agent } from '@/lib/api';
 
 export function QuickActions() {
@@ -12,14 +11,12 @@ export function QuickActions() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [suites, setSuites] = useState<TestSuite[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useAuth();
 
   useEffect(() => {
     if (isTestWizardOpen) {
       setIsLoading(true);
-      // Filter agents by current user's ID so they only see their own agents
-      const agentFilters = user?.id ? { creatorId: user.id } : undefined;
-      Promise.all([agentsApi.list(agentFilters), testingApi.listSuites()])
+      // Show all agents in test wizard (same as dashboard)
+      Promise.all([agentsApi.list({ showAll: 'true' }), testingApi.listSuites()])
         .then(([agentsData, suitesData]) => {
           setAgents(agentsData);
           setSuites(suitesData);
@@ -30,7 +27,7 @@ export function QuickActions() {
           setIsLoading(false);
         });
     }
-  }, [isTestWizardOpen, user?.id]);
+  }, [isTestWizardOpen]);
 
   const actions = [
     { label: 'Deploy a new agent', href: '/agents/new' },

@@ -67,14 +67,13 @@ export default async function HomePage() {
   let agents: Agent[] = [];
 
   try {
-    // Filter agents by current user's ID so they only see their own agents
-    const agentFilters = currentUser?.id ? { creatorId: currentUser.id } : undefined;
-    
+    // Show all agents on the dashboard by setting showAll=true
+    // This bypasses the default PUBLIC/APPROVED filter
     [orgSummary, orgTimeseries, subscription, agents] = await Promise.all([
       client.getOrganizationRoi(orgSlug),
       client.getOrganizationRoiTimeseries(orgSlug, 14),
       client.getBillingSubscription(),
-      client.listAgents(agentFilters),
+      client.listAgents({ showAll: 'true' }),
     ]);
   } catch (error) {
     console.warn('Dashboard data unavailable during build', error);

@@ -78,24 +78,28 @@ export class AgentsService {
     search?: string;
     verifiedOnly?: boolean;
     creatorId?: string;
+    showAll?: boolean;
   }) {
     const where: Prisma.AgentWhereInput = {};
     try {
       // Status filter
-      if (params?.status) {
+      const hasStatusFilter = params?.status !== undefined;
+      if (hasStatusFilter) {
         where.status = params.status;
       }
       
-      // Visibility filter - default to PUBLIC for public marketplace
-      if (params?.visibility !== undefined) {
+      // Visibility filter
+      const hasVisibilityFilter = params?.visibility !== undefined;
+      if (hasVisibilityFilter) {
         where.visibility = params.visibility;
-      } else if (!params?.creatorId) {
-        // If no creatorId filter, default to showing only PUBLIC agents
+      }
+      
+      // Only apply default PUBLIC/APPROVED filter if showAll is not true and no explicit filters are set
+      // This allows authenticated users to see all agents by setting showAll=true
+      if (!params?.showAll && !hasStatusFilter && !hasVisibilityFilter && !params?.creatorId) {
+        // Default to showing only PUBLIC, APPROVED agents for public marketplace browsing
         where.visibility = AgentVisibility.PUBLIC;
-        // Also filter by APPROVED status for public marketplace
-        if (!params?.status) {
-          where.status = AgentStatus.APPROVED;
-        }
+        where.status = AgentStatus.APPROVED;
       }
       
       // Category filter

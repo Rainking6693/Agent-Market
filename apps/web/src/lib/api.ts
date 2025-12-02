@@ -131,6 +131,7 @@ export interface AgentListFilters {
   tag?: string;
   verifiedOnly?: boolean;
   creatorId?: string;
+  showAll?: string;
 }
 
 export const authApi = {
@@ -160,6 +161,7 @@ export const agentsApi = {
             ...(filters?.tag ? { tag: filters.tag } : {}),
             ...(filters?.verifiedOnly ? { verifiedOnly: 'true' } : {}),
             ...(filters?.creatorId ? { creatorId: filters.creatorId } : {}),
+            ...(filters?.showAll ? { showAll: filters.showAll } : {}),
           },
         })
         .json<Agent[]>();
