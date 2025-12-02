@@ -191,6 +191,20 @@ export const agentsApi = {
         json: payload,
       })
       .json<AgentBudgetSnapshot>(),
+  getQualityAnalytics: (agentId: string) =>
+    api.get(`quality/analytics/agents/${agentId}`).json(),
+  listCertifications: (agentId: string) =>
+    api.get(`agents/${agentId}/certifications`).json(),
+  listEvaluationResults: (agentId: string) =>
+    api.get(`agents/${agentId}/evaluations`).json(),
+  listServiceAgreements: (agentId: string) =>
+    api.get(`agents/${agentId}/service-agreements`).json(),
+  getQualityTimeseries: (agentId: string, days: number) =>
+    api
+      .get(`quality/analytics/agents/${agentId}/timeseries`, {
+        searchParams: { days: String(days) },
+      })
+      .json(),
 };
 
 export const ap2Api = {
