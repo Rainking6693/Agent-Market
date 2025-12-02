@@ -48,6 +48,7 @@ export function TestWizardModal({
   const [isRunning, setIsRunning] = useState(false);
   const [startError, setStartError] = useState<string | null>(null);
   const [activeRunId, setActiveRunId] = useState<string | null>(null);
+  const [runStatusLabel, setRunStatusLabel] = useState<string | null>(null);
 
   const { progress } = useTestRunProgress(activeRunId);
 
@@ -71,6 +72,7 @@ export function TestWizardModal({
 
     setIsRunning(true);
     setStartError(null);
+    setRunStatusLabel('Starting…');
     try {
       const response = await onStartRun(selectedAgents, selectedSuites);
       const firstRun = response?.runs?.[0];
@@ -94,6 +96,7 @@ export function TestWizardModal({
         message = error.message;
       }
       setStartError(message);
+      setRunStatusLabel(null);
     } finally {
       setIsRunning(false);
     }
@@ -261,7 +264,7 @@ export function TestWizardModal({
                             : 'bg-amber-100 text-amber-800'
                       }`}
                     >
-                      {progress?.status ?? 'queued'}
+                      {progress?.status ?? runStatusLabel ?? 'queued'}
                     </span>
                   </div>
 
@@ -277,8 +280,10 @@ export function TestWizardModal({
                               )
                             : progress?.status === 'completed'
                               ? 100
-                              : progress?.status === 'running'
-                                ? 50
+                            : progress?.status === 'running'
+                              ? 50
+                              : runStatusLabel
+                                ? 20
                                 : 15
                         }%`,
                       }}
@@ -292,7 +297,7 @@ export function TestWizardModal({
                           ? 'Failed'
                           : progress?.status === 'running'
                             ? `Running${progress?.currentTest ? `: ${progress.currentTest}` : ''}`
-                            : 'Queued...'}
+                            : runStatusLabel ?? 'Queued...'}
                     </span>
                     {progress?.score !== undefined && progress.score !== null && (
                       <span className="font-semibold text-ink">Score: {progress.score}</span>
@@ -338,6 +343,7 @@ export function TestWizardModal({
                             ~{Math.round(suite.estimatedDurationSec / 60)} min • ~$
                             {suite.approximateCostUsd.toFixed(2)}
                           </p>
+                          <p className="mt-1 text-xs text-ink-muted">{suite.description}</p>
                         </div>
                       ) : null;
                     })}

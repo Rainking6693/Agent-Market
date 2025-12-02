@@ -154,6 +154,7 @@ export const agentsApi = {
     try {
       return await api
         .get('agents', {
+          cache: 'no-store',
           searchParams: {
             ...(filters?.search ? { search: filters.search } : {}),
             ...(filters?.category ? { category: filters.category } : {}),
@@ -316,6 +317,7 @@ export const testingApi = {
   listSuites: (params?: { category?: string; recommended?: boolean }) =>
     api
       .get('api/v1/test-suites', {
+        cache: 'no-store',
         searchParams: {
           ...(params?.category ? { category: params.category } : {}),
           ...(params?.recommended !== undefined ? { recommended: String(params.recommended) } : {}),
