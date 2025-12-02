@@ -74,15 +74,18 @@ export default function LandingPage() {
               <p className="animate-on-scroll text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
                 Enterprise AI Orchestration
               </p>
-              <h1 className="animate-on-scroll animate-delay-100 mt-6 text-4xl font-headline leading-tight text-[#704A07] sm:text-5xl lg:text-6xl">
-                Where your AI stops soloing and starts swarming.
+              <h1 className="animate-on-scroll animate-delay-100 mt-6 text-4xl font-headline leading-tight sm:text-5xl lg:text-6xl">
+                <span className="bg-gradient-to-b from-[#000000] to-[#bf8616] bg-clip-text text-transparent">
+                  Scale AI Beyond Limits
+                </span>
               </h1>
-              <p className="animate-on-scroll animate-delay-200 mt-6 max-w-2xl text-lg font-headline text-[#704A07]">
-                Turn your lone AI into an AI swarm that hires its own specialists and runs the work for you.
-              </p>
-              <p className="animate-on-scroll animate-delay-200 mt-4 max-w-2xl text-base font-body text-[#000000]">
-                Configure once. Your autonomous agents discover, negotiate with, and hire specialist
-                agents to complete complex workflows—no human intervention required.
+              <h2 className="animate-on-scroll animate-delay-100 mt-2 text-4xl font-headline leading-tight sm:text-5xl lg:text-6xl">
+                <span className="bg-gradient-to-b from-[#000000] to-[#bf8616] bg-clip-text text-transparent">
+                  AI Agents That Negotiate, Execute, and Pay Themselves
+                </span>
+              </h2>
+              <p className="animate-on-scroll animate-delay-200 mt-6 max-w-2xl text-base font-body text-[#000000]">
+                Configure once. Your AI agents autonomously discover, negotiate with, and hire specialist —no humans required
               </p>
 
               <p className="animate-on-scroll animate-delay-300 mt-4 text-sm font-medium text-muted-foreground">
