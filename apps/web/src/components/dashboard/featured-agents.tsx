@@ -1,74 +1,58 @@
-interface FeaturedAgent {
-  name: string;
-  description: string;
-  trustScore: number;
-  badges?: string[];
-  price: string;
+import { type Agent } from '@agent-market/sdk';
+
+interface FeaturedAgentsProps {
+  agents: Agent[];
 }
 
-const featuredAgents: FeaturedAgent[] = [
-  {
-    name: 'Discovery Analyst',
-    description: 'Research agent with certified QA and reporting.',
-    trustScore: 92,
-    badges: ['high-quality'],
-    price: 'Pay per insight',
-  },
-  {
-    name: 'Workflow Builder',
-    description: 'Drag-and-drop orchestrator for multi-agent plays.',
-    trustScore: 88,
-    badges: [],
-    price: 'Free (credits only)',
-  },
-  {
-    name: 'Support Copilot',
-    description: 'Escrow-enabled support agent with SLA guarantees.',
-    trustScore: 95,
-    badges: ['high-quality', 'production-ready'],
-    price: '$2 / resolved case',
-  },
-];
+export function FeaturedAgents({ agents }: FeaturedAgentsProps) {
+  const hasAgents = agents && agents.length > 0;
+  const displayAgents = hasAgents ? agents : [];
 
-export function FeaturedAgents() {
   return (
     <div className="glass-card space-y-4 p-6">
       <div>
         <h2 className="text-sm font-headline uppercase tracking-wide text-ink-muted font-body">
           Featured agents
         </h2>
-        <p className="text-xs text-ink-muted font-body">Curated picks with high trust scores.</p>
+        <p className="text-xs text-ink-muted font-body">
+          Your agents, front and center.
+        </p>
       </div>
-      <div className="space-y-4">
-        {featuredAgents.map((agent) => (
-          <div
-            key={agent.name}
-            className="rounded-2xl border border-outline/70 bg-surfaceAlt/60 p-4 text-sm text-ink"
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-semibold text-ink font-body">{agent.name}</h3>
-              <span className="text-xs text-emerald-400 font-body">Trust {agent.trustScore}</span>
-            </div>
-            {agent.badges && agent.badges.length > 0 && (
-              <div className="mt-2 flex flex-wrap gap-1">
-                {agent.badges.map((badge) => (
-                  <span
-                    key={badge}
-                    className="rounded-full bg-brass/20 px-2 py-0.5 text-xs font-medium text-brass capitalize font-body"
-                  >
-                    {badge.replace(/-/g, ' ')}
-                  </span>
-                ))}
+      {hasAgents ? (
+        <div className="space-y-4">
+          {displayAgents.map((agent) => (
+            <div
+              key={agent.id}
+              className="rounded-2xl border border-outline/70 bg-surfaceAlt/60 p-4 text-sm text-ink"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <h3 className="text-base font-semibold text-ink font-body">{agent.name}</h3>
+                  <p className="text-xs text-ink-muted font-body">{agent.slug}</p>
+                </div>
+                {agent.trustScore !== undefined && (
+                  <span className="text-xs text-emerald-400 font-body">Trust {agent.trustScore}</span>
+                )}
               </div>
-            )}
-            <p className="mt-2 text-xs text-ink-muted font-body">{agent.description}</p>
-            <div className="mt-3 flex items-center justify-between text-xs text-ink-muted font-body">
-              <span>{agent.price}</span>
-              <button className="text-accent underline font-body">View profile</button>
+              <p className="mt-2 text-xs text-ink-muted font-body">
+                {agent.description || 'No description provided.'}
+              </p>
+              <div className="mt-3 flex items-center justify-between text-xs text-ink-muted font-body">
+                <span className="capitalize">
+                  {agent.categories?.slice(0, 3).join(', ') || 'Uncategorized'}
+                </span>
+                <a className="text-accent underline font-body" href={`/agents/${agent.slug}`}>
+                  View profile
+                </a>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-xl border border-outline/60 bg-surfaceAlt/50 p-4 text-sm text-ink-muted">
+          No agents found. Create or import an agent to feature it here.
+        </div>
+      )}
     </div>
   );
 }

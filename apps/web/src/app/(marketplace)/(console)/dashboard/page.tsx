@@ -13,7 +13,6 @@ import { FeaturedAgents } from '@/components/dashboard/featured-agents';
 import { OrgOverviewCard } from '@/components/dashboard/org-overview-card';
 import { OrgRoiTimeseriesChart } from '@/components/dashboard/org-roi-timeseries-chart';
 import { QuickActions } from '@/components/dashboard/quick-actions';
-import { RecentActivityList } from '@/components/dashboard/recent-activity-list';
 import { getCurrentUser } from '@/lib/auth-guard';
 import { getAgentMarketClient } from '@/lib/server-client';
 
@@ -28,12 +27,6 @@ export const metadata: Metadata = {
 };
 
 export const dynamic = 'force-dynamic';
-
-const recentPrompts = [
-  { name: 'Go-to-market briefing', updated: 'Sep 21, 2025' },
-  { name: 'Agent orchestration outline', updated: 'Aug 27, 2025' },
-  { name: 'Payments readiness QA', updated: 'Aug 25, 2025' },
-];
 
 const statusPills = [
   {
@@ -138,7 +131,6 @@ export default async function HomePage() {
       <section className="grid gap-6 lg:grid-cols-3">
         <CreditSummaryCard subscription={subscription} />
         <QuickActions />
-        <RecentActivityList />
       </section>
 
       {orgSummary ? (
@@ -151,7 +143,7 @@ export default async function HomePage() {
 
       <section className="grid gap-6 lg:grid-cols-[3fr,2fr]">
         <OrgRoiTimeseriesChart points={orgTimeseries} />
-        <FeaturedAgents />
+        <FeaturedAgents agents={agents} />
       </section>
 
       {agents.length > 0 ? (
@@ -175,26 +167,9 @@ export default async function HomePage() {
       )}
 
       <section className="glass-card">
-        <div className="border-b border-outline px-6 py-5">
-          <h2 className="text-sm font-headline uppercase tracking-wide text-ink-muted font-body">
-            Recent workspaces
-          </h2>
+        <div className="px-6 py-5 text-sm text-ink-muted">
+          Great agents are front and center above. No recent workspace clutter here.
         </div>
-        <ul className="divide-y divide-outline/60">
-          {recentPrompts.map((prompt) => (
-            <li key={prompt.name} className="px-6 py-5 transition hover:bg-surfaceAlt/60">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-sm font-semibold text-ink font-body">{prompt.name}</div>
-                  <div className="text-xs text-ink-muted font-body">Updated {prompt.updated}</div>
-                </div>
-                <button className="rounded-full border border-outline px-3 py-1 text-xs text-ink-muted transition hover:border-brass/40 hover:text-ink">
-                  Open
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
       </section>
     </div>
   );

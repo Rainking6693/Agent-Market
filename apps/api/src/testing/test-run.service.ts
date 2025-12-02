@@ -2,6 +2,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { TestRunStatus } from '@prisma/client';
 import { Queue } from 'bullmq';
 
+import { RunTestSuiteWorker } from './workers/run-test-suite.worker.js';
 import { PrismaService } from '../modules/database/prisma.service.js';
 
 
@@ -12,6 +13,7 @@ export class TestRunService {
 
   constructor(
     private readonly prisma: PrismaService,
+    private readonly runTestSuiteWorker: RunTestSuiteWorker,
   ) {
     // Initialize BullMQ queue only if Redis is configured
     const redisHost = process.env.REDIS_HOST;
@@ -318,35 +320,13 @@ export class TestRunService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _userId: string,
   ) {
-    // Update status to RUNNING
-    await this.prisma.testRun.update({
-      where: { id: runId },
-      data: { status: TestRunStatus.RUNNING },
+    // Run the real test suite inline (same logic as the worker) when Redis/queue is unavailable
+    await this.runTestSuiteWorker.runInline({
+      runId,
+      agentId: _agentId,
+      suiteId: _suiteId,
+      userId: _userId,
     });
-
-    try {
-      // Simulate test execution - in production, this would run actual tests
-      // For now, we'll mark it as completed with a placeholder score
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate 2 second test execution
-
-      await this.prisma.testRun.update({
-        where: { id: runId },
-        data: {
-          status: TestRunStatus.COMPLETED,
-          score: 85, // Placeholder score - replace with actual test results
-        },
-      });
-
-      this.logger.log(`Test run ${runId} completed successfully`);
-    } catch (error) {
-      await this.prisma.testRun.update({
-        where: { id: runId },
-        data: {
-          status: TestRunStatus.FAILED,
-        },
-      });
-      throw error;
-    }
   }
 }
 

@@ -79,29 +79,6 @@ export class RunTestSuiteWorker {
       this.logger.error(`Failed to initialize test run worker: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
 
-    // Initialize BullMQ worker
-    this.worker = new Worker(
-      'run-test-suite',
-      async (job: Job) => {
-        await this.processJob(job);
-      },
-      {
-        connection: {
-          host: process.env.REDIS_HOST || 'localhost',
-          port: parseInt(process.env.REDIS_PORT || '6379', 10),
-          password: process.env.REDIS_PASSWORD,
-        },
-        concurrency: 1, // Run tests sequentially
-      },
-    );
-
-    this.worker.on('completed', (job) => {
-      this.logger.log(`Test run ${job.id} completed`);
-    });
-
-    this.worker.on('failed', (job, err) => {
-      this.logger.error(`Test run ${job?.id} failed: ${err.message}`);
-    });
   }
 
   /**
@@ -317,6 +294,18 @@ export class RunTestSuiteWorker {
 
       throw error;
     }
+  }
+
+  /**
+   * Run a test suite inline (used when Redis/queue is not available)
+   */
+  async runInline(payload: { runId: string; agentId: string; suiteId: string; userId: string }) {
+    // @ts-expect-error using a minimal job shape for reuse
+    const fakeJob: Job = {
+      id: payload.runId,
+      data: payload,
+    };
+    await this.processJob(fakeJob);
   }
 
   /**
