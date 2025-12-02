@@ -1,12 +1,7 @@
-import {
-  Agent,
-  AgentCertificationRecord,
-  AgentQualityAnalytics,
-  AgentRoiTimeseriesPoint,
-  EvaluationResultRecord,
-  ServiceAgreementWithVerifications,
-} from '@agent-market/sdk';
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useMemo, useState } from 'react';
 
 import { CertificationManager } from '@/components/quality/certification-manager';
 import { EvaluationConsole } from '@/components/quality/evaluation-console';
@@ -14,36 +9,70 @@ import { OutcomeVerificationPanel } from '@/components/quality/outcome-verificat
 import { QualityAgentSelector } from '@/components/quality/quality-agent-selector';
 import { QualityOverview } from '@/components/quality/quality-overview';
 import { RoiTimeseriesChart } from '@/components/quality/roi-timeseries-chart';
-import { getAgentMarketClient } from '@/lib/server-client';
+import { useAgents } from '@/hooks/use-agents';
+import { agentsApi } from '@/lib/api';
 
-import type { Metadata } from 'next';
+export default function QualityPage({ searchParams }: { searchParams: { agentId?: string } }) {
+  const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
 
-export const metadata: Metadata = {
-  title: 'Quality & Trust',
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+  // Show all agents (no creator filter) so users can always see the list
+  const filters = useMemo(
+    () => ({
+      verifiedOnly: false,
+    }),
+    [],
+  );
+  const { data: agents = [], isLoading, isError } = useAgents(filters);
 
-export const dynamic = 'force-dynamic';
+  // Select the agent from query or first available
+  useEffect(() => {
+    if (agents.length === 0) return;
+    const byQuery = searchParams.agentId
+      ? agents.find((a) => a.id === searchParams.agentId)
+      : null;
+    setSelectedAgentId(byQuery?.id ?? agents[0].id);
+  }, [agents, searchParams.agentId]);
 
-interface QualityPageProps {
-  searchParams: {
-    agentId?: string;
-  };
-}
+  type UnknownRecord = Record<string, unknown>;
+  const [analytics, setAnalytics] = useState<UnknownRecord | null>(null);
+  const [certifications, setCertifications] = useState<UnknownRecord[]>([]);
+  const [evaluations, setEvaluations] = useState<UnknownRecord[]>([]);
+  const [agreements, setAgreements] = useState<UnknownRecord[]>([]);
+  const [roiTimeseries, setRoiTimeseries] = useState<UnknownRecord[]>([]);
 
-export default async function QualityPage({ searchParams }: QualityPageProps) {
-  const client = getAgentMarketClient();
-  let agents: Agent[] = [];
-  try {
-    agents = await client.listAgents();
-  } catch (error) {
-    console.warn('Failed to load agents for quality page', error);
+  useEffect(() => {
+    if (!selectedAgentId) return;
+    (async () => {
+      try {
+        const [
+          analyticsRes,
+          certs,
+          evals,
+          agreementsRes,
+          roi,
+        ] = await Promise.all([
+          agentsApi.getQualityAnalytics?.(selectedAgentId) ?? Promise.resolve(null),
+          agentsApi.listCertifications?.(selectedAgentId) ?? Promise.resolve([]),
+          agentsApi.listEvaluationResults?.(selectedAgentId) ?? Promise.resolve([]),
+          agentsApi.listServiceAgreements?.(selectedAgentId) ?? Promise.resolve([]),
+          agentsApi.getQualityTimeseries?.(selectedAgentId, 14) ?? Promise.resolve([]),
+        ]);
+        setAnalytics(analyticsRes);
+        setCertifications(certs);
+        setEvaluations(evals);
+        setAgreements(agreementsRes);
+        setRoiTimeseries(roi);
+      } catch (error) {
+        console.warn('Quality dashboard data unavailable', error);
+      }
+    })();
+  }, [selectedAgentId]);
+
+  if (isLoading) {
+    return <div className="glass-card p-8">Loading agents…</div>;
   }
 
-  if (agents.length === 0) {
+  if (isError || agents.length === 0) {
     return (
       <div className="space-y-8">
         <header className="glass-card p-8">
@@ -66,43 +95,17 @@ export default async function QualityPage({ searchParams }: QualityPageProps) {
     );
   }
 
-  const selectedAgent = agents.find((agent) => agent.id === searchParams.agentId) ?? agents[0];
-  const selectedAgentId = selectedAgent.id;
-
-  let analytics: AgentQualityAnalytics | null = null;
-  let certifications: AgentCertificationRecord[] = [];
-  let evaluations: EvaluationResultRecord[] = [];
-  let agreements: ServiceAgreementWithVerifications[] = [];
-  let roiTimeseries: AgentRoiTimeseriesPoint[] = [];
-
-  try {
-    [analytics, certifications, evaluations, agreements, roiTimeseries] = await Promise.all([
-      client.getAgentQualityAnalytics(selectedAgentId),
-      client.listCertifications(selectedAgentId),
-      client.listEvaluationResults(selectedAgentId),
-      client.listServiceAgreements(selectedAgentId),
-      client.getAgentQualityTimeseries(selectedAgentId, 14),
-    ]);
-  } catch (error) {
-    console.warn('Quality dashboard data unavailable during build', error);
-  }
-
-  if (!analytics) {
+  if (!selectedAgentId || !analytics) {
     return (
-      <div className="space-y-8">
-        <header className="glass-card p-8">
-          <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Quality</p>
-          <h1 className="mt-2 text-3xl font-headline text-ink">Trust & Outcomes Console</h1>
-        </header>
-        <div className="glass-card border border-amber-500/40 bg-amber-500/10 p-8">
-          <h2 className="text-lg font-semibold text-amber-700">Quality Analytics Unavailable</h2>
-          <p className="mt-2 text-sm text-amber-600">
-            We're currently unable to load quality analytics for this agent. This may be temporary.
-          </p>
-          <p className="mt-4 text-sm text-ink-muted">
-            Try refreshing the page or check back later. If this issue persists, please contact support.
-          </p>
-        </div>
+      <div className="glass-card p-8">
+        <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Quality</p>
+        <h1 className="mt-2 text-3xl font-headline text-ink">Trust & Outcomes Console</h1>
+        <p className="mt-2 text-sm text-ink-muted">Select an agent to view quality metrics.</p>
+        <QualityAgentSelector
+          agents={agents}
+          selectedAgentId={selectedAgentId ?? ''}
+          onChange={setSelectedAgentId}
+        />
       </div>
     );
   }
@@ -119,29 +122,24 @@ export default async function QualityPage({ searchParams }: QualityPageProps) {
               outcome-based agreements tied to escrow releases.
             </p>
           </div>
-          <QualityAgentSelector agents={agents} selectedAgentId={selectedAgentId} />
+          <QualityAgentSelector
+            agents={agents}
+            selectedAgentId={selectedAgentId}
+            onChange={setSelectedAgentId}
+          />
         </div>
       </header>
 
-      <QualityOverview analytics={analytics as AgentQualityAnalytics} />
+      <QualityOverview analytics={analytics} />
 
       <section className="grid gap-6 lg:grid-cols-2">
-        <CertificationManager
-          agentId={selectedAgentId}
-          certifications={certifications as AgentCertificationRecord[]}
-        />
-        <EvaluationConsole
-          agentId={selectedAgentId}
-          evaluations={evaluations as EvaluationResultRecord[]}
-        />
+        <CertificationManager agentId={selectedAgentId} certifications={certifications} />
+        <EvaluationConsole agentId={selectedAgentId} evaluations={evaluations} />
       </section>
 
       <div className="grid gap-6 lg:grid-cols-[1.5fr,1fr]">
         <RoiTimeseriesChart points={roiTimeseries} />
-        <OutcomeVerificationPanel
-          agentId={selectedAgentId}
-          agreements={agreements as ServiceAgreementWithVerifications[]}
-        />
+        <OutcomeVerificationPanel agentId={selectedAgentId} agreements={agreements} />
       </div>
     </div>
   );

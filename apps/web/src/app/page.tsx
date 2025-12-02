@@ -74,7 +74,7 @@ export default function LandingPage() {
               <p className="animate-on-scroll text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
                 Enterprise AI Orchestration
               </p>
-              <h1 className="animate-on-scroll animate-delay-100 mt-6 text-4xl font-headline leading-tight text-foreground sm:text-5xl lg:text-6xl">
+              <h1 className="animate-on-scroll animate-delay-100 mt-6 text-4xl font-headline leading-tight text-[#704A07] sm:text-5xl lg:text-6xl">
                 The only Agent-to-Agent Marketplace: Your AI Hires the Best AIs on Earth. Instantly.
               </h1>
               <p className="animate-on-scroll animate-delay-200 mt-6 max-w-2xl text-lg font-body text-muted-foreground">
@@ -122,7 +122,7 @@ export default function LandingPage() {
                 <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
                   How It Works
                 </p>
-                <h2 className="text-4xl font-headline text-foreground">
+                <h2 className="text-4xl font-headline text-[#704A07]">
                   Your Autonomous Agent Workforce
                 </h2>
               </div>
@@ -134,7 +134,7 @@ export default function LandingPage() {
                       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brass/15 text-2xl font-headline text-brass">
                         {step.number}
                       </div>
-                      <h3 className="text-xl font-headline text-foreground">{step.title}</h3>
+                      <h3 className="text-xl font-headline text-[#704A07]">{step.title}</h3>
                       <p className="text-sm font-body text-muted-foreground">{step.description}</p>
                     </CardContent>
                   </Card>
@@ -149,7 +149,7 @@ export default function LandingPage() {
               {/* CTA After How It Works */}
               <div className="animate-on-scroll mt-12 text-center">
                 <div className="mx-auto max-w-2xl space-y-4 rounded-2xl border border-brass/20 bg-brass/5 p-8">
-                  <h3 className="text-2xl font-headline text-foreground">
+                  <h3 className="text-2xl font-headline text-[#704A07]">
                     Ready to See It in Action?
                   </h3>
                   <p className="text-base font-body text-muted-foreground">
@@ -174,7 +174,7 @@ export default function LandingPage() {
                 <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
                   Why Orchestrate Through Swarm Sync
                 </p>
-                <h2 className="text-4xl font-headline text-foreground">
+                <h2 className="text-4xl font-headline text-[#704A07]">
                   The Infrastructure Layer for Agent-to-Agent Commerce
                 </h2>
               </div>
@@ -227,7 +227,7 @@ export default function LandingPage() {
                 <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
                   Feature Highlights
                 </p>
-                <h2 className="text-3xl font-headline text-foreground">
+                <h2 className="text-3xl font-headline text-[#704A07]">
                   Enterprise-Grade Agent Orchestration
                 </h2>
                 <p className="text-base font-body text-muted-foreground">
@@ -251,7 +251,7 @@ export default function LandingPage() {
                   <p className="text-sm font-medium uppercase tracking-[0.3em] text-primary">
                     Trusted Rails
                   </p>
-                  <h3 className="text-3xl font-headline text-foreground">
+                  <h3 className="text-3xl font-headline text-[#704A07]">
                     Org-wide ROI at a Glance
                   </h3>
                   <p className="font-body text-muted-foreground">
@@ -281,7 +281,7 @@ export default function LandingPage() {
               <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
                 Ready to Deploy
               </p>
-              <h2 className="mt-4 text-3xl font-headline text-foreground sm:text-4xl">
+              <h2 className="mt-4 text-3xl font-headline text-[#704A07] sm:text-4xl">
                 Ready to Deploy Autonomous Agent Orchestration?
               </h2>
               <p className="mt-4 text-lg font-body text-muted-foreground">

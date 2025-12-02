@@ -6,14 +6,12 @@ import {
   Param,
   Query,
   Delete,
-  UseGuards,
   Request,
   NotFoundException,
 } from '@nestjs/common';
 import { TestRunStatus } from '@prisma/client';
 
 import { TestRunService } from './test-run.service.js';
-import { JwtAuthGuard } from '../modules/auth/guards/jwt-auth.guard.js';
 
 class StartTestRunDto {
   agentId: string | string[];
@@ -21,13 +19,12 @@ class StartTestRunDto {
 }
 
 @Controller('api/v1/test-runs')
-@UseGuards(JwtAuthGuard)
 export class TestRunsController {
   constructor(private readonly testRunService: TestRunService) {}
 
   @Post()
-  async startRun(@Body() body: StartTestRunDto, @Request() req: { user: { id: string } }) {
-    const userId = req.user.id;
+  async startRun(@Body() body: StartTestRunDto, @Request() req?: { user?: { id: string } }) {
+    const userId = req?.user?.id ?? 'anonymous';
     return this.testRunService.startRun({
       agentId: body.agentId,
       suiteId: body.suiteId,
@@ -55,9 +52,9 @@ export class TestRunsController {
   }
 
   @Get(':id')
-  async getRun(@Param('id') id: string, @Request() req: { user: { id: string } }) {
+  async getRun(@Param('id') id: string, @Request() req?: { user?: { id: string } }) {
     try {
-      return await this.testRunService.getRun(id, req.user.id);
+      return await this.testRunService.getRun(id, req?.user?.id);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
@@ -67,8 +64,8 @@ export class TestRunsController {
   }
 
   @Delete(':id')
-  async cancelRun(@Param('id') id: string, @Request() req: { user: { id: string } }) {
-    return this.testRunService.cancelRun(id, req.user.id);
+  async cancelRun(@Param('id') id: string, @Request() req?: { user?: { id: string } }) {
+    return this.testRunService.cancelRun(id, req?.user?.id ?? 'anonymous');
   }
 }
 

@@ -86,6 +86,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/favicon.ico" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body
         className={`${inter.variable} min-h-screen bg-background font-body text-foreground antialiased`}

@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Inject, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { AgentStatus, AgentVisibility } from '@prisma/client';
 
 import { AgentsService } from './agents.service.js';
@@ -8,22 +9,14 @@ import { ExecuteAgentDto } from './dto/execute-agent.dto.js';
 import { ReviewAgentDto } from './dto/review-agent.dto.js';
 import { SubmitForReviewDto } from './dto/submit-for-review.dto.js';
 import { UpdateAgentDto } from './dto/update-agent.dto.js';
-import { UpdateAgentBudgetDto } from './dto/update-budget.dto.js';
-import { X402Service } from '../x402/x402.service.js';
 
 @Controller('agents')
 export class AgentsController {
-  constructor(
-    @Inject(AgentsService) private readonly agentsService: AgentsService,
-    @Inject(X402Service) private readonly x402Service: X402Service,
-  ) {}
+  constructor(private readonly agentsService: AgentsService) {}
 
-  @Post()
-  create(@Body() body: CreateAgentDto) {
-    return this.agentsService.create(body);
-  }
-
+  // Public endpoints - rate limited
   @Get()
+  @Throttle({ default: { limit: 20, ttl: 60000 } }) // 20 requests per minute
   findAll(
     @Query('status') status?: AgentStatus,
     @Query('visibility') visibility?: AgentVisibility,
@@ -45,104 +38,93 @@ export class AgentsController {
   }
 
   @Get('discover')
+  @Throttle({ default: { limit: 10, ttl: 60000 } }) // 10 requests per minute for discovery
   async discover(@Query() query: AgentDiscoveryQueryDto) {
-    const discovery = await this.agentsService.discover(query);
-    const agentsWithPayments = await Promise.all(
-      discovery.agents.map(async (agent) => ({
-        ...agent,
-        paymentMethods: await this.safePaymentMethods(agent.id),
-      })),
-    );
+    return this.agentsService.discover(query);
+  }
 
-    return {
-      ...discovery,
-      agents: agentsWithPayments,
-    };
+  @Get('slug/:slug')
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  async findBySlug(@Param('slug') slug: string) {
+    return this.agentsService.findBySlug(slug);
+  }
+
+  @Get(':id')
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  async findOne(@Param('id') id: string) {
+    return this.agentsService.findOne(id);
   }
 
   @Get(':id/schema')
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
   getSchema(@Param('id') id: string) {
     return this.agentsService.getAgentSchema(id);
   }
 
-  @Get(':id/a2a-transactions')
-  listA2aTransactions(@Param('id') id: string) {
-    return this.agentsService.listAgentA2aTransactions(id);
-  }
-
-  @Get(':id/network')
-  getNetwork(@Param('id') id: string) {
-    return this.agentsService.getAgentNetwork(id);
-  }
-
-  @Get(':id/budget')
-  getBudget(@Param('id') id: string) {
-    return this.agentsService.getAgentBudget(id);
-  }
-
-  @Get(':id/payment-history')
-  getPaymentHistory(@Param('id') id: string) {
-    return this.agentsService.getAgentPaymentHistory(id);
-  }
-
-  @Patch(':id/budget')
-  updateBudget(@Param('id') id: string, @Body() body: UpdateAgentBudgetDto) {
-    return this.agentsService.updateAgentBudget(id, body);
-  }
-
-  @Get('slug/:slug')
-  async findBySlug(@Param('slug') slug: string) {
-    const agent = await this.agentsService.findBySlug(slug);
-    return {
-      ...agent,
-      paymentMethods: await this.safePaymentMethods(agent.id),
-    };
-  }
-
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const agent = await this.agentsService.findOne(id);
-    return {
-      ...agent,
-      paymentMethods: await this.safePaymentMethods(agent.id),
-    };
+  // Protected endpoints - rate limited
+  @Post()
+  @Throttle({ default: { limit: 10, ttl: 60000 } }) // 10 requests per minute for creation
+  create(@Body() body: CreateAgentDto) {
+    return this.agentsService.create(body);
   }
 
   @Put(':id')
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
   update(@Param('id') id: string, @Body() body: UpdateAgentDto) {
     return this.agentsService.update(id, body);
   }
 
   @Post(':id/submit')
+  @Throttle({ default: { limit: 5, ttl: 60000 } }) // 5 requests per minute
   submit(@Param('id') id: string, @Body() body: SubmitForReviewDto) {
     return this.agentsService.submitForReview(id, body);
   }
 
   @Post(':id/review')
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   review(@Param('id') id: string, @Body() body: ReviewAgentDto) {
     return this.agentsService.reviewAgent(id, body);
   }
 
   @Post(':id/execute')
+  @Throttle({ default: { limit: 30, ttl: 60000 } }) // 30 requests per minute for execution
   execute(@Param('id') id: string, @Body() body: ExecuteAgentDto) {
     return this.agentsService.executeAgent(id, body);
   }
 
   @Get(':id/executions')
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
   executions(@Param('id') id: string) {
     return this.agentsService.listExecutions(id);
   }
 
   @Get(':id/reviews')
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
   reviews(@Param('id') id: string) {
     return this.agentsService.listReviews(id);
   }
 
-  private async safePaymentMethods(agentId: string) {
-    try {
-      return await this.x402Service.getPaymentMethods(agentId);
-    } catch {
-      return [];
-    }
+  @Get(':id/budget')
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  getBudget(@Param('id') id: string) {
+    return this.agentsService.getAgentBudget(id);
+  }
+
+  @Get(':id/payment-history')
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  getPaymentHistory(@Param('id') id: string) {
+    return this.agentsService.getAgentPaymentHistory(id);
+  }
+
+  @Get(':id/a2a-transactions')
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  listA2aTransactions(@Param('id') id: string) {
+    return this.agentsService.listAgentA2aTransactions(id);
+  }
+
+  @Get(':id/network')
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  getNetwork(@Param('id') id: string) {
+    return this.agentsService.getAgentNetwork(id);
   }
 }

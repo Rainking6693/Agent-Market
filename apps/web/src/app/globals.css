@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Bauer Bodoni font - using system fonts with fallback */
+@font-face {
+  font-family: 'Bauer Bodoni';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Bauer Bodoni'), local('BauerBodoni-Roman');
+}
+
 @layer base {
   :root {
     --background: 36 57% 97%;
@@ -37,6 +46,14 @@
       radial-gradient(80% 80% at 75% 0%, rgba(92, 161, 255, 0.15) 0%, rgba(92, 161, 255, 0) 60%),
       linear-gradient(180deg, #fdfaf5 0%, #f5ece0 65%, #efe2d3 100%);
     min-height: 100vh;
+    color: #000000;
+  }
+
+  /* Headlines use antique bronze */
+  h1, h2, h3, h4, h5, h6 {
+    &.font-headline {
+      color: #704A07;
+    }
   }
 
   /* Enhanced focus styles for keyboard navigation */

@@ -12,7 +12,7 @@ interface BrandLogoProps {
   alt?: string;
 }
 
-const LOGO_SRC = '/logos/logo-transparent.png';
+const LOGO_SRC = '/logos/SWARMBauerBodoniCROP.png';
 
 export function BrandLogo({
   size = 256,
