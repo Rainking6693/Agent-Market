@@ -73,10 +73,16 @@ export default async function HomePage() {
       client.getOrganizationRoi(orgSlug),
       client.getOrganizationRoiTimeseries(orgSlug, 14),
       client.getBillingSubscription(),
-      client.listAgents({ showAll: 'true' }),
+      client.listAgents({ showAll: 'true' } as { showAll?: string }),
     ]);
+    // Debug logging
+    console.log('Dashboard loaded agents:', agents.length);
   } catch (error) {
     console.warn('Dashboard data unavailable during build', error);
+    // Log the specific error for agents
+    if (error instanceof Error) {
+      console.error('Agent fetch error:', error.message, error.stack);
+    }
   }
 
   // Get greeting based on time of day
