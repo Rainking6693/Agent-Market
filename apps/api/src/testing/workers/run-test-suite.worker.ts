@@ -28,7 +28,14 @@ export class RunTestSuiteWorker {
     }
 
     const redisUrl = process.env.REDIS_URL;
-    const parsedRedisUrl = redisUrl ? new URL(redisUrl) : null;
+    let parsedRedisUrl: URL | null = null;
+    if (redisUrl) {
+      try {
+        parsedRedisUrl = new URL(redisUrl);
+      } catch {
+        this.logger.warn(`Invalid REDIS_URL provided, falling back to REDIS_HOST/PORT`);
+      }
+    }
     const redisHost = process.env.REDIS_HOST ?? parsedRedisUrl?.hostname;
     const redisPort = parseInt(process.env.REDIS_PORT ?? parsedRedisUrl?.port ?? '6379', 10);
     const redisPassword = process.env.REDIS_PASSWORD ?? parsedRedisUrl?.password;
