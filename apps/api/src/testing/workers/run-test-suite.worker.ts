@@ -114,10 +114,18 @@ export class RunTestSuiteWorker {
   }
 
   /**
-   * Process a test run job
+   * Process a test run job from BullMQ
    */
   private async processJob(job: Job<{ runId: string; agentId: string; suiteId: string; userId: string }, unknown, string>) {
     const { runId, agentId, suiteId, userId } = job.data;
+    await this.runSuite({ runId, agentId, suiteId, userId });
+  }
+
+  /**
+   * Run a test suite (shared by worker and inline fallback)
+   */
+  async runSuite(params: { runId: string; agentId: string; suiteId: string; userId: string }) {
+    const { runId, agentId, suiteId, userId } = params;
 
     this.logger.log(`Starting test run ${runId} for agent ${agentId} with suite ${suiteId}`);
 
@@ -294,18 +302,6 @@ export class RunTestSuiteWorker {
 
       throw error;
     }
-  }
-
-  /**
-   * Run a test suite inline (used when Redis/queue is not available)
-   */
-  async runInline(payload: { runId: string; agentId: string; suiteId: string; userId: string }) {
-    // @ts-expect-error using a minimal job shape for reuse
-    const fakeJob: Job = {
-      id: payload.runId,
-      data: payload,
-    };
-    await this.processJob(fakeJob);
   }
 
   /**

@@ -321,7 +321,7 @@ export class TestRunService {
     _userId: string,
   ) {
     // Run the real test suite inline (same logic as the worker) when Redis/queue is unavailable
-    await this.runTestSuiteWorker.runInline({
+    await this.runTestSuiteWorker.runSuite({
       runId,
       agentId: _agentId,
       suiteId: _suiteId,
