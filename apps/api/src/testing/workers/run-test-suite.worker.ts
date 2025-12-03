@@ -27,18 +27,27 @@ export class RunTestSuiteWorker {
       return; // Already initialized
     }
 
+    // Railway provides REDIS_URL in format: redis://default:password@host:port or rediss://default:password@host:port (TLS)
     const redisUrl = process.env.REDIS_URL;
     let parsedRedisUrl: URL | null = null;
     if (redisUrl) {
       try {
         parsedRedisUrl = new URL(redisUrl);
-      } catch {
-        this.logger.warn(`Invalid REDIS_URL provided, falling back to REDIS_HOST/PORT`);
+        this.logger.log(`Parsed REDIS_URL: host=${parsedRedisUrl.hostname}, port=${parsedRedisUrl.port}, hasPassword=${!!parsedRedisUrl.password}`);
+      } catch (error) {
+        this.logger.warn(`Invalid REDIS_URL provided: ${error instanceof Error ? error.message : 'Unknown error'}, falling back to REDIS_HOST/PORT`);
       }
     }
     const redisHost = process.env.REDIS_HOST ?? parsedRedisUrl?.hostname;
     const redisPort = parseInt(process.env.REDIS_PORT ?? parsedRedisUrl?.port ?? '6379', 10);
+    // Extract password from URL (Railway format: redis://default:password@host:port)
+    // URL.password contains the password part after the colon
     const redisPassword = process.env.REDIS_PASSWORD ?? parsedRedisUrl?.password;
+    
+    // Log Redis configuration for debugging
+    if (redisHost) {
+      this.logger.log(`Redis configuration: host=${redisHost}, port=${redisPort}, hasPassword=${!!redisPassword}, fromUrl=${!!parsedRedisUrl}`);
+    }
 
     if (!redisHost) {
       this.logger.warn('Redis not configured - test run worker will not start');
@@ -210,18 +219,48 @@ export class RunTestSuiteWorker {
           const testRunnerOrModule = 'default' in testModule ? testModule.default : testModule;
           
           // Extract the actual TestRunner instance
-          // If it's already an instance (has run method), use it directly
-          // If it's a class constructor, instantiate it
+          // Always instantiate with agentsService to ensure proper dependency injection
+          // Some test runners export pre-instantiated instances with null agentsService
           let testRunner: TestRunner;
-          if (typeof testRunnerOrModule === 'object' && testRunnerOrModule !== null && 'run' in testRunnerOrModule) {
-            // It's already an instance
-            testRunner = testRunnerOrModule as TestRunner;
-          } else if (typeof testRunnerOrModule === 'function') {
-            // It's a class constructor, instantiate it
+          if (typeof testRunnerOrModule === 'function') {
+            // It's a class constructor, instantiate it with agentsService
+            // Ensure agentsService is available before instantiating
+            if (!this.agentsService) {
+              throw new Error(`AgentsService is not available for test ${testDef.id}`);
+            }
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             testRunner = new (testRunnerOrModule as any)(this.agentsService);
+          } else if (typeof testRunnerOrModule === 'object' && testRunnerOrModule !== null && 'run' in testRunnerOrModule) {
+            // It's already an instance, but we should check if it needs agentsService
+            // If it has a constructor property, try to re-instantiate it
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const constructor = (testRunnerOrModule as any).constructor;
+            if (constructor && typeof constructor === 'function' && this.agentsService) {
+              // Re-instantiate with proper agentsService
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              testRunner = new (constructor as any)(this.agentsService);
+            } else {
+              // Use the instance as-is (might have null agentsService, but we'll handle errors)
+              testRunner = testRunnerOrModule as TestRunner;
+            }
           } else {
-            throw new Error(`Invalid test runner for test ${testDef.id}`);
+            throw new Error(`Invalid test runner for test ${testDef.id}: expected object with 'run' method or constructor function, got ${typeof testRunnerOrModule}`);
+          }
+
+          // Validate testRunner has run method before calling
+          if (!testRunner) {
+            throw new Error(`Test runner for test ${testDef.id} is null or undefined`);
+          }
+          if (typeof testRunner.run !== 'function') {
+            throw new Error(`Test runner for test ${testDef.id} does not have a valid 'run' method. Type: ${typeof testRunner.run}`);
+          }
+
+          // Ensure agentsService is available if test runner needs it
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          if (this.agentsService && typeof (testRunner as any).agentsService !== 'undefined') {
+            // If test runner has agentsService property, ensure it's set
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (testRunner as any).agentsService = this.agentsService;
           }
 
           const testResult = await testRunner.run({
@@ -244,12 +283,18 @@ export class RunTestSuiteWorker {
           totalCost += testResult.costUsd || 0;
           totalLatency += testResult.latencyMs || 0;
         } catch (error) {
-          this.logger.error(`Test ${testDef.id} failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          const errorStack = error instanceof Error ? error.stack : undefined;
+          this.logger.error(`Test ${testDef.id} failed: ${errorMessage}`, errorStack);
           results.push({
             testId: testDef.id,
             passed: false,
             score: 0,
-            error: error instanceof Error ? error.message : 'Unknown error',
+            error: errorMessage,
+            details: {
+              errorType: error instanceof Error ? error.constructor.name : typeof error,
+              stack: errorStack,
+            },
           });
         }
       }

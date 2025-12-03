@@ -16,18 +16,29 @@ export class TestRunService {
     private readonly runTestSuiteWorker: RunTestSuiteWorker,
   ) {
     // Initialize BullMQ queue only if Redis is configured
+    // Railway provides REDIS_URL in format: redis://default:password@host:port or rediss://default:password@host:port (TLS)
     const redisUrl = process.env.REDIS_URL;
     let parsedRedisUrl: URL | null = null;
     if (redisUrl) {
       try {
         parsedRedisUrl = new URL(redisUrl);
-      } catch {
-        this.logger.warn('Invalid REDIS_URL provided, falling back to REDIS_HOST/PORT');
+        this.logger.log(`Parsed REDIS_URL: host=${parsedRedisUrl.hostname}, port=${parsedRedisUrl.port}, hasPassword=${!!parsedRedisUrl.password}`);
+      } catch (error) {
+        this.logger.warn(`Invalid REDIS_URL provided: ${error instanceof Error ? error.message : 'Unknown error'}, falling back to REDIS_HOST/PORT`);
       }
     }
     const redisHost = process.env.REDIS_HOST ?? parsedRedisUrl?.hostname;
     const redisPort = parseInt(process.env.REDIS_PORT ?? parsedRedisUrl?.port ?? '6379', 10);
+    // Extract password from URL (Railway format: redis://default:password@host:port)
+    // URL.password contains the password part after the colon
     const redisPassword = process.env.REDIS_PASSWORD ?? parsedRedisUrl?.password;
+    
+    // Log Redis configuration for debugging
+    if (redisHost) {
+      this.logger.log(`Redis configuration: host=${redisHost}, port=${redisPort}, hasPassword=${!!redisPassword}, fromUrl=${!!parsedRedisUrl}`);
+    } else {
+      this.logger.warn('Redis not configured - REDIS_HOST and REDIS_URL are both missing');
+    }
 
     if (redisHost) {
       try {
