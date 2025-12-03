@@ -60,13 +60,19 @@ export default async function HomePage() {
   let agents: Agent[] = [];
 
   try {
-    // Show all agents on the dashboard by setting showAll=true
-    // This bypasses the default PUBLIC/APPROVED filter
+    // Fetch all agents for the current user's organization
+    // Use showAll to bypass default PUBLIC/APPROVED filter and show all agents
+    // Also filter by creatorId to show only the user's agents
+    const agentFilters: Record<string, string> = { showAll: 'true' };
+    if (currentUser?.id) {
+      agentFilters.creatorId = currentUser.id;
+    }
+    
     [orgSummary, orgTimeseries, subscription, agents] = await Promise.all([
       client.getOrganizationRoi(orgSlug),
       client.getOrganizationRoiTimeseries(orgSlug, 14),
       client.getBillingSubscription(),
-      client.listAgents({ showAll: 'true' } as { showAll?: string }),
+      client.listAgents(agentFilters),
     ]);
     // Debug logging
     console.log('Dashboard loaded agents:', agents.length);

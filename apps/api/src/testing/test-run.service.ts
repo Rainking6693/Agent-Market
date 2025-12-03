@@ -146,7 +146,9 @@ export class TestRunService {
             // Process test run asynchronously without blocking
             this.processTestRunImmediately(run.id, agentId, suite.id, params.userId).catch(
               (error) => {
-                this.logger.error(`Failed to process test run ${run.id}:`, error);
+                const errorMessage = error instanceof Error ? error.message : String(error);
+                const errorStack = error instanceof Error ? error.stack : undefined;
+                this.logger.error(`Failed to process test run ${run.id}: ${errorMessage}`, errorStack);
               },
             );
           }
@@ -320,13 +322,25 @@ export class TestRunService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _userId: string,
   ) {
-    // Run the real test suite inline (same logic as the worker) when Redis/queue is unavailable
-    await this.runTestSuiteWorker.runSuite({
-      runId,
-      agentId: _agentId,
-      suiteId: _suiteId,
-      userId: _userId,
-    });
+    try {
+      // Run the real test suite inline (same logic as the worker) when Redis/queue is unavailable
+      await this.runTestSuiteWorker.runSuite({
+        runId,
+        agentId: _agentId,
+        suiteId: _suiteId,
+        userId: _userId,
+      });
+    } catch (error) {
+      // Ensure error is properly formatted for logging
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(
+        `Failed to process test run ${runId}: ${errorMessage}`,
+        errorStack,
+      );
+      // Re-throw to let the caller handle it
+      throw error;
+    }
   }
 }
 

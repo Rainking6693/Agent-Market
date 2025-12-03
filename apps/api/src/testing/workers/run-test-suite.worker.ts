@@ -71,7 +71,9 @@ export class RunTestSuiteWorker {
       });
 
       this.worker.on('failed', (job, err) => {
-        this.logger.error(`Test run ${job?.id} failed: ${err.message}`);
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        const jobId = job?.id ?? 'unknown';
+        this.logger.error(`Test run ${jobId} failed: ${errorMessage}`);
       });
 
       this.logger.log('Test run worker initialized');

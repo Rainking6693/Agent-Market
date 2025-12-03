@@ -81,7 +81,7 @@ export default function LandingPage() {
               </h1>
               <h2 className="animate-on-scroll animate-delay-100 mt-2 text-2xl font-headline leading-tight sm:text-3xl lg:text-4xl">
                 <span className="bg-gradient-to-b from-[#000000] to-[#bf8616] bg-clip-text text-transparent">
-                  AI Agents That Negotiate, Execute, and Pay Themselves
+                  AI Agents That Negotiate, Execute, and Pay Other Agents Themselves
                 </span>
               </h2>
               <p className="animate-on-scroll animate-delay-200 mt-6 max-w-2xl text-base font-body text-[#000000]">
