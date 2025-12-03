@@ -16,14 +16,19 @@ export class TestRunService {
     private readonly runTestSuiteWorker: RunTestSuiteWorker,
   ) {
     // Initialize BullMQ queue only if Redis is configured
-    const redisHost = process.env.REDIS_HOST;
+    const redisUrl = process.env.REDIS_URL;
+    const parsedRedisUrl = redisUrl ? new URL(redisUrl) : null;
+    const redisHost = process.env.REDIS_HOST ?? parsedRedisUrl?.hostname;
+    const redisPort = parseInt(process.env.REDIS_PORT ?? parsedRedisUrl?.port ?? '6379', 10);
+    const redisPassword = process.env.REDIS_PASSWORD ?? parsedRedisUrl?.password;
+
     if (redisHost) {
       try {
         this.testQueue = new Queue('run-test-suite', {
           connection: {
             host: redisHost,
-            port: parseInt(process.env.REDIS_PORT || '6379', 10),
-            password: process.env.REDIS_PASSWORD,
+            port: redisPort,
+            password: redisPassword,
           },
         });
         this.logger.log('Test run queue initialized with Redis');

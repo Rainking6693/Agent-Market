@@ -27,14 +27,18 @@ export class TestRunsGateway implements OnGatewayConnection, OnGatewayDisconnect
 
   constructor() {
     // Initialize Redis subscriber only if Redis is configured
-    const redisHost = process.env.REDIS_HOST;
+    const redisUrl = process.env.REDIS_URL;
+    const parsedRedisUrl = redisUrl ? new URL(redisUrl) : null;
+    const redisHost = process.env.REDIS_HOST ?? parsedRedisUrl?.hostname;
+    const redisPort = parseInt(process.env.REDIS_PORT ?? parsedRedisUrl?.port ?? '6379', 10);
+    const redisPassword = process.env.REDIS_PASSWORD ?? parsedRedisUrl?.password;
     if (redisHost) {
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         this.redis = new (Redis as any)({
           host: redisHost,
-          port: parseInt(process.env.REDIS_PORT || '6379', 10),
-          password: process.env.REDIS_PASSWORD,
+          port: redisPort,
+          password: redisPassword,
           retryStrategy: () => null, // Don't retry on connection failure
           maxRetriesPerRequest: null,
           lazyConnect: true,
