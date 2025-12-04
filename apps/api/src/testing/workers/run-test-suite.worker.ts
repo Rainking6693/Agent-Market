@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Prisma, TestRunStatus } from '@prisma/client';
 import { Worker, Job } from 'bullmq';
 import Redis from 'ioredis';
@@ -8,6 +8,7 @@ import { PrismaService } from '../../modules/database/prisma.service.js';
 import { getSuiteBySlug } from '../suites/index.js';
 import { TestRunProgress, TestRunner } from '../types.js';
 
+@Injectable()
 export class RunTestSuiteWorker {
   private readonly logger = new Logger(RunTestSuiteWorker.name);
   private worker: Worker | null = null;

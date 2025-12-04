@@ -10,6 +10,20 @@ const starterPlan = {
   features: ['Community support', 'Basic analytics', 'Shared compute'],
 };
 
+const plusPlan = {
+  slug: 'plus',
+  name: 'Plus',
+  priceCents: 2900,
+  seats: 1,
+  agentLimit: 10,
+  workflowLimit: 3,
+  monthlyCredits: 5000,
+  takeRateBasisPoints: 700,
+  features: ['Email support', 'Advanced analytics', 'Webhook notifications', 'Slack integration'],
+  stripeProductId: process.env.PLUS_SWARM_SYNC_TIER_PRODUCT_ID ?? '',
+  stripePriceId: process.env.PLUS_SWARM_SYNC_TIER_PRICE_ID ?? '',
+};
+
 const growthPlan = {
   slug: 'growth',
   name: 'Growth',
@@ -66,6 +80,7 @@ const enterprisePlan = {
 
 export const billingPlanConfigs = [
   starterPlan,
+  plusPlan,
   growthPlan,
   scalePlan,
   proPlan,

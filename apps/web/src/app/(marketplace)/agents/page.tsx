@@ -20,6 +20,7 @@ export default function MarketplaceAgentsPage() {
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [showMyAgents, setShowMyAgents] = useState(false);
 
+  // When showing "My Agents", also pass showAll to bypass default PUBLIC/APPROVED filter
   const filters = useMemo(
     () => ({
       search: search.trim() || undefined,
@@ -27,10 +28,31 @@ export default function MarketplaceAgentsPage() {
       tag: capability || undefined,
       verifiedOnly,
       creatorId: showMyAgents && user?.id ? user.id : undefined,
+      showAll: showMyAgents && user?.id ? 'true' : undefined,
     }),
     [search, category, capability, verifiedOnly, showMyAgents, user?.id],
   );
-  const { data: agents, isLoading, isError, error, refetch } = useAgents(filters);
+
+  // When showing "My Agents" but user.id isn't available yet, use empty filters to trigger loading state
+  const effectiveFilters = useMemo(() => {
+    // If showing all agents (not filtering by creator), use the filters as-is
+    if (!showMyAgents) {
+      return filters;
+    }
+    // If showing my agents and user.id is available, use the filters
+    if (user?.id) {
+      return filters;
+    }
+    // Otherwise, return null to indicate we're waiting for user data
+    return null;
+  }, [showMyAgents, user?.id, filters]);
+
+  const { data: agents, isLoading: queryLoading, isError, error, refetch } = useAgents(
+    effectiveFilters ?? undefined
+  );
+
+  // Show loading if we're waiting for user ID to be available OR if query is loading
+  const isLoading = queryLoading || (showMyAgents && !user?.id);
 
   // Log errors for debugging
   if (isError && error) {
