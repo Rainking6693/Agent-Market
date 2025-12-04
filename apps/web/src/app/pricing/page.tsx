@@ -65,7 +65,7 @@ const pricingTiers = [
         cta: 'Start Plus Plan',
         ctaLink: '/register?plan=plus',
         popular: true,
-        stripeLink: 'https://buy.stripe.com/test/price_1SVKKGPQdMywmVkHgz2Wk5gD',
+        stripeLink: 'stripe',
     },
     {
         name: 'Growth',
@@ -95,7 +95,7 @@ const pricingTiers = [
         cta: 'Start Growth Plan',
         ctaLink: '/register?plan=growth',
         popular: false,
-        stripeLink: 'https://buy.stripe.com/test/price_1SSlzkPQdMywmVkHXJSPjysl',
+        stripeLink: 'stripe',
     },
     {
         name: 'Pro',
@@ -126,7 +126,7 @@ const pricingTiers = [
         cta: 'Start Pro Plan',
         ctaLink: '/register?plan=pro',
         popular: false,
-        stripeLink: 'https://buy.stripe.com/test/price_1SSm0GPQdMywmVkHAb9V3Ct7',
+        stripeLink: 'stripe',
     },
     {
         name: 'Scale',
@@ -159,7 +159,7 @@ const pricingTiers = [
         cta: 'Start Scale Plan',
         ctaLink: '/register?plan=scale',
         popular: false,
-        stripeLink: 'https://buy.stripe.com/test/price_1SSm3XPQdMywmVkH0Umdoehb',
+        stripeLink: 'stripe',
     },
 ];
 
