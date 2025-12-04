@@ -136,6 +136,60 @@ export class BillingService {
     return { checkoutUrl: session.url };
   }
 
+  async createPublicCheckoutSession(planSlug: string, successUrl?: string, cancelUrl?: string) {
+    await this.ensurePlansSeeded();
+    const plan = await this.prisma.billingPlan.findUnique({ where: { slug: planSlug } });
+    if (!plan) {
+      throw new NotFoundException('Plan not found');
+    }
+
+    const planConfig = this.findPlanConfigBySlug(plan.slug);
+
+    if (plan.priceCents === 0) {
+      // For free plans, redirect to registration
+      return {
+        checkoutUrl: `${STRIPE_WEB_URL}/register?plan=${planSlug}`,
+      };
+    }
+
+    if (!this.stripe) {
+      throw new Error('Stripe is not configured');
+    }
+
+    const stripePriceId = planConfig?.stripePriceId;
+    if (!stripePriceId) {
+      throw new Error(`Stripe price ID missing for plan ${plan.slug}`);
+    }
+
+    // Create checkout session without requiring authentication
+    // User will provide email during checkout, and we'll create account after payment
+    const session = await this.stripe.checkout.sessions.create({
+      mode: 'subscription',
+      customer_email: undefined, // Let Stripe collect email
+      success_url: successUrl ?? `${STRIPE_WEB_URL}/register?status=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: cancelUrl ?? `${STRIPE_WEB_URL}/pricing?status=cancel`,
+      line_items: [
+        {
+          price: stripePriceId,
+          quantity: 1,
+        },
+      ],
+      metadata: {
+        planSlug: plan.slug,
+        isPublicCheckout: 'true',
+      },
+      subscription_data: {
+        metadata: {
+          planSlug: plan.slug,
+        },
+      },
+      allow_promotion_codes: true,
+      billing_address_collection: 'auto',
+    });
+
+    return { checkoutUrl: session.url };
+  }
+
   async handleStripeWebhook(signature: string | undefined, payload: Buffer) {
     if (!this.stripe || !this.webhookSecret) {
       this.logger.warn('Stripe webhook received but Stripe is not configured.');

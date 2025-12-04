@@ -29,13 +29,7 @@ export function CheckoutButton({
 
   const checkoutMutation = useMutation({
     mutationFn: async () => {
-      if (!isAuthenticated) {
-        // Redirect to register with plan selected
-        router.push(`${ctaLink}`);
-        return { checkoutUrl: null };
-      }
-
-      const successUrl = `${window.location.origin}/billing?status=success`;
+      const successUrl = `${window.location.origin}/register?status=success&plan=${planSlug}`;
       const cancelUrl = `${window.location.origin}/pricing?status=cancel`;
 
       // For free plans, just redirect to register
@@ -44,8 +38,14 @@ export function CheckoutButton({
         return { checkoutUrl: null };
       }
 
-      // Create checkout session via API
-      return billingApi.createCheckoutSession(planSlug, successUrl, cancelUrl);
+      // Use public checkout endpoint (works for both authenticated and unauthenticated users)
+      if (isAuthenticated) {
+        // If user is logged in, use authenticated checkout
+        return billingApi.createCheckoutSession(planSlug, successUrl, cancelUrl);
+      } else {
+        // If user is not logged in, use public checkout
+        return billingApi.createPublicCheckoutSession(planSlug, successUrl, cancelUrl);
+      }
     },
     onSuccess: (result) => {
       if (result.checkoutUrl) {

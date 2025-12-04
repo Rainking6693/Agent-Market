@@ -239,6 +239,12 @@ export const billingApi = {
         json: { planSlug, successUrl, cancelUrl },
       })
       .json<{ checkoutUrl: string | null; subscription?: unknown }>(),
+  createPublicCheckoutSession: (planSlug: string, successUrl?: string, cancelUrl?: string) =>
+    api
+      .post('billing/subscription/checkout/public', {
+        json: { planSlug, successUrl, cancelUrl },
+      })
+      .json<{ checkoutUrl: string | null }>(),
   createTopUpSession: (amountCents: number, successUrl?: string, cancelUrl?: string) =>
     api
       .post('billing/topup', {

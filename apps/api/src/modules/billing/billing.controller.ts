@@ -54,6 +54,11 @@ export class BillingController {
     return this.billingService.createCheckoutSession(body.planSlug, body.successUrl, body.cancelUrl);
   }
 
+  @Post('subscription/checkout/public')
+  createPublicCheckout(@Body() body: CheckoutRequestDto) {
+    return this.billingService.createPublicCheckoutSession(body.planSlug, body.successUrl, body.cancelUrl);
+  }
+
   @Post('topup')
   createTopUp(@Body() body: TopUpRequestDto) {
     return this.billingService.createTopUpSession(body.amountCents, body.successUrl, body.cancelUrl);
