@@ -242,16 +242,25 @@ export class BillingService {
   }
 
   private async getDefaultOrganization() {
-    const organization =
-      (await this.prisma.organization.findUnique({
-        where: { slug: DEFAULT_ORG_SLUG },
-      })) ??
-      (await this.prisma.organization.findFirst({
-        orderBy: { createdAt: 'asc' },
-      }));
+    let organization = await this.prisma.organization.findUnique({
+      where: { slug: DEFAULT_ORG_SLUG },
+    });
 
     if (!organization) {
-      throw new NotFoundException('No organization configured');
+      organization = await this.prisma.organization.findFirst({
+        orderBy: { createdAt: 'asc' },
+      });
+    }
+
+    // Auto-create the default organization if none exists
+    if (!organization) {
+      this.logger.log(`Creating default organization with slug: ${DEFAULT_ORG_SLUG}`);
+      organization = await this.prisma.organization.create({
+        data: {
+          slug: DEFAULT_ORG_SLUG,
+          name: 'Genesis Organization',
+        },
+      });
     }
 
     return organization;

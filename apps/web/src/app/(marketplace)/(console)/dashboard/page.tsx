@@ -59,29 +59,48 @@ export default async function HomePage() {
   let subscription: BillingSubscription | null = null;
   let agents: Agent[] = [];
 
-  try {
-    // Fetch all agents for the current user's organization
-    // Use showAll to bypass default PUBLIC/APPROVED filter and show all agents
-    // Also filter by creatorId to show only the user's agents
-    const agentFilters: Record<string, string> = { showAll: 'true' };
-    if (currentUser?.id) {
-      agentFilters.creatorId = currentUser.id;
-    }
-    
-    [orgSummary, orgTimeseries, subscription, agents] = await Promise.all([
+  // Fetch all agents for the current user's organization
+  // Use showAll to bypass default PUBLIC/APPROVED filter and show all agents
+  // Also filter by creatorId to show only the user's agents
+  const agentFilters: Record<string, string> = { showAll: 'true' };
+  if (currentUser?.id) {
+    agentFilters.creatorId = currentUser.id;
+  }
+
+  // Fetch data individually to handle partial failures gracefully
+  // Organization data might fail if org doesn't exist yet, but agents should still load
+  const [orgSummaryResult, orgTimeseriesResult, subscriptionResult, agentsResult] =
+    await Promise.allSettled([
       client.getOrganizationRoi(orgSlug),
       client.getOrganizationRoiTimeseries(orgSlug, 14),
       client.getBillingSubscription(),
       client.listAgents(agentFilters),
     ]);
-    // Debug logging
+
+  // Extract successful results, log failures
+  if (orgSummaryResult.status === 'fulfilled') {
+    orgSummary = orgSummaryResult.value;
+  } else {
+    console.warn('Failed to load org summary:', orgSummaryResult.reason);
+  }
+
+  if (orgTimeseriesResult.status === 'fulfilled') {
+    orgTimeseries = orgTimeseriesResult.value;
+  } else {
+    console.warn('Failed to load org timeseries:', orgTimeseriesResult.reason);
+  }
+
+  if (subscriptionResult.status === 'fulfilled') {
+    subscription = subscriptionResult.value;
+  } else {
+    console.warn('Failed to load subscription:', subscriptionResult.reason);
+  }
+
+  if (agentsResult.status === 'fulfilled') {
+    agents = agentsResult.value;
     console.log('Dashboard loaded agents:', agents.length);
-  } catch (error) {
-    console.warn('Dashboard data unavailable during build', error);
-    // Log the specific error for agents
-    if (error instanceof Error) {
-      console.error('Agent fetch error:', error.message, error.stack);
-    }
+  } else {
+    console.error('Failed to load agents:', agentsResult.reason);
   }
 
   // Get greeting based on time of day
