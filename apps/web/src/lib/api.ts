@@ -114,6 +114,11 @@ const api = ky.create({
   },
 });
 
+// Create a separate API client for public endpoints (no auth header)
+const publicApi = ky.create({
+  prefixUrl: API_BASE_URL,
+});
+
 export interface AuthResponse {
   user: {
     id: string;
@@ -240,7 +245,7 @@ export const billingApi = {
       })
       .json<{ checkoutUrl: string | null; subscription?: unknown }>(),
   createPublicCheckoutSession: (planSlug: string, successUrl?: string, cancelUrl?: string) =>
-    api
+    publicApi
       .post('billing/subscription/checkout/public', {
         json: { planSlug, successUrl, cancelUrl },
       })
