@@ -8,7 +8,8 @@
     "dev": "cross-env TS_NODE_PROJECT=tsconfig.json TS_NODE_TRANSPILE_ONLY=1 node --watch --loader ts-node/esm src/main.ts",
     "start": "node dist/main.js",
     "test:smoke": "tsx scripts/load-smoke.ts",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+    "seed:agents": "tsx prisma/seed-agents.ts"
   },
   "dependencies": {
     "@coinbase/coinbase-sdk": "^0.25.0",
