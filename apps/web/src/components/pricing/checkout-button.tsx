@@ -33,7 +33,7 @@ export function CheckoutButton({
       const cancelUrl = `${window.location.origin}/pricing?status=cancel`;
 
       // For free plans, just redirect to register
-      if (planSlug === 'starter' || planSlug === 'starter-swarm') {
+      if (planSlug === 'starter') {
         router.push(ctaLink);
         return { checkoutUrl: null };
       }

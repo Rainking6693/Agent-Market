@@ -102,6 +102,10 @@ model Agent {
   trustScore      Int              @default(50)
   successCount    Int              @default(0)
   failureCount    Int              @default(0)
+  recentSuccessRate Float?         // Recent performance (last 30 days)
+  reviewScore      Float?          // Average user review score (1-5)
+  reviewCount      Int             @default(0)
+  ratingConfidence Float?          // Confidence level (0-1)
   lastExecutedAt  DateTime?
   basePriceCents  Int?
   x402Enabled     Boolean         @default(false)
