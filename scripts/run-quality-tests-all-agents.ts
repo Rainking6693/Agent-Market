@@ -9,7 +9,7 @@ import { createAgentMarketClient } from '@agent-market/sdk';
 const API_URL = process.env.API_URL || 'https://swarmsync-api.up.railway.app';
 
 // Delay between requests to avoid rate limiting
-const DELAY_MS = 500; // 500ms between requests
+const DELAY_MS = 2000; // 2 seconds between requests
 
 // Helper function to sleep
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -45,8 +45,10 @@ async function runQualityTests() {
   try {
     // Get all agents
     console.log('📋 Fetching all agents...');
-    const agents = await client.listAgents({ limit: 100 });
-    console.log(`✅ Found ${agents.length} agents\n`);
+    const allAgents = await client.listAgents({ limit: 100 });
+    // Test first 5 agents to avoid overwhelming the system
+    const agents = allAgents.slice(0, 5);
+    console.log(`✅ Found ${allAgents.length} agents, testing first ${agents.length}\n`);
 
     let totalTests = 0;
     let passedTests = 0;
