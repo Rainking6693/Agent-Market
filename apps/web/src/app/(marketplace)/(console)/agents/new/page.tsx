@@ -168,14 +168,18 @@ export default function NewAgentPage() {
 
       const agent = await agentsApi.create(payload);
 
-      const budgetPayload: AgentBudgetPayload = {
-        monthlyLimit: normalizeCurrency(monthlyLimit),
-        perTransactionLimit: normalizeCurrency(perTransactionLimit) ?? null,
-        approvalThreshold: normalizeCurrency(approvalThreshold) ?? null,
-        autoReload,
-      };
+      // Only update budget if user provided values
+      const monthlyLimitValue = normalizeCurrency(monthlyLimit);
+      if (monthlyLimitValue !== undefined || perTransactionLimit || approvalThreshold) {
+        const budgetPayload: AgentBudgetPayload = {
+          monthlyLimit: monthlyLimitValue ?? 500, // Default to $500/month
+          perTransactionLimit: normalizeCurrency(perTransactionLimit) ?? null,
+          approvalThreshold: normalizeCurrency(approvalThreshold) ?? null,
+          autoReload,
+        };
 
-      await agentsApi.updateBudget(agent.id, budgetPayload);
+        await agentsApi.updateBudget(agent.id, budgetPayload);
+      }
       return agent;
     },
     onSuccess: async (agent) => {
@@ -220,11 +224,11 @@ export default function NewAgentPage() {
       case 2:
         return ap2Endpoint.trim().length > 0;
       case 3:
-        return normalizeCurrency(monthlyLimit) !== undefined;
+        return true; // Budget is optional - defaults to $500/month
       default:
         return false;
     }
-  }, [currentStep, name, description, selectedCategories, pricingModel, ap2Endpoint, monthlyLimit]);
+  }, [currentStep, name, description, selectedCategories, pricingModel, ap2Endpoint]);
 
   // Auto-open file picker if ?import=true is in the URL
   useEffect(() => {
@@ -865,6 +869,9 @@ export default function NewAgentPage() {
       case 3:
         return (
           <div className="space-y-6">
+            <div className="rounded-lg border border-blue-500/40 bg-blue-500/10 p-4 text-sm text-blue-300">
+              <strong>Optional:</strong> Budget limits are optional. If not specified, a default monthly limit of $500 will be applied. You can adjust these settings anytime after creation.
+            </div>
             <div className="grid gap-4 md:grid-cols-3">
               <div className="space-y-2">
                 <Label htmlFor="monthly-limit">Monthly limit (USD)</Label>
@@ -873,6 +880,7 @@ export default function NewAgentPage() {
                   type="number"
                   min="0"
                   step="50"
+                  placeholder="500"
                   value={monthlyLimit}
                   onChange={(event) => setMonthlyLimit(event.target.value)}
                 />
