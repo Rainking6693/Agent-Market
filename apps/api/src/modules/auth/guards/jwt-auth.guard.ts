@@ -1,11 +1,13 @@
 import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { firstValueFrom, isObservable } from 'rxjs';
 
+import { IS_PUBLIC_KEY } from '../decorators/public.decorator.js';
 import { ServiceAccountsService } from '../service-accounts.service.js';
 
 import type { Request } from 'express';
-import { firstValueFrom, isObservable } from 'rxjs';
 import type { Observable } from 'rxjs';
 
 @Injectable()
@@ -13,11 +15,22 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   constructor(
     private readonly configService: ConfigService,
     private readonly serviceAccounts: ServiceAccountsService,
+    private readonly reflector: Reflector,
   ) {
     super();
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    // Check if route is marked as public
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    if (isPublic) {
+      return true;
+    }
+
     if (!this.isEnforced()) {
       return true;
     }
@@ -41,9 +54,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   handleRequest<TUser = unknown>(
     err: unknown,
     user: TUser,
-    info?: unknown,
-    context?: ExecutionContext,
-    status?: unknown,
+    _info?: unknown,
+    _context?: ExecutionContext,
+    _status?: unknown,
   ): TUser {
     if (!this.isEnforced()) {
       if (err) {

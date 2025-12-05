@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { IsInt, IsOptional, IsString, Min } from 'class-validator';
 
 import { BillingService } from './billing.service.js';
+import { Public } from '../auth/decorators/public.decorator.js';
 
 class CheckoutRequestDto {
   @IsString()
@@ -54,6 +55,7 @@ export class BillingController {
     return this.billingService.createCheckoutSession(body.planSlug, body.successUrl, body.cancelUrl);
   }
 
+  @Public()
   @Post('subscription/checkout/public')
   createPublicCheckout(@Body() body: CheckoutRequestDto) {
     return this.billingService.createPublicCheckoutSession(body.planSlug, body.successUrl, body.cancelUrl);

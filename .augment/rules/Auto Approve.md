@@ -1,5 +1,4 @@
 ---
-alwaysApply: true
 type: 'always_apply'
 ---
 
