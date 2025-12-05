@@ -31,9 +31,12 @@ export default async function AgentDetailPage({ params }: { params: { slug: stri
     notFound();
   }
 
-  const [schema, budget] = await Promise.all([
+  const [schema, budget, qualityAnalytics, evaluations, certifications] = await Promise.all([
     client.getAgentSchema(agent.id).catch(() => null),
     client.getAgentBudget(agent.id).catch(() => null),
+    client.getQualityAnalytics(agent.id).catch(() => null),
+    client.listEvaluationResults(agent.id).catch(() => []),
+    client.listCertifications(agent.id).catch(() => []),
   ]);
 
   const categories = agent.categories.length ? agent.categories : ['Generalist'];
@@ -103,6 +106,91 @@ export default async function AgentDetailPage({ params }: { params: { slug: stri
               hint={budget ? `Approval mode: ${budget.approvalMode}` : 'Wallet-managed'}
             />
           </section>
+
+          {qualityAnalytics && (
+            <Card className="border-white/70 bg-white/80">
+              <CardContent className="space-y-6 p-6">
+                <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+                  Quality & Testing
+                </h2>
+                <div className="grid gap-4 md:grid-cols-4">
+                  <StatCard
+                    label="Test Pass Rate"
+                    value={`${(qualityAnalytics.evaluations.passRate * 100).toFixed(0)}%`}
+                    hint={`${qualityAnalytics.evaluations.passed}/${qualityAnalytics.evaluations.total} tests passed`}
+                  />
+                  <StatCard
+                    label="Avg Latency"
+                    value={
+                      qualityAnalytics.evaluations.averageLatencyMs
+                        ? `${qualityAnalytics.evaluations.averageLatencyMs.toFixed(0)}ms`
+                        : 'N/A'
+                    }
+                    hint="Response time"
+                  />
+                  <StatCard
+                    label="Certification"
+                    value={qualityAnalytics.certification.status || 'None'}
+                    hint={
+                      qualityAnalytics.certification.expiresAt
+                        ? `Expires ${new Date(qualityAnalytics.certification.expiresAt).toLocaleDateString()}`
+                        : 'Not certified'
+                    }
+                  />
+                  <StatCard
+                    label="Verified Outcomes"
+                    value={`${(qualityAnalytics.roi.verifiedOutcomeRate * 100).toFixed(0)}%`}
+                    hint={`${qualityAnalytics.verifications.verified} verified`}
+                  />
+                </div>
+                {evaluations.length > 0 && (
+                  <div className="space-y-2">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      Recent Test Results
+                    </h3>
+                    <div className="space-y-1">
+                      {evaluations.slice(0, 5).map((evaluation) => (
+                        <div
+                          key={evaluation.id}
+                          className="flex items-center justify-between rounded-lg border border-border/50 bg-background/50 px-3 py-2 text-sm"
+                        >
+                          <span className="font-medium">{evaluation.scenario.name}</span>
+                          <div className="flex items-center gap-3">
+                            {evaluation.latencyMs && (
+                              <span className="text-xs text-muted-foreground">{evaluation.latencyMs}ms</span>
+                            )}
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
+                                evaluation.status === 'PASSED'
+                                  ? 'bg-green-100 text-green-700'
+                                  : 'bg-red-100 text-red-700'
+                              }`}
+                            >
+                              {evaluation.status}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {certifications.length > 0 && (
+                  <div className="space-y-2">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      Certifications
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {certifications.map((cert) => (
+                        <Badge key={cert.id} variant="secondary">
+                          {cert.status}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
           <section className="grid gap-6 lg:grid-cols-2">
             <Card className="border-white/70 bg-white/80">

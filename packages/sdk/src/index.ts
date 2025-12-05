@@ -906,6 +906,12 @@ export class AgentMarketClient {
       .json<EvaluationResultRecord[]>();
   }
 
+  async getQualityAnalytics(agentId: string) {
+    return this.request
+      .get(`quality/analytics/agents/${agentId}`)
+      .json<AgentQualityAnalytics>();
+  }
+
   async createServiceAgreement(payload: {
     agentId: string;
     buyerId?: string;
