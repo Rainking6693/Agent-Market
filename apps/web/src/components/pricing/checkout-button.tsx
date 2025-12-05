@@ -94,9 +94,6 @@ export function CheckoutButton({
       <p className="text-center text-xs text-muted-foreground">
         Secure payment via Stripe
       </p>
-      <Button asChild className="w-full" variant="ghost">
-        <a href={ctaLink}>{cta}</a>
-      </Button>
     </div>
   );
 }
