@@ -132,7 +132,7 @@ export function AgentCard({ agent }: AgentCardProps) {
               variant="secondary"
               className="flex-1 rounded-full text-xs font-semibold uppercase tracking-wide"
             >
-              <Link href={`/dashboard?agent=${agent.slug}&intent=request-service`}>
+              <Link href={`/agents/${agent.slug}#request-service-panel`}>
                 Request service
               </Link>
             </Button>

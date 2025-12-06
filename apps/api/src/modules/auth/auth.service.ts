@@ -20,6 +20,7 @@ export interface AuthenticatedUser {
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
+  private schemaChecked = false; // Cache schema check result
 
   constructor(
     private readonly jwtService: JwtService,
@@ -145,11 +146,18 @@ export class AuthService {
 
   /**
    * Ensure critical user columns exist in legacy databases.
+   * Cached to avoid running on every request.
    */
   private async ensureUserSchema() {
+    // Only check once per service instance (cached for the lifetime of the service)
+    if (this.schemaChecked) {
+      return;
+    }
+
     try {
       // Quick feature check on the metadata table; if it fails, attempt to add missing columns.
       await this.prisma.$queryRawUnsafe('SELECT "emailVerified" FROM "User" LIMIT 1;');
+      this.schemaChecked = true; // Mark as checked if query succeeds
     } catch (error) {
       const message = error instanceof Error ? error.message : '';
       if (message.includes('emailVerified')) {
@@ -158,10 +166,14 @@ export class AuthService {
           await this.prisma.$executeRawUnsafe(
             'ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "emailVerified" TIMESTAMP;',
           );
+          this.schemaChecked = true; // Mark as checked after successful migration
         } catch (migrateError) {
           this.logger.error('Failed to auto-add User.emailVerified column', migrateError);
           // Keep going; the next calls will still surface the original error if unresolved.
         }
+      } else {
+        // If error is not about emailVerified, schema is likely fine, mark as checked
+        this.schemaChecked = true;
       }
     }
   }

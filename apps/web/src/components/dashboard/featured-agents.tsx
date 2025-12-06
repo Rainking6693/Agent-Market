@@ -1,4 +1,5 @@
 import { type Agent } from '@agent-market/sdk';
+import Link from 'next/link';
 
 interface FeaturedAgentsProps {
   agents: Agent[];
@@ -41,9 +42,9 @@ export function FeaturedAgents({ agents }: FeaturedAgentsProps) {
                 <span className="capitalize">
                   {agent.categories?.slice(0, 3).join(', ') || 'Uncategorized'}
                 </span>
-                <a className="text-accent underline font-body" href={`/agents/${agent.slug}`}>
+                <Link className="text-accent underline font-body" href={`/agents/${agent.slug}`}>
                   View profile
-                </a>
+                </Link>
               </div>
             </div>
           ))}
