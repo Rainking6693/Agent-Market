@@ -181,7 +181,7 @@ export default async function AgentDetailPage({ params }: { params: { slug: stri
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {certifications.map((cert) => (
-                        <Badge key={cert.id} variant="secondary">
+                        <Badge key={cert.id} variant="accent">
                           {cert.status}
                         </Badge>
                       ))}
