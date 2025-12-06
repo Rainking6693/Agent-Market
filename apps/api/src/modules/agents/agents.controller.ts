@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { AgentStatus, AgentVisibility } from '@prisma/client';
 
@@ -9,6 +9,7 @@ import { ExecuteAgentDto } from './dto/execute-agent.dto.js';
 import { ReviewAgentDto } from './dto/review-agent.dto.js';
 import { SubmitForReviewDto } from './dto/submit-for-review.dto.js';
 import { UpdateAgentDto } from './dto/update-agent.dto.js';
+import { UpdateAgentBudgetDto } from './dto/update-budget.dto.js';
 
 @Controller('agents')
 export class AgentsController {
@@ -110,6 +111,12 @@ export class AgentsController {
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   getBudget(@Param('id') id: string) {
     return this.agentsService.getAgentBudget(id);
+  }
+
+  @Patch(':id/budget')
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  updateBudget(@Param('id') id: string, @Body() body: UpdateAgentBudgetDto) {
+    return this.agentsService.updateAgentBudget(id, body);
   }
 
   @Get(':id/payment-history')
