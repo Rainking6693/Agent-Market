@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -22,7 +21,6 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function EmailLoginForm() {
-  const router = useRouter();
   const setAuth = useAuthStore((state) => state.setAuth);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,8 +50,12 @@ export function EmailLoginForm() {
       // Update auth store
       setAuth(response.user, response.accessToken);
 
-      // Redirect to dashboard
-      router.push('/dashboard');
+      // Wait a brief moment for state to be set, then redirect
+      // Use window.location for a full page reload to avoid hydration issues
+      // This ensures the auth state is properly initialized before rendering
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 100);
     } catch (err: unknown) {
       console.error('Login error:', err);
       let message = 'Login failed. Please check your credentials and try again.';

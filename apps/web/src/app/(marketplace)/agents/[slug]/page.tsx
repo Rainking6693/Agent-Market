@@ -17,13 +17,31 @@ const currency = new Intl.NumberFormat('en-US', {
   currency: 'USD',
 });
 
-export default async function AgentDetailPage({ params }: { params: { slug: string } }) {
+// Mark this route as dynamic since it fetches data based on slug
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export default async function AgentDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ slug: string }> | { slug: string } 
+}) {
+  // Handle both Promise and direct params (Next.js 13-15 compatibility)
+  const resolvedParams = params instanceof Promise ? await params : params;
+  const slug = resolvedParams.slug;
+  
+  if (!slug || typeof slug !== 'string') {
+    console.error('Invalid slug parameter:', slug);
+    notFound();
+  }
+
   const client = getAgentMarketClient();
   let agent: Agent | null = null;
 
   try {
-    agent = await client.getAgentBySlug(params.slug);
-  } catch {
+    agent = await client.getAgentBySlug(slug);
+  } catch (error) {
+    console.error('Failed to fetch agent by slug:', resolvedParams.slug, error);
     agent = null;
   }
 
