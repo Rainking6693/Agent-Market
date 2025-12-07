@@ -45,10 +45,10 @@ async function runQualityTests() {
   try {
     // Get all agents
     console.log('📋 Fetching all agents...');
-    const allAgents = await client.listAgents({ limit: 100 });
-    // Test first 5 agents to avoid overwhelming the system
-    const agents = allAgents.slice(0, 5);
-    console.log(`✅ Found ${allAgents.length} agents, testing first ${agents.length}\n`);
+    const allAgents = await client.listAgents({ limit: 1000, showAll: 'true' });
+    // Test all agents
+    const agents = allAgents;
+    console.log(`✅ Found ${allAgents.length} agents, testing all ${agents.length}\n`);
 
     let totalTests = 0;
     let passedTests = 0;

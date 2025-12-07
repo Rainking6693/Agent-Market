@@ -10,12 +10,14 @@ import { ReviewAgentDto } from './dto/review-agent.dto.js';
 import { SubmitForReviewDto } from './dto/submit-for-review.dto.js';
 import { UpdateAgentDto } from './dto/update-agent.dto.js';
 import { UpdateAgentBudgetDto } from './dto/update-budget.dto.js';
+import { Public } from '../auth/decorators/public.decorator.js';
 
 @Controller('agents')
 export class AgentsController {
   constructor(private readonly agentsService: AgentsService) {}
 
   // Public endpoints - rate limited
+  @Public()
   @Get()
   @Throttle({ default: { limit: 20, ttl: 60000 } }) // 20 requests per minute
   findAll(
@@ -40,24 +42,28 @@ export class AgentsController {
     });
   }
 
+  @Public()
   @Get('discover')
   @Throttle({ default: { limit: 10, ttl: 60000 } }) // 10 requests per minute for discovery
   async discover(@Query() query: AgentDiscoveryQueryDto) {
     return this.agentsService.discover(query);
   }
 
+  @Public()
   @Get('slug/:slug')
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   async findBySlug(@Param('slug') slug: string) {
     return this.agentsService.findBySlug(slug);
   }
 
+  @Public()
   @Get(':id')
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   async findOne(@Param('id') id: string) {
     return this.agentsService.findOne(id);
   }
 
+  @Public()
   @Get(':id/schema')
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   getSchema(@Param('id') id: string) {
@@ -107,6 +113,7 @@ export class AgentsController {
     return this.agentsService.listReviews(id);
   }
 
+  @Public()
   @Get(':id/budget')
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   getBudget(@Param('id') id: string) {
