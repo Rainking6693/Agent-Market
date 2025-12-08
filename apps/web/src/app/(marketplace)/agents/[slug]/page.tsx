@@ -39,13 +39,21 @@ export default async function AgentDetailPage({
   let agent: Agent | null = null;
 
   try {
+    console.log('[AgentDetailPage] Fetching agent with slug:', slug);
     agent = await client.getAgentBySlug(slug);
+    console.log('[AgentDetailPage] Agent fetched successfully:', agent?.id, agent?.name);
   } catch (error) {
-    console.error('Failed to fetch agent by slug:', resolvedParams.slug, error);
+    console.error('[AgentDetailPage] Failed to fetch agent by slug:', slug, error);
+    // Log more details about the error
+    if (error instanceof Error) {
+      console.error('[AgentDetailPage] Error message:', error.message);
+      console.error('[AgentDetailPage] Error stack:', error.stack);
+    }
     agent = null;
   }
 
   if (!agent) {
+    console.error('[AgentDetailPage] Agent not found for slug:', slug);
     notFound();
   }
 
