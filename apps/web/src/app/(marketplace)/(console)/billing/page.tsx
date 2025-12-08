@@ -1,5 +1,5 @@
 import { BillingPlan, BillingSubscription } from '@agent-market/sdk';
-
+import { cookies } from 'next/headers';
 
 import { PlanCard } from '@/components/billing/plan-card';
 import { TopUpCard } from '@/components/billing/top-up-card';
@@ -18,15 +18,24 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function BillingPage() {
-  const client = getAgentMarketClient();
+  const token = cookies().get('auth_token')?.value;
+  const client = getAgentMarketClient(token);
   let plans: BillingPlan[] = [];
   let subscription: BillingSubscription | null = null;
 
   try {
-    [plans, subscription] = await Promise.all([
+    const [plansResult, subscriptionResult] = await Promise.allSettled([
       client.listBillingPlans(),
       client.getBillingSubscription(),
     ]);
+
+    if (plansResult.status === 'fulfilled') {
+      plans = plansResult.value ?? [];
+    }
+
+    if (subscriptionResult.status === 'fulfilled') {
+      subscription = subscriptionResult.value || null;
+    }
   } catch (error) {
     console.warn('Billing data unavailable during build', error);
   }

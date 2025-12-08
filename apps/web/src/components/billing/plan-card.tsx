@@ -19,7 +19,7 @@ const formatter = new Intl.NumberFormat('en-US', {
 });
 
 export function PlanCard({ plan, subscription }: PlanCardProps) {
-  const isActive = subscription?.plan.slug === plan.slug;
+  const isActive = subscription?.plan?.slug === plan.slug;
   const { isAuthenticated } = useAuth();
   const [errorMessage, setErrorMessage] = useState('');
   const priceLabel =
@@ -90,7 +90,7 @@ export function PlanCard({ plan, subscription }: PlanCardProps) {
       </ul>
 
       <div className="space-y-2 text-sm text-ink-muted">
-        {plan.features.map((feature) => (
+        {(plan.features || []).map((feature) => (
           <div key={feature} className="flex items-center gap-2">
             <span className="text-accent">✺</span>
             <span>{feature}</span>

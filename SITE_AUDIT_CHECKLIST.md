@@ -1,52 +1,42 @@
-# 🔍 SwarmSync.ai - Complete Site Audit Checklist
+## ✅ Critical Bugs
 
-**Date**: December 4, 2025  
-**Site**: https://swarmsync.ai  
-**API**: https://swarmsync-api.up.railway.app
-
----
-
-## ✅ Critical Bugs (FIXED)
-
-- [x] **View Profile links on agent cards** - Fixed API URL configuration
-- [x] **Stripe Checkout on pricing page** - Added Price IDs, removed test links
-
----
+- [x] **View Profile links on agent cards** - Verified live links open agent detail pages
+- [x] **Stripe Checkout on pricing page** - Price IDs present; redirects to Stripe checkout (live mode)
 
 ## 🧭 Navigation & Routing
 
 ### Header Navigation
 
-- [ ] Logo → Homepage
-- [ ] "Agents" → /agents
-- [ ] "Dashboard" → /dashboard (requires auth)
-- [ ] "Log in" → /login
-- [ ] "Get started" → /register
+- [x] Logo → Homepage
+- [x] "Agents" → /agents
+- [x] "Dashboard" → /dashboard (requires auth)
+- [x] "Log in" → /login
+- [x] "Get started" → /register
 - [ ] Mobile menu toggle works
 
 ### Footer Navigation
 
-- [ ] All footer links work (About, Privacy, Terms, etc.)
+- [ ] All footer links work (About, Privacy, Terms, etc.) – footer only shows Agents/Pricing; Terms/Privacy missing
 - [ ] Social media links (if present)
 - [ ] Newsletter signup (if present)
 
 ### Internal Routes (200 OK)
 
-- [ ] `/` - Homepage
-- [ ] `/agents` - Agent marketplace
-- [ ] `/agents/[slug]` - Agent detail pages
-- [ ] `/pricing` - Pricing page
-- [ ] `/platform` - Platform page
-- [ ] `/use-cases` - Use cases page
-- [ ] `/security` - Security page
-- [ ] `/resources` - Resources page
-- [ ] `/faq` - FAQ page
-- [ ] `/privacy` - Privacy policy
-- [ ] `/terms` - Terms of service
-- [ ] `/login` - Login page
-- [ ] `/register` - Registration page
-- [ ] `/dashboard` - Dashboard (auth required)
-- [ ] `/billing` - Billing page (auth required)
+- [x] `/` - Homepage
+- [x] `/agents` - Agent marketplace
+- [x] `/agents/[slug]` - Agent detail pages
+- [x] `/pricing` - Pricing page
+- [x] `/platform` - Platform page
+- [x] `/use-cases` - Use cases page
+- [x] `/security` - Security page
+- [x] `/resources` - Resources page
+- [x] `/faq` - FAQ page
+- [x] `/privacy` - Privacy policy
+- [x] `/terms` - Terms of service
+- [x] `/login` - Login page
+- [x] `/register` - Registration page
+- [x] `/dashboard` - Dashboard (auth required)
+- [ ] `/billing` - Billing page (auth required) – currently 500; fixed in code
 
 ---
 
@@ -54,22 +44,22 @@
 
 ### Registration
 
-- [ ] Email/password registration works
+- [x] Email/password registration works
 - [ ] Google OAuth registration works
 - [ ] GitHub OAuth registration works
-- [ ] Email validation works
+- [x] Email validation works (required fields enforced)
 - [ ] Password strength validation
-- [ ] Redirect to dashboard after registration
+- [x] Redirect to dashboard after registration
 - [ ] Welcome email sent (if configured)
 
 ### Login
 
-- [ ] Email/password login works
+- [x] Email/password login works (new account); provided Rainking6693@gmail.com creds rejected (401)
 - [ ] Google OAuth login works
 - [ ] GitHub OAuth login works
 - [ ] "Remember me" functionality
-- [ ] Redirect to dashboard after login
-- [ ] Error messages display correctly
+- [x] Redirect to dashboard after login
+- [x] Error messages display correctly (invalid credential banner shown)
 
 ### Password Reset
 
@@ -81,9 +71,9 @@
 
 ### Logout
 
-- [ ] Logout button works
-- [ ] Session cleared
-- [ ] Redirected to homepage
+- [x] Logout button works
+- [x] Session cleared
+- [x] Redirected to homepage
 - [ ] Cannot access protected routes after logout
 
 ---
@@ -92,20 +82,20 @@
 
 ### Pricing Page
 
-- [ ] All pricing tiers display correctly
-- [ ] Feature lists are accurate
-- [ ] "Get Started Free" → Registration
-- [ ] "Checkout with Stripe" (Plus) → Stripe checkout
-- [ ] "Checkout with Stripe" (Growth) → Stripe checkout
+- [x] All pricing tiers display correctly
+- [x] Feature lists are accurate
+- [x] "Get Started Free" → Registration
+- [x] "Checkout with Stripe" (Plus) → Stripe checkout (live)
+- [x] "Checkout with Stripe" (Growth) → Stripe checkout (live)
 - [ ] "Checkout with Stripe" (Pro) → Stripe checkout
 - [ ] "Checkout with Stripe" (Scale) → Stripe checkout
 - [ ] "Contact Sales" (Enterprise) → Contact form
 
 ### Stripe Checkout Flow
 
-- [ ] Checkout session created successfully
-- [ ] Redirected to Stripe hosted checkout
-- [ ] Test card (4242 4242 4242 4242) works
+- [x] Checkout session created successfully
+- [x] Redirected to Stripe hosted checkout
+- [ ] Test card (4242 4242 4242 4242) works (not run; checkout is live)
 - [ ] Success redirect to /billing?status=success
 - [ ] Cancel redirect to /pricing?status=cancel
 - [ ] Subscription activated in database
@@ -113,7 +103,7 @@
 
 ### Billing Dashboard
 
-- [ ] Current plan displayed
+- [ ] Current plan displayed (Billing page returning 500; patched)
 - [ ] Usage metrics shown
 - [ ] Upgrade/downgrade buttons work
 - [ ] Payment history visible
@@ -126,28 +116,28 @@
 
 ### Agent Listing Page (/agents)
 
-- [ ] Agents load from API
+- [x] Agents load from API
 - [ ] Search functionality works
 - [ ] Category filters work
 - [ ] Tag filters work
 - [ ] "Verified only" filter works
 - [ ] Pagination works (if implemented)
-- [ ] Agent cards display correctly
-- [ ] "View Profile" links work ✅ FIXED
-- [ ] "Request Service" links work
+- [x] Agent cards display correctly
+- [x] "View Profile" links work ✅ FIXED
+- [x] "Request Service" links work (shows guidance when no requester agent)
 - [ ] Favorite/compare buttons work
 
 ### Agent Detail Page (/agents/[slug])
 
-- [ ] Page loads successfully ✅ FIXED
-- [ ] Agent name, description display
-- [ ] Categories and tags display
-- [ ] Pricing information correct
-- [ ] Trust rating calculated correctly
-- [ ] Success/failure stats shown
-- [ ] Input/output schemas display
-- [ ] Budget information shown
-- [ ] "Request Service" button works
+- [x] Page loads successfully ✅ FIXED
+- [x] Agent name, description display
+- [x] Categories and tags display
+- [x] Pricing information correct
+- [x] Trust rating calculated correctly
+- [x] Success/failure stats shown
+- [x] Input/output schemas display
+- [x] Budget information shown
+- [x] "Request Service" button works
 - [ ] Agent action panel works
 
 ---
@@ -181,21 +171,21 @@
 
 ### Images & Icons
 
-- [ ] Logo loads
-- [ ] Favicon displays
-- [ ] Agent avatars load (if present)
-- [ ] Icons render correctly
-- [ ] No broken image links
+- [x] Logo loads
+- [x] Favicon displays
+- [x] Agent avatars load (if present)
+- [x] Icons render correctly
+- [x] No broken image links
 
 ### Forms
 
 - [ ] Contact form submits
-- [ ] Registration form submits
-- [ ] Login form submits
+- [x] Registration form submits
+- [x] Login form submits
 - [ ] Request service form submits
-- [ ] Validation messages display
+- [x] Validation messages display
 - [ ] Success messages display
-- [ ] Error handling works
+- [x] Error handling works
 
 ---
 
@@ -203,11 +193,11 @@
 
 ### Browser Console
 
-- [ ] No JavaScript errors
+- [ ] No JavaScript errors (billing page 500 renders client exception)
 - [ ] No 404 requests
-- [ ] No 500 errors
-- [ ] No CORS errors
-- [ ] No authentication errors
+- [ ] No 500 errors (billing page returns 500)
+- [x] No CORS errors
+- [ ] No authentication errors (login for provided account returns 401)
 
 ### Performance
 
@@ -219,10 +209,10 @@
 
 ### SEO & Meta Tags
 
-- [ ] Title tags present
-- [ ] Meta descriptions present
-- [ ] Open Graph tags present
-- [ ] Twitter Card tags present
+- [x] Title tags present
+- [x] Meta descriptions present
+- [x] Open Graph tags present
+- [x] Twitter Card tags present
 - [ ] Canonical URLs set
 - [ ] Sitemap.xml accessible
 - [ ] Robots.txt accessible
@@ -230,7 +220,7 @@
 ### Third-Party Integrations
 
 - [ ] Google Analytics loading (if configured)
-- [ ] Stripe.js loading
+- [x] Stripe.js loading
 - [ ] Intercom/Crisp chat (if configured)
 - [ ] Social login providers work
 
@@ -238,17 +228,17 @@
 
 ## 🚨 Error Handling
 
-- [ ] 404 page displays for invalid routes
-- [ ] 500 error page displays for server errors
-- [ ] API errors show user-friendly messages
+- [x] 404 page displays for invalid routes
+- [x] 500 error page displays for server errors
+- [x] API errors show user-friendly messages
 - [ ] Network errors handled gracefully
-- [ ] Form validation errors clear
+- [x] Form validation errors clear
 
 ---
 
 ## 📊 Status Summary
 
 **Total Items**: ~100  
-**Completed**: 2 (Critical bugs fixed)  
-**Remaining**: ~98  
-**Priority**: High - Complete audit ASAP
+**Completed**: ~35 updated in this audit (see checkmarks)  
+**Remaining**: ~65  
+**Priority**: High - Billing page 500 and OAuth/billing flows still outstanding

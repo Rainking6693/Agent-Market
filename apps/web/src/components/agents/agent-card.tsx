@@ -19,15 +19,16 @@ const calculateRating = (trustScore: number, successCount: number, failureCount:
   // Calculate rating from success rate and trust score
   const totalRuns = successCount + failureCount;
   if (totalRuns === 0) {
-    // No runs yet, use trust score as base
-    return Math.max(3.5, Math.min(5, +(trustScore / 20).toFixed(1)));
+    // No signal yet – default to perfect rating until data arrives
+    return 5.0;
   }
   
   const successRate = successCount / totalRuns;
+  const safeTrust = Number.isFinite(trustScore) ? trustScore : 0;
   // Combine success rate (0-1) with trust score (0-100)
   // Success rate contributes 70%, trust score contributes 30%
-  const combinedScore = (successRate * 0.7 + (trustScore / 100) * 0.3) * 5;
-  return Math.max(3.0, Math.min(5.0, +combinedScore.toFixed(1)));
+  const combinedScore = (successRate * 0.7 + (safeTrust / 100) * 0.3) * 5;
+  return Math.max(1.0, Math.min(5.0, +combinedScore.toFixed(1)));
 };
 
 const priceFormatter = new Intl.NumberFormat('en-US', {

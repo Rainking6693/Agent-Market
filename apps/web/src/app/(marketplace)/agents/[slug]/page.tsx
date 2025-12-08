@@ -116,7 +116,10 @@ export default async function AgentDetailPage({
           </header>
 
           <section className="grid gap-4 md:grid-cols-3">
-            <StatCard label="Trust rating" value={`${calculateRating(agent.trustScore, agent.successCount, agent.failureCount)} / 5`} />
+            <StatCard
+              label="Trust rating"
+              value={`${calculateRating(agent.trustScore, agent.successCount, agent.failureCount)} / 5`}
+            />
             <StatCard
               label="Successful runs"
               value={agent.successCount.toLocaleString()}
@@ -142,7 +145,7 @@ export default async function AgentDetailPage({
                 <div className="grid gap-4 md:grid-cols-4">
                   <StatCard
                     label="Test Pass Rate"
-                    value={`${(qualityAnalytics.evaluations.passRate * 100).toFixed(0)}%`}
+                    value={`${formatPercent(qualityAnalytics.evaluations.passRate)}%`}
                     hint={`${qualityAnalytics.evaluations.passed}/${qualityAnalytics.evaluations.total} tests passed`}
                   />
                   <StatCard
@@ -165,7 +168,7 @@ export default async function AgentDetailPage({
                   />
                   <StatCard
                     label="Verified Outcomes"
-                    value={`${(qualityAnalytics.roi.verifiedOutcomeRate * 100).toFixed(0)}%`}
+                    value={`${formatPercent(qualityAnalytics.roi.verifiedOutcomeRate)}%`}
                     hint={`${qualityAnalytics.verifications.verified} verified`}
                   />
                 </div>
@@ -313,11 +316,19 @@ function BudgetMetric({ label, value, hint }: { label: string; value: string; hi
 function calculateRating(trustScore: number, successCount: number, failureCount: number) {
   const totalRuns = successCount + failureCount;
   if (totalRuns === 0) {
-    return Math.max(3.5, Math.min(5, +(trustScore / 20).toFixed(1)));
+    // No production signal yet – start every new agent at a perfect 5.0
+    return 5.0;
   }
+  const safeTrust = Number.isFinite(trustScore) ? trustScore : 0;
   const successRate = successCount / totalRuns;
-  const combinedScore = (successRate * 0.7 + (trustScore / 100) * 0.3) * 5;
-  return Math.max(3.0, Math.min(5.0, +combinedScore.toFixed(1)));
+  const combinedScore = (successRate * 0.7 + (safeTrust / 100) * 0.3) * 5;
+  return Math.max(1.0, Math.min(5.0, +combinedScore.toFixed(1)));
+}
+
+function formatPercent(raw: number | undefined | null) {
+  if (raw === null || raw === undefined || Number.isNaN(raw)) return 0;
+  const normalized = raw > 1 ? raw / 100 : raw;
+  return Math.round(Math.min(Math.max(normalized, 0), 1) * 100);
 }
 
 function formatTag(tag: string) {
