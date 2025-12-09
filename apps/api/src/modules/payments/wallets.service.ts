@@ -12,6 +12,10 @@ import { PrismaService } from '../database/prisma.service.js';
 import { CreateWalletDto } from './dto/create-wallet.dto.js';
 import { FundWalletDto } from './dto/fund-wallet.dto.js';
 
+const PLATFORM_SLUG = process.env.DEFAULT_ORG_SLUG ?? 'genesis';
+const PLATFORM_FEE_BASIS_POINTS =
+  Number(process.env.PLATFORM_TAKE_RATE_BPS ?? process.env.TAKE_RATE_BPS ?? '500') || 0;
+
 @Injectable()
 export class WalletsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -282,6 +286,12 @@ export class WalletsService {
         sourceWallet: true,
         destinationWallet: true,
         transaction: true,
+        destinationWallet: {
+          include: { ownerAgent: { include: { organization: true } } },
+        },
+        sourceWallet: {
+          include: { ownerAgent: { include: { organization: true } } },
+        },
       },
     });
 
@@ -315,6 +325,95 @@ export class WalletsService {
         where: { id: escrow.transactionId },
         data: { status: TransactionStatus.SETTLED },
       });
+
+      // Apply platform fee symmetrically to buyer and seller if configured
+      if (PLATFORM_FEE_BASIS_POINTS > 0) {
+        const feeDecimal = amount
+          .times(PLATFORM_FEE_BASIS_POINTS)
+          .dividedBy(10000)
+          .decimalPlaces(2, Prisma.Prisma.Decimal.ROUND_HALF_UP);
+
+        const platformOrg =
+          escrow.destinationWallet.ownerAgent?.organization ??
+          escrow.sourceWallet.ownerAgent?.organization ??
+          (await tx.organization.findFirst({
+            where: { slug: PLATFORM_SLUG },
+            orderBy: { createdAt: 'asc' },
+          }));
+
+        let platformWallet = platformOrg
+          ? await tx.wallet.findFirst({
+              where: { organizationId: platformOrg.id, ownerType: WalletOwnerType.PLATFORM },
+            })
+          : null;
+
+        if (!platformWallet && platformOrg) {
+          platformWallet = await tx.wallet.create({
+            data: {
+              ownerType: WalletOwnerType.PLATFORM,
+              organizationId: platformOrg.id,
+              currency: escrow.destinationWallet.currency,
+              status: WalletStatus.ACTIVE,
+            },
+          });
+        }
+
+        if (platformWallet) {
+          // Buyer fee
+          await tx.transaction.create({
+            data: {
+              walletId: escrow.sourceWalletId,
+              type: TransactionType.DEBIT,
+              status: TransactionStatus.SETTLED,
+              amount: feeDecimal,
+              reference: `platform-fee-buyer:${escrow.id}`,
+            },
+          });
+          await tx.wallet.update({
+            where: { id: escrow.sourceWalletId },
+            data: {
+              balance: Prisma.Decimal.max(
+                new Prisma.Decimal(0),
+                escrow.sourceWallet.balance.minus(amount).minus(feeDecimal),
+              ),
+            },
+          });
+
+          // Seller fee (deduct from credited amount)
+          await tx.transaction.create({
+            data: {
+              walletId: escrow.destinationWalletId,
+              type: TransactionType.DEBIT,
+              status: TransactionStatus.SETTLED,
+              amount: feeDecimal,
+              reference: `platform-fee-seller:${escrow.id}`,
+            },
+          });
+          await tx.wallet.update({
+            where: { id: escrow.destinationWalletId },
+            data: {
+              balance: escrow.destinationWallet.balance.plus(amount).minus(feeDecimal),
+            },
+          });
+
+          // Credit platform wallet with both fees
+          await tx.transaction.create({
+            data: {
+              walletId: platformWallet.id,
+              type: TransactionType.CREDIT,
+              status: TransactionStatus.SETTLED,
+              amount: feeDecimal.times(2),
+              reference: `platform-fee:${escrow.id}`,
+            },
+          });
+          await tx.wallet.update({
+            where: { id: platformWallet.id },
+            data: {
+              balance: platformWallet.balance.plus(feeDecimal.times(2)),
+            },
+          });
+        }
+      }
 
       await tx.escrow.update({
         where: { id: escrow.id },

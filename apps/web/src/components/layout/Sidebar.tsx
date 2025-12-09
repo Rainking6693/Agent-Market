@@ -11,6 +11,7 @@ const sections = [
   {
     title: 'Build',
     items: [
+      { label: 'Home', href: '/' },
       { label: 'Dashboard', href: '/dashboard' },
       { label: 'Agents', href: '/agents' },
       { label: 'Workflows', href: '/workflows' },

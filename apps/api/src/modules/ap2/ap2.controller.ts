@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 
 import { AP2Service } from './ap2.service.js';
 import { AgentNegotiationsQueryDto } from './dto/agent-negotiations-query.dto.js';
@@ -25,6 +26,8 @@ import { AuthenticatedUser } from '../auth/types.js';
 export class AP2Controller {
   constructor(private readonly ap2Service: AP2Service) {}
 
+  // Raise limits for negotiation traffic to reduce 429s during agent-to-agent flows
+  @Throttle({ default: { limit: 500, ttl: 60000 } })
   @Post('negotiate')
   initiateNegotiation(
     @CurrentUser() user: AuthenticatedUser | null,
@@ -57,6 +60,7 @@ export class AP2Controller {
     return this.ap2Service.getNegotiation(id);
   }
 
+  @Throttle({ default: { limit: 500, ttl: 60000 } })
   @Get('negotiations/my')
   listNegotiations(@Query() query: AgentNegotiationsQueryDto) {
     return this.ap2Service.getAgentNegotiations(query.agentId);
