@@ -283,15 +283,13 @@ export class WalletsService {
     const escrow = await this.prisma.escrow.findUnique({
       where: { id: escrowId },
       include: {
-        sourceWallet: true,
-        destinationWallet: true,
-        transaction: true,
-        destinationWallet: {
-          include: { ownerAgent: { include: { organization: true } } },
-        },
         sourceWallet: {
           include: { ownerAgent: { include: { organization: true } } },
         },
+        destinationWallet: {
+          include: { ownerAgent: { include: { organization: true } } },
+        },
+        transaction: true,
       },
     });
 
@@ -303,7 +301,12 @@ export class WalletsService {
       return escrow;
     }
 
-    const amount = escrow.amount;
+    const amount = new Prisma.Decimal(escrow.amount);
+    const feeBasisPoints = await this.resolveFeeBasisPoints(
+      escrow.sourceWallet.ownerAgent?.organizationId ??
+        escrow.destinationWallet.ownerAgent?.organizationId ??
+        null,
+    );
 
     await this.prisma.$transaction(async (tx) => {
       await tx.wallet.update({
@@ -327,11 +330,11 @@ export class WalletsService {
       });
 
       // Apply platform fee symmetrically to buyer and seller if configured
-      if (PLATFORM_FEE_BASIS_POINTS > 0) {
+      if (feeBasisPoints > 0) {
         const feeDecimal = amount
-          .times(PLATFORM_FEE_BASIS_POINTS)
+          .times(feeBasisPoints)
           .dividedBy(10000)
-          .decimalPlaces(2, Prisma.Prisma.Decimal.ROUND_HALF_UP);
+          .decimalPlaces(2, Prisma.Decimal.ROUND_HALF_UP);
 
         const platformOrg =
           escrow.destinationWallet.ownerAgent?.organization ??
@@ -372,10 +375,7 @@ export class WalletsService {
           await tx.wallet.update({
             where: { id: escrow.sourceWalletId },
             data: {
-              balance: Prisma.Decimal.max(
-                new Prisma.Decimal(0),
-                escrow.sourceWallet.balance.minus(amount).minus(feeDecimal),
-              ),
+              balance: { decrement: feeDecimal },
             },
           });
 
@@ -392,7 +392,7 @@ export class WalletsService {
           await tx.wallet.update({
             where: { id: escrow.destinationWalletId },
             data: {
-              balance: escrow.destinationWallet.balance.plus(amount).minus(feeDecimal),
+              balance: { decrement: feeDecimal },
             },
           });
 
@@ -425,6 +425,21 @@ export class WalletsService {
     });
 
     return this.prisma.escrow.findUnique({ where: { id: escrow.id } });
+  }
+
+  private async resolveFeeBasisPoints(organizationId: string | null) {
+    if (organizationId) {
+      const subscription = await this.prisma.organizationSubscription.findUnique({
+        where: { organizationId },
+        include: { plan: true },
+      });
+
+      if (subscription?.plan?.takeRateBasisPoints) {
+        return subscription.plan.takeRateBasisPoints;
+      }
+    }
+
+    return PLATFORM_FEE_BASIS_POINTS;
   }
 
   private async ensureWallet(id: string) {
