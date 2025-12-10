@@ -1,8 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards, NotFoundException, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Throttle } from '@nestjs/throttler';
 import { ServiceAccountStatus } from '@prisma/client';
 
 import { AuthenticatedUser } from './auth.service.js';
 import { CurrentUser } from './decorators/current-user.decorator.js';
+import { Public } from './decorators/public.decorator.js';
 import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
 import { ServiceAccountsService } from './service-accounts.service.js';
 import { PrismaService } from '../database/prisma.service.js';
@@ -15,12 +18,21 @@ interface CreateServiceAccountDto {
   agentId?: string;
 }
 
+interface PublicAgentServiceAccountDto {
+  name?: string;
+  description?: string;
+  agentId?: string;
+  agentSlug?: string;
+  organizationSlug?: string;
+}
+
 @Controller('api/v1/service-accounts')
 @UseGuards(JwtAuthGuard)
 export class ServiceAccountsController {
   constructor(
     private readonly serviceAccounts: ServiceAccountsService,
     private readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Post()
@@ -106,6 +118,71 @@ export class ServiceAccountsController {
       select: { id: true },
     });
     return agents.map((a) => a.id);
+  }
+
+  /**
+   * Lightweight, public agent API-key issuance so autonomous agents can call AP2 without human login.
+   * Throttled to avoid abuse; ties keys to the default organization or the agent's organization.
+   */
+  @Public()
+  @Post('agents/self-register')
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  async selfRegister(@Body() dto: PublicAgentServiceAccountDto) {
+    const defaultOrgSlug = this.configService.get<string>('DEFAULT_ORG_SLUG', 'genesis');
+
+    let organizationId: string | undefined;
+    if (dto.organizationSlug) {
+      const org = await this.prisma.organization.findFirst({
+        where: { slug: dto.organizationSlug },
+        select: { id: true },
+      });
+      if (!org) {
+        throw new NotFoundException('Organization not found for provided slug');
+      }
+      organizationId = org.id;
+    }
+
+    let agentId = dto.agentId;
+    if (dto.agentSlug && !agentId) {
+      const agent = await this.prisma.agent.findUnique({
+        where: { slug: dto.agentSlug },
+        select: { id: true, organizationId: true },
+      });
+      if (!agent) {
+        throw new NotFoundException('Agent not found for provided slug');
+      }
+      agentId = agent.id;
+      organizationId = organizationId ?? agent.organizationId ?? undefined;
+    }
+
+    if (!organizationId) {
+      const org = await this.prisma.organization.findFirst({
+        where: { slug: defaultOrgSlug },
+        select: { id: true },
+      });
+      if (!org) {
+        throw new BadRequestException('Default organization is not configured');
+      }
+      organizationId = org.id;
+    }
+
+    const { account, apiKey } = await this.serviceAccounts.createServiceAccount({
+      name: dto.name ?? dto.agentSlug ?? dto.agentId ?? 'agent-service-account',
+      description: dto.description,
+      organizationId,
+      agentId,
+      scopes: ['ap2:negotiation', 'agents:read'],
+    });
+
+    return {
+      apiKey,
+      serviceAccountId: account.id,
+      organizationId: account.organizationId,
+      agentId: account.agentId,
+      scopes: account.scopes,
+      status: account.status,
+      createdAt: account.createdAt,
+    };
   }
 }
 

@@ -334,7 +334,7 @@ export class WalletsService {
         const feeDecimal = amount
           .times(feeBasisPoints)
           .dividedBy(10000)
-          .decimalPlaces(2, Prisma.Decimal.ROUND_HALF_UP);
+          .toDecimalPlaces(2, Prisma.Decimal.ROUND_HALF_UP);
 
         const platformOrg =
           escrow.destinationWallet.ownerAgent?.organization ??
