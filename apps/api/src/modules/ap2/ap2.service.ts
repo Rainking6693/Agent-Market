@@ -220,7 +220,7 @@ export class AP2Service {
         status: nextStatus,
         escrowId: negotiation.serviceAgreement.escrowId,
         evidence: {
-          result: payload.result,
+          result: payload.result ?? {},
           evidence: payload.evidence ?? null,
         },
         notes: payload.notes,

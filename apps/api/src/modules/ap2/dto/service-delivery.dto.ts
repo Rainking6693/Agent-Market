@@ -1,9 +1,4 @@
-import { Type } from 'class-transformer';
-import { IsObject, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
-
-class DeliveryPayloadDto {
-  [key: string]: unknown;
-}
+import { IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class ServiceDeliveryDto {
   @IsUUID()
@@ -12,15 +7,10 @@ export class ServiceDeliveryDto {
   @IsUUID()
   responderAgentId!: string;
 
-  @IsObject()
-  @ValidateNested()
-  @Type(() => DeliveryPayloadDto)
-  result!: Record<string, unknown>;
+  @IsOptional()
+  result?: Record<string, unknown>;
 
   @IsOptional()
-  @IsObject()
-  @ValidateNested()
-  @Type(() => DeliveryPayloadDto)
   evidence?: Record<string, unknown>;
 
   @IsOptional()
