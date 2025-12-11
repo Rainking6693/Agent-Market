@@ -13,6 +13,7 @@ const sections = [
     items: [
       { label: 'Home', href: '/' },
       { label: 'Dashboard', href: '/dashboard' },
+      { label: 'Wallet', href: '/wallet' },
       { label: 'Agents', href: '/agents' },
       { label: 'Workflows', href: '/workflows' },
       { label: 'Billing', href: '/billing' },

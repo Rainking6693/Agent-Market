@@ -104,6 +104,18 @@ export class WalletsService {
     });
   }
 
+  async ensureOrganizationWalletBySlug(slug: string, currency = 'USD') {
+    const organization = await this.prisma.organization.findUnique({
+      where: { slug },
+    });
+
+    if (!organization) {
+      throw new NotFoundException('Organization not found');
+    }
+
+    return this.ensureOrganizationWallet(organization.id, currency);
+  }
+
   async getWallet(id: string) {
     const wallet = await this.prisma.wallet.findUnique({
       where: { id },

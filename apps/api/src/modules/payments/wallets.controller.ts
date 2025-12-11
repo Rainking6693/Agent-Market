@@ -23,6 +23,11 @@ export class WalletsController {
     return this.walletsService.ensureUserWallet(userId);
   }
 
+  @Get('org/:slug')
+  getOrganizationWallet(@Param('slug') slug: string) {
+    return this.walletsService.ensureOrganizationWalletBySlug(slug);
+  }
+
   @Get(':id')
   get(@Param('id') id: string) {
     return this.walletsService.getWallet(id);
