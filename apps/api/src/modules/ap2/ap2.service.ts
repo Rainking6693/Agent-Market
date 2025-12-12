@@ -13,6 +13,7 @@ import {
   Prisma,
   Wallet,
 } from '@prisma/client';
+import { isUUID } from 'class-validator';
 
 import { PrismaService } from '../database/prisma.service.js';
 import { Ap2Service as PaymentsAp2Service } from '../payments/ap2.service.js';
@@ -213,6 +214,10 @@ export class AP2Service {
     }
 
     const nextStatus = this.determineVerificationStatus(payload);
+    const reviewerId =
+      payload.deliveredByUserId && isUUID(payload.deliveredByUserId)
+        ? payload.deliveredByUserId
+        : undefined;
 
     const verification = await this.outcomesService.recordVerification(
       negotiation.serviceAgreement.id,
@@ -224,7 +229,7 @@ export class AP2Service {
           evidence: payload.evidence ?? null,
         },
         notes: payload.notes,
-        reviewerId: payload.deliveredByUserId ?? undefined,
+        reviewerId,
       },
     );
 

@@ -1,4 +1,5 @@
 import { TopUpCard } from '@/components/billing/top-up-card';
+import { OrgPayoutConnector } from '@/components/wallet/org-payout-connector';
 import { WalletBalanceCard } from '@/components/wallet/wallet-balance-card';
 import { WalletTransactionsList } from '@/components/wallet/wallet-transactions-list';
 
@@ -75,6 +76,7 @@ export default async function WalletPage() {
             funds are added.
           </p>
         )}
+        <OrgPayoutConnector />
       </section>
 
       <WalletTransactionsList transactions={transactions} />

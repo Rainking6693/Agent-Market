@@ -30,5 +30,25 @@ export class PayoutsController {
   async getPayoutHistory(@Param('agentId') agentId: string) {
     return this.stripeConnectService.getPayoutHistory(agentId);
   }
+
+  @Post('org/setup')
+  async setupOrgAccount(@Body() dto: { organizationSlug: string; email: string }) {
+    return this.stripeConnectService.createOrgConnectedAccount(dto.organizationSlug, dto.email);
+  }
+
+  @Get('org/account-status/:slug')
+  async getOrgAccountStatus(@Param('slug') slug: string) {
+    return this.stripeConnectService.getOrgAccountStatus(slug);
+  }
+
+  @Post('org/request')
+  async requestOrgPayout(@Body() dto: { organizationSlug: string; amountCents: number }) {
+    return this.stripeConnectService.requestOrgPayout(dto.organizationSlug, dto.amountCents);
+  }
+
+  @Get('org/history/:slug')
+  async getOrgPayoutHistory(@Param('slug') slug: string) {
+    return this.stripeConnectService.getOrgPayoutHistory(slug);
+  }
 }
 
