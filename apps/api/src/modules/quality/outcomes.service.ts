@@ -43,17 +43,42 @@ export class OutcomesService {
       throw new NotFoundException('Service agreement not found');
     }
 
-    const verification = await this.prisma.outcomeVerification.create({
-      data: {
-        serviceAgreementId: agreement.id,
-        escrowId: dto.escrowId ?? agreement.escrowId,
-        status: dto.status,
-        evidence: (dto.evidence ?? {}) as Prisma.InputJsonValue,
-        notes: dto.notes,
-        verifiedBy: dto.reviewerId ?? null,
-        verifiedAt: dto.status === OutcomeVerificationStatus.VERIFIED ? new Date() : null,
-      },
-    });
+    // Make delivery idempotent: if a verification already exists for this escrow/agreement, update it.
+    const existing =
+      dto.escrowId
+        ? await this.prisma.outcomeVerification.findUnique({
+            where: { escrowId: dto.escrowId },
+          })
+        : await this.prisma.outcomeVerification.findFirst({
+            where: { serviceAgreementId: agreement.id },
+            orderBy: { createdAt: 'desc' },
+          });
+
+    const verifiedAt =
+      dto.status === OutcomeVerificationStatus.VERIFIED ? new Date() : existing?.verifiedAt ?? null;
+
+    const verification = existing
+      ? await this.prisma.outcomeVerification.update({
+          where: { id: existing.id },
+          data: {
+            status: dto.status,
+            evidence: (dto.evidence ?? {}) as Prisma.InputJsonValue,
+            notes: dto.notes,
+            verifiedBy: dto.reviewerId ?? null,
+            verifiedAt,
+          },
+        })
+      : await this.prisma.outcomeVerification.create({
+          data: {
+            serviceAgreementId: agreement.id,
+            escrowId: dto.escrowId ?? agreement.escrowId,
+            status: dto.status,
+            evidence: (dto.evidence ?? {}) as Prisma.InputJsonValue,
+            notes: dto.notes,
+            verifiedBy: dto.reviewerId ?? null,
+            verifiedAt,
+          },
+        });
 
     if (verification.escrowId) {
       if (dto.status === OutcomeVerificationStatus.VERIFIED) {
