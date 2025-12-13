@@ -100,3 +100,4 @@ bootstrap().catch((error) => {
   console.error('Failed to bootstrap API', error);
   process.exit(1);
 });
+// Force restart
