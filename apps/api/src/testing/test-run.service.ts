@@ -32,7 +32,7 @@ export class TestRunService {
     // Extract password from URL (Railway format: redis://default:password@host:port)
     // URL.password contains the password part after the colon
     const redisPassword = process.env.REDIS_PASSWORD ?? parsedRedisUrl?.password;
-    
+
     // Log Redis configuration for debugging
     if (redisHost) {
       this.logger.log(`Redis configuration: host=${redisHost}, port=${redisPort}, hasPassword=${!!redisPassword}, fromUrl=${!!parsedRedisUrl}`);
@@ -67,6 +67,7 @@ export class TestRunService {
     agentId: string | string[];
     suiteId: string | string[];
     userId: string;
+    testIds?: string[];
   }): Promise<{ runs: Array<{ id: string; agentId: string; suiteId: string }> }> {
     const agentIds = Array.isArray(params.agentId) ? params.agentId : [params.agentId];
     const suiteIds = Array.isArray(params.suiteId) ? params.suiteId : [params.suiteId];
@@ -119,6 +120,7 @@ export class TestRunService {
                 agentId,
                 suiteId: suiteBySlug.id,
                 userId: params.userId,
+                testIds: params.testIds,
               },
               {
                 jobId: run.id,
@@ -129,7 +131,7 @@ export class TestRunService {
             // This allows test runs to work without Redis infrastructure
             this.logger.warn('Test queue not available - processing test run immediately');
             // Process test run asynchronously without blocking
-            this.processTestRunImmediately(run.id, agentId, suiteBySlug.id, params.userId).catch(
+            this.processTestRunImmediately(run.id, agentId, suiteBySlug.id, params.userId, params.testIds).catch(
               (error) => {
                 this.logger.error(`Failed to process test run ${run.id}:`, error);
               },
@@ -157,6 +159,7 @@ export class TestRunService {
                 agentId,
                 suiteId: suite.id,
                 userId: params.userId,
+                testIds: params.testIds,
               },
               {
                 jobId: run.id,
@@ -167,7 +170,7 @@ export class TestRunService {
             // This allows test runs to work without Redis infrastructure
             this.logger.warn('Test queue not available - processing test run synchronously');
             // Process test run asynchronously without blocking
-            this.processTestRunImmediately(run.id, agentId, suite.id, params.userId).catch(
+            this.processTestRunImmediately(run.id, agentId, suite.id, params.userId, params.testIds).catch(
               (error) => {
                 const errorMessage = error instanceof Error ? error.message : String(error);
                 const errorStack = error instanceof Error ? error.stack : undefined;
@@ -334,6 +337,34 @@ export class TestRunService {
   }
 
   /**
+   * List all individual tests available across all suites
+   */
+  async listIndividualTests() {
+    // We need to import ALL_SUITES dynamically or move it to a shared location to avoid circular deps if any
+    // For now, we'll assume we can import it or use the DB if we stored individual tests there.
+    // Since individual tests are not stored in DB as separate entities, we must use the code definitions.
+
+    const { ALL_SUITES } = await import('./suites/index.js');
+
+    const tests = new Map<string, { id: string; suiteSlug: string; suiteName: string; category: string }>();
+
+    for (const suite of ALL_SUITES) {
+      for (const test of suite.tests) {
+        if (!tests.has(test.id)) {
+          tests.set(test.id, {
+            id: test.id,
+            suiteSlug: suite.slug,
+            suiteName: suite.name,
+            category: suite.category,
+          });
+        }
+      }
+    }
+
+    return Array.from(tests.values());
+  }
+
+  /**
    * Process test run immediately when Redis queue is not available
    */
   private async processTestRunImmediately(
@@ -344,6 +375,7 @@ export class TestRunService {
     _suiteId: string,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _userId: string,
+    _testIds?: string[],
   ) {
     try {
       // Run the real test suite inline (same logic as the worker) when Redis/queue is unavailable
@@ -352,6 +384,7 @@ export class TestRunService {
         agentId: _agentId,
         suiteId: _suiteId,
         userId: _userId,
+        testIds: _testIds,
       });
     } catch (error) {
       // Ensure error is properly formatted for logging

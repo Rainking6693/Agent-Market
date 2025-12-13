@@ -19,12 +19,13 @@ import { ServiceDeliveryDto } from './dto/service-delivery.dto.js';
 import { AgentTransactionsQueryDto } from './dto/transactions-query.dto.js';
 import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
-import { AuthenticatedUser } from '../auth/types.js';
+
+import type { AuthenticatedUser } from '../auth/types.js';
 
 @Controller('ap2')
 @UseGuards(JwtAuthGuard)
 export class AP2Controller {
-  constructor(private readonly ap2Service: AP2Service) {}
+  constructor(private readonly ap2Service: AP2Service) { }
 
   // Raise limits for negotiation traffic to reduce 429s during agent-to-agent flows
   @Throttle({ default: { limit: 500, ttl: 60000 } })

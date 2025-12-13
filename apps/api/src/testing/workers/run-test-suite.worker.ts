@@ -18,7 +18,7 @@ export class RunTestSuiteWorker {
   constructor(
     private readonly prisma: PrismaService,
     private readonly agentsService: AgentsService,
-  ) {}
+  ) { }
 
   /**
    * Initialize the worker (called after module initialization)
@@ -44,7 +44,7 @@ export class RunTestSuiteWorker {
     // Extract password from URL (Railway format: redis://default:password@host:port)
     // URL.password contains the password part after the colon
     const redisPassword = process.env.REDIS_PASSWORD ?? parsedRedisUrl?.password;
-    
+
     // Log Redis configuration for debugging
     if (redisHost) {
       this.logger.log(`Redis configuration: host=${redisHost}, port=${redisPort}, hasPassword=${!!redisPassword}, fromUrl=${!!parsedRedisUrl}`);
@@ -140,16 +140,16 @@ export class RunTestSuiteWorker {
   /**
    * Process a test run job from BullMQ
    */
-  private async processJob(job: Job<{ runId: string; agentId: string; suiteId: string; userId: string }, unknown, string>) {
-    const { runId, agentId, suiteId, userId } = job.data;
-    await this.runSuite({ runId, agentId, suiteId, userId });
+  private async processJob(job: Job<{ runId: string; agentId: string; suiteId: string; userId: string; testIds?: string[] }, unknown, string>) {
+    const { runId, agentId, suiteId, userId, testIds } = job.data;
+    await this.runSuite({ runId, agentId, suiteId, userId, testIds });
   }
 
   /**
    * Run a test suite (shared by worker and inline fallback)
    */
-  async runSuite(params: { runId: string; agentId: string; suiteId: string; userId: string }) {
-    const { runId, agentId, suiteId, userId } = params;
+  async runSuite(params: { runId: string; agentId: string; suiteId: string; userId: string; testIds?: string[] }) {
+    const { runId, agentId, suiteId, userId, testIds } = params;
 
     this.logger.log(`Starting test run ${runId} for agent ${agentId} with suite ${suiteId}`);
 
@@ -205,6 +205,11 @@ export class RunTestSuiteWorker {
       for (let i = 0; i < suiteDef.tests.length; i++) {
         const testDef = suiteDef.tests[i];
 
+        // Filter tests if testIds is provided
+        if (testIds && testIds.length > 0 && !testIds.includes(testDef.id)) {
+          continue;
+        }
+
         await this.publishProgress(runId, {
           runId,
           status: 'running',
@@ -218,7 +223,7 @@ export class RunTestSuiteWorker {
           const testModule = await testDef.runner();
           // Handle both module with default export and direct TestRunner
           const testRunnerOrModule = 'default' in testModule ? testModule.default : testModule;
-          
+
           // Extract the actual TestRunner instance
           // Always instantiate with agentsService to ensure proper dependency injection
           // Some test runners export pre-instantiated instances with null agentsService

@@ -1,12 +1,12 @@
 'use client';
 
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, FlaskConical } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 import { TestWizardModal } from '@/components/testing/test-wizard-modal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { testingApi, agentsApi, type TestSuite, type Agent } from '@/lib/api';
+import { testingApi, agentsApi, type TestSuite, type Agent, type IndividualTest } from '@/lib/api';
 
 export default function TestLibraryPage() {
   const [suites, setSuites] = useState<TestSuite[]>([]);
@@ -18,17 +18,22 @@ export default function TestLibraryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [agents, setAgents] = useState<Agent[]>([]);
   const [isWizardLoading, setIsWizardLoading] = useState(false);
+  const [individualTests, setIndividualTests] = useState<IndividualTest[]>([]);
+  const [selectedIndividualTest, setSelectedIndividualTest] = useState<IndividualTest | null>(null);
 
   useEffect(() => {
-    testingApi
-      .listSuites()
-      .then((data) => {
-        setSuites(data);
-        setFilteredSuites(data);
+    Promise.all([
+      testingApi.listSuites(),
+      testingApi.listIndividualTests().catch(() => [])
+    ])
+      .then(([suitesData, testsData]) => {
+        setSuites(suitesData);
+        setFilteredSuites(suitesData);
+        setIndividualTests(testsData);
         setIsLoading(false);
       })
       .catch((error) => {
-        console.error('Failed to fetch test suites:', error);
+        console.error('Failed to fetch test data:', error);
         setIsLoading(false);
       });
   }, []);
@@ -118,9 +123,8 @@ export default function TestLibraryPage() {
           {filteredSuites.map((suite) => (
             <Card
               key={suite.id}
-              className={`transition hover:border-brass/40 ${
-                suite.isRecommended ? 'border-brass/40 bg-brass/5' : 'border-outline/40'
-              }`}
+              className={`transition hover:border-brass/40 ${suite.isRecommended ? 'border-brass/40 bg-brass/5' : 'border-outline/40'
+                }`}
             >
               <CardHeader>
                 <div className="flex items-start justify-between">
@@ -147,6 +151,7 @@ export default function TestLibraryPage() {
                   className="w-full"
                   onClick={() => {
                     setSelectedSuite(suite.id);
+                    setSelectedIndividualTest(null);
                     setIsWizardOpen(true);
                   }}
                 >
@@ -158,6 +163,45 @@ export default function TestLibraryPage() {
         </div>
       )}
 
+      {/* Individual Tests Section */}
+      <div className="space-y-4 border-t border-outline/20 pt-8">
+        <div className="flex items-center gap-2">
+          <FlaskConical className="h-5 w-5 text-brass" />
+          <h2 className="text-xl font-headline text-ink">Run Individual Tests</h2>
+        </div>
+        <p className="text-sm text-ink-muted">
+          Select specific tests to run individually instead of running full suites.
+        </p>
+
+        <div className="flex flex-wrap items-center gap-4">
+          <select
+            className="flex-1 min-w-[300px] rounded-lg border border-outline/40 bg-surface px-4 py-2 text-sm text-ink focus:border-brass focus:outline-none"
+            onChange={(e) => {
+              const test = individualTests.find(t => t.id === e.target.value);
+              setSelectedIndividualTest(test || null);
+            }}
+            value={selectedIndividualTest?.id || ''}
+          >
+            <option value="">Select a test...</option>
+            {individualTests.map((test) => (
+              <option key={test.id} value={test.id}>
+                {test.id} ({test.suiteName})
+              </option>
+            ))}
+          </select>
+
+          <Button
+            disabled={!selectedIndividualTest}
+            onClick={() => {
+              setSelectedSuite(null);
+              setIsWizardOpen(true);
+            }}
+          >
+            Run Selected Test
+          </Button>
+        </div>
+      </div>
+
       <TestWizardModal
         isOpen={isWizardOpen}
         onClose={() => {
@@ -168,6 +212,13 @@ export default function TestLibraryPage() {
         suites={suites}
         isLoading={isWizardLoading}
         onStartRun={async (agentIds, suiteIds) => {
+          if (selectedIndividualTest) {
+            return testingApi.startRun({
+              agentId: agentIds,
+              suiteId: [selectedIndividualTest.suiteSlug],
+              testIds: [selectedIndividualTest.id]
+            });
+          }
           const finalSuiteIds = selectedSuite ? [selectedSuite, ...suiteIds] : suiteIds;
           return testingApi.startRun({
             agentId: agentIds,

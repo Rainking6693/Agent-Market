@@ -24,6 +24,7 @@ async function bootstrap() {
     // Local development
     'http://localhost:3000',
     'http://localhost:3001',
+    'http://127.0.0.1:3000',
     // Production marketing domains (always allow to prevent CORS regressions)
     'https://swarmsync.ai',
     'https://www.swarmsync.ai',

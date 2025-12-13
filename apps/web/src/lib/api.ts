@@ -315,9 +315,17 @@ export interface TestRunListResponse {
   total: number;
 }
 
+export interface IndividualTest {
+  id: string;
+  suiteSlug: string;
+  suiteName: string;
+  category: string;
+}
+
 export interface StartTestRunPayload {
   agentId: string | string[];
   suiteId: string | string[];
+  testIds?: string[];
 }
 
 export interface StartTestRunResponse {
@@ -336,6 +344,7 @@ export const testingApi = {
       })
       .json<TestSuite[]>(),
   getRecommendedSuites: () => api.get('api/v1/test-suites/recommended').json<TestSuite[]>(),
+  listIndividualTests: () => api.get('api/v1/test-suites/individual').json<IndividualTest[]>(),
   startRun: (payload: StartTestRunPayload) =>
     api
       .post('api/v1/test-runs', {

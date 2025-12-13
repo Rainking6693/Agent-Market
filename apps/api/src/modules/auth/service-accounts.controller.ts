@@ -3,12 +3,13 @@ import { ConfigService } from '@nestjs/config';
 import { Throttle } from '@nestjs/throttler';
 import { ServiceAccountStatus } from '@prisma/client';
 
-import { AuthenticatedUser } from './auth.service.js';
 import { CurrentUser } from './decorators/current-user.decorator.js';
 import { Public } from './decorators/public.decorator.js';
 import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
 import { ServiceAccountsService } from './service-accounts.service.js';
 import { PrismaService } from '../database/prisma.service.js';
+
+import type { AuthenticatedUser } from './auth.service.js';
 
 interface CreateServiceAccountDto {
   name: string;
@@ -33,13 +34,13 @@ export class ServiceAccountsController {
     private readonly serviceAccounts: ServiceAccountsService,
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   @Post()
   async create(@CurrentUser() user: AuthenticatedUser, @Body() dto: CreateServiceAccountDto) {
     // Only allow creating for user's organization or agents
     const organizationId = dto.organizationId || user.organizationId;
-    
+
     const result = await this.serviceAccounts.createServiceAccount({
       name: dto.name,
       description: dto.description,

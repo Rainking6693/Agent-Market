@@ -15,6 +15,7 @@ export const reasoningBenchmark: SuiteDefinition = {
     { id: 'multi_step_reasoning', runner: () => import('../../individual/reasoning/multi_step_reasoning.test.js') },
     { id: 'fact_checking', runner: () => import('../../individual/reasoning/fact_checking.test.js') },
     { id: 'scoring_rubric', runner: () => import('../../individual/reasoning/scoring_rubric.test.js') },
+    { id: 'self_correction', runner: () => import('../../individual/reasoning/self_correction.test.js') },
   ],
 };
 

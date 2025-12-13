@@ -6,7 +6,7 @@ import { JwtAuthGuard } from '../modules/auth/guards/jwt-auth.guard.js';
 @Controller('api/v1/test-suites')
 @UseGuards(JwtAuthGuard)
 export class TestSuitesController {
-  constructor(private readonly testRunService: TestRunService) {}
+  constructor(private readonly testRunService: TestRunService) { }
 
   @Get()
   async listSuites(
@@ -22,6 +22,10 @@ export class TestSuitesController {
   @Get('recommended')
   async getRecommendedSuites() {
     return this.testRunService.getRecommendedSuites();
+  }
+  @Get('individual')
+  async listIndividualTests() {
+    return this.testRunService.listIndividualTests();
   }
 }
 
