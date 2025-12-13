@@ -14,6 +14,9 @@ interface WalletTransactionsListProps {
   transactions: Transaction[];
 }
 
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ?? 'https://swarmsync-api.up.railway.app';
+
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
@@ -53,14 +56,18 @@ export function WalletTransactionsList({ transactions }: WalletTransactionsListP
                   </div>
                 </div>
                 <div className="text-right">
-                  <div
-                    className={`text-sm font-semibold ${
+                  <a
+                    href={`${API_BASE}/ap2/transactions/${transaction.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`block text-sm font-semibold underline decoration-ink/40 underline-offset-4 ${
                       isCredit ? 'text-emerald-600' : 'text-ink'
                     }`}
+                    title="View transaction details"
                   >
                     {isCredit ? '+' : '-'}
                     {currencyFormatter.format(Math.abs(amount))}
-                  </div>
+                  </a>
                   <div className="text-xs text-ink-muted">{transaction.status}</div>
                 </div>
               </div>

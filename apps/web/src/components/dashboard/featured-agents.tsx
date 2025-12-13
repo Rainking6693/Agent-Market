@@ -1,5 +1,8 @@
-import { type Agent } from '@agent-market/sdk';
-import Link from 'next/link';
+"use client";
+
+import { type Agent } from "@agent-market/sdk";
+import Link from "next/link";
+import { useMemo, useState } from "react";
 
 interface FeaturedAgentsProps {
   agents: Agent[];
@@ -7,7 +10,14 @@ interface FeaturedAgentsProps {
 
 export function FeaturedAgents({ agents }: FeaturedAgentsProps) {
   const hasAgents = agents && agents.length > 0;
-  const displayAgents = hasAgents ? agents : [];
+  const [selectedId, setSelectedId] = useState<string | null>(
+    hasAgents ? agents[0]?.id ?? null : null,
+  );
+
+  const selectedAgent = useMemo(() => {
+    if (!hasAgents || !selectedId) return null;
+    return agents.find((a) => a.id === selectedId) ?? agents[0] ?? null;
+  }, [agents, hasAgents, selectedId]);
 
   return (
     <div className="glass-card space-y-4 p-6">
@@ -16,38 +26,55 @@ export function FeaturedAgents({ agents }: FeaturedAgentsProps) {
           Featured agents
         </h2>
         <p className="text-xs text-ink-muted font-body">
-          Your agents, front and center.
+          Pick an agent from the dropdown to see details. No long scrolling.
         </p>
       </div>
       {hasAgents ? (
         <div className="space-y-4">
-          {displayAgents.map((agent) => (
-            <div
-              key={agent.id}
-              className="rounded-2xl border border-outline/70 bg-surfaceAlt/60 p-4 text-sm text-ink"
-            >
+          <label className="block text-xs font-semibold uppercase tracking-wide text-ink-muted">
+            Choose an agent
+          </label>
+          <select
+            value={selectedId ?? ""}
+            onChange={(e) => setSelectedId(e.target.value)}
+            className="w-full rounded-lg border border-outline/60 bg-surfaceAlt/80 px-3 py-2 text-sm text-ink"
+          >
+            {agents.map((agent) => (
+              <option key={agent.id} value={agent.id}>
+                {agent.name}{" "}
+                {agent.trustScore !== undefined ? `(Trust ${agent.trustScore})` : ""}
+              </option>
+            ))}
+          </select>
+
+          {selectedAgent && (
+            <div className="rounded-2xl border border-outline/70 bg-surfaceAlt/60 p-4 text-sm text-ink">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <h3 className="text-base font-semibold text-ink font-body">{agent.name}</h3>
-                  <p className="text-xs text-ink-muted font-body">{agent.slug}</p>
+                  <h3 className="text-base font-semibold text-ink font-body">
+                    {selectedAgent.name}
+                  </h3>
+                  <p className="text-xs text-ink-muted font-body">{selectedAgent.slug}</p>
                 </div>
-                {agent.trustScore !== undefined && (
-                  <span className="text-xs text-emerald-400 font-body">Trust {agent.trustScore}</span>
+                {selectedAgent.trustScore !== undefined && (
+                  <span className="text-xs text-emerald-400 font-body">
+                    Trust {selectedAgent.trustScore}
+                  </span>
                 )}
               </div>
               <p className="mt-2 text-xs text-ink-muted font-body">
-                {agent.description || 'No description provided.'}
+                {selectedAgent.description || "No description provided."}
               </p>
               <div className="mt-3 flex items-center justify-between text-xs text-ink-muted font-body">
                 <span className="capitalize">
-                  {agent.categories?.slice(0, 3).join(', ') || 'Uncategorized'}
+                  {selectedAgent.categories?.slice(0, 3).join(", ") || "Uncategorized"}
                 </span>
-                <Link className="text-accent underline font-body" href={`/agents/${agent.slug}`}>
+                <Link className="text-accent underline font-body" href={`/agents/${selectedAgent.slug}`}>
                   View profile
                 </Link>
               </div>
             </div>
-          ))}
+          )}
         </div>
       ) : (
         <div className="rounded-xl border border-outline/60 bg-surfaceAlt/50 p-4 text-sm text-ink-muted">
