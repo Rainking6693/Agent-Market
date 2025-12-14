@@ -321,7 +321,7 @@ export default function NewAgentPage() {
         fieldsPopulated++;
       }
 
-      if (config.visibility === 'PUBLIC' || config.visibility === 'PRIVATE') {
+      if (config.visibility === 'PUBLIC' || config.visibility === 'PRIVATE' || config.visibility === 'ORGANIZATION') {
         imported.visibility = config.visibility;
         setVisibility(config.visibility);
         fieldsPopulated++;

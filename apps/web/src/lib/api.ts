@@ -34,7 +34,7 @@ export interface CreateAgentPayload {
   categories: string[];
   tags: string[];
   pricingModel: string;
-  visibility?: 'PUBLIC' | 'PRIVATE' | 'UNLISTED';
+  visibility?: 'PUBLIC' | 'PRIVATE' | 'UNLISTED' | 'ORGANIZATION';
   basePriceCents?: number;
   inputSchema?: Record<string, unknown>;
   outputSchema?: Record<string, unknown>;
