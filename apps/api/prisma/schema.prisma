@@ -182,6 +182,7 @@ enum AgentVisibility {
   PUBLIC
   PRIVATE
   UNLISTED
+  ORGANIZATION
 }
 
 enum VerificationStatus {

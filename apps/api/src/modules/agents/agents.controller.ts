@@ -10,11 +10,13 @@ import { ReviewAgentDto } from './dto/review-agent.dto.js';
 import { SubmitForReviewDto } from './dto/submit-for-review.dto.js';
 import { UpdateAgentDto } from './dto/update-agent.dto.js';
 import { UpdateAgentBudgetDto } from './dto/update-budget.dto.js';
+import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { Public } from '../auth/decorators/public.decorator.js';
+import { AuthenticatedUser } from '../auth/types.js';
 
 @Controller('agents')
 export class AgentsController {
-  constructor(private readonly agentsService: AgentsService) {}
+  constructor(private readonly agentsService: AgentsService) { }
 
   // Public endpoints - rate limited
   @Public()
@@ -29,6 +31,7 @@ export class AgentsController {
     @Query('verifiedOnly') verifiedOnly?: string,
     @Query('creatorId') creatorId?: string,
     @Query('showAll') showAll?: string,
+    @CurrentUser() user?: AuthenticatedUser,
   ) {
     return this.agentsService.findAll({
       status,
@@ -39,6 +42,8 @@ export class AgentsController {
       verifiedOnly: (verifiedOnly ?? '').toLowerCase() === 'true',
       creatorId,
       showAll: (showAll ?? '').toLowerCase() === 'true',
+      userId: user?.id,
+      organizationId: user?.organizationId,
     });
   }
 

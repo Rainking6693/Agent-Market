@@ -45,7 +45,7 @@ export class AgentsService {
     private readonly prisma: PrismaService,
     private readonly walletsService: WalletsService,
     private readonly ap2Service: Ap2Service,
-  ) {}
+  ) { }
 
   async create(data: CreateAgentDto) {
     const slug = slugify(`${data.name}-${Date.now()}`);
@@ -79,6 +79,8 @@ export class AgentsService {
     verifiedOnly?: boolean;
     creatorId?: string;
     showAll?: boolean;
+    userId?: string;
+    organizationId?: string;
   }) {
     const where: Prisma.AgentWhereInput = {};
     try {
@@ -87,40 +89,58 @@ export class AgentsService {
       if (hasStatusFilter) {
         where.status = params.status;
       }
-      
-      // Visibility filter
+
+      // Visibility filter with user context
       const hasVisibilityFilter = params?.visibility !== undefined;
       if (hasVisibilityFilter) {
         where.visibility = params.visibility;
       }
-      
+
       // Only apply default PUBLIC/APPROVED filter if showAll is not true and no explicit filters are set
       // This allows authenticated users to see all agents by setting showAll=true
       if (!params?.showAll && !hasStatusFilter && !hasVisibilityFilter && !params?.creatorId) {
-        // Default to showing only PUBLIC, APPROVED agents for public marketplace browsing
-        where.visibility = AgentVisibility.PUBLIC;
+        // Apply visibility-based filtering
+        if (params?.userId) {
+          // Authenticated user: show PUBLIC, PRIVATE (own), and ORGANIZATION (if in org)
+          const visibilityConditions: Prisma.AgentWhereInput[] = [
+            { visibility: AgentVisibility.PUBLIC },
+            { visibility: AgentVisibility.PRIVATE, creatorId: params.userId },
+          ];
+
+          if (params.organizationId) {
+            visibilityConditions.push({
+              visibility: AgentVisibility.ORGANIZATION,
+              organizationId: params.organizationId,
+            });
+          }
+
+          where.OR = visibilityConditions;
+        } else {
+          // Unauthenticated user: only show PUBLIC agents
+          where.visibility = AgentVisibility.PUBLIC;
+        }
         where.status = AgentStatus.APPROVED;
       }
-      
+
       // Category filter
       if (params?.category) {
         where.categories = {
           has: params.category,
         };
       }
-      
+
       // Tag filter
       if (params?.tag) {
         where.tags = {
           has: params.tag,
         };
       }
-      
+
       // Verified only filter
       if (params?.verifiedOnly) {
         where.verificationStatus = VerificationStatus.VERIFIED;
       }
-      
+
       // Search filter
       if (params?.search?.trim()) {
         const term = params.search.trim();
@@ -129,7 +149,7 @@ export class AgentsService {
           { description: { contains: term, mode: 'insensitive' } },
         ];
       }
-      
+
       // Creator filter
       if (params?.creatorId) {
         where.creatorId = params.creatorId;
@@ -639,17 +659,17 @@ export class AgentsService {
         status: collaboration.status,
         requesterAgent: collaboration.requesterAgent
           ? {
-              id: collaboration.requesterAgent.id,
-              name: collaboration.requesterAgent.name,
-              slug: collaboration.requesterAgent.slug,
-            }
+            id: collaboration.requesterAgent.id,
+            name: collaboration.requesterAgent.name,
+            slug: collaboration.requesterAgent.slug,
+          }
           : null,
         responderAgent: collaboration.responderAgent
           ? {
-              id: collaboration.responderAgent.id,
-              name: collaboration.responderAgent.name,
-              slug: collaboration.responderAgent.slug,
-            }
+            id: collaboration.responderAgent.id,
+            name: collaboration.responderAgent.name,
+            slug: collaboration.responderAgent.slug,
+          }
           : null,
         requestedService:
           typeof payload.requestedService === 'string' ? (payload.requestedService as string) : null,
@@ -659,11 +679,11 @@ export class AgentsService {
         currency: 'USD',
         transaction: transaction
           ? {
-              id: transaction.id,
-              status: transaction.status,
-              settledAt: transaction.settledAt,
-              createdAt: transaction.createdAt,
-            }
+            id: transaction.id,
+            status: transaction.status,
+            settledAt: transaction.settledAt,
+            createdAt: transaction.createdAt,
+          }
           : null,
         serviceAgreementId: collaboration.serviceAgreementId,
         escrowId: escrow?.id ?? null,

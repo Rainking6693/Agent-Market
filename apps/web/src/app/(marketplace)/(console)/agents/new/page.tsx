@@ -56,7 +56,7 @@ const pricingModels = [
   { value: 'usage_based', label: 'Usage based' },
 ];
 
-type Visibility = 'PUBLIC' | 'PRIVATE';
+type Visibility = 'PUBLIC' | 'PRIVATE' | 'ORGANIZATION';
 
 export default function NewAgentPage() {
   const router = useRouter();
@@ -192,7 +192,7 @@ export default function NewAgentPage() {
           // Get the swarm baseline suite
           const suites = await testingApi.getRecommendedSuites();
           const baselineSuite = suites.find((s) => s.slug === 'swarm_smoke_test');
-          
+
           if (baselineSuite) {
             await testingApi.startRun({
               agentId: agent.id,
@@ -683,7 +683,7 @@ export default function NewAgentPage() {
             <div className="space-y-3">
               <Label>Visibility</Label>
               <div className="flex flex-wrap gap-3">
-                {(['PUBLIC', 'PRIVATE'] as Visibility[]).map((option) => (
+                {(['PUBLIC', 'PRIVATE', 'ORGANIZATION'] as Visibility[]).map((option) => (
                   <button
                     key={option}
                     type="button"
@@ -695,10 +695,17 @@ export default function NewAgentPage() {
                         : 'border-outline text-ink-muted hover:text-ink',
                     )}
                   >
-                    {option === 'PUBLIC' ? 'Public' : 'Private'}
+                    {option === 'PUBLIC' && 'Public (everyone can use)'}
+                    {option === 'ORGANIZATION' && 'Organization (team only)'}
+                    {option === 'PRIVATE' && 'Private (just me)'}
                   </button>
                 ))}
               </div>
+              <p className="text-xs text-ink-muted">
+                {visibility === 'PUBLIC' && 'This agent will be visible in the marketplace to all users.'}
+                {visibility === 'ORGANIZATION' && 'This agent will only be visible to members of your organization.'}
+                {visibility === 'PRIVATE' && 'This agent will only be visible to you.'}
+              </p>
             </div>
           </div>
         );

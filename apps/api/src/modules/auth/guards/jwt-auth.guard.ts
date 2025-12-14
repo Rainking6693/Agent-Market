@@ -28,13 +28,18 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     ]);
 
     if (isPublic) {
+      try {
+        // Attempt to authenticate to populate user, but don't fail if invalid
+        await super.canActivate(context);
+      } catch {
+        // Ignore auth errors on public routes
+      }
       return true;
     }
 
     if (!this.isEnforced()) {
       return true;
     }
-
     const request = context.switchToHttp().getRequest<Request>();
     const apiKey = this.extractApiKey(request);
 
