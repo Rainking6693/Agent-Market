@@ -207,11 +207,13 @@ export default function TestLibraryPage() {
         onClose={() => {
           setIsWizardOpen(false);
           setSelectedSuite(null);
+          setSelectedIndividualTest(null);
         }}
         agents={agents}
         suites={suites}
+        individualTests={individualTests}
         isLoading={isWizardLoading}
-        onStartRun={async (agentIds, suiteIds) => {
+        onStartRun={async (agentIds, suiteIds, testIds) => {
           if (selectedIndividualTest) {
             return testingApi.startRun({
               agentId: agentIds,
@@ -219,6 +221,15 @@ export default function TestLibraryPage() {
               testIds: [selectedIndividualTest.id]
             });
           }
+
+          if (testIds && testIds.length > 0) {
+            return testingApi.startRun({
+              agentId: agentIds,
+              suiteId: suiteIds,
+              testIds: testIds
+            });
+          }
+
           const finalSuiteIds = selectedSuite ? [selectedSuite, ...suiteIds] : suiteIds;
           return testingApi.startRun({
             agentId: agentIds,

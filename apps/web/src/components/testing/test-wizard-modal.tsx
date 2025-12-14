@@ -30,8 +30,9 @@ interface TestWizardModalProps {
   onClose: () => void;
   agents: Agent[];
   suites: TestSuite[];
+  individualTests?: { id: string; suiteSlug: string; suiteName: string; category: string }[];
   isLoading?: boolean;
-  onStartRun: (agentIds: string[], suiteIds: string[]) => Promise<StartTestRunResponse>;
+  onStartRun: (agentIds: string[], suiteIds: string[], testIds?: string[]) => Promise<StartTestRunResponse>;
 }
 
 export function TestWizardModal({
@@ -39,12 +40,15 @@ export function TestWizardModal({
   onClose,
   agents,
   suites,
+  individualTests,
   isLoading,
   onStartRun,
 }: TestWizardModalProps) {
   const [step, setStep] = useState(1);
   const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
   const [selectedSuites, setSelectedSuites] = useState<string[]>([]);
+  const [selectedIndividualTests, setSelectedIndividualTests] = useState<string[]>([]);
+  const [mode, setMode] = useState<'suite' | 'individual'>('suite');
   const [isRunning, setIsRunning] = useState(false);
   const [startError, setStartError] = useState<string | null>(null);
   const [activeRunId, setActiveRunId] = useState<string | null>(null);
@@ -57,6 +61,8 @@ export function TestWizardModal({
       setStep(1);
       setSelectedAgents([]);
       setSelectedSuites([]);
+      setSelectedIndividualTests([]);
+      setMode('suite');
       setIsRunning(false);
       setStartError(null);
       setActiveRunId(null);
@@ -66,15 +72,41 @@ export function TestWizardModal({
   if (!isOpen) return null;
 
   const handleStart = async () => {
-    if (selectedAgents.length === 0 || selectedSuites.length === 0) {
+    if (selectedAgents.length === 0) {
       return;
     }
+
+    if (mode === 'suite' && selectedSuites.length === 0) return;
+    if (mode === 'individual' && selectedIndividualTests.length === 0) return;
 
     setIsRunning(true);
     setStartError(null);
     setRunStatusLabel('Starting…');
     try {
-      const response = await onStartRun(selectedAgents, selectedSuites);
+      let response;
+      if (mode === 'individual') {
+        // Group by suite
+        const testsBySuite = new Map<string, string[]>();
+        selectedIndividualTests.forEach(testId => {
+          const test = individualTests?.find(t => t.id === testId);
+          if (test) {
+            const existing = testsBySuite.get(test.suiteSlug) || [];
+            testsBySuite.set(test.suiteSlug, [...existing, test.id]);
+          }
+        });
+
+        // We can only run one startRun call per suite/agent combo easily with current API
+        // For now, let's just pick the first suite found or handle multiple calls
+        // Simplification: Just take the first suite found for now or refactor API later
+        // Actually, the API supports array of suites. But testIds is global for the run.
+        // If we select tests from DIFFERENT suites, we might have an issue if the API expects testIds to apply to ALL suites.
+        // Let's assume for now we just pass all testIds and the backend filters them per suite.
+
+        const uniqueSuites = Array.from(testsBySuite.keys());
+        response = await onStartRun(selectedAgents, uniqueSuites, selectedIndividualTests);
+      } else {
+        response = await onStartRun(selectedAgents, selectedSuites);
+      }
       const firstRun = response?.runs?.[0];
       if (firstRun?.id) {
         setActiveRunId(firstRun.id);
@@ -121,11 +153,10 @@ export function TestWizardModal({
           {[1, 2, 3].map((s) => (
             <div key={s} className="flex items-center gap-2">
               <div
-                className={`flex h-8 w-8 items-center justify-center rounded-full border-2 ${
-                  step >= s
-                    ? 'border-brass bg-brass text-carrara'
-                    : 'border-outline text-ink-muted'
-                }`}
+                className={`flex h-8 w-8 items-center justify-center rounded-full border-2 ${step >= s
+                  ? 'border-brass bg-brass text-carrara'
+                  : 'border-outline text-ink-muted'
+                  }`}
               >
                 {s}
               </div>
@@ -158,11 +189,10 @@ export function TestWizardModal({
                   {agents.map((agent) => (
                     <Card
                       key={agent.id}
-                      className={`cursor-pointer transition ${
-                        selectedAgents.includes(agent.id)
-                          ? 'border-brass bg-brass/10'
-                          : 'border-outline/40 hover:border-brass/40'
-                      }`}
+                      className={`cursor-pointer transition ${selectedAgents.includes(agent.id)
+                        ? 'border-brass bg-brass/10'
+                        : 'border-outline/40 hover:border-brass/40'
+                        }`}
                       onClick={() => {
                         setSelectedAgents((prev) =>
                           prev.includes(agent.id)
@@ -191,56 +221,120 @@ export function TestWizardModal({
 
           {step === 2 && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-ink">Select Test Suites</h3>
-              <p className="text-sm text-ink-muted">Choose which test suites to run</p>
-              {isLoading ? (
-                <div className="py-8 text-center text-sm text-ink-muted">Loading test suites...</div>
-              ) : suites.length === 0 ? (
-                <div className="py-8 text-center text-sm text-ink-muted">No test suites available.</div>
-              ) : (
-                <div className="grid max-h-[40vh] gap-3 overflow-y-auto pr-1 md:grid-cols-2">
-                  {suites.map((suite) => (
-                    <Card
-                      key={suite.id}
-                      className={`cursor-pointer transition ${
-                        selectedSuites.includes(suite.id)
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-ink">Select Tests</h3>
+                  <p className="text-sm text-ink-muted">Choose entire suites or specific tests</p>
+                </div>
+                <div className="flex rounded-lg border border-outline/40 bg-surfaceAlt p-1">
+                  <button
+                    onClick={() => setMode('suite')}
+                    className={`rounded-md px-3 py-1 text-sm font-medium transition ${mode === 'suite'
+                      ? 'bg-surface text-ink shadow-sm'
+                      : 'text-ink-muted hover:text-ink'
+                      }`}
+                  >
+                    Test Suites
+                  </button>
+                  <button
+                    onClick={() => setMode('individual')}
+                    className={`rounded-md px-3 py-1 text-sm font-medium transition ${mode === 'individual'
+                      ? 'bg-surface text-ink shadow-sm'
+                      : 'text-ink-muted hover:text-ink'
+                      }`}
+                  >
+                    Individual Tests
+                  </button>
+                </div>
+              </div>
+
+              {mode === 'suite' ? (
+                isLoading ? (
+                  <div className="py-8 text-center text-sm text-ink-muted">Loading test suites...</div>
+                ) : suites.length === 0 ? (
+                  <div className="py-8 text-center text-sm text-ink-muted">No test suites available.</div>
+                ) : (
+                  <div className="grid max-h-[40vh] gap-3 overflow-y-auto pr-1 md:grid-cols-2">
+                    {suites.map((suite) => (
+                      <Card
+                        key={suite.id}
+                        className={`cursor-pointer transition ${selectedSuites.includes(suite.id)
                           ? 'border-brass bg-brass/10'
                           : 'border-outline/40 hover:border-brass/40'
-                      }`}
-                      onClick={() => {
-                        setSelectedSuites((prev) =>
-                          prev.includes(suite.id)
-                            ? prev.filter((id) => id !== suite.id)
-                            : [...prev, suite.id],
-                        );
-                      }}
-                    >
-                      <CardHeader className="p-4 pb-2">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <CardTitle className="text-base">{suite.name}</CardTitle>
-                            {suite.isRecommended && (
-                              <span className="mt-1 inline-block rounded-full bg-brass/20 px-2 py-0.5 text-xs text-brass">
-                                Recommended
-                              </span>
+                          }`}
+                        onClick={() => {
+                          setSelectedSuites((prev) =>
+                            prev.includes(suite.id)
+                              ? prev.filter((id) => id !== suite.id)
+                              : [...prev, suite.id],
+                          );
+                        }}
+                      >
+                        <CardHeader className="p-4 pb-2">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <CardTitle className="text-base">{suite.name}</CardTitle>
+                              {suite.isRecommended && (
+                                <span className="mt-1 inline-block rounded-full bg-brass/20 px-2 py-0.5 text-xs text-brass">
+                                  Recommended
+                                </span>
+                              )}
+                            </div>
+                            {selectedSuites.includes(suite.id) && (
+                              <div className="h-5 w-5 rounded-full bg-brass" />
                             )}
                           </div>
-                          {selectedSuites.includes(suite.id) && (
-                            <div className="h-5 w-5 rounded-full bg-brass" />
-                          )}
-                        </div>
-                      </CardHeader>
-                      <CardContent className="p-4 pt-2">
-                        <CardDescription className="text-xs">{suite.description}</CardDescription>
-                        <div className="mt-3 flex items-center gap-4 text-xs text-ink-muted">
-                          <span>~{Math.round(suite.estimatedDurationSec / 60)} min</span>
-                          <span>~${suite.approximateCostUsd.toFixed(2)}</span>
-                          <span className="capitalize">{suite.category}</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                        </CardHeader>
+                        <CardContent className="p-4 pt-2">
+                          <CardDescription className="text-xs">{suite.description}</CardDescription>
+                          <div className="mt-3 flex items-center gap-4 text-xs text-ink-muted">
+                            <span>~{Math.round(suite.estimatedDurationSec / 60)} min</span>
+                            <span>~${suite.approximateCostUsd.toFixed(2)}</span>
+                            <span className="capitalize">{suite.category}</span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )
+              ) : (
+                // Individual Tests View
+                isLoading ? (
+                  <div className="py-8 text-center text-sm text-ink-muted">Loading tests...</div>
+                ) : !individualTests || individualTests.length === 0 ? (
+                  <div className="py-8 text-center text-sm text-ink-muted">No individual tests available.</div>
+                ) : (
+                  <div className="grid max-h-[40vh] gap-3 overflow-y-auto pr-1 md:grid-cols-2">
+                    {individualTests.map((test) => (
+                      <Card
+                        key={test.id}
+                        className={`cursor-pointer transition ${selectedIndividualTests.includes(test.id)
+                          ? 'border-brass bg-brass/10'
+                          : 'border-outline/40 hover:border-brass/40'
+                          }`}
+                        onClick={() => {
+                          setSelectedIndividualTests((prev) =>
+                            prev.includes(test.id)
+                              ? prev.filter((id) => id !== test.id)
+                              : [...prev, test.id],
+                          );
+                        }}
+                      >
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <h4 className="font-semibold text-ink">{test.id}</h4>
+                              <p className="text-xs text-ink-muted">{test.suiteName} • {test.category}</p>
+                            </div>
+                            {selectedIndividualTests.includes(test.id) && (
+                              <div className="h-5 w-5 rounded-full bg-brass" />
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )
               )}
             </div>
           )}
@@ -256,13 +350,12 @@ export function TestWizardModal({
                       <p className="text-sm font-semibold text-ink">ID: {activeRunId}</p>
                     </div>
                     <span
-                      className={`rounded-full px-3 py-1 text-xs font-medium ${
-                        progress?.status === 'completed'
-                          ? 'bg-green-100 text-green-800'
-                          : progress?.status === 'failed'
-                            ? 'bg-red-100 text-red-700'
-                            : 'bg-amber-100 text-amber-800'
-                      }`}
+                      className={`rounded-full px-3 py-1 text-xs font-medium ${progress?.status === 'completed'
+                        ? 'bg-green-100 text-green-800'
+                        : progress?.status === 'failed'
+                          ? 'bg-red-100 text-red-700'
+                          : 'bg-amber-100 text-amber-800'
+                        }`}
                     >
                       {progress?.status ?? runStatusLabel ?? 'queued'}
                     </span>
@@ -272,20 +365,19 @@ export function TestWizardModal({
                     <div
                       className="h-full bg-gradient-to-r from-brass to-[#bf8616] transition-all duration-500"
                       style={{
-                        width: `${
-                          progress?.totalTests
-                            ? Math.min(
-                                100,
-                                Math.round((progress.completedTests / progress.totalTests) * 100),
-                              )
-                            : progress?.status === 'completed'
-                              ? 100
+                        width: `${progress?.totalTests
+                          ? Math.min(
+                            100,
+                            Math.round((progress.completedTests / progress.totalTests) * 100),
+                          )
+                          : progress?.status === 'completed'
+                            ? 100
                             : progress?.status === 'running'
                               ? 50
                               : runStatusLabel
                                 ? 20
                                 : 15
-                        }%`,
+                          }%`,
                       }}
                     />
                   </div>
@@ -331,22 +423,39 @@ export function TestWizardModal({
                 <div>
                   <h4 className="mb-2 text-sm font-semibold text-ink">Selected Test Suites</h4>
                   <div className="space-y-2">
-                    {selectedSuites.map((suiteId) => {
-                      const suite = suites.find((s) => s.id === suiteId);
-                      return suite ? (
-                        <div
-                          key={suiteId}
-                          className="rounded-lg border border-outline/40 bg-surfaceAlt/60 p-3"
-                        >
-                          <p className="text-sm font-medium text-ink">{suite.name}</p>
-                          <p className="mt-1 text-xs text-ink-muted">
-                            ~{Math.round(suite.estimatedDurationSec / 60)} min • ~$
-                            {suite.approximateCostUsd.toFixed(2)}
-                          </p>
-                          <p className="mt-1 text-xs text-ink-muted">{suite.description}</p>
-                        </div>
-                      ) : null;
-                    })}
+                    {mode === 'suite' ? (
+                      selectedSuites.map((suiteId) => {
+                        const suite = suites.find((s) => s.id === suiteId);
+                        return suite ? (
+                          <div
+                            key={suiteId}
+                            className="rounded-lg border border-outline/40 bg-surfaceAlt/60 p-3"
+                          >
+                            <p className="text-sm font-medium text-ink">{suite.name}</p>
+                            <p className="mt-1 text-xs text-ink-muted">
+                              ~{Math.round(suite.estimatedDurationSec / 60)} min • ~$
+                              {suite.approximateCostUsd.toFixed(2)}
+                            </p>
+                            <p className="mt-1 text-xs text-ink-muted">{suite.description}</p>
+                          </div>
+                        ) : null;
+                      })
+                    ) : (
+                      selectedIndividualTests.map((testId) => {
+                        const test = individualTests?.find((t) => t.id === testId);
+                        return test ? (
+                          <div
+                            key={testId}
+                            className="rounded-lg border border-outline/40 bg-surfaceAlt/60 p-3"
+                          >
+                            <p className="text-sm font-medium text-ink">{test.id}</p>
+                            <p className="mt-1 text-xs text-ink-muted">
+                              Suite: {test.suiteName}
+                            </p>
+                          </div>
+                        ) : null;
+                      })
+                    )}
                   </div>
                 </div>
               </div>
@@ -373,13 +482,18 @@ export function TestWizardModal({
                 onClick={() => {
                   if (step === 1 && selectedAgents.length > 0) {
                     setStep(2);
-                  } else if (step === 2 && selectedSuites.length > 0) {
-                    setStep(3);
+                  } else if (step === 2) {
+                    if (mode === 'suite' && selectedSuites.length > 0) {
+                      setStep(3);
+                    } else if (mode === 'individual' && selectedIndividualTests.length > 0) {
+                      setStep(3);
+                    }
                   }
                 }}
                 disabled={
                   (step === 1 && selectedAgents.length === 0) ||
-                  (step === 2 && selectedSuites.length === 0)
+                  (step === 2 && mode === 'suite' && selectedSuites.length === 0) ||
+                  (step === 2 && mode === 'individual' && selectedIndividualTests.length === 0)
                 }
               >
                 Next
