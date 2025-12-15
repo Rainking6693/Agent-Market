@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function ConsoleAgentDetailRedirect() {
   const router = useRouter();
