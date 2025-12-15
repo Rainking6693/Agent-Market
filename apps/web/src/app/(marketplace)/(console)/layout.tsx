@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 
 export default async function ConsoleLayout({ children }: { children: ReactNode }) {
   // Protect all console routes - redirect to login if not authenticated
-  await requireAuth('/dashboard');
+  await requireAuth('/overview');
 
   return (
     <div className="flex min-h-screen w-full">

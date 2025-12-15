@@ -9,31 +9,37 @@ import { useAuth } from '@/hooks/use-auth';
 
 const sections = [
   {
+    title: 'Home',
+    items: [
+      { label: 'Overview', href: '/overview' },
+    ],
+  },
+  {
     title: 'Build',
     items: [
-      { label: 'Home', href: '/' },
-      { label: 'Dashboard', href: '/dashboard' },
-      { label: 'Wallet', href: '/wallet' },
       { label: 'Agents', href: '/agents' },
       { label: 'Workflows', href: '/workflows' },
+    ],
+  },
+  {
+    title: 'Spend',
+    items: [
+      { label: 'Wallet', href: '/wallet' },
       { label: 'Billing', href: '/billing' },
-      { label: 'Quality', href: '/quality' },
     ],
   },
   {
-    title: 'Analytics',
+    title: 'Quality',
     items: [
-      { label: 'Usage', href: '/analytics/usage' },
-      { label: 'Cost', href: '/analytics/cost' },
+      { label: 'Test Library', href: '/quality/test-library' },
+      { label: 'Outcomes', href: '/quality/outcomes' },
+    ],
+  },
+  {
+    title: 'System',
+    items: [
       { label: 'Logs', href: '/analytics/logs' },
-      { label: 'Batches', href: '/analytics/batches' },
-      { label: 'Agent Mesh', href: '/analytics/agent-mesh' },
-    ],
-  },
-  {
-    title: 'Manage',
-    items: [
-      { label: 'API keys', href: '/settings/api-keys' },
+      { label: 'API Keys', href: '/settings/api-keys' },
       { label: 'Limits', href: '/settings/limits' },
       { label: 'Settings', href: '/settings/profile' },
     ],
