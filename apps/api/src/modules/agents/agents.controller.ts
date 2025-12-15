@@ -10,9 +10,9 @@ import { ReviewAgentDto } from './dto/review-agent.dto.js';
 import { SubmitForReviewDto } from './dto/submit-for-review.dto.js';
 import { UpdateAgentDto } from './dto/update-agent.dto.js';
 import { UpdateAgentBudgetDto } from './dto/update-budget.dto.js';
+import { AuthenticatedUser } from '../auth/auth.service.js';
 import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { Public } from '../auth/decorators/public.decorator.js';
-import { AuthenticatedUser } from '../auth/types.js';
 
 @Controller('agents')
 export class AgentsController {
