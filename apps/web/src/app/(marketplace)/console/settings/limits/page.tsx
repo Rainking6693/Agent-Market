@@ -80,7 +80,7 @@ export default function LimitsPage() {
             <div className="mt-4 rounded-lg border border-outline/40 bg-surfaceAlt/60 p-3 text-xs text-ink-muted">
               <p>
                 Configure budget limits per agent in the{' '}
-                <a href="/agents" className="text-primary underline hover:no-underline">
+                <a href="/console/agents" className="text-primary underline hover:no-underline">
                   Agents
                 </a>{' '}
                 section.

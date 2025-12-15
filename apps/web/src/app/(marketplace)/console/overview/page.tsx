@@ -8,8 +8,10 @@ import { OrgOverviewCard } from '@/components/dashboard/org-overview-card';
 import { OrgRoiTimeseriesChart } from '@/components/dashboard/org-roi-timeseries-chart';
 import { RecentActivityList } from '@/components/dashboard/recent-activity-list';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { agentsApi, billingApi, organizationsApi } from '@/lib/api';
+import { agentsApi } from '@/lib/api';
 import { useAuthStore } from '@/stores/auth-store';
+
+import type { OrganizationRoiTimeseriesPoint } from '@agent-market/sdk';
 
 const statusPills = [
     {
@@ -30,24 +32,28 @@ export default function OverviewPage() {
 
     const orgSlug = process.env.NEXT_PUBLIC_DEFAULT_ORG_SLUG ?? 'genesis';
 
-    // Fetch organization data
-    const { data: orgSummary } = useQuery({
-        queryKey: ['org-roi', orgSlug],
-        queryFn: () => organizationsApi.getOrganizationRoi(orgSlug),
-        retry: false,
-    });
+    // TODO: Fetch organization data once organizationsApi is implemented
+    // const { data: orgSummary } = useQuery({
+    //     queryKey: ['org-roi', orgSlug],
+    //     queryFn: () => organizationsApi.getOrganizationRoi(orgSlug),
+    //     retry: false,
+    // });
 
-    const { data: orgTimeseries = [] } = useQuery({
-        queryKey: ['org-roi-timeseries', orgSlug],
-        queryFn: () => organizationsApi.getOrganizationRoiTimeseries(orgSlug, 14),
-        retry: false,
-    });
+    // const { data: orgTimeseries = [] } = useQuery({
+    //     queryKey: ['org-roi-timeseries', orgSlug],
+    //     queryFn: () => organizationsApi.getOrganizationRoiTimeseries(orgSlug, 14),
+    //     retry: false,
+    // });
 
-    const { data: subscription } = useQuery({
-        queryKey: ['billing-subscription'],
-        queryFn: () => billingApi.getSubscription(),
-        retry: false,
-    });
+    // TODO: Implement getSubscription in billingApi
+    // const { data: subscription } = useQuery({
+    //     queryKey: ['billing-subscription'],
+    //     queryFn: () => billingApi.getSubscription(),
+    //     retry: false,
+    // });
+    const subscription = null;
+    const orgSummary = null;
+    const orgTimeseries: OrganizationRoiTimeseriesPoint[] = [];
 
     const { data: agents = [] } = useQuery({
         queryKey: ['agents', 'my-agents'],
@@ -85,7 +91,7 @@ export default function OverviewPage() {
 
                 <div className="flex flex-wrap gap-3">
                     <Link
-                        href="/agents/new"
+                        href="/console/agents/new"
                         className="rounded-lg bg-brass px-4 py-2 text-sm font-medium text-white transition hover:bg-brass/90"
                     >
                         + Create Agent

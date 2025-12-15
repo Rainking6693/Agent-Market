@@ -498,33 +498,16 @@ export default function NewAgentPage() {
                       type="button"
                       onClick={clearImportedConfig}
                       className="ml-2 rounded p-1 hover:bg-emerald-100"
-                      title="Clear imported config"
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-4 w-4" />
                     </button>
                   </div>
-                  <div className="text-xs text-ink-muted">
-                    {importedConfig.name && <span>✓ Name</span>}
-                    {importedConfig.description && <span className="ml-2">✓ Description</span>}
-                    {importedConfig.categories && importedConfig.categories.length > 0 && (
-                      <span className="ml-2">✓ Categories</span>
-                    )}
-                    {importedConfig.tags && importedConfig.tags.length > 0 && (
-                      <span className="ml-2">✓ Tags</span>
-                    )}
-                    {importedConfig.pricingModel && <span className="ml-2">✓ Pricing</span>}
-                    {importedConfig.ap2Endpoint && <span className="ml-2">✓ Endpoint</span>}
-                    {importedConfig.inputSchema && <span className="ml-2">✓ Input Schema</span>}
-                    {importedConfig.outputSchema && <span className="ml-2">✓ Output Schema</span>}
-                  </div>
-                  {(name.trim().length < 3 || description.trim().length < 20) && (
-                    <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
-                      <p className="font-semibold">Validation note:</p>
-                      <p className="mt-1">
-                        {name.trim().length < 3 && 'Name must be at least 3 characters. '}
-                        {description.trim().length < 20 && 'Description must be at least 20 characters. '}
-                        Please complete these fields to proceed.
-                      </p>
+                  {importedConfig.name && !name.trim() && (
+                    <div className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs text-blue-700">
+                      <span className="font-semibold">Note:</span> Fields from the imported config have been
+                      auto-filled. {name.trim().length < 3 && 'Agent name is required. '}
+                      {description.trim().length < 20 && 'Description must be at least 20 characters. '}
+                      Please complete these fields to proceed.
                     </div>
                   )}
                 </div>

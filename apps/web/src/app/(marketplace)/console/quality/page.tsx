@@ -91,7 +91,7 @@ export default function QualityPage({ searchParams }: { searchParams: { agentId?
             You haven't created any agents yet. Create your first agent to access quality workflows.
           </p>
           <Link
-            href="/agents/new"
+            href="/console/agents/new"
             className="mt-4 inline-flex items-center rounded-lg bg-brass px-4 py-2 text-sm font-semibold text-white hover:bg-brass/90"
           >
             Create Your First Agent
