@@ -16,6 +16,9 @@ const nextConfig = {
   // There is NO experimental.turbopack option — it has never existed
   // Just delete it completely
 
+  // Extend build timeout for static generation
+  staticPageGenerationTimeout: 120,
+
   webpack: (config) => {
     // Properly resolve @ alias to ./src (works with both Webpack & Turbopack)
     config.resolve.alias = config.resolve.alias || {};

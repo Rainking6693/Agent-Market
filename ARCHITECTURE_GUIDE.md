@@ -21,6 +21,8 @@ Agent-Market/
 └── agents/               # Python agent implementations
 ```
 
+huggingface-cli upload rainking6693/Genesis . --repo-type model --commit-message "Upload fine-tuned Genesis model"
+
 ### **Technology Stack**
 
 #### **Frontend** (`apps/web`)
