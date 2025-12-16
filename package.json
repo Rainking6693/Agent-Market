@@ -23,7 +23,7 @@
     "test:stripe-smoke": "npm run test:stripe-smoke --workspace apps/web",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
-  "packageManager": "npm@11.6.2",
+  "packageManager": "npm@10.9.4",
   "devDependencies": {
     "@flydotio/dockerfile": "^0.7.10",
     "@types/node": "^20.11.5",
