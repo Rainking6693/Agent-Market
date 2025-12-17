@@ -60,8 +60,11 @@ export default function TestA2APage() {
         addLog('💰 Step 0: Checking and funding agent wallets...');
         
         try {
-          const requesterWallet = await walletsApi.getAgentWallet(requesterId);
-          const currentBalance = parseFloat(requesterWallet.balance || '0');
+          const requesterWallet = (await walletsApi.getAgentWallet(requesterId)) as {
+            id: string;
+            balance: string | number;
+          };
+          const currentBalance = parseFloat(String(requesterWallet.balance || '0'));
           addLog(`   Requester wallet balance: $${currentBalance.toFixed(2)}`);
           
           if (currentBalance < budget + 5) {
@@ -73,8 +76,11 @@ export default function TestA2APage() {
             addLog(`   ✅ Requester wallet has sufficient funds`);
           }
           
-          const responderWallet = await walletsApi.getAgentWallet(responderId);
-          const responderBalance = parseFloat(responderWallet.balance || '0');
+          const responderWallet = (await walletsApi.getAgentWallet(responderId)) as {
+            id: string;
+            balance: string | number;
+          };
+          const responderBalance = parseFloat(String(responderWallet.balance || '0'));
           addLog(`   Responder wallet balance: $${responderBalance.toFixed(2)}`);
           
           if (responderBalance < 5) {
