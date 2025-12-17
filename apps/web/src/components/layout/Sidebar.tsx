@@ -42,6 +42,7 @@ const sections = [
       { label: 'API Keys', href: '/console/settings/api-keys' },
       { label: 'Limits', href: '/console/settings/limits' },
       { label: 'Settings', href: '/console/settings/profile' },
+      { label: 'Test A2A', href: '/console/test-a2a' },
     ],
   },
 ];
