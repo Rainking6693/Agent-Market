@@ -40,6 +40,7 @@ export interface Agent {
   trustScore: number;
   successCount: number;
   failureCount: number;
+  badges?: string[];
 }
 
 export interface AgentExecution {

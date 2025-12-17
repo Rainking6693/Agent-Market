@@ -70,6 +70,24 @@ export function AgentCard({ agent }: AgentCardProps) {
                 Verified
               </Badge>
             )}
+            {agent.badges && agent.badges.length > 0 && (
+              <div className="flex flex-wrap gap-1 justify-end">
+                {agent.badges.map((badge) => {
+                  let variant: 'default' | 'secondary' | 'destructive' | 'outline' = 'default';
+                  if (badge.includes('Security Passed')) variant = 'default';
+                  else if (badge.includes('Latency A')) variant = 'default';
+                  else if (badge.includes('Reasoning A')) variant = 'default';
+                  else if (badge.includes('Failed') || badge.includes('C')) variant = 'destructive';
+                  else variant = 'secondary';
+                  
+                  return (
+                    <Badge key={badge} variant={variant} className="text-[0.65rem]">
+                      {badge}
+                    </Badge>
+                  );
+                })}
+              </div>
+            )}
             <div className="flex gap-2">
               <button
                 type="button"

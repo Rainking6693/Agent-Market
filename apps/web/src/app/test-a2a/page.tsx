@@ -1,7 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState, useTransition } from 'react';
 
+import { Button } from '@/components/ui/button';
 import { agentsApi, ap2Api, walletsApi } from '@/lib/api';
 import type { Agent, Ap2NegotiationPayload } from '@/lib/api';
 
@@ -14,7 +16,7 @@ interface NegotiationResponse {
   serviceAgreement?: { id: string; status: string };
 }
 
-export default function TestA2APage() {
+export default function PublicTestA2APage() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [requesterId, setRequesterId] = useState('');
   const [responderId, setResponderId] = useState('');
@@ -24,9 +26,10 @@ export default function TestA2APage() {
   const [status, setStatus] = useState<string>('');
   const [logs, setLogs] = useState<string[]>([]);
   const [isPending, startTransition] = useTransition();
+  const [needsAuth, setNeedsAuth] = useState(false);
 
   useEffect(() => {
-    // Try to load agents (will fail if not authenticated, but that's OK)
+    // Try to load agents (will fail if not authenticated, show login prompt)
     agentsApi
       .list({ showAll: 'true' })
       .then((data) => {
@@ -52,8 +55,7 @@ export default function TestA2APage() {
       })
       .catch((error) => {
         console.error('Failed to load agents:', error);
-        addLog('⚠️ Note: Some features require login. Using demo mode...');
-        // Don't show error - just work in demo mode
+        setNeedsAuth(true);
       });
   }, []);
 
@@ -64,6 +66,11 @@ export default function TestA2APage() {
   const runFullTest = () => {
     if (!requesterId || !responderId || requesterId === responderId) {
       addLog('❌ Please select two different agents');
+      return;
+    }
+
+    if (needsAuth) {
+      addLog('❌ Please login to run tests. <a href="/login">Login here</a>');
       return;
     }
 
@@ -84,7 +91,7 @@ export default function TestA2APage() {
           addLog(`   Requester wallet balance: $${currentBalance.toFixed(2)}`);
           
           if (currentBalance < budget + 5) {
-            const fundAmount = budget + 20; // Add extra buffer
+            const fundAmount = budget + 20;
             addLog(`   Funding requester wallet with $${fundAmount}...`);
             await walletsApi.fundWallet(requesterWallet.id, fundAmount, 'Test funding for A2A negotiation');
             addLog(`   ✅ Requester wallet funded to $${fundAmount}`);
@@ -215,113 +222,139 @@ export default function TestA2APage() {
   };
 
   return (
-    <div className="space-y-6">
-      <header className="glass-card p-8">
-        <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Testing</p>
-        <h1 className="mt-2 text-3xl font-headline text-ink">Agent-to-Agent Negotiation Test</h1>
-        <p className="mt-2 max-w-3xl text-sm text-ink-muted">
-          Automatically test the full A2A flow: negotiation → acceptance → escrow → service delivery
-        </p>
-      </header>
-
-      <div className="glass-card space-y-6 p-6">
-        <div className="grid gap-4 md:grid-cols-2">
-          <label className="flex flex-col gap-2">
-            <span className="text-sm font-semibold text-ink">Requester Agent</span>
-            <select
-              value={requesterId}
-              onChange={(e) => setRequesterId(e.target.value)}
-              className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
-            >
-              {agents.map((agent) => (
-                <option key={agent.id} value={agent.id}>
-                  {agent.name}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="flex flex-col gap-2">
-            <span className="text-sm font-semibold text-ink">Responder Agent</span>
-            <select
-              value={responderId}
-              onChange={(e) => setResponderId(e.target.value)}
-              className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
-            >
-              {agents.map((agent) => (
-                <option key={agent.id} value={agent.id}>
-                  {agent.name}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-
-        <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-ink">Service Request</span>
-          <textarea
-            value={service}
-            onChange={(e) => setService(e.target.value)}
-            rows={3}
-            className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
-          />
-        </label>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          <label className="flex flex-col gap-2">
-            <span className="text-sm font-semibold text-ink">Budget ($)</span>
-            <input
-              type="number"
-              value={budget}
-              onChange={(e) => setBudget(parseFloat(e.target.value) || 0)}
-              className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
-            />
-          </label>
-
-          <label className="flex flex-col gap-2">
-            <span className="text-sm font-semibold text-ink">Acceptance Price ($)</span>
-            <input
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
-              className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
-            />
-          </label>
-        </div>
-
-        <button
-          type="button"
-          onClick={runFullTest}
-          disabled={isPending || agents.length < 2}
-          className="glass-button bg-accent px-6 py-3 text-carrara shadow-accent-glow hover:bg-accent-dark disabled:cursor-not-allowed disabled:bg-outline/40"
-        >
-          {isPending ? 'Running Test...' : '🚀 Run Full A2A Test'}
-        </button>
-
-        {status && (
-          <div
-            className={`rounded-lg border p-4 ${
-              status.startsWith('✅')
-                ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
-                : 'border-red-500/40 bg-red-500/10 text-red-300'
-            }`}
-          >
-            {status}
-          </div>
-        )}
-
-        {logs.length > 0 && (
-          <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-ink">Test Logs:</h3>
-            <div className="max-h-96 overflow-y-auto rounded-lg border border-outline bg-surfaceAlt/60 p-4 font-mono text-xs text-ink">
-              {logs.map((log, i) => (
-                <div key={i} className="mb-1">
-                  {log}
-                </div>
-              ))}
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+      <div className="mx-auto max-w-4xl space-y-8 px-4 py-12">
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl font-bold text-gray-900">🚀 Live A2A Transaction Demo</h1>
+          <p className="text-lg text-gray-600">
+            Watch two AI agents negotiate, create escrow, and complete a transaction — no login required
+          </p>
+          {needsAuth && (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+              <p className="text-sm text-amber-800">
+                To run the full test, please <Link href="/login" className="font-semibold underline">login</Link> or{' '}
+                <Link href="/register" className="font-semibold underline">create an account</Link>
+              </p>
             </div>
+          )}
+        </div>
+
+        <div className="rounded-lg border border-gray-200 bg-white shadow-lg p-6 space-y-6">
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="flex flex-col gap-2">
+              <span className="text-sm font-semibold text-gray-700">Requester Agent</span>
+              <select
+                value={requesterId}
+                onChange={(e) => setRequesterId(e.target.value)}
+                disabled={agents.length === 0}
+                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none disabled:bg-gray-100"
+              >
+                {agents.length === 0 ? (
+                  <option>Loading agents...</option>
+                ) : (
+                  agents.map((agent) => (
+                    <option key={agent.id} value={agent.id}>
+                      {agent.name}
+                    </option>
+                  ))
+                )}
+              </select>
+            </label>
+
+            <label className="flex flex-col gap-2">
+              <span className="text-sm font-semibold text-gray-700">Responder Agent</span>
+              <select
+                value={responderId}
+                onChange={(e) => setResponderId(e.target.value)}
+                disabled={agents.length === 0}
+                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none disabled:bg-gray-100"
+              >
+                {agents.length === 0 ? (
+                  <option>Loading agents...</option>
+                ) : (
+                  agents.map((agent) => (
+                    <option key={agent.id} value={agent.id}>
+                      {agent.name}
+                    </option>
+                  ))
+                )}
+              </select>
+            </label>
           </div>
-        )}
+
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-semibold text-gray-700">Service Request</span>
+            <textarea
+              value={service}
+              onChange={(e) => setService(e.target.value)}
+              rows={3}
+              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none"
+            />
+          </label>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="flex flex-col gap-2">
+              <span className="text-sm font-semibold text-gray-700">Budget ($)</span>
+              <input
+                type="number"
+                value={budget}
+                onChange={(e) => setBudget(parseFloat(e.target.value) || 0)}
+                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none"
+              />
+            </label>
+
+            <label className="flex flex-col gap-2">
+              <span className="text-sm font-semibold text-gray-700">Acceptance Price ($)</span>
+              <input
+                type="number"
+                value={price}
+                onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
+                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none"
+              />
+            </label>
+          </div>
+
+          <Button
+            type="button"
+            onClick={runFullTest}
+            disabled={isPending || agents.length < 2 || needsAuth}
+            className="w-full bg-brass text-white hover:bg-brass/90 text-lg py-6"
+            size="lg"
+          >
+            {isPending ? 'Running Test...' : '🚀 Run Full A2A Test'}
+          </Button>
+
+          {status && (
+            <div
+              className={`rounded-lg border p-4 ${
+                status.startsWith('✅')
+                  ? 'border-emerald-500/40 bg-emerald-50 text-emerald-800'
+                  : 'border-red-500/40 bg-red-50 text-red-800'
+              }`}
+            >
+              {status}
+            </div>
+          )}
+
+          {logs.length > 0 && (
+            <div className="space-y-2">
+              <h3 className="text-sm font-semibold text-gray-900">Test Logs:</h3>
+              <div className="max-h-96 overflow-y-auto rounded-lg border border-gray-200 bg-gray-50 p-4 font-mono text-xs text-gray-800">
+                {logs.map((log, i) => (
+                  <div key={i} className="mb-1">
+                    {log}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="text-center">
+          <Link href="/" className="text-sm text-gray-600 hover:text-gray-900 underline">
+            ← Back to Home
+          </Link>
+        </div>
       </div>
     </div>
   );

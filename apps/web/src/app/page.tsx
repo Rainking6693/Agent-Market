@@ -93,6 +93,9 @@ export default function LandingPage() {
               </p>
 
               <div className="animate-on-scroll animate-delay-300 mt-10 flex flex-wrap justify-center gap-4">
+                <Button size="lg" className="hover-lift bg-brass text-white hover:bg-brass/90 border-2 border-brass shadow-lg animate-pulse" asChild>
+                  <Link href="/test-a2a">🚀 Run a Live A2A Transaction (No Login)</Link>
+                </Button>
                 <Button size="lg" className="hover-lift" asChild>
                   <Link href="/register">Start Free Trial</Link>
                 </Button>

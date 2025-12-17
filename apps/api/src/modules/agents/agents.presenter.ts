@@ -25,6 +25,7 @@ export interface AgentResponse {
   trustScore: number;
   successCount: number;
   failureCount: number;
+  badges: string[];
 }
 
 export const presentAgent = (agent: Agent): AgentResponse => ({
@@ -46,6 +47,7 @@ export const presentAgent = (agent: Agent): AgentResponse => ({
   trustScore: agent.trustScore,
   successCount: agent.successCount,
   failureCount: agent.failureCount,
+  badges: agent.badges || [],
 });
 
 export interface AgentExecutionResponse {

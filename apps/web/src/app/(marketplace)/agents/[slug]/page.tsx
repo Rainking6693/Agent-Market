@@ -84,6 +84,26 @@ export default async function AgentDetailPage({
                   Verified
                 </Badge>
               )}
+              {agent.badges && agent.badges.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {agent.badges.map((badge) => {
+                    let variant: 'default' | 'secondary' | 'destructive' | 'outline' = 'default';
+                    if (badge.includes('Security Passed') || badge.includes('Latency A') || badge.includes('Reasoning A')) {
+                      variant = 'default';
+                    } else if (badge.includes('Failed') || badge.includes('Latency C') || badge.includes('Reasoning C')) {
+                      variant = 'destructive';
+                    } else {
+                      variant = 'secondary';
+                    }
+                    
+                    return (
+                      <Badge key={badge} variant={variant} className="text-[0.65rem] uppercase tracking-wide">
+                        {badge}
+                      </Badge>
+                    );
+                  })}
+                </div>
+              )}
             </div>
             <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
               <div>
