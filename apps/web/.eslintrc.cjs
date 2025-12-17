@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['next/core-web-vitals', '../../.eslintrc.cjs'],
+  extends: ['next/core-web-vitals'],
   parserOptions: {
     project: ['./tsconfig.eslint.json'],
     tsconfigRootDir: __dirname,
@@ -16,6 +16,12 @@ module.exports = {
   },
   rules: {
     'next/no-html-link-for-pages': 'off',
-    'import/no-unresolved': ['error', { ignore: ['^@agent-market/'] }],
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      },
+    ],
   },
 };
