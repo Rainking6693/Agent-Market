@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation';
 
-export default function DashboardPage() {
+export default function ConsoleIndexPage() {
   redirect('/console/overview');
 }
+
+
