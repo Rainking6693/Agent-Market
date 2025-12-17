@@ -1,4 +1,3 @@
-import { Type } from 'class-transformer';
 import {
   IsNumber,
   IsObject,
@@ -6,12 +5,7 @@ import {
   IsPositive,
   IsString,
   IsUUID,
-  ValidateNested,
 } from 'class-validator';
-
-class NegotiationRequirementsDto {
-  [key: string]: unknown;
-}
 
 export class NegotiationRequestDto {
   @IsUUID()
@@ -29,8 +23,6 @@ export class NegotiationRequestDto {
 
   @IsOptional()
   @IsObject()
-  @ValidateNested()
-  @Type(() => NegotiationRequirementsDto)
   requirements?: Record<string, unknown>;
 
   @IsOptional()
