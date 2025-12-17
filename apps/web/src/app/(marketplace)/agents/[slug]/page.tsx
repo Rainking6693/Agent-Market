@@ -87,13 +87,13 @@ export default async function AgentDetailPage({
               {agent.badges && agent.badges.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {agent.badges.map((badge) => {
-                    let variant: 'default' | 'secondary' | 'destructive' | 'outline' = 'default';
+                    let variant: 'default' | 'outline' | 'accent' = 'default';
                     if (badge.includes('Security Passed') || badge.includes('Latency A') || badge.includes('Reasoning A')) {
                       variant = 'default';
                     } else if (badge.includes('Failed') || badge.includes('Latency C') || badge.includes('Reasoning C')) {
-                      variant = 'destructive';
+                      variant = 'outline';
                     } else {
-                      variant = 'secondary';
+                      variant = 'accent';
                     }
                     
                     return (

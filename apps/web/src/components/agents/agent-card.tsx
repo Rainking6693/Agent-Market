@@ -73,12 +73,14 @@ export function AgentCard({ agent }: AgentCardProps) {
             {agent.badges && agent.badges.length > 0 && (
               <div className="flex flex-wrap gap-1 justify-end">
                 {agent.badges.map((badge) => {
-                  let variant: 'default' | 'secondary' | 'destructive' | 'outline' = 'default';
-                  if (badge.includes('Security Passed')) variant = 'default';
-                  else if (badge.includes('Latency A')) variant = 'default';
-                  else if (badge.includes('Reasoning A')) variant = 'default';
-                  else if (badge.includes('Failed') || badge.includes('C')) variant = 'destructive';
-                  else variant = 'secondary';
+                  let variant: 'default' | 'outline' | 'accent' = 'default';
+                  if (badge.includes('Security Passed') || badge.includes('Latency A') || badge.includes('Reasoning A')) {
+                    variant = 'default';
+                  } else if (badge.includes('Failed') || badge.includes('Latency C') || badge.includes('Reasoning C')) {
+                    variant = 'outline';
+                  } else {
+                    variant = 'accent';
+                  }
                   
                   return (
                     <Badge key={badge} variant={variant} className="text-[0.65rem]">
