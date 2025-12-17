@@ -33,7 +33,7 @@
     "date-fns": "^4.1.0",
     "ky": "^1.14.0",
     "lucide-react": "^0.553.0",
-    "next": "14.2.32",
+    "next": "^14.2.35",
     "next-auth": "^4.24.13",
     "next-themes": "^0.3.0",
     "pino-pretty": "^10.3.1",
