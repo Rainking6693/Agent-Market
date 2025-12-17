@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition } from 'react';
 
-import { agentsApi, ap2Api } from '@/lib/api';
+import { agentsApi, ap2Api, walletsApi } from '@/lib/api';
 import type { Agent, Ap2NegotiationPayload } from '@/lib/api';
 
 interface NegotiationResponse {
@@ -56,8 +56,41 @@ export default function TestA2APage() {
 
     startTransition(async () => {
       try {
+        // Step 0: Ensure wallets are funded
+        addLog('💰 Step 0: Checking and funding agent wallets...');
+        
+        try {
+          const requesterWallet = await walletsApi.getAgentWallet(requesterId);
+          const currentBalance = parseFloat(requesterWallet.balance || '0');
+          addLog(`   Requester wallet balance: $${currentBalance.toFixed(2)}`);
+          
+          if (currentBalance < budget + 5) {
+            const fundAmount = budget + 20; // Add extra buffer
+            addLog(`   Funding requester wallet with $${fundAmount}...`);
+            await walletsApi.fundWallet(requesterWallet.id, fundAmount, 'Test funding for A2A negotiation');
+            addLog(`   ✅ Requester wallet funded to $${fundAmount}`);
+          } else {
+            addLog(`   ✅ Requester wallet has sufficient funds`);
+          }
+          
+          const responderWallet = await walletsApi.getAgentWallet(responderId);
+          const responderBalance = parseFloat(responderWallet.balance || '0');
+          addLog(`   Responder wallet balance: $${responderBalance.toFixed(2)}`);
+          
+          if (responderBalance < 5) {
+            addLog(`   Funding responder wallet with $10...`);
+            await walletsApi.fundWallet(responderWallet.id, 10, 'Test funding for A2A negotiation');
+            addLog(`   ✅ Responder wallet funded to $10`);
+          } else {
+            addLog(`   ✅ Responder wallet has sufficient funds`);
+          }
+        } catch (walletError) {
+          addLog(`   ⚠️  Wallet check/funding failed: ${walletError instanceof Error ? walletError.message : 'Unknown error'}`);
+          addLog(`   Continuing anyway - negotiation may fail if funds are insufficient`);
+        }
+
         // Step 1: Initiate negotiation
-        addLog('🤝 Step 1: Initiating negotiation...');
+        addLog('\n🤝 Step 1: Initiating negotiation...');
         addLog(`   Requester: ${agents.find((a) => a.id === requesterId)?.name || requesterId}`);
         addLog(`   Responder: ${agents.find((a) => a.id === responderId)?.name || responderId}`);
         addLog(`   Service: ${service}`);
