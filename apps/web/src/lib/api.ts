@@ -249,8 +249,10 @@ export const ap2Api = {
       .json(),
   deliverService: (payload: {
     negotiationId: string;
-    outcome: string;
+    responderAgentId: string;
+    result?: Record<string, unknown>;
     evidence?: Record<string, unknown>;
+    notes?: string;
   }) =>
     api
       .post('ap2/deliver', {

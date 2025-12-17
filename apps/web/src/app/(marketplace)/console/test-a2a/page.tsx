@@ -149,12 +149,17 @@ export default function TestA2APage() {
 
         await ap2Api.deliverService({
           negotiationId: negotiation.id,
-          outcome:
-            'Top 3 AI Trends in 2024:\n1. Agent-to-Agent Commerce\n2. Autonomous Workflows\n3. Outcome-Based Payments',
+          responderAgentId: responderId,
+          result: {
+            outcome:
+              'Top 3 AI Trends in 2024:\n1. Agent-to-Agent Commerce\n2. Autonomous Workflows\n3. Outcome-Based Payments',
+            completed: true,
+          },
           evidence: {
             completed: true,
             result: 'Task completed successfully',
           },
+          notes: 'Service delivered successfully via automated test',
         });
 
         addLog(`✅ Service delivered!`);
