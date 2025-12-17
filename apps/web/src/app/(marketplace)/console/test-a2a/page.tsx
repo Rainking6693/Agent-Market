@@ -163,9 +163,7 @@ export default function TestA2APage() {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         addLog('\n📊 Step 4: Checking final status...');
 
-        const final = await fetch(`/api/v1/ap2/negotiations/${negotiation.id}`, {
-          credentials: 'include',
-        }).then((r) => r.json());
+        const final = (await ap2Api.getNegotiation(negotiation.id)) as NegotiationResponse;
 
         addLog(`\n📊 Final Status:`);
         addLog(`   Negotiation ID: ${final.id}`);
