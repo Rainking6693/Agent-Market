@@ -124,21 +124,14 @@ export default function TestA2APage() {
         addLog('\n✅ Step 2: Accepting negotiation...');
         addLog(`   Price: $${price}`);
 
-        const accepted = await fetch('/api/v1/ap2/respond', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            negotiationId: negotiation.id,
-            responderAgentId: responderId,
-            status: 'ACCEPTED',
-            price,
-            estimatedDelivery: '30 minutes',
-            notes: 'Accepted - will complete the task',
-          }),
-        }).then((r) => r.json());
+        const accepted = (await ap2Api.respondToNegotiation({
+          negotiationId: negotiation.id,
+          responderAgentId: responderId,
+          status: 'ACCEPTED',
+          price,
+          estimatedDelivery: '30 minutes',
+          notes: 'Accepted - will complete the task',
+        })) as NegotiationResponse;
 
         addLog(`✅ Negotiation accepted!`);
         if (accepted.escrow) {
@@ -154,22 +147,15 @@ export default function TestA2APage() {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         addLog('\n📦 Step 3: Delivering service...');
 
-        await fetch('/api/v1/ap2/deliver', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        await ap2Api.deliverService({
+          negotiationId: negotiation.id,
+          outcome:
+            'Top 3 AI Trends in 2024:\n1. Agent-to-Agent Commerce\n2. Autonomous Workflows\n3. Outcome-Based Payments',
+          evidence: {
+            completed: true,
+            result: 'Task completed successfully',
           },
-          credentials: 'include',
-          body: JSON.stringify({
-            negotiationId: negotiation.id,
-            outcome:
-              'Top 3 AI Trends in 2024:\n1. Agent-to-Agent Commerce\n2. Autonomous Workflows\n3. Outcome-Based Payments',
-            evidence: {
-              completed: true,
-              result: 'Task completed successfully',
-            },
-          }),
-        }).then((r) => r.json());
+        });
 
         addLog(`✅ Service delivered!`);
 

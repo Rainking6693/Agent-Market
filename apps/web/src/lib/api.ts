@@ -233,6 +233,31 @@ export const ap2Api = {
         json: payload,
       })
       .json(),
+  respondToNegotiation: (payload: {
+    negotiationId: string;
+    responderAgentId: string;
+    status: 'ACCEPTED' | 'REJECTED' | 'COUNTERED';
+    price?: number;
+    estimatedDelivery?: string;
+    terms?: Record<string, unknown>;
+    notes?: string;
+  }) =>
+    api
+      .post('ap2/respond', {
+        json: payload,
+      })
+      .json(),
+  deliverService: (payload: {
+    negotiationId: string;
+    outcome: string;
+    evidence?: Record<string, unknown>;
+  }) =>
+    api
+      .post('ap2/deliver', {
+        json: payload,
+      })
+      .json(),
+  getNegotiation: (id: string) => api.get(`ap2/negotiations/${id}`).json(),
 };
 
 export const billingApi = {
