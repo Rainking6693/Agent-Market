@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { AgentsBadgesService } from './agents-badges.service.js';
 import { AgentsController } from './agents.controller.js';
 import { AgentsService } from './agents.service.js';
 import { CollaborationController } from './collaboration/collaboration.controller.js';
@@ -10,7 +11,7 @@ import { X402Module } from '../x402/x402.module.js';
 @Module({
   imports: [PaymentsModule, X402Module],
   controllers: [AgentsController, CollaborationController],
-  providers: [AgentsService, CollaborationService],
-  exports: [AgentsService],
+  providers: [AgentsService, AgentsBadgesService, CollaborationService],
+  exports: [AgentsService, AgentsBadgesService],
 })
 export class AgentsModule {}
