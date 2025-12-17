@@ -20,6 +20,7 @@ import { TrustModule } from './trust/trust.module.js';
 import { WorkflowsModule } from './workflows/workflows.module.js';
 import { X402Module } from './x402/x402.module.js';
 import { TestingModule } from '../testing/testing.module.js';
+import { DemoModule } from './demo/demo.module.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -48,6 +49,7 @@ const rootEnvPath = join(__dirname, '..', '..', '..', '..', '.env');
     X402Module,
     TestingModule,
     NotificationsModule,
+    DemoModule,
   ],
 })
 export class AppModule {}
