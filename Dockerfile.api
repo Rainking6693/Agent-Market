@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=20.18.1
+ARG NODE_VERSION=20.19.0
 FROM node:${NODE_VERSION}-slim AS base
 
 LABEL fly_launch_runtime="NestJS/Prisma"
@@ -21,6 +21,7 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential node-gyp openssl pkg-config python-is-python3
 
 # Copy root package files for workspace setup
+COPY .npmrc ./
 COPY package.json package-lock.json ./
 COPY apps/api/package.json apps/api/
 COPY packages/config/package.json packages/config/
@@ -59,6 +60,7 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy package files
+COPY --from=build /app/.npmrc ./
 COPY --from=build /app/package.json /app/package-lock.json ./
 COPY --from=build /app/apps/api/package.json ./apps/api/
 COPY --from=build /app/packages/config/package.json ./packages/config/
