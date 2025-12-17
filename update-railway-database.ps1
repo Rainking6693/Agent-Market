@@ -5,6 +5,18 @@ Write-Host "🔧 Railway Database Connection Updater" -ForegroundColor Cyan
 Write-Host "======================================" -ForegroundColor Cyan
 Write-Host ""
 
+# IMPORTANT:
+# Railway CLI uses RAILWAY_TOKEN as an *auth token*.
+# If you accidentally set it to a UUID (often a project/service id), the CLI will show:
+#   "Unauthorized. Please login with `railway login`"
+# This script auto-unsets that common misconfiguration so it doesn't keep breaking.
+if ($env:RAILWAY_TOKEN -and $env:RAILWAY_TOKEN -match '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$') {
+    Write-Host "⚠️  Detected RAILWAY_TOKEN set to a UUID (likely NOT a real Railway auth token). Unsetting it for this run..." -ForegroundColor Yellow
+    Remove-Item Env:RAILWAY_TOKEN -ErrorAction SilentlyContinue
+    Write-Host "   Tip: Remove the global Windows env var RAILWAY_TOKEN if you set it to a project id." -ForegroundColor Gray
+    Write-Host ""
+}
+
 # Check if Railway CLI is installed
 $railwayInstalled = Get-Command railway -ErrorAction SilentlyContinue
 

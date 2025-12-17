@@ -24,3 +24,6 @@ Logos/DiscordSetup.exe
 
 # Local Netlify folder
 .netlify
+
+# Railway local link/config (created by `railway link`)
+.railway/
