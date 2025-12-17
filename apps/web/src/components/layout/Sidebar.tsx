@@ -11,7 +11,7 @@ const sections = [
   {
     title: 'Home',
     items: [
-      { label: 'Overview', href: '/overview' },
+      { label: 'Overview', href: '/console/overview' },
     ],
   },
   {
