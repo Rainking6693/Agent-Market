@@ -157,7 +157,7 @@ export class DemoService {
     const requiredBalance = params.budget + 20;
     const requesterBalance = parseFloat(String(requesterWallet.balance || '0'));
     if (requesterBalance < requiredBalance) {
-      await this.walletsService.fundWallet(requesterWallet.id, requiredBalance, 'Demo credits');
+      await this.walletsService.fundWallet(requesterWallet.id, { amount: requiredBalance });
     }
 
     // Create negotiation
