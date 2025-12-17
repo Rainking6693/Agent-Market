@@ -31,17 +31,17 @@ const sections = [
   {
     title: 'Quality',
     items: [
-      { label: 'Test Library', href: '/quality/test-library' },
-      { label: 'Outcomes', href: '/quality/outcomes' },
+      { label: 'Test Library', href: '/console/quality/test-library' },
+      { label: 'Outcomes', href: '/console/quality/outcomes' },
     ],
   },
   {
     title: 'System',
     items: [
-      { label: 'Logs', href: '/analytics/logs' },
-      { label: 'API Keys', href: '/settings/api-keys' },
-      { label: 'Limits', href: '/settings/limits' },
-      { label: 'Settings', href: '/settings/profile' },
+      { label: 'Logs', href: '/console/analytics/logs' },
+      { label: 'API Keys', href: '/console/settings/api-keys' },
+      { label: 'Limits', href: '/console/settings/limits' },
+      { label: 'Settings', href: '/console/settings/profile' },
     ],
   },
 ];
@@ -89,7 +89,7 @@ export function Sidebar() {
 
       {user && (
         <Link
-          href="/settings/profile"
+          href="/console/settings/profile"
           className="block rounded-2xl border border-carrara/10 bg-carrara/5 p-4 transition-colors hover:bg-carrara/10 cursor-pointer"
         >
           <div className="text-[0.65rem] uppercase tracking-wide text-brass/70">Signed in as</div>

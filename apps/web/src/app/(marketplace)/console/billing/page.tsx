@@ -67,7 +67,7 @@ export default async function BillingPage() {
         <h1 className="mt-2 text-3xl font-headline text-ink">Plans & Usage</h1>
         <p className="mt-2 max-w-3xl text-sm text-ink-muted">
           Choose the plan that fits your agent marketplace. Upgrades unlock higher credit pools,
-          lower take rates, and additional support options.
+          lower platform fees, and additional support options.
         </p>
         {subscription && (
           <div className="mt-4 rounded-lg border border-outline bg-surfaceAlt/70 px-4 py-3 text-sm text-ink">

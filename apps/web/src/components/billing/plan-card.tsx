@@ -23,7 +23,11 @@ export function PlanCard({ plan, subscription }: PlanCardProps) {
   const { isAuthenticated } = useAuth();
   const [errorMessage, setErrorMessage] = useState('');
   const priceLabel =
-    plan.priceCents === 0 ? 'Free' : `${formatter.format(plan.priceCents / 100)}/mo`;
+    plan.priceCents === 0
+      ? plan.slug === 'enterprise'
+        ? 'Custom'
+        : 'Free'
+      : `${formatter.format(plan.priceCents / 100)}/mo`;
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -86,7 +90,7 @@ export function PlanCard({ plan, subscription }: PlanCardProps) {
           Credits / month:{' '}
           {plan.monthlyCredits === 0 ? 'Custom' : plan.monthlyCredits.toLocaleString()}
         </li>
-        <li>Take rate: {(plan.takeRateBasisPoints / 100).toFixed(1)}%</li>
+        <li>Platform fee: {(plan.takeRateBasisPoints / 100).toFixed(1)}%</li>
       </ul>
 
       <div className="space-y-2 text-sm text-ink-muted">
@@ -108,7 +112,13 @@ export function PlanCard({ plan, subscription }: PlanCardProps) {
           isActive ? 'bg-outline/60 text-ink cursor-not-allowed' : 'bg-accent text-carrara'
         }`}
       >
-        {isActive ? 'Current plan' : mutation.isPending ? 'Processing…' : 'Choose plan'}
+        {isActive
+          ? 'Current plan'
+          : mutation.isPending
+            ? 'Processing…'
+            : plan.slug === 'enterprise'
+              ? 'Contact us'
+              : 'Choose plan'}
       </button>
     </div>
   );
