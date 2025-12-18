@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { CollaborationStatus, Prisma } from '@prisma/client';
 
 import { AgentsService } from '../agents/agents.service.js';
 import { AP2Service } from '../ap2/ap2.service.js';
@@ -20,6 +20,9 @@ export class DemoService {
     'Create a brief product description for a new SaaS tool',
     'Write a short email response to a customer inquiry',
   ];
+
+  private readonly isStrictDemoMode =
+    process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging';
 
   constructor(
     private readonly prisma: PrismaService,
@@ -97,17 +100,6 @@ export class DemoService {
         },
       });
 
-      // Create demo wallet for the org (with demo credits)
-      await tx.wallet.create({
-        data: {
-          ownerType: 'AGENT',
-          organizationId: org.id,
-          currency: 'USD',
-          balance: new Prisma.Decimal(1000), // Demo credits
-          status: 'ACTIVE',
-        },
-      });
-
       return { user, org };
     });
 
@@ -150,45 +142,35 @@ export class DemoService {
     // Validate demo request
     this.validateDemoRequest(params.requesterAgentId, params.responderAgentId, params.service);
 
-    // Ensure demo wallets exist for agents
-    const requesterWallet = await this.walletsService.ensureAgentWallet(params.requesterAgentId);
-    await this.walletsService.ensureAgentWallet(params.responderAgentId);
-
-    // Fund demo wallets if needed (demo credits only, not real money)
-    const requiredBalance = params.budget + 20;
-    const requesterBalance = parseFloat(String(requesterWallet.balance || '0'));
-    if (requesterBalance < requiredBalance) {
-      await this.walletsService.fundWallet(requesterWallet.id, { amount: requiredBalance });
-    }
-
-    // Create negotiation
-    const negotiation = await this.ap2Service.initiateNegotiation({
-      requesterAgentId: params.requesterAgentId,
-      responderAgentId: params.responderAgentId,
-      requestedService: params.service,
-      budget: params.budget,
-      requirements: {
-        quality: 'high',
-        deadline: '1 hour',
+    // Lightweight demo negotiation: avoid touching real wallets/billing tables
+    const negotiation = await this.prisma.agentCollaboration.create({
+      data: {
+        requesterAgentId: params.requesterAgentId,
+        responderAgentId: params.responderAgentId,
+        status: CollaborationStatus.ACCEPTED,
+        payload: {
+          requestedService: params.service,
+          budget: params.budget,
+          requirements: {
+            quality: 'high',
+            deadline: '1 hour',
+          },
+          notes: 'Demo negotiation',
+          initiatedByUserId: params.userId,
+        } as Prisma.InputJsonValue,
+        counterPayload: {
+          status: NegotiationResponseStatus.ACCEPTED,
+          price: params.price,
+          estimatedDelivery: '30 minutes',
+          notes: 'Accepted in demo',
+        } as Prisma.InputJsonValue,
       },
-      notes: 'Demo negotiation',
-      initiatedByUserId: params.userId,
-    });
-
-    // Accept negotiation
-    const accepted = await this.ap2Service.respondToNegotiation({
-      negotiationId: negotiation.id,
-      responderAgentId: params.responderAgentId,
-      status: NegotiationResponseStatus.ACCEPTED,
-      price: params.price,
-      estimatedDelivery: '30 minutes',
-      notes: 'Accepted in demo',
     });
 
     // Use negotiation ID as run ID for tracking/logs
     return {
-      runId: accepted.id,
-      negotiationId: accepted.id,
+      runId: negotiation.id,
+      negotiationId: negotiation.id,
     };
   }
 
@@ -239,7 +221,14 @@ export class DemoService {
    */
   async getDemoAgents(): Promise<Array<{ id: string; name: string; description: string }>> {
     if (this.DEMO_AGENT_IDS.length === 0) {
-      // Fallback: return first 2 approved agents if no demo agents configured
+      if (this.isStrictDemoMode) {
+        this.logger.warn(
+          'DEMO_AGENT_IDS is not configured; demo agents endpoint will return an empty list in strict demo mode.',
+        );
+        return [];
+      }
+
+      // Development fallback: return first 2 approved agents if no demo agents configured
       const agents = await this.prisma.agent.findMany({
         where: {
           status: 'APPROVED',

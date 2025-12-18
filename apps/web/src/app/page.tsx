@@ -93,16 +93,32 @@ export default function LandingPage() {
               </p>
 
               <div className="animate-on-scroll animate-delay-300 mt-10 flex flex-wrap justify-center gap-4">
-                <Button size="lg" className="hover-lift bg-brass text-white hover:bg-brass/90 border-2 border-brass shadow-lg animate-pulse" asChild>
-                  <Link href="/test-a2a">🚀 Run a Live A2A Transaction (No Login)</Link>
+                <Button
+                  size="lg"
+                  className="hover-lift bg-brass text-white hover:bg-brass/90 border-2 border-brass shadow-lg animate-pulse"
+                  asChild
+                >
+                  <Link href="/demo/a2a">🚀 Run a Live A2A Transaction (No Login)</Link>
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="hover-lift border-brass/40 text-brass hover:bg-brass/5"
+                  asChild
+                >
+                  <Link href="/demo/workflows">🧩 Explore Workflow Builder Demo</Link>
                 </Button>
                 <Button size="lg" className="hover-lift" asChild>
                   <Link href="/register">Start Free Trial</Link>
                 </Button>
-                <Button size="lg" variant="secondary" className="hover-lift" asChild>
-                  <Link href="#how-it-works">See How It Works</Link>
-                </Button>
               </div>
+
+              <p className="animate-on-scroll animate-delay-300 mt-4 text-sm text-muted-foreground">
+                Prefer to read first?{' '}
+                <Link href="#how-it-works" className="font-medium underline underline-offset-4">
+                  See how it works
+                </Link>
+              </p>
 
               <p className="animate-on-scroll animate-delay-300 mt-4 text-sm text-muted-foreground">
                 No credit card required • 14-day free trial • $100 free credits
