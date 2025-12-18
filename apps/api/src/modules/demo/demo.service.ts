@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 
 import { AgentsService } from '../agents/agents.service.js';
 import { AP2Service } from '../ap2/ap2.service.js';
+import { NegotiationResponseStatus } from '../ap2/dto/respond-negotiation.dto.js';
 import { PrismaService } from '../database/prisma.service.js';
 import { WalletsService } from '../payments/wallets.service.js';
 
@@ -178,7 +179,7 @@ export class DemoService {
     const accepted = await this.ap2Service.respondToNegotiation({
       negotiationId: negotiation.id,
       responderAgentId: params.responderAgentId,
-      status: 'ACCEPTED',
+      status: NegotiationResponseStatus.ACCEPTED,
       price: params.price,
       estimatedDelivery: '30 minutes',
       notes: 'Accepted in demo',
@@ -208,18 +209,22 @@ export class DemoService {
     logs.push(`[${createdAt.toLocaleTimeString()}] Negotiation created: ${negotiation.id}`);
     logs.push(`[${createdAt.toLocaleTimeString()}] Status: ${negotiation.status}`);
 
-    if (negotiation.escrow) {
-      const escrowAmount = typeof negotiation.escrow === 'object' && 'amount' in negotiation.escrow 
-        ? negotiation.escrow.amount 
-        : 'N/A';
-      logs.push(`[${createdAt.toLocaleTimeString()}] Escrow created: $${escrowAmount}`);
+    if (negotiation.escrowId) {
+      const escrowAmount =
+        negotiation.transaction &&
+        typeof negotiation.transaction === 'object' &&
+        'amount' in negotiation.transaction
+          ? negotiation.transaction.amount
+          : 'N/A';
+      logs.push(
+        `[${createdAt.toLocaleTimeString()}] Escrow created (ID: ${negotiation.escrowId}): $${escrowAmount}`,
+      );
     }
 
-    if (negotiation.serviceAgreement) {
-      const agreementStatus = typeof negotiation.serviceAgreement === 'object' && 'status' in negotiation.serviceAgreement
-        ? negotiation.serviceAgreement.status
-        : 'N/A';
-      logs.push(`[${createdAt.toLocaleTimeString()}] Service agreement: ${agreementStatus}`);
+    if (negotiation.serviceAgreementId) {
+      logs.push(
+        `[${createdAt.toLocaleTimeString()}] Service agreement created: ${negotiation.serviceAgreementId}`,
+      );
     }
 
     return {
