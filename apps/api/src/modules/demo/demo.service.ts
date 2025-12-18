@@ -221,14 +221,13 @@ export class DemoService {
    */
   async getDemoAgents(): Promise<Array<{ id: string; name: string; description: string }>> {
     if (this.DEMO_AGENT_IDS.length === 0) {
+      // Fallback: return first 2 approved agents if no demo agents configured
+      // Works in all environments; set DEMO_AGENT_IDS to tighten which agents appear.
       if (this.isStrictDemoMode) {
         this.logger.warn(
-          'DEMO_AGENT_IDS is not configured; demo agents endpoint will return an empty list in strict demo mode.',
+          'DEMO_AGENT_IDS is not configured; falling back to first 2 approved agents for demo.',
         );
-        return [];
       }
-
-      // Development fallback: return first 2 approved agents if no demo agents configured
       const agents = await this.prisma.agent.findMany({
         where: {
           status: 'APPROVED',
