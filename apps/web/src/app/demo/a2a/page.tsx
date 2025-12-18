@@ -46,7 +46,7 @@ export default function DemoA2APage() {
     );
 
     const fallback = await fetch(
-      `${API_BASE_URL}/agents?status=APPROVED&visibility=PUBLIC&limit=5`,
+      `${API_BASE_URL}/agents?status=APPROVED&visibility=PUBLIC&limit=8`,
     );
     if (!fallback.ok) {
       throw new Error(
@@ -83,15 +83,17 @@ export default function DemoA2APage() {
       addLog,
       setStatus,
       setRunId,
-      setLogs,
     } = params;
 
-    addLog('🚀 Starting demo A2A negotiation...');
+    // Step 1: Initialize demo run
+    addLog('🚦 Step 1: Initializing demo run...');
     addLog(`   Requester: ${agents.find((a) => a.id === requesterId)?.name || requesterId}`);
     addLog(`   Responder: ${agents.find((a) => a.id === responderId)?.name || responderId}`);
     addLog(`   Service: ${service}`);
     addLog(`   Budget: $${budget}`);
 
+    // Step 2: Create demo negotiation (session + synthetic A2A)
+    addLog('\n🤝 Step 2: Creating demo negotiation...');
     const response = await fetch(`${API_BASE_URL}/demo/a2a/run`, {
       method: 'POST',
       headers: {
@@ -122,9 +124,9 @@ export default function DemoA2APage() {
       setRunId(nextRunId);
     }
 
-    addLog(`✅ Demo run started: ${nextRunId}`);
+    addLog(`   ✅ Demo negotiation created: ${nextRunId}`);
     if (result.expiresAt) {
-      addLog(`   Expires at: ${new Date(result.expiresAt).toLocaleString()}`);
+      addLog(`   Session expires at: ${new Date(result.expiresAt).toLocaleString()}`);
     }
 
     // Update URL with runId for sharing
@@ -132,30 +134,39 @@ export default function DemoA2APage() {
     url.searchParams.set('runId', nextRunId);
     window.history.pushState({}, '', url.toString());
 
-    // Poll for logs
-    const interval = setInterval(async () => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/demo/a2a/run/${nextRunId}/logs`);
-        const data = await response.json();
+    // Step 3: Fetch final status and logs from API
+    addLog('\n📊 Step 3: Checking demo status...');
+    try {
+      const logsResponse = await fetch(`${API_BASE_URL}/demo/a2a/run/${nextRunId}/logs`);
+      if (logsResponse.ok) {
+        const data = await logsResponse.json();
+        const statusText = data.status || 'UNKNOWN';
 
-        setLogs(data.logs || []);
-        setStatus(data.status || 'Running');
-
-        if (data.status === 'COMPLETED' || data.status === 'FAILED') {
-          clearInterval(interval);
-          setStatus(
-            data.status === 'COMPLETED' ? '✅ Demo completed!' : '⚠️ Demo failed',
-          );
+        if (Array.isArray(data.logs) && data.logs.length > 0) {
+          addLog('\n🧾 Demo engine logs:');
+          for (const line of data.logs as string[]) {
+            addLog(`   ${line}`);
+          }
         }
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Failed to poll logs:', error);
-        clearInterval(interval);
-      }
-    }, 2000);
 
-    // Stop polling after 5 minutes
-    setTimeout(() => clearInterval(interval), 5 * 60 * 1000);
+        addLog('\n📌 Final status:');
+        addLog(`   ${statusText}`);
+
+        setStatus(
+          statusText === 'ACCEPTED' || statusText === 'COMPLETED'
+            ? '✅ Demo completed successfully!'
+            : `⚠️ Demo completed with status: ${statusText}`,
+        );
+      } else {
+        addLog('⚠️ Unable to fetch demo status from API.');
+        setStatus('✅ Demo completed (status fetch unavailable)');
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to fetch demo status:', error);
+      addLog('⚠️ Error fetching demo status');
+      setStatus('✅ Demo completed (status fetch error)');
+    }
   };
 
   const buildShareLink = (id: string) => `${window.location.origin}/demo/a2a?runId=${id}`;

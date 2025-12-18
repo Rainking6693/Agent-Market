@@ -232,7 +232,7 @@ export class DemoService {
         where: {
           status: 'APPROVED',
         },
-        take: 2,
+        take: 8,
         select: {
           id: true,
           name: true,
