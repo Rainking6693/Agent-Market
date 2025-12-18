@@ -32,6 +32,9 @@ interface TestWizardModalProps {
   suites: TestSuite[];
   individualTests?: { id: string; suiteSlug: string; suiteName: string; category: string }[];
   isLoading?: boolean;
+   initialSuiteId?: string | null;
+   initialTestId?: string | null;
+   defaultMode?: 'suite' | 'individual';
   onStartRun: (agentIds: string[], suiteIds: string[], testIds?: string[]) => Promise<StartTestRunResponse>;
 }
 
@@ -42,6 +45,9 @@ export function TestWizardModal({
   suites,
   individualTests,
   isLoading,
+   initialSuiteId,
+   initialTestId,
+   defaultMode,
   onStartRun,
 }: TestWizardModalProps) {
   const [step, setStep] = useState(1);
@@ -66,8 +72,22 @@ export function TestWizardModal({
       setIsRunning(false);
       setStartError(null);
       setActiveRunId(null);
+      return;
     }
-  }, [isOpen]);
+
+    // When opening, apply any initial selection hints from the caller
+    if (initialSuiteId) {
+      setMode('suite');
+      setSelectedSuites([initialSuiteId]);
+    }
+    if (initialTestId) {
+      setMode('individual');
+      setSelectedIndividualTests([initialTestId]);
+    }
+    if (defaultMode) {
+      setMode(defaultMode);
+    }
+  }, [isOpen, initialSuiteId, initialTestId, defaultMode]);
 
   if (!isOpen) return null;
 

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 import { A2ARunner, type A2AAgent } from '@/components/demo/a2a-runner';
+import { API_BASE_URL } from '@/lib/api';
 
 interface DemoRunParams {
   agents: A2AAgent[];
@@ -29,7 +30,7 @@ export default function DemoA2APage() {
   const runId = searchParams.get('runId');
 
   const fetchDemoAgents = async (): Promise<A2AAgent[]> => {
-    const res = await fetch('/api/v1/demo/a2a/agents');
+    const res = await fetch(`${API_BASE_URL}/demo/a2a/agents`);
     if (!res.ok) {
       throw new Error('Failed to load demo agents');
     }
@@ -39,7 +40,7 @@ export default function DemoA2APage() {
 
   const resumeDemoRun = async (id: string, helpers: DemoResumeHelpers) => {
     try {
-      const response = await fetch(`/api/v1/demo/a2a/run/${id}/logs`);
+      const response = await fetch(`${API_BASE_URL}/demo/a2a/run/${id}/logs`);
       const data = await response.json();
 
       helpers.setLogs(data.logs || []);
@@ -71,7 +72,7 @@ export default function DemoA2APage() {
     addLog(`   Service: ${service}`);
     addLog(`   Budget: $${budget}`);
 
-    const response = await fetch('/api/v1/demo/a2a/run', {
+    const response = await fetch(`${API_BASE_URL}/demo/a2a/run`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -114,7 +115,7 @@ export default function DemoA2APage() {
     // Poll for logs
     const interval = setInterval(async () => {
       try {
-        const response = await fetch(`/api/v1/demo/a2a/run/${nextRunId}/logs`);
+        const response = await fetch(`${API_BASE_URL}/demo/a2a/run/${nextRunId}/logs`);
         const data = await response.json();
 
         setLogs(data.logs || []);
@@ -176,4 +177,3 @@ export default function DemoA2APage() {
     </div>
   );
 }
-

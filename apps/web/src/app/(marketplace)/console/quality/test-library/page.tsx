@@ -213,20 +213,16 @@ export default function TestLibraryPage() {
         suites={suites}
         individualTests={individualTests}
         isLoading={isWizardLoading}
+        initialSuiteId={selectedSuite}
+        initialTestId={selectedIndividualTest?.id ?? null}
+        defaultMode={selectedIndividualTest ? 'individual' : 'suite'}
         onStartRun={async (agentIds, suiteIds, testIds) => {
-          if (selectedIndividualTest) {
-            return testingApi.startRun({
-              agentId: agentIds,
-              suiteId: [selectedIndividualTest.suiteSlug],
-              testIds: [selectedIndividualTest.id]
-            });
-          }
-
           if (testIds && testIds.length > 0) {
+            // Individual test mode: suiteIds are suite slugs
             return testingApi.startRun({
               agentId: agentIds,
               suiteId: suiteIds,
-              testIds: testIds
+              testIds,
             });
           }
 
