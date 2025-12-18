@@ -30,11 +30,31 @@ export default function DemoA2APage() {
   const runId = searchParams.get('runId');
 
   const fetchDemoAgents = async (): Promise<A2AAgent[]> => {
+    // Primary: demo-specific allowlisted endpoint
     const res = await fetch(`${API_BASE_URL}/demo/a2a/agents`);
-    if (!res.ok) {
-      throw new Error('Failed to load demo agents');
+    if (res.ok) {
+      return (await res.json()) as A2AAgent[];
     }
-    const data = (await res.json()) as A2AAgent[];
+
+    // Fallback: public agents endpoint, limited and filtered
+    // This keeps the demo usable even if the demo module is misconfigured.
+    // Backend will still enforce DEMO_AGENT_IDS on run, if configured.
+    // eslint-disable-next-line no-console
+    console.warn(
+      'Falling back to /agents for demo A2A because /demo/a2a/agents returned',
+      res.status,
+    );
+
+    const fallback = await fetch(
+      `${API_BASE_URL}/agents?status=APPROVED&visibility=PUBLIC&limit=5`,
+    );
+    if (!fallback.ok) {
+      throw new Error(
+        `Failed to load demo agents (demo endpoint ${res.status}, fallback ${fallback.status})`,
+      );
+    }
+
+    const data = (await fallback.json()) as A2AAgent[];
     return data;
   };
 
