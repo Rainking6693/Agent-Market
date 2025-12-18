@@ -6,6 +6,9 @@ import { useEffect, useState, useTransition } from 'react';
 
 import { Button } from '@/components/ui/button';
 
+// Force dynamic rendering - this page requires client-side data fetching
+export const dynamic = 'force-dynamic';
+
 interface DemoAgent {
   id: string;
   name: string;
