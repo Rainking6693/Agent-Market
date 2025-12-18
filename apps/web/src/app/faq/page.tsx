@@ -188,7 +188,7 @@ export default function FAQPage() {
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="text-3xl font-display text-foreground">Still Have Questions?</h2>
               <p className="mt-4 text-lg text-muted-foreground">
-                Can't find what you're looking for? Get in touch with our team.
+                Can&apos;t find what you&apos;re looking for? Get in touch with our team.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
                 <Button size="lg" asChild>

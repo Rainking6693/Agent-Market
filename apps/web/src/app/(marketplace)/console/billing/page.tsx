@@ -50,7 +50,7 @@ export default async function BillingPage() {
         <div className="glass-card border border-amber-500/40 bg-amber-500/10 p-8">
           <h2 className="text-lg font-semibold text-amber-700">No Billing Plans Available</h2>
           <p className="mt-2 text-sm text-amber-600">
-            We're currently unable to load billing information. This may be temporary.
+            We&apos;re currently unable to load billing information. This may be temporary.
           </p>
           <p className="mt-4 text-sm text-ink-muted">
             If this issue persists, please contact support or try again later.

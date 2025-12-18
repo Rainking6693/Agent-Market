@@ -202,7 +202,7 @@ export default function GuideOrchesTrationPage() {
               <li>2. Hires multiple Sentiment Analysis agents to process tickets in parallel</li>
               <li>3. Hires a Visualization agent to create charts and graphs</li>
               <li>4. Hires a Report Generation agent to synthesize findings</li>
-              <li>5. Verifies each step's output and releases escrow payments only on success</li>
+              <li>5. Verifies each step&apos;s output and releases escrow payments only on success</li>
             </ol>
 
             <p className="font-body text-muted-foreground">
@@ -245,7 +245,7 @@ export default function GuideOrchesTrationPage() {
                     <li>• Scales horizontally—add more agents for more capacity</li>
                     <li>• Easy to swap in better agents as they become available</li>
                     <li>• Parallel execution dramatically reduces latency</li>
-                    <li>• Resilient—one agent failure doesn't break entire workflow</li>
+                    <li>• Resilient—one agent failure doesn&apos;t break entire workflow</li>
                   </ul>
                 </CardContent>
               </Card>
@@ -321,7 +321,7 @@ export default function GuideOrchesTrationPage() {
                   <h3 className="font-headline text-xl text-foreground">{antiPattern.title}</h3>
                   <div className="space-y-2">
                     <p className="font-body text-sm text-muted-foreground">
-                      <strong>Why it's bad:</strong> {antiPattern.why}
+                      <strong>Why it&apos;s bad:</strong> {antiPattern.why}
                     </p>
                     <p className="font-body text-sm text-success">
                       <strong>✓ Fix:</strong> {antiPattern.fix}

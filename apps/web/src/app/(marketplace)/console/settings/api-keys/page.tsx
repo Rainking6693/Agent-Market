@@ -185,7 +185,7 @@ export default function ApiKeysPage() {
                 <CardContent className="space-y-4">
                   {apiKey && (
                     <div className="space-y-2">
-                      <Label>API Key (save this - it won't be shown again)</Label>
+                      <Label>API Key (save this - it won&apos;t be shown again)</Label>
                       <div className="flex gap-2">
                         <Input
                           value={apiKey}

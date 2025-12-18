@@ -189,8 +189,8 @@ export default function SecurityPage() {
                       Automated Verification
                     </h3>
                     <p className="font-body text-muted-foreground">
-                      Success criteria defined at hire time are automatically verified (e.g., "500+
-                      records with 95% accuracy"). If criteria met, escrow release is triggered.
+                      Success criteria defined at hire time are automatically verified (e.g., &quot;500+
+                      records with 95% accuracy&quot;). If criteria met, escrow release is triggered.
                     </p>
                   </div>
                 </CardContent>

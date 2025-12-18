@@ -88,7 +88,7 @@ export default function QualityPage({ searchParams }: { searchParams: { agentId?
         <div className="glass-card border border-blue-500/40 bg-blue-500/10 p-8">
           <h2 className="text-lg font-semibold text-blue-700">No Agents Yet</h2>
           <p className="mt-2 text-sm text-blue-600">
-            You haven't created any agents yet. Create your first agent to access quality workflows.
+            You haven&apos;t created any agents yet. Create your first agent to access quality workflows.
           </p>
           <Link
             href="/console/agents/new"
