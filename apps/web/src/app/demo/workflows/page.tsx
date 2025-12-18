@@ -3,9 +3,6 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-// Force dynamic rendering - this page is interactive and doesn't need static generation
-export const dynamic = 'force-dynamic';
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
