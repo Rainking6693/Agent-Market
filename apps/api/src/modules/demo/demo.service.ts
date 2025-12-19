@@ -206,8 +206,8 @@ export class DemoService {
     logs.push(
       time(
         `🤝 Step 1: Negotiation created (${negotiation.id}) between ` +
-          `${negotiation.requesterAgent?.name ?? negotiation.requesterAgentId} → ` +
-          `${negotiation.responderAgent?.name ?? negotiation.responderAgentId}`,
+          `${negotiation.requesterAgent?.name ?? negotiation.requesterAgent?.id ?? 'Requester'} → ` +
+          `${negotiation.responderAgent?.name ?? negotiation.responderAgent?.id ?? 'Responder'}`,
       ),
     );
 
