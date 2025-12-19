@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 import { A2ARunner, type A2AAgent } from '@/components/demo/a2a-runner';
 import { API_BASE_URL } from '@/lib/api';
@@ -25,14 +26,411 @@ interface DemoResumeHelpers {
   addLog: (message: string) => void;
 }
 
+interface DemoNegotiationAgent {
+  id?: string | null;
+  name?: string | null;
+}
+
+interface DemoNegotiationTransaction {
+  id?: string;
+  status?: string | null;
+  amount?: number | null;
+  settledAt?: string | null;
+}
+
+interface DemoNegotiation {
+  id: string;
+  status?: string | null;
+  requesterAgent?: DemoNegotiationAgent | null;
+  responderAgent?: DemoNegotiationAgent | null;
+  requestedService?: string | null;
+  proposedBudget?: number | null;
+  counter?: {
+    price?: number | null;
+    estimatedDelivery?: string | null;
+  } | null;
+  serviceAgreementId?: string | null;
+  escrowId?: string | null;
+  transaction?: DemoNegotiationTransaction | null;
+  verificationStatus?: string | null;
+  verificationUpdatedAt?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+}
+
+type DetailView = 'investor' | 'developer';
+
+interface TransactionStoryboardProps {
+  negotiation: DemoNegotiation | null;
+  detailView: DetailView;
+  onDetailViewChange: (view: DetailView) => void;
+}
+
+interface TimelineStep {
+  key: string;
+  title: string;
+  description: string;
+  timestamp?: string;
+  state: 'done' | 'upcoming' | 'pending';
+}
+
+function formatTime(value?: string | null): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return undefined;
+  }
+  return date.toLocaleTimeString();
+}
+
+function buildTimelineSteps(negotiation: DemoNegotiation | null): TimelineStep[] {
+  if (!negotiation) {
+    return [
+      {
+        key: 'created',
+        title: 'Negotiation created',
+        description: 'Run a live demo to see funds move through negotiation, escrow, and payout.',
+        state: 'pending',
+      },
+    ];
+  }
+
+  const requesterName =
+    negotiation.requesterAgent?.name ?? negotiation.requesterAgent?.id ?? 'Requester agent';
+  const responderName =
+    negotiation.responderAgent?.name ?? negotiation.responderAgent?.id ?? 'Responder agent';
+  const createdAt = formatTime(negotiation.createdAt ?? negotiation.updatedAt ?? null);
+  const updatedAt = formatTime(negotiation.updatedAt ?? negotiation.createdAt ?? null);
+  const verificationAt = formatTime(negotiation.verificationUpdatedAt ?? negotiation.updatedAt ?? null);
+  const settledAt = formatTime(negotiation.transaction?.settledAt ?? null);
+
+  const accepted =
+    negotiation.status === 'ACCEPTED' ||
+    negotiation.status === 'COMPLETED' ||
+    negotiation.status === 'DELIVERED';
+  const escrowFunded = Boolean(negotiation.escrowId);
+  const workDelivered = Boolean(negotiation.verificationStatus);
+  const verificationPassed = negotiation.verificationStatus === 'VERIFIED';
+  const paymentReleased = negotiation.transaction?.status === 'SETTLED';
+
+  const steps: TimelineStep[] = [
+    {
+      key: 'created',
+      title: 'Negotiation created',
+      description: `${requesterName} opened a negotiation with ${responderName} for this service request.`,
+      timestamp: createdAt,
+      state: 'done',
+    },
+    {
+      key: 'accepted',
+      title: 'Responder accepted',
+      description: accepted
+        ? `${responderName} accepted the work at the agreed price.`
+        : `${responderName} is reviewing the request and price.`,
+      timestamp: updatedAt,
+      state: accepted ? 'done' : 'upcoming',
+    },
+    {
+      key: 'escrow',
+      title: 'Escrow funded',
+      description: escrowFunded
+        ? 'Funds were locked in escrow so both sides are protected.'
+        : 'Once accepted, funds will move into escrow before work begins.',
+      timestamp: updatedAt,
+      state: escrowFunded ? 'done' : accepted ? 'upcoming' : 'pending',
+    },
+    {
+      key: 'delivered',
+      title: 'Work delivered',
+      description: workDelivered
+        ? `${responderName} delivered the agreed result back into the system.`
+        : `${responderName} will deliver the result back into the system when work is complete.`,
+      timestamp: verificationAt,
+      state: workDelivered ? 'done' : escrowFunded ? 'upcoming' : 'pending',
+    },
+    {
+      key: 'verified',
+      title: 'Verification passed',
+      description: verificationPassed
+        ? 'The outcome passed verification checks and is marked as successful.'
+        : workDelivered
+          ? 'The result is under verification to confirm quality before payout.'
+          : 'Verification runs after the work has been delivered.',
+      timestamp: verificationAt,
+      state: verificationPassed ? 'done' : workDelivered ? 'upcoming' : 'pending',
+    },
+    {
+      key: 'paid',
+      title: 'Payment released',
+      description: paymentReleased
+        ? 'Escrow was released and the responder received payment.'
+        : 'Once verification passes, escrow releases and the responder is paid.',
+      timestamp: settledAt,
+      state: paymentReleased ? 'done' : verificationPassed ? 'upcoming' : 'pending',
+    },
+  ];
+
+  return steps;
+}
+
+function TransactionStoryboard({
+  negotiation,
+  detailView,
+  onDetailViewChange,
+}: TransactionStoryboardProps) {
+  const steps = buildTimelineSteps(negotiation);
+
+  const requesterName =
+    negotiation?.requesterAgent?.name ?? negotiation?.requesterAgent?.id ?? 'Requester agent';
+  const responderName =
+    negotiation?.responderAgent?.name ?? negotiation?.responderAgent?.id ?? 'Responder agent';
+  const service = negotiation?.requestedService ?? 'this service request';
+  const price =
+    negotiation?.counter?.price ??
+    negotiation?.transaction?.amount ??
+    negotiation?.proposedBudget ??
+    null;
+  const escrowAmount = negotiation?.transaction?.amount ?? negotiation?.proposedBudget ?? null;
+  const status = negotiation?.status ?? 'PENDING';
+  const payoutStatus = negotiation?.transaction?.status ?? 'INITIATED';
+  const verificationStatus = negotiation?.verificationStatus ?? 'PENDING';
+
+  const summarySentence =
+    negotiation == null
+      ? 'Run the live demo to see a complete, line-item view of how funds move between agents.'
+      : `${requesterName} hired ${responderName} to ${service.toLowerCase()} for ${
+          price != null ? `$${price}` : 'an agreed budget'
+        }.`;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-baseline justify-between">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900">Transaction Storyboard</h2>
+          <p className="text-xs text-gray-500">
+            Outcomes-first view of a full A2A negotiation, escrow, and payout.
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        {steps.map((step) => (
+          <div
+            key={step.key}
+            className="flex gap-3 rounded-2xl border border-gray-200 bg-white/80 px-3 py-3 shadow-sm"
+          >
+            <div className="mt-1 flex flex-col items-center">
+              <span
+                className={`h-2.5 w-2.5 rounded-full ${
+                  step.state === 'done'
+                    ? 'bg-emerald-500'
+                    : step.state === 'upcoming'
+                      ? 'bg-amber-400'
+                      : 'bg-gray-300'
+                }`}
+              />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-sm font-semibold text-gray-900">{step.title}</span>
+                {step.timestamp && (
+                  <span className="text-xs text-gray-500 whitespace-nowrap">{step.timestamp}</span>
+                )}
+              </div>
+              <p className="mt-1 text-xs text-gray-600">{step.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-2xl border border-gray-200 bg-white/80 shadow-sm">
+        <div className="flex items-center justify-between border-b border-gray-100 px  -4 py-2">
+          <span className="text-sm font-semibold text-gray-900">Run details</span>
+          <div className="inline-flex rounded-full bg-gray-100 p-0.5 text-xs">
+            <button
+              type="button"
+              onClick={() => onDetailViewChange('investor')}
+              className={`rounded-full px-3 py-1 ${
+                detailView === 'investor'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Investor view
+            </button>
+            <button
+              type="button"
+              onClick={() => onDetailViewChange('developer')}
+              className={`rounded-full px-3 py-1 ${
+                detailView === 'developer'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Developer view
+            </button>
+          </div>
+        </div>
+
+        {detailView === 'investor' ? (
+          <div className="space-y-3 px-4 py-3 text-sm text-gray-800">
+            <p>{summarySentence}</p>
+            {negotiation && (
+              <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 p-3 text-xs text-emerald-900">
+                <p className="mb-1 font-semibold">Outcome preview</p>
+                <p>
+                  This run shows a fully funded, escrow-backed transaction from negotiation to
+                  payout. The storyboard on the left mirrors how investor capital moves between
+                  agents in production.
+                </p>
+              </div>
+            )}
+            {negotiation && (
+              <ul className="grid gap-2 text-xs text-gray-700 sm:grid-cols-2">
+                <li>
+                  <span className="font-semibold">Negotiation status:</span> {status}
+                </li>
+                <li>
+                  <span className="font-semibold">Agreed price:</span>{' '}
+                  {price != null ? `$${price}` : 'N/A'}
+                </li>
+                <li>
+                  <span className="font-semibold">Verification:</span> {verificationStatus}
+                </li>
+                <li>
+                  <span className="font-semibold">Payout status:</span> {payoutStatus}
+                </li>
+              </ul>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-3 px-4 py-3 text-xs text-gray-800">
+            {negotiation ? (
+              <>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <div>
+                    <div className="font-semibold text-gray-900">IDs & ledger</div>
+                    <dl className="mt-1 space-y-1 font-mono">
+                      <div>
+                        <span className="text-gray-500">negotiationId:</span>{' '}
+                        <span>{negotiation.id}</span>
+                      </div>
+                      {negotiation.escrowId && (
+                        <div>
+                          <span className="text-gray-500">escrowId:</span>{' '}
+                          <span>{negotiation.escrowId}</span>
+                        </div>
+                      )}
+                      {negotiation.transaction?.id && (
+                        <div>
+                          <span className="text-gray-500">transactionId:</span>{' '}
+                          <span>{negotiation.transaction.id}</span>
+                        </div>
+                      )}
+                    </dl>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-gray-900">Status</div>
+                    <dl className="mt-1 space-y-1 font-mono">
+                      <div>
+                        <span className="text-gray-500">negotiationStatus:</span>{' '}
+                        <span>{status}</span>
+                      </div>
+                      {negotiation.transaction && (
+                        <div>
+                          <span className="text-gray-500">payoutStatus:</span>{' '}
+                          <span>{negotiation.transaction.status}</span>
+                        </div>
+                      )}
+                      {negotiation.verificationStatus && (
+                        <div>
+                          <span className="text-gray-500">verificationStatus:</span>{' '}
+                          <span>{negotiation.verificationStatus}</span>
+                        </div>
+                      )}
+                    </dl>
+                  </div>
+                </div>
+
+                <div className="rounded-lg border border-gray-200 bg-gray-50 p-3">
+                  <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                    Raw negotiation payload
+                  </div>
+                  <pre className="max-h-64 overflow-y-auto text-[11px] leading-tight">
+                    {JSON.stringify(negotiation, null, 2)}
+                  </pre>
+                </div>
+              </>
+            ) : (
+              <p className="text-xs text-gray-600">
+                Once you run the demo, you&apos;ll see the raw negotiation object, escrow and payout
+                fields, and verification status here.
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {negotiation && (
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-4 text-xs text-emerald-900">
+          <div className="mb-2 font-semibold">Receipt</div>
+          <dl className="space-y-1 font-mono">
+            <div className="flex justify-between gap-2">
+              <span className="text-emerald-700">negotiationId</span>
+              <span className="text-right">{negotiation.id}</span>
+            </div>
+            {negotiation.escrowId && (
+              <div className="flex justify-between gap-2">
+                <span className="text-emerald-700">escrowId</span>
+                <span className="text-right">{negotiation.escrowId}</span>
+              </div>
+            )}
+            {escrowAmount != null && (
+              <div className="flex justify-between gap-2">
+                <span className="text-emerald-700">escrowAmount</span>
+                <span className="text-right">${escrowAmount}</span>
+              </div>
+            )}
+            {price != null && (
+              <div className="flex justify-between gap-2">
+                <span className="text-emerald-700">acceptedPrice</span>
+                <span className="text-right">${price}</span>
+              </div>
+            )}
+            {negotiation.transaction?.status && (
+              <div className="flex justify-between gap-2">
+                <span className="text-emerald-700">payoutResult</span>
+                <span className="text-right">{negotiation.transaction.status}</span>
+              </div>
+            )}
+            {negotiation.verificationStatus && (
+              <div className="flex justify-between gap-2">
+                <span className="text-emerald-700">verificationSummary</span>
+                <span className="text-right">{negotiation.verificationStatus}</span>
+              </div>
+            )}
+          </dl>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function DemoA2APage() {
   const searchParams = useSearchParams();
   const runId = searchParams.get('runId');
+
+  const [negotiation, setNegotiation] = useState<DemoNegotiation | null>(null);
+  const [detailView, setDetailView] = useState<DetailView>('investor');
+  const [usingFallbackAgents, setUsingFallbackAgents] = useState(false);
 
   const fetchDemoAgents = async (): Promise<A2AAgent[]> => {
     // Primary: demo-specific allowlisted endpoint
     const res = await fetch(`${API_BASE_URL}/demo/a2a/agents`);
     if (res.ok) {
+      setUsingFallbackAgents(false);
       return (await res.json()) as A2AAgent[];
     }
 
@@ -55,6 +453,7 @@ export default function DemoA2APage() {
     }
 
     const data = (await fallback.json()) as A2AAgent[];
+    setUsingFallbackAgents(true);
     return data;
   };
 
@@ -65,10 +464,14 @@ export default function DemoA2APage() {
 
       helpers.setLogs(data.logs || []);
       helpers.setStatus(data.status || 'Unknown');
+      if (data.negotiation) {
+        setNegotiation(data.negotiation as DemoNegotiation);
+      }
+      setDetailView('investor');
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to load run logs:', error);
-      helpers.addLog('⚠️ Failed to load run logs');
+      helpers.addLog('?? Failed to load run logs');
     }
   };
 
@@ -85,15 +488,18 @@ export default function DemoA2APage() {
       setRunId,
     } = params;
 
+    setNegotiation(null);
+    setDetailView('investor');
+
     // Step 1: Initialize demo run
-    addLog('🚦 Step 1: Initializing demo run...');
+    addLog('?? Step 1: Initializing demo run...');
     addLog(`   Requester: ${agents.find((a) => a.id === requesterId)?.name || requesterId}`);
     addLog(`   Responder: ${agents.find((a) => a.id === responderId)?.name || responderId}`);
     addLog(`   Service: ${service}`);
     addLog(`   Budget: $${budget}`);
 
     // Step 2: Create demo negotiation (session + synthetic A2A)
-    addLog('\n🤝 Step 2: Creating demo negotiation...');
+    addLog('\n?? Step 2: Creating demo negotiation...');
     const response = await fetch(`${API_BASE_URL}/demo/a2a/run`, {
       method: 'POST',
       headers: {
@@ -124,7 +530,7 @@ export default function DemoA2APage() {
       setRunId(nextRunId);
     }
 
-    addLog(`   ✅ Demo negotiation created: ${nextRunId}`);
+    addLog(`   ? Demo negotiation created: ${nextRunId}`);
     if (result.expiresAt) {
       addLog(`   Session expires at: ${new Date(result.expiresAt).toLocaleString()}`);
     }
@@ -135,7 +541,7 @@ export default function DemoA2APage() {
     window.history.pushState({}, '', url.toString());
 
     // Step 3: Fetch final status and logs from API
-    addLog('\n📊 Step 3: Checking demo status...');
+    addLog('\n?? Step 3: Checking demo status...');
     try {
       const logsResponse = await fetch(`${API_BASE_URL}/demo/a2a/run/${nextRunId}/logs`);
       if (logsResponse.ok) {
@@ -143,29 +549,35 @@ export default function DemoA2APage() {
         const statusText = data.status || 'UNKNOWN';
 
         if (Array.isArray(data.logs) && data.logs.length > 0) {
-          addLog('\n🧾 Demo engine logs:');
+          addLog('\n?? Demo engine logs:');
           for (const line of data.logs as string[]) {
             addLog(`   ${line}`);
           }
         }
 
-        addLog('\n📌 Final status:');
+        if (data.negotiation) {
+          setNegotiation(data.negotiation as DemoNegotiation);
+        }
+
+        addLog('\n?? Final status:');
         addLog(`   ${statusText}`);
 
         setStatus(
-          statusText === 'ACCEPTED' || statusText === 'COMPLETED'
-            ? '✅ Demo completed successfully!'
-            : `⚠️ Demo completed with status: ${statusText}`,
+          statusText === 'ACCEPTED' ||
+            statusText === 'COMPLETED' ||
+            statusText === 'VERIFIED'
+            ? '? Demo completed successfully!'
+            : `?? Demo completed with status: ${statusText}`,
         );
       } else {
-        addLog('⚠️ Unable to fetch demo status from API.');
-        setStatus('✅ Demo completed (status fetch unavailable)');
+        addLog('?? Unable to fetch demo status from API.');
+        setStatus('? Demo completed (status fetch unavailable)');
       }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to fetch demo status:', error);
-      addLog('⚠️ Error fetching demo status');
-      setStatus('✅ Demo completed (status fetch error)');
+      addLog('?? Error fetching demo status');
+      setStatus('? Demo completed (status fetch error)');
     }
   };
 
@@ -173,32 +585,47 @@ export default function DemoA2APage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
-      <div className="mx-auto max-w-4xl space-y-8 px-4 py-12">
+      <div className="mx-auto max-w-6xl space-y-8 px-4 py-12">
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold text-gray-900">
             Live Agent-to-Agent Demo
           </h1>
           <p className="text-lg text-gray-600">
-            Watch two agents negotiate and execute a service request in real time — no
-            signup required.
+            Watch two agents negotiate, fund escrow, and release payment in real time - no signup
+            required.
           </p>
         </div>
 
-        <div className="rounded-3xl border border-brass/20 bg-white/80 p-6 shadow-lg backdrop-blur-sm">
-          <A2ARunner
-            mode="demo"
-            initialRunId={runId}
-            fetchAgents={fetchDemoAgents}
-            onRun={runDemo}
-            onResumeRun={resumeDemoRun}
-            enableShareLink
-            buildShareLink={buildShareLink}
+        {usingFallbackAgents && (
+          <div className="mx-auto max-w-3xl rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+            Using demo agents from the public catalog.{' '}
+            <span className="font-semibold">Sign up</span> to access the full agent directory.
+          </div>
+        )}
+
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+          <div className="rounded-3xl border border-brass/20 bg-white/80 p-6 shadow-lg backdrop-blur-sm">
+            <A2ARunner
+              mode="demo"
+              initialRunId={runId}
+              fetchAgents={fetchDemoAgents}
+              onRun={runDemo}
+              onResumeRun={resumeDemoRun}
+              enableShareLink
+              buildShareLink={buildShareLink}
+            />
+          </div>
+
+          <TransactionStoryboard
+            negotiation={negotiation}
+            detailView={detailView}
+            onDetailViewChange={setDetailView}
           />
         </div>
 
         <div className="text-center space-y-2">
           <Link href="/" className="text-sm text-gray-600 hover:text-gray-900 underline">
-            ← Back to Home
+            Back to Home
           </Link>
           <p className="text-xs text-gray-500">
             Demo sessions expire after 1 hour. No signup required.

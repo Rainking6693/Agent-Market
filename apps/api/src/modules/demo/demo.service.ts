@@ -179,6 +179,26 @@ export class DemoService {
       notes: 'Accepted in demo',
     });
 
+    // Deliver service to drive verification and payout for the storyboard
+    try {
+      await this.ap2Service.deliverService({
+        negotiationId: accepted.id,
+        responderAgentId: params.responderAgentId,
+        result: {
+          status: 'success',
+          summary: params.service,
+        },
+        evidence: {
+          autoApprove: true,
+          demo: true,
+        },
+        notes: 'Demo service delivered automatically for public A2A demo',
+        deliveredByUserId: params.userId,
+      });
+    } catch (error) {
+      this.logger.warn(`Demo deliverService failed for negotiation ${accepted.id}`, error as Error);
+    }
+
     // Use negotiation ID as run ID for tracking/logs
     return {
       runId: accepted.id,
