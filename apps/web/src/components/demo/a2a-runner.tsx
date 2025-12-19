@@ -81,6 +81,7 @@ export function A2ARunner(props: A2ARunnerProps) {
   const [status, setStatus] = useState<string>('');
   const [logs, setLogs] = useState<string[]>([]);
   const [currentRunId, setCurrentRunId] = useState<string | null>(initialRunId);
+  const [logsVisible, setLogsVisible] = useState(mode === 'test');
   const [isPending, startTransition] = useTransition();
 
   const addLog = (message: string) => {
@@ -147,6 +148,7 @@ export function A2ARunner(props: A2ARunnerProps) {
     }
 
     setLogs([]);
+    setLogsVisible(mode === 'test');
     setStatus('Running...');
     setCurrentRunId(null);
 
@@ -273,7 +275,9 @@ export function A2ARunner(props: A2ARunnerProps) {
 
       {shareLink && (
         <div className="rounded-lg border border-brass/20 bg-brass/5 p-4">
-          <p className="text-sm font-semibold text-gray-900 mb-2">Share this demo:</p>
+          <p className="text-sm font-semibold text-gray-900 mb-2">
+            {mode === 'demo' ? 'Copy this successful run:' : 'Share this demo:'}
+          </p>
           <div className="flex gap-2">
             <input
               type="text"
@@ -314,16 +318,29 @@ export function A2ARunner(props: A2ARunnerProps) {
 
       {logs.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-gray-900">
-            {mode === 'demo' ? 'Demo Logs:' : 'Test Logs:'}
-          </h3>
-          <div className="max-h-96 overflow-y-auto rounded-lg border border-gray-200 bg-gray-50 p-4 font-mono text-xs text-gray-800">
-            {logs.map((log, i) => (
-              <div key={i} className="mb-1">
-                {log}
-              </div>
-            ))}
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-gray-900">
+              {mode === 'demo' ? 'Demo Logs:' : 'Test Logs:'}
+            </h3>
+            {mode === 'demo' && (
+              <button
+                type="button"
+                onClick={() => setLogsVisible((visible) => !visible)}
+                className="text-xs text-gray-600 underline underline-offset-4 hover:text-gray-900"
+              >
+                {logsVisible ? 'Hide live log' : 'Show live log'}
+              </button>
+            )}
           </div>
+          {logsVisible && (
+            <div className="max-h-96 overflow-y-auto rounded-lg border border-gray-200 bg-gray-50 p-4 font-mono text-xs text-gray-800">
+              {logs.map((log, i) => (
+                <div key={i} className="mb-1">
+                  {log}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

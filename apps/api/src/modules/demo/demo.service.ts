@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CollaborationStatus, Prisma } from '@prisma/client';
 
 import { AgentsService } from '../agents/agents.service.js';
 import { AP2Service } from '../ap2/ap2.service.js';
@@ -142,35 +141,48 @@ export class DemoService {
     // Validate demo request
     this.validateDemoRequest(params.requesterAgentId, params.responderAgentId, params.service);
 
-    // Lightweight demo negotiation: avoid touching real wallets/billing tables
-    const negotiation = await this.prisma.agentCollaboration.create({
-      data: {
-        requesterAgentId: params.requesterAgentId,
-        responderAgentId: params.responderAgentId,
-        status: CollaborationStatus.ACCEPTED,
-        payload: {
-          requestedService: params.service,
-          budget: params.budget,
-          requirements: {
-            quality: 'high',
-            deadline: '1 hour',
-          },
-          notes: 'Demo negotiation',
-          initiatedByUserId: params.userId,
-        } as Prisma.InputJsonValue,
-        counterPayload: {
-          status: NegotiationResponseStatus.ACCEPTED,
-          price: params.price,
-          estimatedDelivery: '30 minutes',
-          notes: 'Accepted in demo',
-        } as Prisma.InputJsonValue,
+    // Ensure demo wallets exist for agents (real wallets, demo credits)
+    const requesterWallet = await this.walletsService.ensureAgentWallet(params.requesterAgentId);
+    await this.walletsService.ensureAgentWallet(params.responderAgentId);
+
+    // Fund demo wallets if needed (demo credits only, not real money)
+    const requiredBalance = params.budget + 20;
+    const requesterBalance = parseFloat(String(requesterWallet.balance || '0'));
+    if (requesterBalance < requiredBalance) {
+      await this.walletsService.fundWallet(requesterWallet.id, {
+        amount: requiredBalance,
+        reference: 'demo-a2a-credit',
+      });
+    }
+
+    // Create negotiation via AP2 pipeline
+    const negotiation = await this.ap2Service.initiateNegotiation({
+      requesterAgentId: params.requesterAgentId,
+      responderAgentId: params.responderAgentId,
+      requestedService: params.service,
+      budget: params.budget,
+      requirements: {
+        quality: 'high',
+        deadline: '1 hour',
       },
+      notes: 'Demo negotiation',
+      initiatedByUserId: params.userId,
+    });
+
+    // Accept negotiation (this will initiate escrow and service agreement)
+    const accepted = await this.ap2Service.respondToNegotiation({
+      negotiationId: negotiation.id,
+      responderAgentId: params.responderAgentId,
+      status: NegotiationResponseStatus.ACCEPTED,
+      price: params.price,
+      estimatedDelivery: '30 minutes',
+      notes: 'Accepted in demo',
     });
 
     // Use negotiation ID as run ID for tracking/logs
     return {
-      runId: negotiation.id,
-      negotiationId: negotiation.id,
+      runId: accepted.id,
+      negotiationId: accepted.id,
     };
   }
 
@@ -182,14 +194,26 @@ export class DemoService {
     logs: string[];
     negotiation?: unknown;
   }> {
-    // Fetch negotiation by ID
+    // Fetch negotiation by ID (includes escrow + verification data)
     const negotiation = await this.ap2Service.getNegotiation(runId);
 
-    // Build logs from negotiation state
+    // Build a storyboard-style log from negotiation state
     const logs: string[] = [];
     const createdAt = negotiation.createdAt ? new Date(negotiation.createdAt) : new Date();
-    logs.push(`[${createdAt.toLocaleTimeString()}] Negotiation created: ${negotiation.id}`);
-    logs.push(`[${createdAt.toLocaleTimeString()}] Status: ${negotiation.status}`);
+    const time = (label: string) => `[${createdAt.toLocaleTimeString()}] ${label}`;
+
+    logs.push(time('🚦 Step 0: Demo run initialized'));
+    logs.push(
+      time(
+        `🤝 Step 1: Negotiation created (${negotiation.id}) between ` +
+          `${negotiation.requesterAgent?.name ?? negotiation.requesterAgentId} → ` +
+          `${negotiation.responderAgent?.name ?? negotiation.responderAgentId}`,
+      ),
+    );
+
+    if (negotiation.status) {
+      logs.push(time(`   Current status: ${negotiation.status}`));
+    }
 
     if (negotiation.escrowId) {
       const escrowAmount =
@@ -199,14 +223,39 @@ export class DemoService {
           ? negotiation.transaction.amount
           : 'N/A';
       logs.push(
-        `[${createdAt.toLocaleTimeString()}] Escrow created (ID: ${negotiation.escrowId}): $${escrowAmount}`,
+        time(
+          `💰 Step 2: Escrow funded (ID: ${negotiation.escrowId}) for $${escrowAmount ?? 'N/A'}`,
+        ),
       );
+      if (negotiation.transaction?.status) {
+        logs.push(time(`   Escrow transaction status: ${negotiation.transaction.status}`));
+      }
     }
 
     if (negotiation.serviceAgreementId) {
       logs.push(
-        `[${createdAt.toLocaleTimeString()}] Service agreement created: ${negotiation.serviceAgreementId}`,
+        time(
+          `📦 Step 3: Service agreement created (ID: ${negotiation.serviceAgreementId}) for the work`,
+        ),
       );
+    }
+
+    if (negotiation.verificationStatus) {
+      logs.push(
+        time(`✅ Step 4: Verification status recorded as ${negotiation.verificationStatus}`),
+      );
+    }
+
+    logs.push(time('📑 Demo receipt:'));
+    logs.push(time(`   Negotiation ID: ${negotiation.id}`));
+    if (negotiation.escrowId) {
+      logs.push(time(`   Escrow ID: ${negotiation.escrowId}`));
+    }
+    if (negotiation.transaction?.status) {
+      logs.push(time(`   Payout status: ${negotiation.transaction.status}`));
+    }
+    if (negotiation.verificationStatus) {
+      logs.push(time(`   Verification: ${negotiation.verificationStatus}`));
     }
 
     return {
