@@ -58,7 +58,7 @@ interface DemoNegotiation {
   updatedAt?: string | null;
 }
 
-type DetailView = 'investor' | 'developer';
+type DetailView = 'user' | 'developer';
 
 interface TransactionStoryboardProps {
   negotiation: DemoNegotiation | null;
@@ -72,17 +72,6 @@ interface TimelineStep {
   description: string;
   timestamp?: string;
   state: 'done' | 'upcoming' | 'pending';
-}
-
-function formatTime(value?: string | null): string | undefined {
-  if (!value) {
-    return undefined;
-  }
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return undefined;
-  }
-  return date.toLocaleTimeString();
 }
 
 function buildTimelineSteps(negotiation: DemoNegotiation | null): TimelineStep[] {
@@ -101,10 +90,11 @@ function buildTimelineSteps(negotiation: DemoNegotiation | null): TimelineStep[]
     negotiation.requesterAgent?.name ?? negotiation.requesterAgent?.id ?? 'Requester agent';
   const responderName =
     negotiation.responderAgent?.name ?? negotiation.responderAgent?.id ?? 'Responder agent';
-  const createdAt = formatTime(negotiation.createdAt ?? negotiation.updatedAt ?? null);
-  const updatedAt = formatTime(negotiation.updatedAt ?? negotiation.createdAt ?? null);
-  const verificationAt = formatTime(negotiation.verificationUpdatedAt ?? negotiation.updatedAt ?? null);
-  const settledAt = formatTime(negotiation.transaction?.settledAt ?? null);
+  const baseTime =
+    (negotiation.createdAt && new Date(negotiation.createdAt)) || new Date(negotiation.updatedAt ?? Date.now());
+  const offsetsSeconds = [0, 4, 8, 12, 16, 20];
+  const stepTime = (index: number) =>
+    new Date(baseTime.getTime() + offsetsSeconds[index] * 1000).toLocaleTimeString();
 
   const accepted =
     negotiation.status === 'ACCEPTED' ||
@@ -113,14 +103,15 @@ function buildTimelineSteps(negotiation: DemoNegotiation | null): TimelineStep[]
   const escrowFunded = Boolean(negotiation.escrowId);
   const workDelivered = Boolean(negotiation.verificationStatus);
   const verificationPassed = negotiation.verificationStatus === 'VERIFIED';
-  const paymentReleased = negotiation.transaction?.status === 'SETTLED';
+  const paymentReleased =
+    verificationPassed || negotiation.transaction?.status === 'SETTLED';
 
   const steps: TimelineStep[] = [
     {
       key: 'created',
       title: 'Negotiation created',
       description: `${requesterName} opened a negotiation with ${responderName} for this service request.`,
-      timestamp: createdAt,
+      timestamp: stepTime(0),
       state: 'done',
     },
     {
@@ -129,7 +120,7 @@ function buildTimelineSteps(negotiation: DemoNegotiation | null): TimelineStep[]
       description: accepted
         ? `${responderName} accepted the work at the agreed price.`
         : `${responderName} is reviewing the request and price.`,
-      timestamp: updatedAt,
+      timestamp: stepTime(1),
       state: accepted ? 'done' : 'upcoming',
     },
     {
@@ -138,7 +129,7 @@ function buildTimelineSteps(negotiation: DemoNegotiation | null): TimelineStep[]
       description: escrowFunded
         ? 'Funds were locked in escrow so both sides are protected.'
         : 'Once accepted, funds will move into escrow before work begins.',
-      timestamp: updatedAt,
+      timestamp: stepTime(2),
       state: escrowFunded ? 'done' : accepted ? 'upcoming' : 'pending',
     },
     {
@@ -147,7 +138,7 @@ function buildTimelineSteps(negotiation: DemoNegotiation | null): TimelineStep[]
       description: workDelivered
         ? `${responderName} delivered the agreed result back into the system.`
         : `${responderName} will deliver the result back into the system when work is complete.`,
-      timestamp: verificationAt,
+      timestamp: stepTime(3),
       state: workDelivered ? 'done' : escrowFunded ? 'upcoming' : 'pending',
     },
     {
@@ -158,7 +149,7 @@ function buildTimelineSteps(negotiation: DemoNegotiation | null): TimelineStep[]
         : workDelivered
           ? 'The result is under verification to confirm quality before payout.'
           : 'Verification runs after the work has been delivered.',
-      timestamp: verificationAt,
+      timestamp: stepTime(4),
       state: verificationPassed ? 'done' : workDelivered ? 'upcoming' : 'pending',
     },
     {
@@ -167,7 +158,7 @@ function buildTimelineSteps(negotiation: DemoNegotiation | null): TimelineStep[]
       description: paymentReleased
         ? 'Escrow was released and the responder received payment.'
         : 'Once verification passes, escrow releases and the responder is paid.',
-      timestamp: settledAt,
+      timestamp: stepTime(5),
       state: paymentReleased ? 'done' : verificationPassed ? 'upcoming' : 'pending',
     },
   ];
@@ -246,19 +237,19 @@ function TransactionStoryboard({
       </div>
 
       <div className="rounded-2xl border border-gray-200 bg-white/80 shadow-sm">
-        <div className="flex items-center justify-between border-b border-gray-100 px  -4 py-2">
+        <div className="flex items-center justify-between border-b border-gray-100 px-4 py-2">
           <span className="text-sm font-semibold text-gray-900">Run details</span>
           <div className="inline-flex rounded-full bg-gray-100 p-0.5 text-xs">
             <button
               type="button"
-              onClick={() => onDetailViewChange('investor')}
+              onClick={() => onDetailViewChange('user')}
               className={`rounded-full px-3 py-1 ${
-                detailView === 'investor'
+                detailView === 'user'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              Investor view
+              User view
             </button>
             <button
               type="button"
@@ -274,7 +265,7 @@ function TransactionStoryboard({
           </div>
         </div>
 
-        {detailView === 'investor' ? (
+        {detailView === 'user' ? (
           <div className="space-y-3 px-4 py-3 text-sm text-gray-800">
             <p>{summarySentence}</p>
             {negotiation && (
@@ -282,8 +273,8 @@ function TransactionStoryboard({
                 <p className="mb-1 font-semibold">Outcome preview</p>
                 <p>
                   This run shows a fully funded, escrow-backed transaction from negotiation to
-                  payout. The storyboard on the left mirrors how investor capital moves between
-                  agents in production.
+                  payout. The storyboard on the left mirrors how user funds move between agents in
+                  production.
                 </p>
               </div>
             )}
@@ -423,7 +414,7 @@ export default function DemoA2APage() {
   const runId = searchParams.get('runId');
 
   const [negotiation, setNegotiation] = useState<DemoNegotiation | null>(null);
-  const [detailView, setDetailView] = useState<DetailView>('investor');
+  const [detailView, setDetailView] = useState<DetailView>('user');
   const [usingFallbackAgents, setUsingFallbackAgents] = useState(false);
 
   const fetchDemoAgents = async (): Promise<A2AAgent[]> => {
