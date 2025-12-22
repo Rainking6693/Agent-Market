@@ -27,6 +27,7 @@
   "devDependencies": {
     "@flydotio/dockerfile": "^0.7.10",
     "@types/node": "^20.11.5",
+    "@types/superagent": "^8.1.9",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "cross-env": "^10.1.0",
@@ -42,7 +43,10 @@
     "yaml": "^2.8.1"
   },
   "lint-staged": {
-    "{apps,packages}/**/*.{ts,tsx,js,jsx}": [
+    "apps/api/**/*.{ts,tsx,js,jsx}": [
+      "cross-env ESLINT_USE_FLAT_CONFIG=false eslint --config .eslintrc.cjs --max-warnings=0 --fix"
+    ],
+    "packages/**/*.{ts,tsx,js,jsx}": [
       "cross-env ESLINT_USE_FLAT_CONFIG=false eslint --config .eslintrc.cjs --max-warnings=0 --fix"
     ],
     "*.{json,md,yml,yaml}": [

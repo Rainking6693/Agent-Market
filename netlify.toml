@@ -1,5 +1,5 @@
 [build]
-  command = "npm ci && turbo run build --filter @agent-market/web"
+  command = "npm install && turbo run build --filter @agent-market/web"
   publish = "apps/web/.next"
 
 [[plugins]]

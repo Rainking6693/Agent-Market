@@ -458,7 +458,7 @@ export default function DemoA2APage() {
       if (data.negotiation) {
         setNegotiation(data.negotiation as DemoNegotiation);
       }
-      setDetailView('investor');
+      setDetailView('user');
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to load run logs:', error);
@@ -480,7 +480,7 @@ export default function DemoA2APage() {
     } = params;
 
     setNegotiation(null);
-    setDetailView('investor');
+    setDetailView('user');
 
     // Step 1: Initialize demo run
     addLog('?? Step 1: Initializing demo run...');
