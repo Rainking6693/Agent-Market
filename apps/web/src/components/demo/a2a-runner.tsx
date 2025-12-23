@@ -336,11 +336,11 @@ export function A2ARunner(props: A2ARunnerProps) {
       >
         {isPending
           ? mode === 'demo'
-            ? 'Running Demo...'
-            : 'Running Test...'
+            ? 'Running demo...'
+            : 'Running test...'
           : mode === 'demo'
-          ? '?? Run Live Demo'
-          : '?? Run Full A2A Test'}
+          ? 'Run Live Demo'
+          : 'Run Full A2A Test'}
       </Button>
 
       {canReplayLastRun && (

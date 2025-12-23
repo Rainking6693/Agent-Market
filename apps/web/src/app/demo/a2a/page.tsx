@@ -498,23 +498,31 @@ export default function DemoA2APage() {
       return [];
     };
 
-  const resumeDemoRun = async (id: string, helpers: DemoResumeHelpers) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/demo/a2a/run/${id}/logs`);
-      const data = await response.json();
+    const resumeDemoRun = async (id: string, helpers: DemoResumeHelpers) => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/demo/a2a/run/${id}/logs`);
+        const data = await response.json();
 
-      helpers.setLogs(data.logs || []);
-      helpers.setStatus(data.status || 'Unknown');
-      if (data.negotiation) {
-        setNegotiation(data.negotiation as DemoNegotiation);
+        helpers.setLogs(data.logs || []);
+
+        const statusText: string = data.status || 'UNKNOWN';
+        const friendly =
+          statusText === 'ACCEPTED' || statusText === 'COMPLETED' || statusText === 'VERIFIED'
+            ? 'Demo completed successfully!'
+            : `Demo status: ${statusText}`;
+
+        helpers.setStatus(friendly);
+
+        if (data.negotiation) {
+          setNegotiation(data.negotiation as DemoNegotiation);
+        }
+        setDetailView('user');
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to load run logs:', error);
+        helpers.addLog('?? Failed to load run logs');
       }
-      setDetailView('user');
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to load run logs:', error);
-      helpers.addLog('?? Failed to load run logs');
-    }
-  };
+    };
 
     const runDemo = async (params: DemoRunParams) => {
       const {
