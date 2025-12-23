@@ -505,18 +505,20 @@ export default function DemoA2APage() {
 
         helpers.setLogs(data.logs || []);
 
-        const statusText: string = data.status || 'UNKNOWN';
-        const friendly =
-          statusText === 'ACCEPTED' || statusText === 'COMPLETED' || statusText === 'VERIFIED'
-            ? 'Demo completed successfully!'
-            : `Demo status: ${statusText}`;
-
-        helpers.setStatus(friendly);
+        const rawStatus: string | undefined = data.status;
+        if (!rawStatus || rawStatus === 'UNKNOWN') {
+          helpers.setStatus('');
+        } else {
+          const friendly =
+            rawStatus === 'ACCEPTED' || rawStatus === 'COMPLETED' || rawStatus === 'VERIFIED'
+              ? 'Demo completed successfully!'
+              : `Demo status: ${rawStatus}`;
+          helpers.setStatus(friendly);
+        }
 
         if (data.negotiation) {
           setNegotiation(data.negotiation as DemoNegotiation);
         }
-        setDetailView('user');
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Failed to load run logs:', error);
@@ -539,7 +541,6 @@ export default function DemoA2APage() {
       } = params;
 
       setNegotiation(null);
-      setDetailView('user');
       setLogs([]);
 
       try {
@@ -597,7 +598,7 @@ export default function DemoA2APage() {
         const logsResponse = await fetch(`${API_BASE_URL}/demo/a2a/run/${nextRunId}/logs`);
         if (logsResponse.ok) {
           const data = await logsResponse.json();
-          const statusText = data.status || 'UNKNOWN';
+          const rawStatus: string | undefined = data.status;
 
           if (Array.isArray(data.logs) && data.logs.length > 0) {
             addLog('\n?? Demo engine logs:');
@@ -610,16 +611,18 @@ export default function DemoA2APage() {
             setNegotiation(data.negotiation as DemoNegotiation);
           }
 
-          addLog('\n?? Final status:');
-          addLog(`   ${statusText}`);
+          if (!rawStatus || rawStatus === 'UNKNOWN') {
+            setStatus('');
+          } else {
+            addLog('\n?? Final status:');
+            addLog(`   ${rawStatus}`);
 
-          setStatus(
-            statusText === 'ACCEPTED' ||
-              statusText === 'COMPLETED' ||
-              statusText === 'VERIFIED'
-              ? '? Demo completed successfully!'
-              : `?? Demo completed with status: ${statusText}`,
-          );
+            setStatus(
+              rawStatus === 'ACCEPTED' || rawStatus === 'COMPLETED' || rawStatus === 'VERIFIED'
+                ? '? Demo completed successfully!'
+                : `?? Demo completed with status: ${rawStatus}`,
+            );
+          }
         } else {
           addLog('?? Unable to fetch demo status from API.');
           setStatus('? Demo completed (status fetch unavailable)');
