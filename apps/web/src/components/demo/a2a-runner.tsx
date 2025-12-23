@@ -6,10 +6,10 @@
  * - mode="demo": used by /demo/a2a, wired to demo-only API endpoints with no real wallet/escrow writes.
  * - mode="test": used by console test pages, wired to full AP2 + wallets APIs for end-to-end testing.
  *
- * Important: keep backend wiring and side effects (API calls, wallet funding, etc.)
- * inside the page-level wrappers and pass them in via props. This component should
- * stay focused on rendering the form, status, and logs.
+ * Keep backend wiring (API calls, wallet funding, etc.) in the page-level wrappers
+ * and pass them in via props. This component focuses on the form, status, and logs.
  */
+
 import { useEffect, useState, useTransition } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -55,6 +55,11 @@ export interface A2ARunnerProps {
   buildShareLink?: (runId: string) => string;
 }
 
+const DEMO_DEFAULT_AGENTS: A2AAgent[] = [
+  { id: 'demo-support-agent', name: 'Support Agent' },
+  { id: 'demo-darwin-agent', name: 'Darwin Agent' },
+];
+
 export function A2ARunner(props: A2ARunnerProps) {
   const {
     mode,
@@ -70,9 +75,15 @@ export function A2ARunner(props: A2ARunnerProps) {
     buildShareLink,
   } = props;
 
-  const [agents, setAgents] = useState<A2AAgent[]>([]);
-  const [requesterId, setRequesterId] = useState('');
-  const [responderId, setResponderId] = useState('');
+  const defaultAgents = props.mode === 'demo' ? DEMO_DEFAULT_AGENTS : [];
+
+  const [agents, setAgents] = useState<A2AAgent[]>(defaultAgents);
+  const [requesterId, setRequesterId] = useState(
+    defaultAgents[0]?.id ?? '',
+  );
+  const [responderId, setResponderId] = useState(
+    defaultAgents[1]?.id ?? '',
+  );
   const [service, setService] = useState(
     initialService ?? 'Generate a summary of the top 3 AI trends in 2024',
   );
@@ -80,13 +91,34 @@ export function A2ARunner(props: A2ARunnerProps) {
   const [price, setPrice] = useState(initialPrice);
   const [status, setStatus] = useState<string>('');
   const [logs, setLogs] = useState<string[]>([]);
-  const [currentRunId, setCurrentRunId] = useState<string | null>(initialRunId);
+  const [currentRunId, setCurrentRunId] = useState<string | null>(initialRunId ?? null);
+  const [lastSuccessfulRunId, setLastSuccessfulRunId] = useState<string | null>(
+    initialRunId ?? null,
+  );
   const [logsVisible, setLogsVisible] = useState(mode === 'test');
   const [isPending, startTransition] = useTransition();
+  const [showLoadingHint, setShowLoadingHint] = useState(mode === 'demo');
 
   const addLog = (message: string) => {
     setLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] ${message}`]);
   };
+
+  const handleSetRunId = (runId: string | null) => {
+    setCurrentRunId(runId);
+    if (runId) {
+      setLastSuccessfulRunId(runId);
+    }
+  };
+
+  useEffect(() => {
+    if (mode === 'demo') {
+      const timer = setTimeout(() => {
+        setShowLoadingHint(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [mode]);
 
   useEffect(() => {
     let cancelled = false;
@@ -97,9 +129,10 @@ export function A2ARunner(props: A2ARunnerProps) {
         if (cancelled) {
           return;
         }
-        setAgents(data);
 
+        // If we got a non-empty list, replace any demo defaults.
         if (data.length >= 2) {
+          setAgents(data);
           const selection = getInitialSelection?.(data);
           if (selection && selection.requesterId && selection.responderId) {
             setRequesterId(selection.requesterId);
@@ -108,14 +141,18 @@ export function A2ARunner(props: A2ARunnerProps) {
             setRequesterId(data[0].id);
             setResponderId(data[1].id);
           }
+        } else if (data.length === 1) {
+          setAgents(data);
+          setRequesterId(data[0].id);
+          setResponderId(data[0].id);
         }
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Failed to load agents:', error);
         if (mode === 'test') {
-          addLog('⚠️ Note: Some features require login. Using demo mode...');
+          addLog('?? Note: Some features require login. Using demo mode...');
         } else {
-          addLog('⚠️ Failed to load agents');
+          addLog('?? Failed to load agents');
         }
       }
     };
@@ -143,7 +180,7 @@ export function A2ARunner(props: A2ARunnerProps) {
 
   const handleRun = () => {
     if (!requesterId || !responderId || requesterId === responderId) {
-      addLog('⚠️ Please select two different agents');
+      addLog('?? Please select two different agents');
       return;
     }
 
@@ -164,12 +201,43 @@ export function A2ARunner(props: A2ARunnerProps) {
           addLog,
           setStatus,
           setLogs,
-          setRunId: setCurrentRunId,
+          setRunId: handleSetRunId,
         });
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        addLog(`⚠️ ${mode === 'demo' ? 'Demo' : 'Test'} failed: ${errorMessage}`);
-        setStatus(`⚠️ ${mode === 'demo' ? 'Demo' : 'Test'} failed`);
+        addLog(`?? ${mode === 'demo' ? 'Demo' : 'Test'} failed: ${errorMessage}`);
+
+        if (mode === 'demo' && lastSuccessfulRunId && onResumeRun) {
+          addLog('?? Replaying last successful demo run instead...');
+          try {
+            await onResumeRun(lastSuccessfulRunId, { setLogs, setStatus, addLog });
+            setStatus('? Showing last successful run');
+          } catch (replayError) {
+            // eslint-disable-next-line no-console
+            console.error('Failed to replay last demo run:', replayError);
+            setStatus('?? Demo failed');
+          }
+        } else {
+          setStatus(`?? ${mode === 'demo' ? 'Demo' : 'Test'} failed`);
+        }
+      }
+    });
+  };
+
+  const handleReplayLastRun = () => {
+    if (!lastSuccessfulRunId || !onResumeRun) {
+      return;
+    }
+
+    startTransition(async () => {
+      setStatus('Replaying last successful run...');
+      try {
+        await onResumeRun(lastSuccessfulRunId, { setLogs, setStatus, addLog });
+        setStatus('? Showing last successful run');
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to replay last run:', error);
+        setStatus('?? Failed to replay last run');
       }
     });
   };
@@ -177,13 +245,13 @@ export function A2ARunner(props: A2ARunnerProps) {
   const shareLink =
     enableShareLink && currentRunId && buildShareLink ? buildShareLink(currentRunId) : null;
 
+  const canReplayLastRun = mode === 'demo' && !!lastSuccessfulRunId && !!onResumeRun;
+
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2">
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-gray-700">
-            {mode === 'demo' ? 'Requester Agent' : 'Requester Agent'}
-          </span>
+          <span className="text-sm font-semibold text-gray-700">Requester Agent</span>
           <select
             value={requesterId}
             onChange={(e) => setRequesterId(e.target.value)}
@@ -191,7 +259,9 @@ export function A2ARunner(props: A2ARunnerProps) {
             className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none disabled:bg-gray-100"
           >
             {agents.length === 0 ? (
-              <option>Loading agents...</option>
+              <option>
+                {showLoadingHint ? 'Loading agents...' : 'Using demo agents (limited set)'}
+              </option>
             ) : (
               agents.map((agent) => (
                 <option key={agent.id} value={agent.id}>
@@ -203,9 +273,7 @@ export function A2ARunner(props: A2ARunnerProps) {
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-gray-700">
-            {mode === 'demo' ? 'Responder Agent' : 'Responder Agent'}
-          </span>
+          <span className="text-sm font-semibold text-gray-700">Responder Agent</span>
           <select
             value={responderId}
             onChange={(e) => setResponderId(e.target.value)}
@@ -213,7 +281,9 @@ export function A2ARunner(props: A2ARunnerProps) {
             className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none disabled:bg-gray-100"
           >
             {agents.length === 0 ? (
-              <option>Loading agents...</option>
+              <option>
+                {showLoadingHint ? 'Loading agents...' : 'Using demo agents (limited set)'}
+              </option>
             ) : (
               agents.map((agent) => (
                 <option key={agent.id} value={agent.id}>
@@ -269,9 +339,21 @@ export function A2ARunner(props: A2ARunnerProps) {
             ? 'Running Demo...'
             : 'Running Test...'
           : mode === 'demo'
-          ? '🚀 Run Live Demo'
-          : '🚀 Run Full A2A Test'}
+          ? '?? Run Live Demo'
+          : '?? Run Full A2A Test'}
       </Button>
+
+      {canReplayLastRun && (
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={handleReplayLastRun}
+            className="text-xs text-gray-600 underline underline-offset-4 hover:text-gray-900"
+          >
+            Replay last successful run
+          </button>
+        </div>
+      )}
 
       {shareLink && (
         <div className="rounded-lg border border-brass/20 bg-brass/5 p-4">
@@ -307,7 +389,7 @@ export function A2ARunner(props: A2ARunnerProps) {
       {status && (
         <div
           className={`rounded-lg border p-4 ${
-            status.includes('⚠️')
+            status.includes('??')
               ? 'border-red-500/40 bg-red-50 text-red-800'
               : 'border-emerald-500/40 bg-emerald-50 text-emerald-800'
           }`}
@@ -334,8 +416,8 @@ export function A2ARunner(props: A2ARunnerProps) {
           </div>
           {logsVisible && (
             <div className="max-h-96 overflow-y-auto rounded-lg border border-gray-200 bg-gray-50 p-4 font-mono text-xs text-gray-800">
-              {logs.map((log, i) => (
-                <div key={i} className="mb-1">
+              {logs.map((log, index) => (
+                <div key={index} className="mb-1">
                   {log}
                 </div>
               ))}

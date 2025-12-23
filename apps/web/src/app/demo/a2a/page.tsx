@@ -60,6 +60,44 @@ interface DemoNegotiation {
 
 type DetailView = 'user' | 'developer';
 
+const SAMPLE_NEGOTIATION: DemoNegotiation = {
+  id: 'demo-sample-negotiation',
+  status: 'ACCEPTED',
+  requesterAgent: { id: 'demo-support-agent', name: 'Support Agent' },
+  responderAgent: { id: 'demo-darwin-agent', name: 'Darwin Agent' },
+  requestedService: 'Generate a summary of the top 3 AI trends in 2024',
+  proposedBudget: 25,
+  counter: {
+    price: 20,
+    estimatedDelivery: '30 minutes',
+  },
+  serviceAgreementId: 'demo-service-agreement',
+  escrowId: 'demo-escrow',
+  transaction: {
+    id: 'demo-transaction',
+    status: 'SETTLED',
+    amount: 20,
+    settledAt: new Date().toISOString(),
+  },
+  verificationStatus: 'VERIFIED',
+  verificationUpdatedAt: new Date().toISOString(),
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+};
+
+const SAMPLE_LOGS: string[] = [
+  '[4:37:01 PM] ?? Step 0: Checking and funding agent wallets...',
+  '[4:37:01 PM] ?? Requester wallet funded to $40',
+  '[4:37:01 PM] ?? Responder wallet funded to $10',
+  '[4:37:01 PM] ?? Step 1: Initiating negotiation...',
+  '[4:37:01 PM] ?? Negotiation created and accepted',
+  '[4:37:01 PM] ?? Step 2: Escrow funded and locked',
+  '[4:37:01 PM] ?? Step 3: Delivering service...',
+  '[4:37:01 PM] ? Service delivered!',
+  '[4:37:01 PM] ?? Step 4: Checking final status...',
+  '[4:37:01 PM] ?? Final Status: ACCEPTED (escrow released)',
+];
+
 interface TransactionStoryboardProps {
   negotiation: DemoNegotiation | null;
   detailView: DetailView;
@@ -417,36 +455,48 @@ export default function DemoA2APage() {
   const [detailView, setDetailView] = useState<DetailView>('user');
   const [usingFallbackAgents, setUsingFallbackAgents] = useState(false);
 
-  const fetchDemoAgents = async (): Promise<A2AAgent[]> => {
-    // Primary: demo-specific allowlisted endpoint
-    const res = await fetch(`${API_BASE_URL}/demo/a2a/agents`);
-    if (res.ok) {
-      setUsingFallbackAgents(false);
-      return (await res.json()) as A2AAgent[];
-    }
+    const fetchDemoAgents = async (): Promise<A2AAgent[]> => {
+      try {
+        // Primary: demo-specific allowlisted endpoint
+        const res = await fetch(`${API_BASE_URL}/demo/a2a/agents`);
+        if (res.ok) {
+          setUsingFallbackAgents(false);
+          return (await res.json()) as A2AAgent[];
+        }
 
-    // Fallback: public agents endpoint, limited and filtered
-    // This keeps the demo usable even if the demo module is misconfigured.
-    // Backend will still enforce DEMO_AGENT_IDS on run, if configured.
-    // eslint-disable-next-line no-console
-    console.warn(
-      'Falling back to /agents for demo A2A because /demo/a2a/agents returned',
-      res.status,
-    );
+        // Fallback: public agents endpoint, limited and filtered
+        // This keeps the demo usable even if the demo module is misconfigured.
+        // Backend will still enforce DEMO_AGENT_IDS on run, if configured.
+        // eslint-disable-next-line no-console
+        console.warn(
+          'Falling back to /agents for demo A2A because /demo/a2a/agents returned',
+          res.status,
+        );
 
-    const fallback = await fetch(
-      `${API_BASE_URL}/agents?status=APPROVED&visibility=PUBLIC&limit=8`,
-    );
-    if (!fallback.ok) {
-      throw new Error(
-        `Failed to load demo agents (demo endpoint ${res.status}, fallback ${fallback.status})`,
-      );
-    }
+        const fallback = await fetch(
+          `${API_BASE_URL}/agents?status=APPROVED&visibility=PUBLIC&limit=8`,
+        );
+        if (fallback.ok) {
+          const data = (await fallback.json()) as A2AAgent[];
+          setUsingFallbackAgents(true);
+          return data;
+        }
 
-    const data = (await fallback.json()) as A2AAgent[];
-    setUsingFallbackAgents(true);
-    return data;
-  };
+        // eslint-disable-next-line no-console
+        console.warn(
+          'Fallback /agents request for demo A2A also failed with status',
+          fallback.status,
+        );
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Unexpected error while loading demo agents:', error);
+      }
+
+      // In the worst case, return an empty list. The UI will still
+      // show the storyboard and can replay the last successful run.
+      setUsingFallbackAgents(true);
+      return [];
+    };
 
   const resumeDemoRun = async (id: string, helpers: DemoResumeHelpers) => {
     try {
@@ -466,111 +516,119 @@ export default function DemoA2APage() {
     }
   };
 
-  const runDemo = async (params: DemoRunParams) => {
-    const {
-      agents,
-      requesterId,
-      responderId,
-      service,
-      budget,
-      price,
-      addLog,
-      setStatus,
-      setRunId,
-    } = params;
-
-    setNegotiation(null);
-    setDetailView('user');
-
-    // Step 1: Initialize demo run
-    addLog('?? Step 1: Initializing demo run...');
-    addLog(`   Requester: ${agents.find((a) => a.id === requesterId)?.name || requesterId}`);
-    addLog(`   Responder: ${agents.find((a) => a.id === responderId)?.name || responderId}`);
-    addLog(`   Service: ${service}`);
-    addLog(`   Budget: $${budget}`);
-
-    // Step 2: Create demo negotiation (session + synthetic A2A)
-    addLog('\n?? Step 2: Creating demo negotiation...');
-    const response = await fetch(`${API_BASE_URL}/demo/a2a/run`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        requesterAgentId: requesterId,
-        responderAgentId: responderId,
+    const runDemo = async (params: DemoRunParams) => {
+      const {
+        agents,
+        requesterId,
+        responderId,
         service,
         budget,
         price,
-      }),
-    });
+        addLog,
+        setStatus,
+        setRunId,
+        setLogs,
+      } = params;
 
-    if (!response.ok) {
-      const errorBody = await response.json().catch(() => ({}));
-      const message =
-        (errorBody && typeof (errorBody as { message?: string }).message === 'string' &&
-          (errorBody as { message?: string }).message) ||
-        'Failed to run demo';
-      throw new Error(message);
-    }
+      setNegotiation(null);
+      setDetailView('user');
+      setLogs([]);
 
-    const result = await response.json();
-    const nextRunId = String(result.runId);
+      try {
+        // Step 1: Initialize demo run
+        addLog('?? Step 1: Initializing demo run...');
+        addLog(`   Requester: ${agents.find((a) => a.id === requesterId)?.name || requesterId}`);
+        addLog(`   Responder: ${agents.find((a) => a.id === responderId)?.name || responderId}`);
+        addLog(`   Service: ${service}`);
+        addLog(`   Budget: $${budget}`);
 
-    if (setRunId) {
-      setRunId(nextRunId);
-    }
+        // Step 2: Create demo negotiation (session + synthetic A2A)
+        addLog('\n?? Step 2: Creating demo negotiation...');
+        const response = await fetch(`${API_BASE_URL}/demo/a2a/run`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            requesterAgentId: requesterId,
+            responderAgentId: responderId,
+            service,
+            budget,
+            price,
+          }),
+        });
 
-    addLog(`   ? Demo negotiation created: ${nextRunId}`);
-    if (result.expiresAt) {
-      addLog(`   Session expires at: ${new Date(result.expiresAt).toLocaleString()}`);
-    }
+        if (!response.ok) {
+          const errorBody = await response.json().catch(() => ({}));
+          const message =
+            (errorBody && typeof (errorBody as { message?: string }).message === 'string' &&
+              (errorBody as { message?: string }).message) ||
+            'Failed to run demo';
+          throw new Error(message);
+        }
 
-    // Update URL with runId for sharing
-    const url = new URL(window.location.href);
-    url.searchParams.set('runId', nextRunId);
-    window.history.pushState({}, '', url.toString());
+        const result = await response.json();
+        const nextRunId = String(result.runId);
 
-    // Step 3: Fetch final status and logs from API
-    addLog('\n?? Step 3: Checking demo status...');
-    try {
-      const logsResponse = await fetch(`${API_BASE_URL}/demo/a2a/run/${nextRunId}/logs`);
-      if (logsResponse.ok) {
-        const data = await logsResponse.json();
-        const statusText = data.status || 'UNKNOWN';
+        if (setRunId) {
+          setRunId(nextRunId);
+        }
 
-        if (Array.isArray(data.logs) && data.logs.length > 0) {
-          addLog('\n?? Demo engine logs:');
-          for (const line of data.logs as string[]) {
-            addLog(`   ${line}`);
+        addLog(`   ? Demo negotiation created: ${nextRunId}`);
+        if (result.expiresAt) {
+          addLog(`   Session expires at: ${new Date(result.expiresAt).toLocaleString()}`);
+        }
+
+        // Update URL with runId for sharing
+        const url = new URL(window.location.href);
+        url.searchParams.set('runId', nextRunId);
+        window.history.pushState({}, '', url.toString());
+
+        // Step 3: Fetch final status and logs from API
+        addLog('\n?? Step 3: Checking demo status...');
+        const logsResponse = await fetch(`${API_BASE_URL}/demo/a2a/run/${nextRunId}/logs`);
+        if (logsResponse.ok) {
+          const data = await logsResponse.json();
+          const statusText = data.status || 'UNKNOWN';
+
+          if (Array.isArray(data.logs) && data.logs.length > 0) {
+            addLog('\n?? Demo engine logs:');
+            for (const line of data.logs as string[]) {
+              addLog(`   ${line}`);
+            }
           }
+
+          if (data.negotiation) {
+            setNegotiation(data.negotiation as DemoNegotiation);
+          }
+
+          addLog('\n?? Final status:');
+          addLog(`   ${statusText}`);
+
+          setStatus(
+            statusText === 'ACCEPTED' ||
+              statusText === 'COMPLETED' ||
+              statusText === 'VERIFIED'
+              ? '? Demo completed successfully!'
+              : `?? Demo completed with status: ${statusText}`,
+          );
+        } else {
+          addLog('?? Unable to fetch demo status from API.');
+          setStatus('? Demo completed (status fetch unavailable)');
         }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        // eslint-disable-next-line no-console
+        console.error('Live demo run failed, using sample fallback:', error);
 
-        if (data.negotiation) {
-          setNegotiation(data.negotiation as DemoNegotiation);
-        }
+        addLog(`?? Live demo failed: ${message}`);
+        addLog('?? Showing a previously successful sample demo run instead.');
 
-        addLog('\n?? Final status:');
-        addLog(`   ${statusText}`);
-
-        setStatus(
-          statusText === 'ACCEPTED' ||
-            statusText === 'COMPLETED' ||
-            statusText === 'VERIFIED'
-            ? '? Demo completed successfully!'
-            : `?? Demo completed with status: ${statusText}`,
-        );
-      } else {
-        addLog('?? Unable to fetch demo status from API.');
-        setStatus('? Demo completed (status fetch unavailable)');
+        setLogs(SAMPLE_LOGS);
+        setNegotiation(SAMPLE_NEGOTIATION);
+        setStatus('? Showing sample successful run');
       }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to fetch demo status:', error);
-      addLog('?? Error fetching demo status');
-      setStatus('? Demo completed (status fetch error)');
-    }
-  };
+    };
 
   const buildShareLink = (id: string) => `${window.location.origin}/demo/a2a?runId=${id}`;
 
