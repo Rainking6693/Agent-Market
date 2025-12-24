@@ -66,7 +66,7 @@ const config: Config = {
       },
       fontFamily: {
         display: ['Bauer Bodoni', 'Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', 'serif'],
-        body: ['var(--font-inter)', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        body: ['Bauer Bodoni', 'Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', 'serif'],
         headline: ['Bauer Bodoni', 'Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', 'serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'Courier New', 'monospace'],
       },
