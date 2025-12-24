@@ -12,7 +12,7 @@ interface BrandLogoProps {
   alt?: string;
 }
 
-const LOGO_SRC = '/logos/new-logo.png';
+const LOGO_SRC = '/logos/logo-white-bg.png';
 
 export function BrandLogo({
   size = 256,
