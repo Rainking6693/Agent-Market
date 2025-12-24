@@ -46,12 +46,20 @@
       radial-gradient(80% 80% at 75% 0%, rgba(92, 161, 255, 0.15) 0%, rgba(92, 161, 255, 0) 60%),
       linear-gradient(180deg, #fdfaf5 0%, #f5ece0 65%, #efe2d3 100%);
     min-height: 100vh;
-    color: #000000;
+    color: #333333;
+    /* Updated to new brand color for body text */
   }
 
   /* Headlines */
-  h1, h2, h3, h4, h5, h6 {
-    color: #704A07; /* Antique Bronze */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: #704A07;
+
+    /* Antique Bronze */
     &.font-headline {
       color: #704A07;
     }
@@ -111,6 +119,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -118,9 +127,12 @@
 }
 
 @keyframes subtle-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.85;
   }
@@ -130,15 +142,23 @@
   .animate-fade-in-up {
     animation: fade-in-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
-  
-  .animate-delay-100 { animation-delay: 100ms; }
-  .animate-delay-200 { animation-delay: 200ms; }
-  .animate-delay-300 { animation-delay: 300ms; }
+
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
 
   .hover-lift {
     transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
-  
+
   .hover-lift:hover {
     transform: translateY(-2px) scale(1.01);
     box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);

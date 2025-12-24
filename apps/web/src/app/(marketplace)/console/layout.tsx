@@ -15,9 +15,9 @@ export default async function ConsoleLayout({ children }: { children: ReactNode 
       <Sidebar />
       <div className="flex-1 relative">
         {/* Logo in top-right corner */}
-        <div className="absolute top-6 right-6 z-50">
+        <div className="absolute top-6 right-6 z-10">
           <Link href="/">
-            <BrandLogo className="h-16 w-auto cursor-pointer transition-opacity hover:opacity-80" size={512} priority variant="transparent" />
+            <BrandLogo className="h-20 w-auto cursor-pointer transition-opacity hover:opacity-80" size={640} priority variant="transparent" />
           </Link>
         </div>
         <main className="flex-1 px-6 py-10 lg:px-12">

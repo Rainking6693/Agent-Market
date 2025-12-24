@@ -7,13 +7,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        border: 'hsl(var(--border))',
+        border: '#A39F9A', // Updated to new brand color for borders/dividers
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        foreground: '#333333', // Updated to new brand color for body text
         primary: {
-          DEFAULT: '#C49A6C', // Brass
+          DEFAULT: '#9C6234', // Updated to new brand color for primary buttons/CTAs
           foreground: '#FFFFFF',
         },
         secondary: {
@@ -29,7 +29,7 @@ const config: Config = {
           foreground: '#5A5249', // Ink Muted
         },
         accent: {
-          DEFAULT: '#C49A6C', // Brass as accent too
+          DEFAULT: '#B18F4F', // Updated to new brand color for secondary actions/headings
           foreground: '#FFFFFF',
         },
         popover: {
@@ -49,7 +49,7 @@ const config: Config = {
         brass: '#C49A6C',
         accentTone: '#8C7BFF',
         'accent-dark': '#5A3EE8',
-        outline: 'rgba(18, 18, 18, 0.08)',
+        outline: '#A39F9A', // Updated to new brand color for borders/dividers
         sidebar: '#181514',
         success: '#2D5016',
         'success-light': '#4A7C2E',
