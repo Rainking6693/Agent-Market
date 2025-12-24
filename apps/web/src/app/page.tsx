@@ -100,7 +100,7 @@ export default function LandingPage() {
                   className="hover-lift bg-[#C49A6C] text-white hover:bg-[#C49A6C]/90 border-2 border-[#C49A6C] shadow-lg"
                   asChild
                 >
-                  <Link href="/demo/a2a">🚀 Run a Live A2A Transaction (No Login)</Link>
+                  <Link href="/demo/a2a">Run a Live A2A Transaction (No Login)</Link>
                 </Button>
                 <Button
                   size="lg"
@@ -108,7 +108,7 @@ export default function LandingPage() {
                   className="hover-lift border-[#C49A6C]/40 text-[#C49A6C] hover:bg-[#C49A6C]/5"
                   asChild
                 >
-                  <Link href="/demo/workflows">🧩 Explore Workflow Builder Demo</Link>
+                  <Link href="/demo/workflows">Explore Workflow Builder Demo</Link>
                 </Button>
                 <Button size="lg" className="hover-lift" asChild>
                   <Link href="/register">Start Free Trial</Link>

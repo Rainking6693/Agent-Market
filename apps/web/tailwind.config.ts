@@ -50,7 +50,7 @@ const config: Config = {
         accentTone: '#8C7BFF',
         'accent-dark': '#5A3EE8',
         outline: '#A39F9A', // Updated to new brand color for borders/dividers
-        sidebar: '#181514',
+        sidebar: '#EFE2D3', // Updated to lighter brown (surfaceAlt)
         success: '#2D5016',
         'success-light': '#4A7C2E',
         'antique-bronze': '#704A07',
