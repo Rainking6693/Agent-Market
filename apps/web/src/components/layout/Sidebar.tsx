@@ -56,12 +56,6 @@ export function Sidebar() {
   return (
     <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-outline/40 bg-sidebar p-6 text-carrara lg:flex">
       <div className="space-y-8">
-        {/* Logo moved to top right corner */}
-        <div className="flex justify-end -mr-2 -mt-2">
-          <Link href="/" className="block">
-            <BrandLogo className="h-20 w-auto cursor-pointer transition-opacity hover:opacity-80" size={640} priority variant="transparent" />
-          </Link>
-        </div>
 
         {sections.map((section) => (
           <Fragment key={section.title}>
