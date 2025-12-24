@@ -46,7 +46,7 @@ const config: Config = {
         surfaceAlt: '#EFE2D3',
         ink: '#121212',
         'ink-muted': '#5A5249',
-        brass: '#C49A6C',
+        brass: '#9C6234', // Updated to match new primary CTA color
         accentTone: '#8C7BFF',
         'accent-dark': '#5A3EE8',
         outline: '#A39F9A', // Updated to new brand color for borders/dividers
