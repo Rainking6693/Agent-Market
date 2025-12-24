@@ -58,7 +58,7 @@ export function Sidebar() {
       <div className="space-y-8">
         <div className="space-y-2">
           <Link href="/" className="block">
-            <BrandLogo className="h-28 w-auto cursor-pointer transition-opacity hover:opacity-80" size={896} priority />
+            <BrandLogo className="h-28 w-auto cursor-pointer transition-opacity hover:opacity-80" size={896} priority variant="transparent" />
           </Link>
         </div>
 

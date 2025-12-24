@@ -10,19 +10,23 @@ interface BrandLogoProps {
   className?: string;
   priority?: boolean;
   alt?: string;
+  variant?: 'default' | 'transparent';
 }
 
-const LOGO_SRC = '/logos/logo-white-bg.png';
+const LOGO_SRC_DEFAULT = '/logos/logo-white-bg.png';
+const LOGO_SRC_TRANSPARENT = '/logos/new_logo_transparent.png';
 
 export function BrandLogo({
   size = 256,
   className,
   priority = false,
   alt = 'Swarm Sync logo',
+  variant = 'default',
 }: BrandLogoProps) {
+  const src = variant === 'transparent' ? LOGO_SRC_TRANSPARENT : LOGO_SRC_DEFAULT;
   return (
     <Image
-      src={LOGO_SRC}
+      src={src}
       alt={alt}
       width={size}
       height={size}
