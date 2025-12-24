@@ -56,9 +56,10 @@ export function Sidebar() {
   return (
     <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-outline/40 bg-sidebar p-6 text-carrara lg:flex">
       <div className="space-y-8">
-        <div className="space-y-2">
+        {/* Logo moved to top right corner */}
+        <div className="flex justify-end -mr-2 -mt-2">
           <Link href="/" className="block">
-            <BrandLogo className="h-28 w-auto cursor-pointer transition-opacity hover:opacity-80" size={896} priority variant="transparent" />
+            <BrandLogo className="h-20 w-auto cursor-pointer transition-opacity hover:opacity-80" size={640} priority variant="transparent" />
           </Link>
         </div>
 
