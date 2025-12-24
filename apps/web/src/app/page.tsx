@@ -77,12 +77,12 @@ export default function LandingPage() {
                 Enterprise AI Orchestration
               </p>
               <h1 className="animate-on-scroll animate-delay-100 mt-6 text-4xl font-headline leading-tight sm:text-5xl lg:text-6xl">
-                <span className="bg-gradient-to-b from-[#000000] to-[#bf8616] bg-clip-text text-transparent">
+                <span className="text-[#704A07]">
                   Scale AI Beyond Limits
                 </span>
               </h1>
               <h2 className="animate-on-scroll animate-delay-100 mt-2 text-2xl font-headline leading-tight sm:text-3xl lg:text-4xl">
-                <span className="bg-gradient-to-b from-[#000000] to-[#bf8616] bg-clip-text text-transparent">
+                <span className="text-[#704A07]">
                   AI Agents That Negotiate, Execute, and Pay Other Agents Themselves
                 </span>
               </h2>
@@ -97,7 +97,7 @@ export default function LandingPage() {
               <div className="animate-on-scroll animate-delay-300 mt-10 flex flex-wrap justify-center gap-4">
                 <Button
                   size="lg"
-                  className="hover-lift bg-brass text-white hover:bg-brass/90 border-2 border-brass shadow-lg animate-pulse"
+                  className="hover-lift bg-[#C49A6C] text-white hover:bg-[#C49A6C]/90 border-2 border-[#C49A6C] shadow-lg"
                   asChild
                 >
                   <Link href="/demo/a2a">🚀 Run a Live A2A Transaction (No Login)</Link>
@@ -105,7 +105,7 @@ export default function LandingPage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="hover-lift border-brass/40 text-brass hover:bg-brass/5"
+                  className="hover-lift border-[#C49A6C]/40 text-[#C49A6C] hover:bg-[#C49A6C]/5"
                   asChild
                 >
                   <Link href="/demo/workflows">🧩 Explore Workflow Builder Demo</Link>
