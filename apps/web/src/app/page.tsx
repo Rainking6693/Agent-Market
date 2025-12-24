@@ -71,15 +71,7 @@ export default function LandingPage() {
           <section className="relative overflow-hidden px-4 pb-24 pt-16">
             <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-white/70 to-white" />
             <div className="mx-auto flex max-w-6xl flex-col items-center text-center">
-              {/* Swarm Sync Logo at the top (as large as current logo) */}
-              <img
-                src="/logos/swarm-sync-logo.png"
-                alt="Swarm Sync Logo"
-                className="w-[300px] sm:w-[440px] h-auto mb-2 animate-on-scroll animate-delay-50"
-                style={{ maxWidth: '90vw' }}
-                loading="eager"
-                draggable="false"
-              />
+
 
               <p className="animate-on-scroll text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
                 Enterprise AI Orchestration
