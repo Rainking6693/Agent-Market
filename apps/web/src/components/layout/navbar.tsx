@@ -21,7 +21,7 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
   return (
     <header className="sticky top-0 z-40 border-b border-white/60 bg-white/80 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 md:py-5">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-0">
         <Link href="/" className="flex items-center" aria-label="Swarm Sync homepage">
           <BrandLogo className="h-48 w-auto md:h-64" priority size={1280} />
         </Link>
