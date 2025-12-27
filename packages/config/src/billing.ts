@@ -1,69 +1,69 @@
 const starterPlan = {
   slug: 'starter',
-  name: 'Starter',
+  name: 'Free',
   priceCents: 0,
   seats: 1,
   agentLimit: 3,
   workflowLimit: 1,
-  monthlyCredits: 1000,
-  takeRateBasisPoints: 800,
-  features: ['Community support', 'Basic analytics', 'Shared compute'],
+  monthlyCredits: 2500,
+  takeRateBasisPoints: 2000,
+  features: [
+    'Agent discovery + marketplace browsing',
+    'Transaction history',
+    'API access (rate-limited)',
+    'Community support',
+  ],
 };
 
 const plusPlan = {
   slug: 'plus',
-  name: 'Plus',
+  name: 'Starter',
   priceCents: 2900,
   seats: 1,
   agentLimit: 10,
   workflowLimit: 3,
-  monthlyCredits: 5000,
-  takeRateBasisPoints: 700,
-  features: ['Email support', 'Advanced analytics', 'Webhook notifications', 'Slack integration'],
+  monthlyCredits: 20000,
+  takeRateBasisPoints: 1800,
+  features: [
+    'Everything in Free',
+    'Email support (48h response)',
+    'Exports (CSV) + better transaction history',
+    'Workflow templates (starter library)',
+  ],
   stripeProductId: process.env.PLUS_SWARM_SYNC_TIER_PRODUCT_ID ?? '',
   stripePriceId: process.env.PLUS_SWARM_SYNC_TIER_PRICE_ID ?? '',
 };
 
 const growthPlan = {
   slug: 'growth',
-  name: 'Growth',
+  name: 'Pro',
   priceCents: 9900,
   seats: 5,
-  agentLimit: 15,
+  agentLimit: 50,
   workflowLimit: 5,
-  monthlyCredits: 15000,
-  takeRateBasisPoints: 600,
-  features: ['Email support', 'Team dashboards', 'Sandbox escrow'],
+  monthlyCredits: 100000,
+  takeRateBasisPoints: 1500,
+  features: [
+    'Everything in Starter',
+    'Priority email support (24h)',
+    'Visual Workflow Builder (multi-step agent workflows)',
+  ],
   stripeProductId: process.env.GROWTH_SWARM_SYNC_TIER_PRODUCT_ID ?? '',
   stripePriceId: process.env.GROWTH_SWARM_SYNC_TIER_PRICE_ID ?? '',
 };
 
 const scalePlan = {
   slug: 'scale',
-  name: 'Scale',
-  priceCents: 24900,
+  name: 'Business',
+  priceCents: 19900,
   seats: 15,
-  agentLimit: 40,
+  agentLimit: 200,
   workflowLimit: 15,
-  monthlyCredits: 60000,
-  takeRateBasisPoints: 400,
-  features: ['Priority support', 'Advanced analytics', 'Premium escrow rules', 'Billing API'],
+  monthlyCredits: 500000,
+  takeRateBasisPoints: 1200,
+  features: ['Priority support (12h)', 'Monthly implementation best-practices session'],
   stripeProductId: process.env.SCALE_SWARM_SYNC_TIER_PRODUCT_ID ?? '',
   stripePriceId: process.env.SCALE_SWARM_SYNC_TIER_PRICE_ID ?? '',
-};
-
-const proPlan = {
-  slug: 'pro',
-  name: 'Pro',
-  priceCents: 49900,
-  seats: 40,
-  agentLimit: 100,
-  workflowLimit: 40,
-  monthlyCredits: 150000,
-  takeRateBasisPoints: 300,
-  features: ['Dedicated support', 'SSO-ready', 'Private hosting option', 'Custom evaluation packs'],
-  stripeProductId: process.env.PRO_SWARM_SYNC_TIER_PRODUCT_ID ?? '',
-  stripePriceId: process.env.PRO_SWARM_SYNC_TIER_PRICE_ID ?? '',
 };
 
 const enterprisePlan = {
@@ -83,6 +83,5 @@ export const billingPlanConfigs = [
   plusPlan,
   growthPlan,
   scalePlan,
-  proPlan,
   enterprisePlan,
 ];

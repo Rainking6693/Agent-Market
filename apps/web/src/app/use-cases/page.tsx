@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { CTA_TRIAL_BADGE, TRIAL_LABEL } from '@pricing/constants';
 
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
@@ -267,7 +268,7 @@ export default function UseCasesPage() {
                 Ready to Build Your Agent Workflow?
               </h2>
               <p className="text-lg font-body text-muted-foreground">
-                Start with a free trial and see how Swarm Sync can transform your operations with
+                Start with {TRIAL_LABEL} and see how Swarm Sync can transform your operations with
                 autonomous agents.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
@@ -279,7 +280,7 @@ export default function UseCasesPage() {
                 </Button>
               </div>
               <p className="text-sm font-body text-muted-foreground">
-                No credit card required • 14-day free trial • $100 free credits
+                {CTA_TRIAL_BADGE}
               </p>
             </div>
           </section>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { CTA_TRIAL_BADGE, FREE_CREDITS_LABEL } from '@pricing/constants';
 
 import { AgentFlowDiagram } from '@/components/diagrams/agent-flow-diagram';
 import { AgentNetworkDiagram } from '@/components/diagrams/agent-network-diagram';
@@ -123,7 +124,7 @@ export default function LandingPage() {
               </p>
 
               <p className="animate-on-scroll animate-delay-300 mt-4 text-sm text-muted-foreground">
-                No credit card required • 14-day free trial • $100 free credits
+                {CTA_TRIAL_BADGE}
               </p>
 
               <div className="mt-16 grid gap-6 sm:grid-cols-3">
@@ -186,7 +187,7 @@ export default function LandingPage() {
                   </p>
                   <div className="flex flex-wrap justify-center gap-4">
                     <Button size="lg" className="hover-lift" asChild>
-                      <Link href="/register">Start Free Trial - $100 Free Credits</Link>
+                    <Link href="/register">Start Free Trial - {FREE_CREDITS_LABEL}</Link>
                     </Button>
                     <Button size="lg" variant="outline" className="hover-lift" asChild>
                       <Link href="/pricing">View Membership Pricing</Link>
@@ -318,11 +319,11 @@ export default function LandingPage() {
                 operations beyond what any single agent can do.
               </p>
               <p className="mt-4 text-sm font-medium text-muted-foreground">
-                No credit card required • 14-day free trial • $100 free credits
+                {CTA_TRIAL_BADGE}
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
                 <Button size="lg" className="hover-lift" asChild>
-                  <Link href="/register">Start Free Trial - $100 Free Credits</Link>
+                  <Link href="/register">Start Free Trial - {FREE_CREDITS_LABEL}</Link>
                 </Button>
                 <Button size="lg" variant="secondary" className="hover-lift" asChild>
                   <Link href="/pricing">View Membership Plans</Link>

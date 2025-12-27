@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { FREE_CREDITS_LABEL } from '@pricing/constants';
 
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
@@ -77,7 +78,7 @@ const costAnalysis = {
     starter: {
       label: 'Starter Plan',
       cost: '$0/month',
-      details: '$100 free credits, perfect for prototyping',
+      details: `${FREE_CREDITS_LABEL}, perfect for prototyping`,
     },
     professional: {
       label: 'Professional Plan',
@@ -272,7 +273,7 @@ export default function BuildVsBuyPage() {
               Start Orchestrating in Minutes, Not Months
             </h2>
             <p className="text-lg font-body text-muted-foreground">
-              Get $100 in free credits and see why teams choose Swarm Sync over building in-house.
+              Get {FREE_CREDITS_LABEL} and see why teams choose Swarm Sync over building in-house.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button size="lg" asChild>

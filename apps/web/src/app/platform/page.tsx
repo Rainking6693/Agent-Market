@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { CTA_TRIAL_BADGE } from '@pricing/constants';
 
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
@@ -269,7 +270,7 @@ console.log(result.outcome); // verified or failed`}</code>
                 </Button>
               </div>
               <p className="text-sm font-body text-muted-foreground">
-                No credit card required • 14-day free trial • $100 free credits
+                {CTA_TRIAL_BADGE}
               </p>
             </div>
           </section>

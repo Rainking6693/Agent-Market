@@ -17,21 +17,21 @@ export const metadata: Metadata = {
 
 const pricingTiers = [
     {
-        name: 'Starter',
-        price: '$0',
+        slug: 'starter',
+        name: 'Free',
+        price: '',
         period: '/month',
-        description: 'Perfect for testing, individual developers, hobbyists',
+        description: 'Try SwarmSync and run real A2A escrow transactions.',
         features: [
             '3 agents',
-            '$25 A2A credit/month',
+            ' A2A Credits/mo',
             '20% platform fee',
-            '100 agent executions/month',
-            '1 user seat',
+            '100 executions/mo',
+            '1 seat',
+            'Agent discovery + marketplace browsing',
+            'Transaction history',
+            'API access (rate-limited)',
             'Community support',
-            'Agent discovery',
-            'A2A payments',
-            'Basic analytics dashboard',
-            'API access (rate limited)',
         ],
         cta: 'Get Started Free',
         ctaLink: '/register?plan=starter',
@@ -39,118 +39,68 @@ const pricingTiers = [
         stripeLink: null,
     },
     {
-        name: 'Plus',
-        price: '$29',
+        slug: 'plus',
+        name: 'Starter',
+        price: '',
         period: '/month',
-        annualPrice: '$290/year (save $58)',
-        description: 'Perfect for solo founders, small projects, side hustles',
+        description: 'For solo builders and small teams running weekly workflows.',
         features: [
+            'Everything in Free',
             '10 agents',
-            '$200 A2A credit/month',
-            '18% platform fee ⬇️',
-            '500 agent executions/month',
-            '1 user seat',
-            'Email support (48hr response)',
-            'Everything in Starter',
-            'Advanced analytics',
-            'Webhook notifications',
-            'Custom agent metadata',
-            'Transaction history export',
-            'Workflow templates',
+            ' A2A Credits/mo',
+            '18% platform fee',
+            '500 executions/mo',
+            '1 seat',
+            'Email support (48h response)',
+            'Exports (CSV) + better transaction history',
+            'Workflow templates (starter library)',
         ],
-        cta: 'Start Plus Plan',
+        cta: 'Checkout with Stripe',
         ctaLink: '/register?plan=plus',
         popular: true,
         stripeLink: 'stripe',
     },
     {
-        name: 'Growth',
-        price: '$99',
+        slug: 'growth',
+        name: 'Pro',
+        price: '',
         period: '/month',
-        annualPrice: '$990/year (save $198)',
-        description: 'Perfect for startups, growing teams, serious builders',
+        description: 'For teams running daily workflows and higher A2A volume.',
         features: [
+            'Everything in Starter',
             '50 agents',
-            '$1,000 A2A credit/month',
-            '15% platform fee ⬇️⬇️',
-            '3,000 agent executions/month',
-            '5 user seats',
-            'Priority email support (24hr)',
-            'Everything in Plus',
-            'Visual workflow builder',
-            'Performance benchmarking',
-            'Advanced agent discovery filters',
-            'Custom branding (reports)',
-            'Agent reputation tracking',
-            'Budget management tools',
-            'Collaboration analytics',
-            'Slack integration',
+            ',000 A2A Credits/mo',
+            '15% platform fee',
+            '3,000 executions/mo',
+            '5 seats',
+            'Priority email support (24h)',
+            'Visual Workflow Builder (multi-step agent workflows)',
         ],
-        cta: 'Start Growth Plan',
+        cta: 'Checkout with Stripe',
         ctaLink: '/register?plan=growth',
         popular: false,
         stripeLink: 'stripe',
     },
     {
-        name: 'Pro',
-        price: '$199',
+        slug: 'scale',
+        name: 'Business',
+        price: '',
         period: '/month',
-        annualPrice: '$1,990/year (save $398)',
-        description: 'Perfect for growing companies, agencies, B2B SaaS',
+        description: 'For larger teams scaling A2A throughput and automation.',
         features: [
+            'Everything in Pro',
             '200 agents',
-            '$5,000 A2A credit/month',
-            '12% platform fee ⬇️⬇️⬇️',
-            '15,000 agent executions/month',
-            '15 user seats',
-            'Priority support (12hr response)',
-            '1 dedicated support session/month',
-            'Everything in Growth',
-            'Advanced orchestration (conditional logic, loops)',
-            'Custom agent certifications',
-            'SLA guarantees (99.9% uptime)',
-            'Team collaboration (roles & permissions)',
-            'Private agent library',
-            'Zapier/Make.com integration',
-            'A/B testing for agents',
-            'Custom integrations',
-            'Quarterly business reviews',
+            ',000 A2A Credits/mo',
+            '12% platform fee',
+            '15,000 executions/mo',
+            '15 seats',
+            'Priority support (12h)',
+            '1 monthly support session (implementation + best practices)',
         ],
-        cta: 'Start Pro Plan',
-        ctaLink: '/register?plan=pro',
+        cta: 'Checkout with Stripe',
+        ctaLink: '/register?plan=scale',
         popular: false,
         stripeLink: 'stripe',
-    },
-    {
-        name: 'Scale',
-        price: '$499',
-        period: '/month',
-        annualPrice: '$4,990/year (save $998)',
-        description: 'Perfect for mid-market companies, high-volume users',
-        features: [
-            '1,000 agents',
-            '$25,000 A2A credit/month',
-            '10% platform fee ⬇️⬇️⬇️⬇️',
-            '100,000 agent executions/month',
-            '50 user seats',
-            'Premium support (4hr response)',
-            'Weekly dedicated support sessions',
-            'Everything in Pro',
-            'SSO/SAML integration',
-            'Advanced security (2FA, IP whitelisting)',
-            'Custom SLA agreements',
-            'Dedicated account manager',
-            'Priority feature requests',
-            'Custom contract terms',
-            'Audit logs & compliance reports',
-            'Dedicated cloud infrastructure',
-            'Custom branding (logo, colors, domain)',
-            'Advanced fraud detection',
-        ],
-        cta: 'Contact Sales',
-        ctaLink: '#contact-sales',
-        popular: false,
-        stripeLink: null,
     },
 ];
 
@@ -172,6 +122,15 @@ export default function PricingPage() {
                         <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
                             Scale your autonomous operations with higher credit limits, lower platform fees, and enterprise-grade support.
                         </p>
+                    </div>
+
+                    <div className="mx-auto max-w-3xl space-y-2 rounded-2xl border border-white/70 bg-white/70 p-6 text-xs text-muted-foreground">
+                        <p className="uppercase tracking-[0.3em] text-[0.6rem] text-muted-foreground">
+                            What the limits mean
+                        </p>
+                        <p>Agents: max active agents in your workspace (archive/unarchive anytime)</p>
+                        <p>A2A Credits: monthly escrow spend for hiring agents (1 credit = $1)</p>
+                        <p>Executions: each time an agent runs a job (workflow steps count as executions)</p>
                     </div>
 
                     {/* Pricing Cards */}
@@ -216,7 +175,7 @@ export default function PricingPage() {
 
                                     <div className="pt-6">
                                         <CheckoutButton
-                                            planSlug={tier.name === 'Starter' ? 'starter' : tier.name.toLowerCase()}
+                                            planSlug={tier.slug}
                                             stripeLink={tier.stripeLink}
                                             ctaLink={tier.ctaLink}
                                             cta={tier.cta}
@@ -285,4 +244,4 @@ export default function PricingPage() {
             <Footer />
         </div>
     );
-}
+    }

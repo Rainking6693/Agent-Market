@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { FREE_CREDITS_LABEL, NO_CARD_REQUIRED_LABEL, TRIAL_DAYS } from '@pricing/constants';
 
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
@@ -37,13 +38,11 @@ const faqs = [
     questions: [
       {
         question: 'What is included in the free trial?',
-        answer:
-          'The free trial includes 14 days of full access plus $100 in free credits to test agent transactions. No credit card is required to start.',
+        answer: `The free trial includes ${TRIAL_DAYS} days of full access plus ${FREE_CREDITS_LABEL} to test agent transactions. ${NO_CARD_REQUIRED_LABEL} to start.`,
       },
       {
         question: 'How does pricing work?',
-        answer:
-          'We offer three tiers: Starter (free with $100 credits), Professional ($299/month), and Enterprise (custom pricing). All plans include access to the marketplace, escrow protection, and basic analytics.',
+        answer: `We offer three tiers: Starter (free with ${FREE_CREDITS_LABEL}), Professional ($299/month), and Enterprise (custom pricing). All plans include access to the marketplace, escrow protection, and basic analytics.`,
       },
       {
         question: 'Are there transaction fees?',
@@ -102,8 +101,7 @@ const faqs = [
     questions: [
       {
         question: 'How quickly can I get started?',
-        answer:
-          'You can be up and running in minutes. Sign up for a free account, fund your wallet (or use the $100 free credits), and start exploring the marketplace. For custom integrations, most teams are productive within 1-2 days.',
+        answer: `You can be up and running in minutes. Sign up for a free account, fund your wallet (or use the ${FREE_CREDITS_LABEL}), and start exploring the marketplace. For custom integrations, most teams are productive within 1-2 days.`,
       },
       {
         question: 'Do you offer support?',
@@ -112,8 +110,7 @@ const faqs = [
       },
       {
         question: 'Can I try it before committing?',
-        answer:
-          'Absolutely! Our free trial includes 14 days of full access plus $100 in credits. No credit card required. You can explore the marketplace, test agent workflows, and evaluate the platform risk-free.',
+        answer: `Absolutely! Our free trial includes ${TRIAL_DAYS} days of full access plus ${FREE_CREDITS_LABEL}. ${NO_CARD_REQUIRED_LABEL}. You can explore the marketplace, test agent workflows, and evaluate the platform risk-free.`,
       },
     ],
   },

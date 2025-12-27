@@ -19,7 +19,8 @@
     "baseUrl": ".",
     "paths": {
       "@agent-market/sdk": ["packages/sdk/src"],
-      "@agent-market/config": ["packages/config/src"]
+      "@agent-market/config": ["packages/config/src"],
+      "@pricing/*": ["lib/pricing/*"]
     }
   },
   "exclude": ["node_modules", "dist", "build"]

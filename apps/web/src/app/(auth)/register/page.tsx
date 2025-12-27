@@ -14,11 +14,10 @@ export const metadata: Metadata = {
 };
 
 const planNames: Record<string, string> = {
-  'starter': 'Starter Swarm',
-  'plus': 'Plus',
-  'growth': 'Growth',
-  'pro': 'Pro',
-  'scale': 'Scale',
+  'starter': 'Free',
+  'plus': 'Starter',
+  'growth': 'Pro',
+  'scale': 'Business',
 };
 
 export default function RegisterPage({
