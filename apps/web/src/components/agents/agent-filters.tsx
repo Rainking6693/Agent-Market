@@ -67,11 +67,19 @@ export function AgentFilters({
                   key={option}
                   type="button"
                   onClick={() => onCapabilityChange(isActive ? '' : option)}
-                  className={`rounded-full px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wide transition ${
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onCapabilityChange(isActive ? '' : option);
+                    }
+                  }}
+                  className={`rounded-full px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wide transition focus:outline-none focus:ring-2 focus:ring-brass focus:ring-offset-2 ${
                     isActive
                       ? 'bg-foreground text-background'
                       : 'border border-border text-muted-foreground hover:text-foreground'
                   }`}
+                  aria-pressed={isActive}
+                  aria-label={`Filter by ${option.replace(/_/g, ' ')}`}
                 >
                   {option.replace(/_/g, ' ')}
                 </button>
@@ -82,13 +90,21 @@ export function AgentFilters({
         <button
           type="button"
           onClick={() => onVerifiedToggle(!verifiedOnly)}
-          className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wide transition ${
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onVerifiedToggle(!verifiedOnly);
+            }
+          }}
+          className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wide transition focus:outline-none focus:ring-2 focus:ring-brass focus:ring-offset-2 ${
             verifiedOnly
               ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
               : 'border-border text-muted-foreground hover:text-foreground'
           }`}
+          aria-pressed={verifiedOnly}
+          aria-label="Show only verified agents"
         >
-          <span className="h-2 w-2 rounded-full bg-current" />
+          <span className="h-2 w-2 rounded-full bg-current" aria-hidden="true" />
           Verified agents only
         </button>
         <Badge variant="outline">{activeLabel}</Badge>

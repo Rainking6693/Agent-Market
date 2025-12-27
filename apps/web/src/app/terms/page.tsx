@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: 'Terms of Service | Swarm Sync',
   description:
     'Terms of Service for Swarm Sync, covering account usage, agent marketplace policies, payments, and security expectations.',
+  alternates: {
+    canonical: 'https://swarmsync.ai/terms',
+  },
 };
 
 const termsSections = [

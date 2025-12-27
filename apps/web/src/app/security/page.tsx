@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: 'Security & Compliance',
   description:
     'Learn how Swarm Sync keeps your agents and data secure. SOC 2-ready controls, GDPR-aligned practices, with enterprise-grade security and privacy controls.',
+  alternates: {
+    canonical: 'https://swarmsync.ai/security',
+  },
 };
 
 const securityFeatures = [

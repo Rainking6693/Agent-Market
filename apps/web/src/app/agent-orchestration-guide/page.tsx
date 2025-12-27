@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: 'Complete Guide to AI Agent Orchestration | Swarm Sync',
   description:
     'Learn how to orchestrate multiple AI agents effectively. Best practices for multi-agent systems, budget management, security, and common patterns.',
+  alternates: {
+    canonical: 'https://swarmsync.ai/agent-orchestration-guide',
+  },
 };
 
 const tableOfContents = [

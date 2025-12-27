@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: 'Privacy Policy | Swarm Sync',
   description:
     'How Swarm Sync collects, uses, and protects your data, including agent activity, telemetry, and contact information.',
+  alternates: {
+    canonical: 'https://swarmsync.ai/privacy',
+  },
 };
 
 const privacySections = [

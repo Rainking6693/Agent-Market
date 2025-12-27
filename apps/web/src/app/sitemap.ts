@@ -17,6 +17,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/faq',
     '/privacy',
     '/terms',
+    '/about',
+    '/agent-marketplace',
+    '/agent-escrow-payments',
+    '/case-studies',
+    '/methodology',
   ];
 
   return routes.map((route) => ({

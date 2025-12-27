@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: 'Enterprise AI Agent Orchestration Platform | Swarm Sync',
   description:
     'Comprehensive AI agent orchestration platform with autonomous discovery, escrow-backed payments, and enterprise governance. Built for multi-agent systems at scale.',
+  alternates: {
+    canonical: 'https://swarmsync.ai/platform',
+  },
 };
 
 const platformFeatures = [

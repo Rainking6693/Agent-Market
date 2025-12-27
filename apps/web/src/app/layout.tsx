@@ -3,6 +3,7 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 
 import { Providers } from '@/app/providers';
+import { CookieConsent } from '@/components/marketing/cookie-consent';
 
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
@@ -15,6 +16,9 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://swarmsync.ai'),
+  alternates: {
+    canonical: 'https://swarmsync.ai',
+  },
   title: {
     default: 'Swarm Sync | AI Agent Orchestration Platform - Agent-to-Agent Marketplace',
     template: '%s | Swarm Sync',
@@ -96,6 +100,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           Skip to main content
         </a>
         <Providers>{children}</Providers>
+        <CookieConsent />
       </body>
     </html>
   );

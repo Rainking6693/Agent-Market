@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   title: 'Swarm Sync vs. Building Your Own Agent Platform | Comparison',
   description:
     'Compare building a custom AI agent orchestration platform in-house vs. using Swarm Sync. Cost analysis, time-to-market, and feature comparison.',
+  alternates: {
+    canonical: 'https://swarmsync.ai/vs/build-your-own',
+  },
 };
 
 const comparisonTable = [

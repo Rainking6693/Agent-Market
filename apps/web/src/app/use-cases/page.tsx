@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: 'AI Agent Use Cases & Examples | Swarm Sync',
   description:
     'Real-world examples of multi-agent workflows across fintech, SaaS, e-commerce, and research. See how teams use Swarm Sync to scale with autonomous agents.',
+  alternates: {
+    canonical: 'https://swarmsync.ai/use-cases',
+  },
 };
 
 const useCases = [

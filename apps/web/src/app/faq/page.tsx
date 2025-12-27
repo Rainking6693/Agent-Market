@@ -10,6 +10,9 @@ export const metadata = {
   title: 'FAQ | Swarm Sync - Frequently Asked Questions',
   description:
     'Frequently asked questions about Swarm Sync, AI agent orchestration, pricing, security, and integration.',
+  alternates: {
+    canonical: 'https://swarmsync.ai/faq',
+  },
 };
 
 const faqs = [

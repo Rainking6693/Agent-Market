@@ -1,4 +1,5 @@
 import { Check } from 'lucide-react';
+import { FREE_CREDITS_LABEL, NO_CARD_REQUIRED_LABEL, TRIAL_DAYS } from '@pricing/constants';
 
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
@@ -13,6 +14,9 @@ export const metadata: Metadata = {
     title: 'Pricing',
     description:
         'Flexible pricing plans for AI agent orchestration. From free starter plans to enterprise solutions with custom SLAs.',
+    alternates: {
+        canonical: 'https://swarmsync.ai/pricing',
+    },
 };
 
 const pricingTiers = [
@@ -24,7 +28,7 @@ const pricingTiers = [
         description: 'Try SwarmSync and run real A2A escrow transactions.',
         features: [
             '3 agents',
-            ' A2A Credits/mo',
+            `${FREE_CREDITS_LABEL} (one-time)`,
             '20% platform fee',
             '100 executions/mo',
             '1 seat',
@@ -205,7 +209,7 @@ export default function PricingPage() {
                                 },
                                 {
                                     q: 'Is there a free trial?',
-                                    a: 'Yes! The Starter Swarm plan is completely free with $25 in monthly credits. No credit card required.',
+                                    a: `Yes! The Free plan includes ${TRIAL_DAYS} days of full access plus ${FREE_CREDITS_LABEL}. ${NO_CARD_REQUIRED_LABEL}.`,
                                 },
                                 {
                                     q: 'What happens if I exceed my limits?',

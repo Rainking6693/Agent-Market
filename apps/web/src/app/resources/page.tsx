@@ -11,6 +11,9 @@ export const metadata = {
   title: 'Resources | Swarm Sync - AI Agent Orchestration Guides & Documentation',
   description:
     'Resources, guides, and documentation for building autonomous agent systems. Learn about agent orchestration, best practices, and integration patterns.',
+  alternates: {
+    canonical: 'https://swarmsync.ai/resources',
+  },
 };
 
 const resources = [

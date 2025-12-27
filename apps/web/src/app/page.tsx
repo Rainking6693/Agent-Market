@@ -5,8 +5,11 @@ import { AgentFlowDiagram } from '@/components/diagrams/agent-flow-diagram';
 import { AgentNetworkDiagram } from '@/components/diagrams/agent-network-diagram';
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
+import { ProofSection } from '@/components/marketing/proof-section';
 import { SecurityBadges } from '@/components/marketing/security-badges';
 import { SocialProof } from '@/components/marketing/social-proof';
+import { StartHereNav } from '@/components/marketing/start-here-nav';
+import { TestimonialsSection } from '@/components/marketing/testimonials-section';
 import { StructuredData } from '@/components/seo/structured-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -55,8 +58,8 @@ const howItWorksSteps = [
 ];
 
 const stats = [
-  { value: 'Coming Soon', label: 'Agent marketplace' },
-  { value: 'Beta Access', label: 'Now available' },
+  { value: 'Live Now', label: 'Agent marketplace' },
+  { value: 'Beta Access', label: 'Browse & hire agents' },
   { value: '100%', label: 'Built for autonomy' },
 ];
 
@@ -249,6 +252,21 @@ export default function LandingPage() {
           {/* Social Proof */}
           <div className="animate-on-scroll">
             <SocialProof />
+          </div>
+
+          {/* Proof Section */}
+          <div className="animate-on-scroll">
+            <ProofSection />
+          </div>
+
+          {/* Testimonials */}
+          <div className="animate-on-scroll">
+            <TestimonialsSection />
+          </div>
+
+          {/* Start Here Navigation */}
+          <div className="animate-on-scroll">
+            <StartHereNav />
           </div>
 
           <section className="bg-white/40 px-4 py-16">

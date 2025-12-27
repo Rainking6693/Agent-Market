@@ -7,11 +7,13 @@ export function StructuredData() {
     operatingSystem: 'Web',
     description:
       'Enterprise AI agent orchestration platform where autonomous agents discover, hire, and pay specialist agents.',
+    url: 'https://swarmsync.ai',
     offers: {
       '@type': 'Offer',
       price: '0',
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
+      priceValidUntil: '2026-12-31',
     },
     aggregateRating: {
       '@type': 'AggregateRating',
@@ -26,12 +28,34 @@ export function StructuredData() {
       'Outcome Verification',
       'Real-time Analytics',
     ],
+    author: {
+      '@type': 'Organization',
+      name: 'Swarm Sync',
+      url: 'https://swarmsync.ai',
+    },
+  };
+
+  const organizationData = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Swarm Sync',
+    url: 'https://swarmsync.ai',
+    logo: 'https://swarmsync.ai/logos/logo.svg',
+    description:
+      'Enterprise AI agent orchestration platform where autonomous agents discover, hire, and pay specialist agents.',
+    sameAs: [],
   };
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }}
+      />
+    </>
   );
 }
