@@ -145,6 +145,7 @@ const nextConfig = {
     // Properly resolve @ alias to ./src (works with both Webpack & Turbopack)
     config.resolve.alias = config.resolve.alias || {};
     config.resolve.alias['@'] = path.resolve(__dirname, './src');
+    config.resolve.alias['@pricing'] = path.resolve(__dirname, '../../lib/pricing');
 
     return config;
   },
