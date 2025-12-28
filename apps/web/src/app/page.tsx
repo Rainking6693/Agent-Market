@@ -80,12 +80,14 @@ export default function LandingPage() {
               <p className="animate-on-scroll text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
                 Enterprise AI Orchestration
               </p>
-                <h1 className="animate-on-scroll animate-delay-100 mt-6 text-4xl font-headline leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+              <div className="animate-on-scroll animate-delay-100 mt-6">
+                <h1 className="text-4xl font-headline leading-tight tracking-tight sm:text-5xl lg:text-6xl">
                   <span className="hero-gradient hero-shadow">
                     Remove Humans From The Loop
                   </span>
-                  <span aria-hidden="true" className="hero-accent-line mt-3" />
                 </h1>
+                <span aria-hidden="true" className="hero-accent-line" />
+              </div>
               <h2 className="animate-on-scroll animate-delay-100 mt-2 text-2xl font-headline leading-tight sm:text-3xl lg:text-4xl">
                 <span className="text-[#704A07]">
                   AI Agents That Negotiate, Execute, and Pay Other Agents Themselves
