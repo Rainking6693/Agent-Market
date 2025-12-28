@@ -81,25 +81,20 @@
   .hero-gradient {
     background: linear-gradient(
       135deg,
-      #ffd700 0%,
-      #ffed4e 25%,
-      #d4af37 50%,
-      #b8860b 75%,
-      #8b6914 100%
+      #d4af37 0%,
+      #b8860b 30%,
+      #8b6914 60%,
+      #704a07 100%
     );
     background-size: 200% 200%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    animation: hero-gradient-shift 8s ease-in-out infinite;
+    animation: hero-gradient-shift 10s ease-in-out infinite;
   }
 
   .hero-shadow {
-    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4))
-      drop-shadow(0 0 16px rgba(212, 175, 55, 0.3))
-      drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    filter: drop-shadow(0 2px 4px rgba(112, 74, 7, 0.2));
   }
 
   @keyframes hero-gradient-shift {
@@ -116,30 +111,30 @@
   .hero-accent-line {
     display: block;
     width: 120px;
-    height: 4px;
+    height: 3px;
     margin: 1rem auto 0;
     background: linear-gradient(
       90deg,
       transparent 0%,
-      #ffd700 20%,
-      #d4af37 50%,
-      #ffd700 80%,
+      #b8860b 30%,
+      #8b6914 50%,
+      #b8860b 70%,
       transparent 100%
     );
-    box-shadow: 0 0 12px rgba(255, 215, 0, 0.6), 0 0 24px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 0 8px rgba(184, 134, 11, 0.3);
     border-radius: 2px;
-    animation: hero-accent-glow 3s ease-in-out infinite;
+    animation: hero-accent-glow 4s ease-in-out infinite;
   }
 
   @keyframes hero-accent-glow {
     0%,
     100% {
-      opacity: 0.8;
-      box-shadow: 0 0 12px rgba(255, 215, 0, 0.6), 0 0 24px rgba(212, 175, 55, 0.4);
+      opacity: 0.6;
+      box-shadow: 0 0 8px rgba(184, 134, 11, 0.3);
     }
     50% {
-      opacity: 1;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.9), 0 0 40px rgba(212, 175, 55, 0.6);
+      opacity: 0.9;
+      box-shadow: 0 0 12px rgba(184, 134, 11, 0.5);
     }
   }
 
