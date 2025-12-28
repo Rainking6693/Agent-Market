@@ -19,7 +19,21 @@ export const metadata: Metadata = {
     },
 };
 
-const pricingTiers = [
+type PricingTier = {
+    slug: string;
+    name: string;
+    price: string;
+    period: string;
+    description: string;
+    features: string[];
+    cta: string;
+    ctaLink: string;
+    popular: boolean;
+    stripeLink: string | null;
+    annualPrice?: string;
+};
+
+const pricingTiers: PricingTier[] = [
     {
         slug: 'starter',
         name: 'Free',
