@@ -50,12 +50,13 @@ export function Navbar() {
               >
                 Sign out
               </button>
-              <Link
-                href="/dashboard"
-                className="text-2xl font-medium text-muted-foreground transition hover:text-foreground"
+              <Button
+                size="lg"
+                className="hover-lift bg-[#C49A6C] text-white hover:bg-[#C49A6C]/90 border-2 border-[#C49A6C] shadow-lg"
+                asChild
               >
-                Console
-              </Link>
+                <Link href="/dashboard">Console</Link>
+              </Button>
             </>
           ) : (
             <>
