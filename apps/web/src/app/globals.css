@@ -140,11 +140,15 @@
 }
 
 .hero-gradient {
-  background: linear-gradient(120deg, rgba(212, 175, 55, 1), rgba(205, 127, 50, 1));
+  background: linear-gradient(120deg, #FFD700 0%, #F4C430 40%, #CD7F32 100%);
   -webkit-background-clip: text;
   color: transparent;
   font-weight: 800;
   text-transform: uppercase;
+  display: inline-block;
+  letter-spacing: 0.08em;
+  background-size: 200% 200%;
+  animation: hero-gradient-shift 4s ease infinite;
 }
 
 .hero-shadow {
@@ -156,7 +160,20 @@
   height: 0.35rem;
   border-radius: 999px;
   background: linear-gradient(90deg, rgba(255, 215, 0, 1), rgba(205, 127, 50, 1));
-  display: inline-flex;
+  display: block;
+  margin-top: 0.75rem;
+}
+
+@keyframes hero-gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 body[data-theme='dark'] {
