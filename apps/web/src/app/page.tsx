@@ -82,7 +82,7 @@ export default function LandingPage() {
               </p>
               <h1 className="animate-on-scroll animate-delay-100 mt-6 text-4xl font-headline leading-tight sm:text-5xl lg:text-6xl">
                 <span className="text-[#704A07]">
-                  Scale AI Beyond Limits
+                  Remove Humans From The Loop
                 </span>
               </h1>
               <h2 className="animate-on-scroll animate-delay-100 mt-2 text-2xl font-headline leading-tight sm:text-3xl lg:text-4xl">

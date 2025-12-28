@@ -41,15 +41,21 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-8 md:flex">
           {isAuthenticated ? (
             <>
-              <Button variant="ghost" onClick={logout}>
+              <button
+                onClick={logout}
+                className="text-2xl font-medium text-muted-foreground transition hover:text-foreground"
+              >
                 Sign out
-              </Button>
-              <Button asChild>
-                <Link href="/dashboard">Console</Link>
-              </Button>
+              </button>
+              <Link
+                href="/dashboard"
+                className="text-2xl font-medium text-muted-foreground transition hover:text-foreground"
+              >
+                Console
+              </Link>
             </>
           ) : (
             <>
