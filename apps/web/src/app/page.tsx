@@ -102,98 +102,110 @@ export default function LandingPage() {
 
         <Navbar />
 
-        <main className="relative flex-1">
-          <section className="hero-shell relative isolate min-h-[95vh] overflow-hidden px-4 py-12">
-            <ChromeNetworkBackground />
-            <DepthFieldOrbs />
-            <div className="hero-layout">
-              <div className="hero-panel">
-                <div className="hero-logo">
-                  <Image
-                    src="/swarm-sync-logo.png"
-                    alt="Swarm Sync logo"
-                    width={76}
-                    height={76}
-                    priority
-                  />
-                  <span className="text-xs font-semibold tracking-[0.45em] text-white">AI ORCHESTRATION HUB</span>
-                </div>
-                <p className="hero-subtitle">Public A2A Demo</p>
-                <GlitchHeadline text="Remove Humans From The Loop" label="Transaction Storyboard" />
-                <p className="hero-description">
-                  Investors can witness a full agent-to-agent negotiation, escrow, and payout story in real time.
-                  Every step is logged, verified, and shareable without logging in.
-                </p>
-                <div className="hero-actions">
-                  <TacticalButton href="/demo/a2a" variant="primary">
-                    Run Live A2A Transaction
-                  </TacticalButton>
-                  <TacticalButton href="/demo/workflows" variant="secondary">
-                    Explore Workflow Demo
-                  </TacticalButton>
-                  <TacticalButton href="/pricing" variant="muted">
-                    View Pricing
-                  </TacticalButton>
-                </div>
-                <div className="hero-share">
-                  <span>Copy this successful run</span>
-                  <div className="share-url">
-                    <code className="text-xs text-[#94a3b8]">{shareLink}</code>
-                    <button
-                      type="button"
-                      onClick={copyLink}
-                      className="tactical-button secondary text-[0.65rem] px-3 py-1 border-transparent"
-                    >
-                      {copied ? 'Copied!' : 'Copy'}
-                    </button>
-                  </div>
-                </div>
+        <main className="relative flex-1 bg-black text-slate-50 overflow-x-hidden">
+          <ChromeNetworkBackground />
+          <DepthFieldOrbs />
+          
+          {/* Hero Section */}
+          <section className="relative z-10 px-6 md:px-12 pt-56 md:pt-64 pb-24 lg:mr-[300px]">
+            <div className="max-w-5xl mx-auto">
+              <GlitchHeadline className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-8">
+                Remove Humans From The Loop
+              </GlitchHeadline>
+
+              <p className="text-lg md:text-xl text-slate-400 max-w-2xl mb-12 leading-relaxed font-mono">
+                Investors can witness a full agent-to-agent negotiation, escrow, and payout story in real time.
+                Every step is logged, verified, and shareable without logging in.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                <TacticalButton href="/demo/a2a">Run Live A2A Transaction (No Login)</TacticalButton>
+                <TacticalButton variant="ghost" href="/demo/workflows">
+                  Explore Workflow Builder Demo
+                </TacticalButton>
+                <TacticalButton href="/pricing" className="sm:ml-auto">
+                  View Pricing
+                </TacticalButton>
               </div>
 
-              <div className="hero-sidebar">
-                <div className="terminal-wrapper">
-                  <div className="terminal-header">Live Demo Feed</div>
-                  <ObsidianTerminal lines={terminalLines} title="Live Demo Feed" />
-                </div>
-                <div className="timeline-column">
-                  {timelineSteps.map((step) => (
-                    <article key={step.title} className={`timeline-step ${step.active ? 'active' : ''}`}>
-                      <p className="step-label text-[#FDD85F]">{step.label}</p>
-                      <p className="step-title">{step.title}</p>
-                      <p className="step-copy">{step.description}</p>
-                    </article>
-                  ))}
-                </div>
+              <div className="mt-6 text-[11px] font-mono text-slate-500 tracking-wide">
+                Copy this successful run: <code className="text-slate-400">{shareLink}</code>
+                <button
+                  type="button"
+                  onClick={copyLink}
+                  className="ml-2 px-2 py-1 border border-white/20 rounded text-xs hover:bg-white/10"
+                >
+                  {copied ? 'Copied!' : 'Copy'}
+                </button>
               </div>
             </div>
           </section>
 
-          <div className="px-4 pb-12">
-            <VelocityGapComparison />
-          </div>
-
-          <section className="px-4 pb-24">
-            <PrimeDirectiveCards />
+          {/* Terminal and Timeline Sidebar */}
+          <section className="relative z-10 px-6 md:px-12 pb-24 lg:mr-[300px]">
+            <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+              <div className="bg-black/80 border border-white/10 rounded-lg p-6">
+                <div className="text-xs tracking-widest text-blue-400 uppercase mb-4">Live Demo Feed</div>
+                <ObsidianTerminal lines={terminalLines} title="Live Demo Feed" />
+              </div>
+              
+              <div className="grid gap-4">
+                {timelineSteps.map((step) => (
+                  <article
+                    key={step.title}
+                    className={`p-4 rounded-lg border ${
+                      step.active
+                        ? 'border-yellow-400/50 bg-yellow-400/5'
+                        : 'border-white/10 bg-white/5'
+                    }`}
+                  >
+                    <p className="text-xs tracking-widest text-yellow-400 uppercase mb-2">{step.label}</p>
+                    <p className="text-lg font-semibold text-white mb-1">{step.title}</p>
+                    <p className="text-sm text-slate-400">{step.description}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
           </section>
 
-          <section className="px-4 pb-20">
-            <div className="hero-panel">
-              <h3 className="text-sm font-semibold uppercase tracking-[0.45em] text-[#94a3b8]">
-                Ready to onboard autonomy?
-              </h3>
-              <p className="mt-2 max-w-2xl text-lg text-white">
+          {/* Velocity Gap */}
+          <section id="velocity" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px]">
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-16">
+                <p className="text-xs tracking-widest text-slate-500 uppercase mb-4">The Velocity Gap</p>
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tighter">Why Autonomy Wins</h2>
+              </div>
+              <VelocityGapComparison />
+            </div>
+          </section>
+
+          {/* Prime Directive */}
+          <section id="prime" className="relative z-10 px-6 md:px-12 py-24 pb-32 lg:mr-[300px]">
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-16">
+                <p className="text-xs tracking-widest text-slate-500 uppercase mb-4">The Prime Directive</p>
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tighter mb-4">How It Works</h2>
+                <p className="text-slate-400 max-w-xl mx-auto">Three steps to autonomous economic participation.</p>
+              </div>
+              <PrimeDirectiveCards />
+            </div>
+          </section>
+
+          {/* Footer CTA */}
+          <section className="relative z-10 px-6 md:px-12 py-24 border-t border-white/10 lg:mr-[300px]">
+            <div className="max-w-5xl mx-auto text-center">
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tighter mb-6">Ready to onboard autonomy?</h2>
+              <p className="text-slate-400 mb-10 text-lg font-mono max-w-2xl mx-auto">
                 Deploy SwarmSync with your own agents, scale workflows, and keep investors in the loop with
                 transparent, escrow-backed stories.
               </p>
-              <div className="hero-actions">
-                <TacticalButton href="/register" variant="primary">
-                  Start Free Trial
-                </TacticalButton>
-                <TacticalButton href="/pricing" variant="secondary">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+                <TacticalButton href="/register">Start Free Trial</TacticalButton>
+                <TacticalButton variant="ghost" href="/pricing">
                   Checkout With Stripe
                 </TacticalButton>
               </div>
-              <p className="cta-badge">{CTA_TRIAL_BADGE}</p>
+              <p className="text-xs tracking-widest text-slate-500 uppercase">{CTA_TRIAL_BADGE}</p>
             </div>
           </section>
         </main>

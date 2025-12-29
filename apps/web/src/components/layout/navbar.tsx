@@ -20,7 +20,7 @@ export function Navbar() {
   const { isAuthenticated, logout } = useAuth();
   const [open, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-40 border-b border-white/60 bg-white/80 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-black/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-8">
         <Link href="/" className="flex items-center py-2" aria-label="Swarm Sync homepage">
           <BrandLogo className="h-24 w-auto md:h-32 -my-6 md:-my-8" priority size={1280} />
@@ -85,7 +85,7 @@ export function Navbar() {
       {open && (
         <div
           id="mobile-navigation"
-          className="border-t border-white/60 bg-white/90 px-4 py-4 md:hidden"
+          className="border-t border-white/10 bg-black/90 px-4 py-4 md:hidden"
         >
           <nav className="flex flex-col gap-4 text-sm" aria-label="Mobile navigation">
             {navLinks.map((link) => (
