@@ -47,19 +47,19 @@ const sections = [
   },
 ];
 
-const navItemClass = 'block rounded-lg px-3 py-2 text-sm transition-colors hover:bg-carrara/10';
+const navItemClass = 'block rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/10';
 
 export function Sidebar() {
   const pathname = usePathname();
   const { user } = useAuth();
 
   return (
-    <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-outline/40 bg-sidebar p-6 text-carrara lg:flex">
+    <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-white/10 bg-black p-6 text-slate-50 lg:flex">
       <div className="space-y-8">
 
         {sections.map((section) => (
           <Fragment key={section.title}>
-            <div className="text-[0.7rem] font-semibold uppercase tracking-wide text-brass/70">
+            <div className="text-[0.7rem] font-semibold uppercase tracking-wide text-slate-500">
               {section.title}
             </div>
             <nav className="space-y-1">
@@ -71,7 +71,7 @@ export function Sidebar() {
                   <Link
                     key={item.label}
                     href={item.href}
-                    className={`${navItemClass} ${isActive ? 'bg-carrara/15 text-carrara' : 'text-carrara/70 hover:text-carrara'
+                    className={`${navItemClass} ${isActive ? 'bg-white/10 text-yellow-400' : 'text-slate-400 hover:text-white'
                       }`}
                   >
                     {item.label}
@@ -86,16 +86,16 @@ export function Sidebar() {
       {user && (
         <Link
           href="/console/settings/profile"
-          className="block rounded-2xl border border-carrara/10 bg-carrara/5 p-4 transition-colors hover:bg-carrara/10 cursor-pointer"
+          className="block rounded-2xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10 cursor-pointer"
         >
-          <div className="text-[0.65rem] uppercase tracking-wide text-brass/70">Signed in as</div>
+          <div className="text-[0.65rem] uppercase tracking-wide text-slate-500">Signed in as</div>
           <div className="mt-2 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-carrara/15 text-sm font-semibold text-carrara">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-sm font-semibold text-white">
               {user.displayName?.charAt(0) || user.email.charAt(0)}
             </div>
             <div>
-              <div className="text-sm font-semibold text-carrara">{user.displayName || 'User'}</div>
-              <div className="text-xs text-carrara/70">{user.email}</div>
+              <div className="text-sm font-semibold text-white">{user.displayName || 'User'}</div>
+              <div className="text-xs text-slate-400">{user.email}</div>
             </div>
           </div>
         </Link>

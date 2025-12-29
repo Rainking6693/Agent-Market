@@ -35,12 +35,12 @@ export default function GlitchHeadline({ text, label, children, className = "" }
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
         className={className}
-        style={{ ...gradientStyle, backgroundPosition: "0% 50%" }}
       >
         {isGlitching ? (
           <motion.span
             animate={{ opacity: [1, 0.3, 1, 0.5, 1, 0.2, 1], x: [0, -2, 2, -1, 1, 0] }}
             transition={{ duration: 0.5, times: [0, 0.1, 0.2, 0.4, 0.6, 0.8, 1] }}
+            style={gradientStyle}
           >
             {displayText}
           </motion.span>

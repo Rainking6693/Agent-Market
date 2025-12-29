@@ -124,7 +124,7 @@ const pricingTiers: PricingTier[] = [
 
 export default function PricingPage() {
     return (
-        <div className="flex min-h-screen flex-col bg-gradient-to-b from-white to-[#f6efe6]">
+        <div className="flex min-h-screen flex-col bg-black text-slate-50">
             <Navbar />
 
             <main className="flex-1 px-4 py-16">
@@ -142,8 +142,8 @@ export default function PricingPage() {
                         </p>
                     </div>
 
-                    <div className="mx-auto max-w-3xl space-y-2 rounded-2xl border border-white/70 bg-white/70 p-6 text-xs text-muted-foreground">
-                        <p className="uppercase tracking-[0.3em] text-[0.6rem] text-muted-foreground">
+                    <div className="mx-auto max-w-3xl space-y-2 rounded-2xl border border-white/10 bg-white/5 p-6 text-xs text-slate-400">
+                        <p className="uppercase tracking-[0.3em] text-[0.6rem] text-slate-500">
                             What the limits mean
                         </p>
                         <p>Agents: max active agents in your workspace (archive/unarchive anytime)</p>
@@ -157,27 +157,27 @@ export default function PricingPage() {
                             <Card
                                 key={tier.name}
                                 className={`relative flex flex-col ${tier.popular
-                                        ? 'border-brass shadow-brand-panel ring-2 ring-brass/20'
-                                        : 'border-white/70 bg-white/80'
+                                        ? 'border-yellow-400/50 shadow-lg ring-2 ring-yellow-400/20 bg-white/5'
+                                        : 'border-white/10 bg-white/5'
                                     }`}
                             >
                                 {tier.popular && (
                                     <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                                        <span className="rounded-full bg-brass px-4 py-1 text-xs font-semibold text-white">
+                                        <span className="rounded-full bg-yellow-400 px-4 py-1 text-xs font-semibold text-black">
                                             Most Popular
                                         </span>
                                     </div>
                                 )}
 
                                 <CardHeader className="pb-8">
-                                    <CardTitle className="text-2xl font-headline">{tier.name}</CardTitle>
-                                    <CardDescription className="text-sm">{tier.description}</CardDescription>
+                                    <CardTitle className="text-2xl font-headline text-white">{tier.name}</CardTitle>
+                                    <CardDescription className="text-sm text-slate-400">{tier.description}</CardDescription>
                                     <div className="mt-4">
-                                        <span className="text-4xl font-headline text-foreground">{tier.price}</span>
-                                        <span className="text-muted-foreground">{tier.period}</span>
+                                        <span className="text-4xl font-headline text-white">{tier.price}</span>
+                                        <span className="text-slate-400">{tier.period}</span>
                                     </div>
                                     {tier.annualPrice && (
-                                        <p className="text-sm text-brass font-medium">{tier.annualPrice}</p>
+                                        <p className="text-sm text-yellow-400 font-medium">{tier.annualPrice}</p>
                                     )}
                                 </CardHeader>
 
@@ -185,8 +185,8 @@ export default function PricingPage() {
                                     <ul className="space-y-3">
                                         {tier.features.map((feature, idx) => (
                                             <li key={idx} className="flex items-start gap-2 text-sm">
-                                                <Check className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                                                <span className="text-muted-foreground">{feature}</span>
+                                                <Check className="h-4 w-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                                                <span className="text-slate-300">{feature}</span>
                                             </li>
                                         ))}
                                     </ul>
@@ -234,21 +234,21 @@ export default function PricingPage() {
                                     a: 'Yes! Save up to 20% by paying annually. Annual pricing is shown above for each paid tier.',
                                 },
                             ].map((faq, idx) => (
-                                <div key={idx} className="rounded-2xl border border-white/70 bg-white/80 p-6">
-                                    <h3 className="font-semibold text-foreground mb-2">{faq.q}</h3>
-                                    <p className="text-sm text-muted-foreground">{faq.a}</p>
+                                <div key={idx} className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                                    <h3 className="font-semibold text-white mb-2">{faq.q}</h3>
+                                    <p className="text-sm text-slate-400">{faq.a}</p>
                                 </div>
                             ))}
                         </div>
                     </div>
 
                     {/* CTA Section */}
-                    <div className="bg-brass/5 rounded-3xl border border-brass/20 p-12 space-y-6">
+                    <div className="bg-white/5 rounded-3xl border border-white/10 p-12 space-y-6">
                         <div className="text-center space-y-4">
-                            <h2 className="text-3xl font-headline text-foreground">
+                            <h2 className="text-3xl font-headline text-white">
                                 Need a Custom Enterprise Plan?
                             </h2>
-                            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
                                 For organizations with unique requirements, we offer custom pricing, dedicated infrastructure, and white-label solutions.
                             </p>
                         </div>

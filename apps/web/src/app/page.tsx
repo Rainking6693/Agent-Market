@@ -77,29 +77,7 @@ export default function LandingPage() {
   return (
     <>
       <StructuredData />
-      <div className="flex min-h-screen flex-col">
-        <div className="top-strip">
-          <div className="top-strip__content">
-            <span>Skip to main content</span>
-            <span>Public A2A Demo • Live Storyboard</span>
-          </div>
-        </div>
-
-        <div className="nav-banner">
-          <div className="nav-banner__logo">
-            <Image src="/swarm-sync-logo.png" alt="Swarm Sync logo" width={54} height={54} priority />
-            <span>AGENT-TO-AGENT HUB</span>
-          </div>
-          <div className="nav-banner__links">
-            <a href="/agents">Agents</a>
-            <a href="/console">Dashboard</a>
-            <a href="/register">Sign up</a>
-            <a href="/console" className="nav-button">
-              Console
-            </a>
-          </div>
-        </div>
-
+      <div className="flex min-h-screen flex-col bg-black">
         <Navbar />
 
         <main className="relative flex-1 bg-black text-slate-50 overflow-x-hidden">

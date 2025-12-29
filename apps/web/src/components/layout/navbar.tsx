@@ -1,11 +1,11 @@
 'use client';
 
 import { Menu } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
-import { BrandLogo } from '@/components/brand/brand-logo';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
 import { cn } from '@/lib/utils';
@@ -21,18 +21,19 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-black/80 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-8">
-        <Link href="/" className="flex items-center py-2" aria-label="Swarm Sync homepage">
-          <BrandLogo className="h-24 w-auto md:h-32 -my-6 md:-my-8" priority size={1280} />
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+        <Link href="/" className="flex items-center gap-2" aria-label="Swarm Sync homepage">
+          <Image src="/swarm-sync-logo.png" alt="Swarm Sync logo" width={40} height={40} priority className="h-10 w-auto" />
+          <span className="text-xs font-semibold tracking-[0.3em] text-white uppercase hidden sm:inline">AGENT-TO-AGENT HUB</span>
         </Link>
 
-        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 text-2xl font-medium text-muted-foreground md:flex">
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 text-2xl font-medium text-yellow-400 md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               className={cn(
-                'transition hover:text-foreground',
-                pathname.startsWith(link.href) && 'text-foreground',
+                'transition hover:text-yellow-300',
+                pathname.startsWith(link.href) && 'text-yellow-400',
               )}
               href={link.href}
             >
@@ -46,13 +47,13 @@ export function Navbar() {
             <>
               <button
                 onClick={logout}
-                className="text-2xl font-medium text-muted-foreground transition hover:text-foreground"
+                className="text-2xl font-medium text-white transition hover:text-slate-300"
               >
                 Sign out
               </button>
               <Button
                 size="lg"
-                className="hover-lift bg-[#C49A6C] text-white hover:bg-[#C49A6C]/90 border-2 border-[#C49A6C] shadow-lg"
+                className="hover-lift bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-yellow-400 shadow-lg"
                 asChild
               >
                 <Link href="/dashboard">Console</Link>
@@ -60,10 +61,10 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Button variant="ghost" asChild>
+              <Button variant="ghost" asChild className="text-white hover:text-yellow-400">
                 <Link href="/login">Log in</Link>
               </Button>
-              <Button asChild>
+              <Button asChild className="bg-yellow-400 text-black hover:bg-yellow-300">
                 <Link href="/register">Get started</Link>
               </Button>
             </>
