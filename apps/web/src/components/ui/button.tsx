@@ -12,12 +12,12 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-gradient-to-br from-[var(--primary-gradient-start)] to-[var(--primary-gradient-end)] text-[var(--primary-foreground)] shadow-[0_15px_30px_-15px_rgba(212,175,55,0.8)] hover:scale-105 hover:shadow-[0_20px_40px_-12px_rgba(212,175,55,0.6)]",
+          "text-white bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] shadow-[0_15px_30px_-15px_rgba(0,0,0,0.65)] hover:-translate-y-0.5 hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.75)]",
         secondary:
-          "bg-gradient-to-br from-[var(--secondary-bronze-light)] to-[var(--secondary-bronze-dark)] text-white shadow-[0_12px_24px_-14px_rgba(205,127,50,0.7)] hover:scale-105 hover:shadow-[0_16px_30px_-12px_rgba(205,127,50,0.65)]",
-        outline: "border border-input bg-transparent hover:bg-muted hover:text-foreground",
-        ghost: "hover:bg-muted hover:text-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "bg-transparent text-white border border-[#94A3B8] hover:bg-white/10 hover:border-white/80",
+        outline: "border border-input bg-transparent hover:bg-black/40 hover:text-white",
+        ghost: "hover:bg-black/20 hover:text-white",
+        link: "text-white underline-offset-4 hover:underline",
       },
       size: {
         default: "h-11 px-6 py-2",
