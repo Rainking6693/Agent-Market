@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 
 type Props = {
   children: ReactNode;
-  variant?: 'primary' | 'secondary' | 'muted';
+  variant?: 'primary' | 'secondary' | 'muted' | 'ghost';
   href?: string;
   className?: string;
 };
