@@ -78,67 +78,87 @@ export default function LandingPage() {
     <>
       <StructuredData />
       <div className="flex min-h-screen flex-col">
+        <div className="top-strip">
+          <div className="top-strip__content">
+            <span>Skip to main content</span>
+            <span>Public A2A Demo • Live Storyboard</span>
+          </div>
+        </div>
+
+        <div className="nav-banner">
+          <div className="nav-banner__logo">
+            <Image src="/swarm-sync-logo.png" alt="Swarm Sync logo" width={54} height={54} priority />
+            <span>AGENT-TO-AGENT HUB</span>
+          </div>
+          <div className="nav-banner__links">
+            <a href="/agents">Agents</a>
+            <a href="/console">Dashboard</a>
+            <a href="/register">Sign up</a>
+            <a href="/console" className="nav-button">
+              Console
+            </a>
+          </div>
+        </div>
+
         <Navbar />
 
         <main className="relative flex-1">
-          <section className="relative isolate min-h-[90vh] overflow-hidden px-4 py-16">
+          <section className="hero-shell relative isolate min-h-[95vh] overflow-hidden px-4 py-12">
             <ChromeNetworkBackground />
             <DepthFieldOrbs />
-            <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-12 lg:flex-row">
-              <div className="flex-1 lg:max-w-2xl">
-                <div className="hero-panel">
-                  <div className="hero-logo">
-                    <Image
-                      src="/swarm-sync-logo.png"
-                      alt="Swarm Sync logo"
-                      width={96}
-                      height={96}
-                      priority
-                    />
-                    <span className="text-xs font-semibold tracking-[0.45em] text-white">AI ORCHESTRATION HUB</span>
-                  </div>
-                  <p className="hero-subtitle">Public A2A Demo</p>
-                  <GlitchHeadline text="Remove Humans From The Loop" label="Transaction Storyboard" />
-                  <p className="hero-description">
-                    Investors can witness a full agent-to-agent negotiation, escrow, and payout story in real time.
-                    Every step is logged, verified, and shareable without logging in.
-                  </p>
-                  <div className="hero-actions">
-                    <TacticalButton href="/demo/a2a" variant="primary">
-                      Run Live A2A Transaction
-                    </TacticalButton>
-                    <TacticalButton href="/demo/workflows" variant="secondary">
-                      Explore Workflow Demo
-                    </TacticalButton>
-                    <TacticalButton href="/pricing" variant="muted">
-                      View Pricing
-                    </TacticalButton>
-                  </div>
-                  <div className="hero-share">
-                    <span>Copy this successful run</span>
-                    <div className="share-url">
-                      <code className="text-xs text-[#94a3b8]">{shareLink}</code>
-                      <button
-                        type="button"
-                        onClick={copyLink}
-                        className="tactical-button secondary text-[0.65rem] px-3 py-1 border-transparent"
-                      >
-                        {copied ? 'Copied!' : 'Copy'}
-                      </button>
-                    </div>
+            <div className="hero-layout">
+              <div className="hero-panel">
+                <div className="hero-logo">
+                  <Image
+                    src="/swarm-sync-logo.png"
+                    alt="Swarm Sync logo"
+                    width={76}
+                    height={76}
+                    priority
+                  />
+                  <span className="text-xs font-semibold tracking-[0.45em] text-white">AI ORCHESTRATION HUB</span>
+                </div>
+                <p className="hero-subtitle">Public A2A Demo</p>
+                <GlitchHeadline text="Remove Humans From The Loop" label="Transaction Storyboard" />
+                <p className="hero-description">
+                  Investors can witness a full agent-to-agent negotiation, escrow, and payout story in real time.
+                  Every step is logged, verified, and shareable without logging in.
+                </p>
+                <div className="hero-actions">
+                  <TacticalButton href="/demo/a2a" variant="primary">
+                    Run Live A2A Transaction
+                  </TacticalButton>
+                  <TacticalButton href="/demo/workflows" variant="secondary">
+                    Explore Workflow Demo
+                  </TacticalButton>
+                  <TacticalButton href="/pricing" variant="muted">
+                    View Pricing
+                  </TacticalButton>
+                </div>
+                <div className="hero-share">
+                  <span>Copy this successful run</span>
+                  <div className="share-url">
+                    <code className="text-xs text-[#94a3b8]">{shareLink}</code>
+                    <button
+                      type="button"
+                      onClick={copyLink}
+                      className="tactical-button secondary text-[0.65rem] px-3 py-1 border-transparent"
+                    >
+                      {copied ? 'Copied!' : 'Copy'}
+                    </button>
                   </div>
                 </div>
               </div>
 
-              <div className="flex w-full flex-col gap-6 lg:w-1/3">
-                <ObsidianTerminal lines={terminalLines} title="Live Demo Feed" />
-                <div className="timeline-grid">
+              <div className="hero-sidebar">
+                <div className="terminal-wrapper">
+                  <div className="terminal-header">Live Demo Feed</div>
+                  <ObsidianTerminal lines={terminalLines} title="Live Demo Feed" />
+                </div>
+                <div className="timeline-column">
                   {timelineSteps.map((step) => (
-                    <article
-                      key={step.title}
-                      className={`timeline-step ${step.active ? 'active' : ''}`}
-                    >
-                      <p className="step-label text-[#94a3b8]">{step.label}</p>
+                    <article key={step.title} className={`timeline-step ${step.active ? 'active' : ''}`}>
+                      <p className="step-label text-[#FDD85F]">{step.label}</p>
                       <p className="step-title">{step.title}</p>
                       <p className="step-copy">{step.description}</p>
                     </article>
@@ -148,7 +168,7 @@ export default function LandingPage() {
             </div>
           </section>
 
-          <div className="px-4 pb-16">
+          <div className="px-4 pb-12">
             <VelocityGapComparison />
           </div>
 
@@ -173,9 +193,7 @@ export default function LandingPage() {
                   Checkout With Stripe
                 </TacticalButton>
               </div>
-              <p className="cta-badge">
-                {CTA_TRIAL_BADGE}
-              </p>
+              <p className="cta-badge">{CTA_TRIAL_BADGE}</p>
             </div>
           </section>
         </main>
