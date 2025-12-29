@@ -237,8 +237,8 @@ function TransactionStoryboard({
     <div className="space-y-4">
       <div className="flex items-baseline justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">Transaction Storyboard</h2>
-          <p className="text-xs text-gray-500">
+          <h2 className="text-lg font-semibold text-white">Transaction Storyboard</h2>
+          <p className="text-xs text-slate-400">
             Outcomes-first view of a full A2A negotiation, escrow, and payout.
           </p>
         </div>
@@ -248,7 +248,7 @@ function TransactionStoryboard({
         {steps.map((step) => (
           <div
             key={step.key}
-            className="flex gap-3 rounded-2xl border border-gray-200 bg-white/80 px-3 py-3 shadow-sm"
+            className="flex gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-3 shadow-sm"
           >
             <div className="mt-1 flex flex-col items-center">
               <span
@@ -257,34 +257,34 @@ function TransactionStoryboard({
                     ? 'bg-emerald-500'
                     : step.state === 'upcoming'
                       ? 'bg-amber-400'
-                      : 'bg-gray-300'
+                      : 'bg-slate-600'
                 }`}
               />
             </div>
             <div className="flex-1">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-semibold text-gray-900">{step.title}</span>
+                <span className="text-sm font-semibold text-white">{step.title}</span>
                 {step.timestamp && (
-                  <span className="text-xs text-gray-500 whitespace-nowrap">{step.timestamp}</span>
+                  <span className="text-xs text-slate-400 whitespace-nowrap">{step.timestamp}</span>
                 )}
               </div>
-              <p className="mt-1 text-xs text-gray-600">{step.description}</p>
+              <p className="mt-1 text-xs text-slate-300">{step.description}</p>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white/80 shadow-sm">
-        <div className="flex items-center justify-between border-b border-gray-100 px-4 py-2">
-          <span className="text-sm font-semibold text-gray-900">Run details</span>
-          <div className="inline-flex rounded-full bg-gray-100 p-0.5 text-xs">
+      <div className="rounded-2xl border border-white/10 bg-white/5 shadow-sm">
+        <div className="flex items-center justify-between border-b border-white/10 px-4 py-2">
+          <span className="text-sm font-semibold text-white">Run details</span>
+          <div className="inline-flex rounded-full bg-white/10 p-0.5 text-xs">
             <button
               type="button"
               onClick={() => onDetailViewChange('user')}
               className={`rounded-full px-3 py-1 ${
                 detailView === 'user'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'bg-white/20 text-white shadow-sm'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
               User view
@@ -294,8 +294,8 @@ function TransactionStoryboard({
               onClick={() => onDetailViewChange('developer')}
               className={`rounded-full px-3 py-1 ${
                 detailView === 'developer'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'bg-white/20 text-white shadow-sm'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
               Developer view
@@ -304,10 +304,10 @@ function TransactionStoryboard({
         </div>
 
         {detailView === 'user' ? (
-          <div className="space-y-3 px-4 py-3 text-sm text-gray-800">
+          <div className="space-y-3 px-4 py-3 text-sm text-slate-200">
             <p>{summarySentence}</p>
             {negotiation && (
-              <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 p-3 text-xs text-emerald-900">
+              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-300">
                 <p className="mb-1 font-semibold">Outcome preview</p>
                 <p>
                   This run shows a fully funded, escrow-backed transaction from negotiation to
@@ -317,7 +317,7 @@ function TransactionStoryboard({
               </div>
             )}
             {negotiation && (
-              <ul className="grid gap-2 text-xs text-gray-700 sm:grid-cols-2">
+              <ul className="grid gap-2 text-xs text-slate-300 sm:grid-cols-2">
                 <li>
                   <span className="font-semibold">Negotiation status:</span> {status}
                 </li>
@@ -335,65 +335,65 @@ function TransactionStoryboard({
             )}
           </div>
         ) : (
-          <div className="space-y-3 px-4 py-3 text-xs text-gray-800">
+          <div className="space-y-3 px-4 py-3 text-xs text-slate-200">
             {negotiation ? (
               <>
                 <div className="grid gap-2 sm:grid-cols-2">
                   <div>
-                    <div className="font-semibold text-gray-900">IDs & ledger</div>
+                    <div className="font-semibold text-white">IDs & ledger</div>
                     <dl className="mt-1 space-y-1 font-mono">
                       <div>
-                        <span className="text-gray-500">negotiationId:</span>{' '}
-                        <span>{negotiation.id}</span>
+                        <span className="text-slate-400">negotiationId:</span>{' '}
+                        <span className="text-white">{negotiation.id}</span>
                       </div>
                       {negotiation.escrowId && (
                         <div>
-                          <span className="text-gray-500">escrowId:</span>{' '}
-                          <span>{negotiation.escrowId}</span>
+                          <span className="text-slate-400">escrowId:</span>{' '}
+                          <span className="text-white">{negotiation.escrowId}</span>
                         </div>
                       )}
                       {negotiation.transaction?.id && (
                         <div>
-                          <span className="text-gray-500">transactionId:</span>{' '}
-                          <span>{negotiation.transaction.id}</span>
+                          <span className="text-slate-400">transactionId:</span>{' '}
+                          <span className="text-white">{negotiation.transaction.id}</span>
                         </div>
                       )}
                     </dl>
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-900">Status</div>
+                    <div className="font-semibold text-white">Status</div>
                     <dl className="mt-1 space-y-1 font-mono">
                       <div>
-                        <span className="text-gray-500">negotiationStatus:</span>{' '}
-                        <span>{status}</span>
+                        <span className="text-slate-400">negotiationStatus:</span>{' '}
+                        <span className="text-white">{status}</span>
                       </div>
                       {negotiation.transaction && (
                         <div>
-                          <span className="text-gray-500">payoutStatus:</span>{' '}
-                          <span>{negotiation.transaction.status}</span>
+                          <span className="text-slate-400">payoutStatus:</span>{' '}
+                          <span className="text-white">{negotiation.transaction.status}</span>
                         </div>
                       )}
                       {negotiation.verificationStatus && (
                         <div>
-                          <span className="text-gray-500">verificationStatus:</span>{' '}
-                          <span>{negotiation.verificationStatus}</span>
+                          <span className="text-slate-400">verificationStatus:</span>{' '}
+                          <span className="text-white">{negotiation.verificationStatus}</span>
                         </div>
                       )}
                     </dl>
                   </div>
                 </div>
 
-                <div className="rounded-lg border border-gray-200 bg-gray-50 p-3">
-                  <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                <div className="rounded-lg border border-white/10 bg-white/5 p-3">
+                  <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
                     Raw negotiation payload
                   </div>
-                  <pre className="max-h-64 overflow-y-auto text-[11px] leading-tight">
+                  <pre className="max-h-64 overflow-y-auto text-[11px] leading-tight text-slate-300">
                     {JSON.stringify(negotiation, null, 2)}
                   </pre>
                 </div>
               </>
             ) : (
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-slate-400">
                 Once you run the demo, you&apos;ll see the raw negotiation object, escrow and payout
                 fields, and verification status here.
               </p>
@@ -403,41 +403,41 @@ function TransactionStoryboard({
       </div>
 
       {negotiation && (
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-4 text-xs text-emerald-900">
+        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-xs text-emerald-300">
           <div className="mb-2 font-semibold">Receipt</div>
           <dl className="space-y-1 font-mono">
             <div className="flex justify-between gap-2">
-              <span className="text-emerald-700">negotiationId</span>
-              <span className="text-right">{negotiation.id}</span>
+              <span className="text-emerald-400">negotiationId</span>
+              <span className="text-right text-white">{negotiation.id}</span>
             </div>
             {negotiation.escrowId && (
               <div className="flex justify-between gap-2">
-                <span className="text-emerald-700">escrowId</span>
-                <span className="text-right">{negotiation.escrowId}</span>
+                <span className="text-emerald-400">escrowId</span>
+                <span className="text-right text-white">{negotiation.escrowId}</span>
               </div>
             )}
             {escrowAmount != null && (
               <div className="flex justify-between gap-2">
-                <span className="text-emerald-700">escrowAmount</span>
-                <span className="text-right">${escrowAmount}</span>
+                <span className="text-emerald-400">escrowAmount</span>
+                <span className="text-right text-white">${escrowAmount}</span>
               </div>
             )}
             {price != null && (
               <div className="flex justify-between gap-2">
-                <span className="text-emerald-700">acceptedPrice</span>
-                <span className="text-right">${price}</span>
+                <span className="text-emerald-400">acceptedPrice</span>
+                <span className="text-right text-white">${price}</span>
               </div>
             )}
             {negotiation.transaction?.status && (
               <div className="flex justify-between gap-2">
-                <span className="text-emerald-700">payoutResult</span>
-                <span className="text-right">{negotiation.transaction.status}</span>
+                <span className="text-emerald-400">payoutResult</span>
+                <span className="text-right text-white">{negotiation.transaction.status}</span>
               </div>
             )}
             {negotiation.verificationStatus && (
               <div className="flex justify-between gap-2">
-                <span className="text-emerald-700">verificationSummary</span>
-                <span className="text-right">{negotiation.verificationStatus}</span>
+                <span className="text-emerald-400">verificationSummary</span>
+                <span className="text-right text-white">{negotiation.verificationStatus}</span>
               </div>
             )}
           </dl>
@@ -644,27 +644,27 @@ export default function DemoA2APage() {
   const buildShareLink = (id: string) => `${window.location.origin}/demo/a2a?runId=${id}`;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div className="min-h-screen bg-black text-slate-50">
       <div className="mx-auto max-w-6xl space-y-8 px-4 py-12">
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-gray-900">
+          <h1 className="text-4xl font-bold text-white">
             Live Agent-to-Agent Demo
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-slate-400">
             Watch two agents negotiate, fund escrow, and release payment in real time - no signup
             required.
           </p>
         </div>
 
         {usingFallbackAgents && (
-          <div className="mx-auto max-w-3xl rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+          <div className="mx-auto max-w-3xl rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-xs text-amber-300">
             Using demo agents from the public catalog.{' '}
             <span className="font-semibold">Sign up</span> to access the full agent directory.
           </div>
         )}
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
-          <div className="rounded-3xl border border-brass/20 bg-white/80 p-6 shadow-lg backdrop-blur-sm">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-lg backdrop-blur-sm">
             <A2ARunner
               mode="demo"
               initialRunId={runId}
@@ -684,10 +684,10 @@ export default function DemoA2APage() {
         </div>
 
         <div className="text-center space-y-2">
-          <Link href="/" className="text-sm text-gray-600 hover:text-gray-900 underline">
+          <Link href="/" className="text-sm text-slate-400 hover:text-white underline">
             Back to Home
           </Link>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-slate-500">
             Demo sessions expire after 1 hour. No signup required.
           </p>
         </div>

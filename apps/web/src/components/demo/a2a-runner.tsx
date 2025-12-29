@@ -256,7 +256,7 @@ export function A2ARunner(props: A2ARunnerProps) {
             value={requesterId}
             onChange={(e) => setRequesterId(e.target.value)}
             disabled={agents.length === 0}
-            className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none disabled:bg-gray-100"
+            className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-white/40 focus:outline-none disabled:bg-gray-100"
           >
             {agents.length === 0 ? (
               <option>
@@ -278,7 +278,7 @@ export function A2ARunner(props: A2ARunnerProps) {
             value={responderId}
             onChange={(e) => setResponderId(e.target.value)}
             disabled={agents.length === 0}
-            className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none disabled:bg-gray-100"
+            className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-white/40 focus:outline-none disabled:bg-gray-100"
           >
             {agents.length === 0 ? (
               <option>
@@ -301,7 +301,7 @@ export function A2ARunner(props: A2ARunnerProps) {
           value={service}
           onChange={(e) => setService(e.target.value)}
           rows={3}
-          className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none"
+          className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-white/40 focus:outline-none"
         />
       </label>
 
@@ -312,7 +312,7 @@ export function A2ARunner(props: A2ARunnerProps) {
             type="number"
             value={budget}
             onChange={(e) => setBudget(parseFloat(e.target.value) || 0)}
-            className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none"
+            className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-white/40 focus:outline-none"
           />
         </label>
 
@@ -322,7 +322,7 @@ export function A2ARunner(props: A2ARunnerProps) {
             type="number"
             value={price}
             onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
-            className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none"
+            className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-white/40 focus:outline-none"
           />
         </label>
       </div>
@@ -331,7 +331,7 @@ export function A2ARunner(props: A2ARunnerProps) {
         type="button"
         onClick={handleRun}
         disabled={isPending || agents.length < 2}
-        className="w-full bg-brass text-white hover:bg-brass/90 text-lg py-6"
+        className="w-full bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] text-white hover:bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc]/90 text-lg py-6"
         size="lg"
       >
         {isPending
@@ -356,7 +356,7 @@ export function A2ARunner(props: A2ARunnerProps) {
       )}
 
       {shareLink && (
-        <div className="rounded-lg border border-brass/20 bg-brass/5 p-4">
+        <div className="rounded-lg border border-white/10/20 bg-white/5 p-4">
           <p className="text-sm font-semibold text-gray-900 mb-2">
             {mode === 'demo' ? 'Copy this successful run:' : 'Share this demo:'}
           </p>

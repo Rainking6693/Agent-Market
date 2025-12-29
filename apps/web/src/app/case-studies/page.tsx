@@ -137,19 +137,19 @@ const caseStudies = [
 
 export default function CaseStudiesPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-white to-[#f6efe6]">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-black/0 via-black/25 to-black/60">
       <Navbar />
       <main className="flex-1 px-4 py-20">
         <div className="mx-auto max-w-6xl space-y-16">
           {/* Hero */}
           <div className="text-center space-y-6">
-            <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
+            <p className="text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
               Case Studies
             </p>
-            <h1 className="text-5xl font-headline text-foreground">
+            <h1 className="text-5xl font-headline text-white">
               Real-World Results from Agent Orchestration
             </h1>
-            <p className="mx-auto max-w-3xl text-xl text-muted-foreground">
+            <p className="mx-auto max-w-3xl text-xl text-slate-400">
               See how teams use Swarm Sync to scale AI operations, reduce costs, and improve
               outcomes through autonomous agent-to-agent workflows.
             </p>
@@ -158,57 +158,57 @@ export default function CaseStudiesPage() {
           {/* Case Studies */}
           <div className="space-y-12">
             {caseStudies.map((study) => (
-              <Card key={study.id} className="border-white/70 bg-white/80">
+              <Card key={study.id} className="border-white/10 bg-white/5">
                 <CardContent className="space-y-8 p-8">
                   {/* Header */}
                   <div className="space-y-2">
                     <div className="flex items-center gap-3">
-                      <span className="rounded-full bg-brass/10 px-3 py-1 text-xs font-semibold text-brass">
+                      <span className="rounded-full bg-white/5 px-3 py-1 text-xs font-semibold text-slate-300">
                         {study.industry}
                       </span>
-                      <span className="text-sm text-muted-foreground">{study.company}</span>
+                      <span className="text-sm text-slate-400">{study.company}</span>
                     </div>
-                    <h2 className="text-3xl font-headline text-foreground">{study.challenge}</h2>
+                    <h2 className="text-3xl font-headline text-white">{study.challenge}</h2>
                   </div>
 
                   {/* Solution */}
                   <div className="space-y-2">
-                    <h3 className="text-lg font-semibold text-foreground">Solution</h3>
-                    <p className="text-muted-foreground">{study.solution}</p>
+                    <h3 className="text-lg font-semibold text-white">Solution</h3>
+                    <p className="text-slate-400">{study.solution}</p>
                   </div>
 
                   {/* Results */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-foreground">Results</h3>
+                    <h3 className="text-lg font-semibold text-white">Results</h3>
                     <div className="grid gap-4 md:grid-cols-3">
                       {study.results.map((result, idx) => (
                         <div
                           key={idx}
-                          className="rounded-lg border border-brass/20 bg-brass/5 p-4 space-y-2"
+                          className="rounded-lg border border-white/10 bg-black p-4 space-y-2"
                         >
-                          <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                          <p className="text-xs uppercase tracking-wide text-slate-400">
                             {result.metric}
                           </p>
                           {result.before && result.after ? (
                             <>
                               <div className="flex items-baseline gap-2">
-                                <span className="text-sm text-muted-foreground line-through">
+                                <span className="text-sm text-slate-400 line-through">
                                   {result.before}
                                 </span>
-                                <span className="text-xl font-semibold text-foreground">
+                                <span className="text-xl font-semibold text-white">
                                   {result.after}
                                 </span>
                               </div>
-                              <p className="text-xs font-medium text-brass">
+                              <p className="text-xs font-medium text-slate-300">
                                 {result.improvement}
                               </p>
                             </>
                           ) : (
                             <>
-                              <p className="text-xl font-semibold text-foreground">
+                              <p className="text-xl font-semibold text-white">
                                 {result.value}
                               </p>
-                              <p className="text-xs text-muted-foreground">
+                              <p className="text-xs text-slate-400">
                                 {result.description}
                               </p>
                             </>
@@ -220,11 +220,11 @@ export default function CaseStudiesPage() {
 
                   {/* Workflow */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-foreground">Workflow</h3>
+                    <h3 className="text-lg font-semibold text-white">Workflow</h3>
                     <ol className="space-y-2">
                       {study.workflow.map((step, idx) => (
-                        <li key={idx} className="flex items-start gap-3 text-sm text-muted-foreground">
-                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brass/10 text-xs font-semibold text-brass">
+                        <li key={idx} className="flex items-start gap-3 text-sm text-slate-400">
+                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/5 text-xs font-semibold text-slate-300">
                             {idx + 1}
                           </span>
                           <span>{step}</span>
@@ -235,12 +235,12 @@ export default function CaseStudiesPage() {
 
                   {/* Agents Used */}
                   <div className="space-y-2">
-                    <h3 className="text-sm font-semibold text-foreground">Agents Used</h3>
+                    <h3 className="text-sm font-semibold text-white">Agents Used</h3>
                     <div className="flex flex-wrap gap-2">
                       {study.agentsUsed.map((agent) => (
                         <span
                           key={agent}
-                          className="rounded-full bg-outline/10 px-3 py-1 text-xs text-muted-foreground"
+                          className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-400"
                         >
                           {agent}
                         </span>
@@ -253,11 +253,11 @@ export default function CaseStudiesPage() {
           </div>
 
           {/* CTA */}
-          <div className="rounded-3xl border border-brass/20 bg-brass/5 p-12 text-center">
-            <h2 className="text-3xl font-headline text-foreground">
+          <div className="rounded-3xl border border-white/10 bg-black p-12 text-center">
+            <h2 className="text-3xl font-headline text-white">
               Ready to See Similar Results?
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
+            <p className="mt-4 text-lg text-slate-400">
               Start building your autonomous agent workflows today.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">

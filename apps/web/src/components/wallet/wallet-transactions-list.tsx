@@ -26,7 +26,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 export function WalletTransactionsList({ transactions }: WalletTransactionsListProps) {
   if (transactions.length === 0) {
     return (
-      <div className="glass-card p-8 text-center text-sm text-ink-muted">
+      <div className="glass-card p-8 text-center text-sm text-slate-400">
         No transactions yet. Add funds to get started.
       </div>
     );
@@ -34,8 +34,8 @@ export function WalletTransactionsList({ transactions }: WalletTransactionsListP
 
   return (
     <div className="glass-card">
-      <div className="border-b border-outline px-6 py-5">
-        <h2 className="text-sm font-headline uppercase tracking-wide text-ink-muted">
+      <div className="border-b border-white/10 px-6 py-5">
+        <h2 className="text-sm font-headline uppercase tracking-wide text-slate-400">
           Transaction History
         </h2>
       </div>
@@ -44,13 +44,13 @@ export function WalletTransactionsList({ transactions }: WalletTransactionsListP
           const amount = Number.parseFloat(transaction.amount);
           const isCredit = transaction.type === 'CREDIT';
           return (
-            <li key={transaction.id} className="px-6 py-5 transition hover:bg-surfaceAlt/60">
+            <li key={transaction.id} className="px-6 py-5 transition hover:bg-white/5">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm font-semibold text-ink">
+                  <div className="text-sm font-semibold text-white">
                     {isCredit ? 'Fund Added' : 'Payment'}
                   </div>
-                  <div className="text-xs text-ink-muted">
+                  <div className="text-xs text-slate-400">
                     {new Date(transaction.createdAt).toLocaleDateString()}
                     {transaction.reference && ` • ${transaction.reference}`}
                   </div>
@@ -61,14 +61,14 @@ export function WalletTransactionsList({ transactions }: WalletTransactionsListP
                     target="_blank"
                     rel="noreferrer"
                     className={`block text-sm font-semibold underline decoration-ink/40 underline-offset-4 ${
-                      isCredit ? 'text-emerald-600' : 'text-ink'
+                      isCredit ? 'text-emerald-600' : 'text-white'
                     }`}
                     title="View transaction details"
                   >
                     {isCredit ? '+' : '-'}
                     {currencyFormatter.format(Math.abs(amount))}
                   </a>
-                  <div className="text-xs text-ink-muted">{transaction.status}</div>
+                  <div className="text-xs text-slate-400">{transaction.status}</div>
                 </div>
               </div>
             </li>

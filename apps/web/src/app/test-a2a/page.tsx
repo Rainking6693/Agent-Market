@@ -222,11 +222,11 @@ export default function PublicTestA2APage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div className="min-h-screen bg-black">
       <div className="mx-auto max-w-4xl space-y-8 px-4 py-12">
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-gray-900">🚀 Live A2A Transaction Demo</h1>
-          <p className="text-lg text-gray-600">
+          <h1 className="text-4xl font-bold text-white">🚀 Live A2A Transaction Demo</h1>
+          <p className="text-lg text-slate-400">
             Watch two AI agents negotiate, create escrow, and complete a transaction — no login required
           </p>
           {needsAuth && (
@@ -239,15 +239,15 @@ export default function PublicTestA2APage() {
           )}
         </div>
 
-        <div className="rounded-lg border border-gray-200 bg-white shadow-lg p-6 space-y-6">
+        <div className="rounded-lg border border-white/10 bg-white/5 shadow-lg p-6 space-y-6">
           <div className="grid gap-4 md:grid-cols-2">
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-semibold text-gray-700">Requester Agent</span>
+              <span className="text-sm font-semibold text-white">Requester Agent</span>
               <select
                 value={requesterId}
                 onChange={(e) => setRequesterId(e.target.value)}
                 disabled={agents.length === 0}
-                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none disabled:bg-gray-100"
+                className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none disabled:bg-white/5"
               >
                 {agents.length === 0 ? (
                   <option>Loading agents...</option>
@@ -262,12 +262,12 @@ export default function PublicTestA2APage() {
             </label>
 
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-semibold text-gray-700">Responder Agent</span>
+              <span className="text-sm font-semibold text-white">Responder Agent</span>
               <select
                 value={responderId}
                 onChange={(e) => setResponderId(e.target.value)}
                 disabled={agents.length === 0}
-                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none disabled:bg-gray-100"
+                className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none disabled:bg-white/5"
               >
                 {agents.length === 0 ? (
                   <option>Loading agents...</option>
@@ -283,33 +283,33 @@ export default function PublicTestA2APage() {
           </div>
 
           <label className="flex flex-col gap-2">
-            <span className="text-sm font-semibold text-gray-700">Service Request</span>
+            <span className="text-sm font-semibold text-white">Service Request</span>
             <textarea
               value={service}
               onChange={(e) => setService(e.target.value)}
               rows={3}
-              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none"
+              className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
             />
           </label>
 
           <div className="grid gap-4 md:grid-cols-2">
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-semibold text-gray-700">Budget ($)</span>
+              <span className="text-sm font-semibold text-white">Budget ($)</span>
               <input
                 type="number"
                 value={budget}
                 onChange={(e) => setBudget(parseFloat(e.target.value) || 0)}
-                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none"
+                className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
               />
             </label>
 
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-semibold text-gray-700">Acceptance Price ($)</span>
+              <span className="text-sm font-semibold text-white">Acceptance Price ($)</span>
               <input
                 type="number"
                 value={price}
                 onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
-                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brass focus:outline-none"
+                className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
               />
             </label>
           </div>
@@ -318,7 +318,7 @@ export default function PublicTestA2APage() {
             type="button"
             onClick={runFullTest}
             disabled={isPending || agents.length < 2 || needsAuth}
-            className="w-full bg-brass text-white hover:bg-brass/90 text-lg py-6"
+            className="w-full bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] text-black hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.75)] text-lg py-6"
             size="lg"
           >
             {isPending ? 'Running Test...' : '🚀 Run Full A2A Test'}
@@ -338,7 +338,7 @@ export default function PublicTestA2APage() {
 
           {logs.length > 0 && (
             <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-gray-900">Test Logs:</h3>
+              <h3 className="text-sm font-semibold text-white">Test Logs:</h3>
               <div className="max-h-96 overflow-y-auto rounded-lg border border-gray-200 bg-gray-50 p-4 font-mono text-xs text-gray-800">
                 {logs.map((log, i) => (
                   <div key={i} className="mb-1">

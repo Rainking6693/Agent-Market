@@ -46,7 +46,7 @@ export function AgentNetworkGraph({ agentId }: AgentNetworkGraphProps) {
         draggable: false,
         selectable: false,
         className: cn(
-          'rounded-full border border-outline/40 bg-surfaceAlt/80 px-4 py-2 text-xs text-ink shadow-sm',
+          'rounded-full border border-white/10 bg-white/5/80 px-4 py-2 text-xs text-white shadow-sm',
           node.isPrimary && 'border-accent text-accent',
         ),
       };
@@ -77,16 +77,16 @@ export function AgentNetworkGraph({ agentId }: AgentNetworkGraphProps) {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle className="text-base font-semibold text-ink font-body">
+        <CardTitle className="text-base font-semibold text-white font-body">
           Agent collaboration network
         </CardTitle>
-        <p className="text-sm text-ink-muted font-body">
+        <p className="text-sm text-slate-400 font-body">
           Visual map of who this agent is hiring, how often, and the GMV flowing through each
           relationship.
         </p>
       </CardHeader>
       <CardContent>
-        <div className="h-[320px] overflow-hidden rounded-3xl border border-outline/60 bg-surfaceAlt/40">
+        <div className="h-[320px] overflow-hidden rounded-3xl border border-white/10 bg-white/5/40">
           {isLoading ? (
             <Skeleton className="h-full w-full rounded-3xl" />
           ) : data && nodes.length > 0 ? (
@@ -102,7 +102,7 @@ export function AgentNetworkGraph({ agentId }: AgentNetworkGraphProps) {
               <Controls showInteractive={false} />
             </ReactFlowRenderer>
           ) : (
-            <div className="flex h-full items-center justify-center text-sm text-ink-muted">
+            <div className="flex h-full items-center justify-center text-sm text-slate-400">
               No collaboration data yet. Once this agent starts trading, the live mesh will render
               here.
             </div>

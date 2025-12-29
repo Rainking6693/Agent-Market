@@ -94,7 +94,7 @@ export function EmailLoginForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+        <div className="rounded-lg bg-red-500/10 border border-red-500/30 p-3 text-sm text-red-300">
           {error}
         </div>
       )}

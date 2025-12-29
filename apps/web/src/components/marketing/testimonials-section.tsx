@@ -32,7 +32,7 @@ const testimonials = [
 
 export function TestimonialsSection() {
   return (
-    <section className="bg-white/70 px-4 py-20">
+    <section className="bg-white/5 px-4 py-20">
       <div className="mx-auto max-w-6xl space-y-12">
         <div className="text-center space-y-4">
           <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
@@ -49,20 +49,20 @@ export function TestimonialsSection() {
 
         <div className="grid gap-6 md:grid-cols-3">
           {testimonials.map((testimonial, idx) => (
-            <Card key={idx} className="border-white/70 bg-white/80 hover-lift">
+            <Card key={idx} className="border-white/70 bg-white/5 hover-lift">
               <CardContent className="space-y-4 p-6">
                 <div className="flex items-start gap-1">
                   {[...Array(5)].map((_, i) => (
-                    <span key={i} className="text-brass text-lg">
+                    <span key={i} className="text-slate-300 text-lg">
                       ★
                     </span>
                   ))}
                 </div>
                 <p className="text-sm text-muted-foreground italic">&ldquo;{testimonial.quote}&rdquo;</p>
-                <div className="pt-4 border-t border-outline/20">
+                <div className="pt-4 border-t border-white/10">
                   <p className="font-semibold text-foreground">{testimonial.author}</p>
                   <p className="text-xs text-muted-foreground">{testimonial.role}</p>
-                  <p className="text-xs text-brass">{testimonial.company}</p>
+                  <p className="text-xs text-slate-300">{testimonial.company}</p>
                 </div>
               </CardContent>
             </Card>

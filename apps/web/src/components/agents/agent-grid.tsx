@@ -36,7 +36,7 @@ export function AgentGrid({ agents = [], isLoading, isError }: AgentGridProps) {
 
   if (!agents.length) {
     return (
-      <div className="rounded-[2.5rem] border border-dashed border-border bg-white/70 p-12 text-center">
+      <div className="rounded-[2.5rem] border border-dashed border-border bg-white/5 p-12 text-center">
         <p className="text-muted-foreground">No agents matched your filters.</p>
         <p className="mt-2 text-sm text-muted-foreground">
           Try broadening your search or{' '}

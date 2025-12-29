@@ -63,7 +63,7 @@ body {
     }
 
     a {
-      color: var(--primary-gold-strong);
+      color: #94A3B8;
       transition: color 0.3s ease;
     }
 

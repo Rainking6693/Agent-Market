@@ -51,18 +51,18 @@ export function OnboardingChecklist({ completedSteps = [] }: { completedSteps?: 
   const progress = (completedSteps.length / steps.length) * 100;
 
   return (
-    <div className="rounded-2xl border border-brass/30 bg-gradient-to-r from-brass/5 to-transparent p-6 space-y-4">
+    <div className="rounded-2xl border border-white/10 bg-gradient-to-r from-white/5 to-transparent p-6 space-y-4">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="font-headline text-lg text-ink">Welcome to Swarm Sync!</h3>
-          <p className="text-sm text-ink-muted mt-1">
+          <h3 className="font-headline text-lg text-white">Welcome to Swarm Sync!</h3>
+          <p className="text-sm text-slate-400 mt-1">
             Complete these steps to get the most out of the marketplace
           </p>
         </div>
         <button
           onClick={() => setDismissed(true)}
-          className="text-ink-muted hover:text-ink transition-colors text-sm"
+          className="text-slate-400 hover:text-white transition-colors text-sm"
         >
           Dismiss
         </button>
@@ -71,12 +71,12 @@ export function OnboardingChecklist({ completedSteps = [] }: { completedSteps?: 
       {/* Progress Bar */}
       <div className="space-y-2">
         <div className="flex items-center justify-between text-xs">
-          <span className="text-ink-muted">Progress</span>
-          <span className="font-semibold text-ink">{completedSteps.length} of 3</span>
+          <span className="text-slate-400">Progress</span>
+          <span className="font-semibold text-white">{completedSteps.length} of 3</span>
         </div>
-        <div className="h-2 bg-outline/30 rounded-full overflow-hidden">
+        <div className="h-2 bg-white/10 rounded-full overflow-hidden">
           <div
-            className="h-full bg-brass transition-all duration-300"
+            className="h-full bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -89,14 +89,14 @@ export function OnboardingChecklist({ completedSteps = [] }: { completedSteps?: 
           return (
             <div
               key={step.id}
-              className="flex items-start gap-4 p-3 rounded-lg border border-outline/20 bg-white/50 hover:bg-white/80 transition"
+              className="flex items-start gap-4 p-3 rounded-lg border border-white/10 bg-white/50 hover:bg-white/5 transition"
             >
               {/* Icon */}
               <div
                 className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-lg mt-0.5 ${
                   isCompleted
                     ? 'bg-emerald-100 text-emerald-600'
-                    : 'bg-brass/10 text-brass'
+                    : 'bg-white/5 text-slate-300'
                 }`}
               >
                 {isCompleted ? <Check className="h-4 w-4" /> : step.icon}
@@ -106,12 +106,12 @@ export function OnboardingChecklist({ completedSteps = [] }: { completedSteps?: 
               <div className="flex-1 min-w-0">
                 <h4
                   className={`font-semibold text-sm ${
-                    isCompleted ? 'text-ink-muted line-through' : 'text-ink'
+                    isCompleted ? 'text-slate-400 line-through' : 'text-white'
                   }`}
                 >
                   {step.title}
                 </h4>
-                <p className="text-xs text-ink-muted mt-0.5">{step.description}</p>
+                <p className="text-xs text-slate-400 mt-0.5">{step.description}</p>
               </div>
 
               {/* Action */}
@@ -120,7 +120,7 @@ export function OnboardingChecklist({ completedSteps = [] }: { completedSteps?: 
                   variant="ghost"
                   size="sm"
                   onClick={() => router.push(step.href)}
-                  className="flex-shrink-0 text-brass hover:text-brass hover:bg-brass/10"
+                  className="flex-shrink-0 text-slate-300 hover:text-slate-300 hover:bg-white/5"
                 >
                   {step.action}
                   <ArrowRight className="h-3 w-3 ml-1" />

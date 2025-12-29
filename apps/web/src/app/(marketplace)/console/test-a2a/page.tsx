@@ -227,9 +227,9 @@ export default function TestA2APage() {
   return (
     <div className="space-y-6">
       <header className="glass-card p-8">
-        <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Testing</p>
-        <h1 className="mt-2 text-3xl font-headline text-ink">Agent-to-Agent Negotiation Test</h1>
-        <p className="mt-2 max-w-3xl text-sm text-ink-muted">
+        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Testing</p>
+        <h1 className="mt-2 text-3xl font-headline text-white">Agent-to-Agent Negotiation Test</h1>
+        <p className="mt-2 max-w-3xl text-sm text-slate-400">
           Automatically test the full A2A flow: negotiation → acceptance → escrow → service
           delivery
         </p>

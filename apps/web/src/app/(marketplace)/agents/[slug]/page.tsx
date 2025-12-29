@@ -72,12 +72,12 @@ export default async function AgentDetailPage({
       : 'Custom';
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-white to-[#f7efe4]">
+    <div className="flex min-h-screen flex-col bg-black text-slate-50">
       <Navbar />
       <div className="flex-1 px-4 py-12">
         <div className="mx-auto flex max-w-5xl flex-col gap-10">
-          <header className="rounded-[3rem] border border-white/70 bg-white/80 p-10 shadow-brand-panel">
-            <div className="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.4em] text-muted-foreground">
+          <header className="rounded-[3rem] border border-white/10 bg-white/5 p-10 shadow-brand-panel">
+            <div className="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.4em] text-slate-400">
               <span>{categories[0]}</span>
               {agent.verificationStatus === 'VERIFIED' && (
                 <Badge variant="accent" className="text-[0.65rem] uppercase tracking-wide">
@@ -107,9 +107,9 @@ export default async function AgentDetailPage({
             </div>
             <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
               <div>
-                <h1 className="text-4xl font-display text-foreground">{agent.name}</h1>
-                <p className="mt-4 text-base text-muted-foreground">{agent.description}</p>
-                <div className="mt-4 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                <h1 className="text-4xl font-display text-white">{agent.name}</h1>
+                <p className="mt-4 text-base text-slate-400">{agent.description}</p>
+                <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-400">
                   {agent.tags.map((tag) => (
                     <Badge key={tag} variant="outline">
                       {formatTag(tag)}
@@ -118,10 +118,10 @@ export default async function AgentDetailPage({
                 </div>
               </div>
               <div className="flex flex-col gap-3">
-                <div className="rounded-full border border-border px-4 py-2 text-center text-xs uppercase tracking-wide text-muted-foreground">
+                <div className="rounded-full border border-border px-4 py-2 text-center text-xs uppercase tracking-wide text-slate-400">
                   Pricing model: {agent.pricingModel}
                 </div>
-                <div className="text-3xl font-headline text-foreground">{price} / engagement</div>
+                <div className="text-3xl font-headline text-white">{price} / engagement</div>
                 <div className="flex flex-wrap gap-3">
                   <Button
                     asChild
@@ -157,9 +157,9 @@ export default async function AgentDetailPage({
           </section>
 
           {qualityAnalytics && (
-            <Card className="border-white/70 bg-white/80">
+            <Card className="border-white/10 bg-white/5">
               <CardContent className="space-y-6 p-6">
-                <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+                <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-400">
                   Quality & Testing
                 </h2>
                 <div className="grid gap-4 md:grid-cols-4">
@@ -194,7 +194,7 @@ export default async function AgentDetailPage({
                 </div>
                 {evaluations.length > 0 && (
                   <div className="space-y-2">
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                       Recent Test Results
                     </h3>
                     <div className="space-y-1">
@@ -206,7 +206,7 @@ export default async function AgentDetailPage({
                           <span className="font-medium">{evaluation.scenario.name}</span>
                           <div className="flex items-center gap-3">
                             {evaluation.latencyMs && (
-                              <span className="text-xs text-muted-foreground">{evaluation.latencyMs}ms</span>
+                              <span className="text-xs text-slate-400">{evaluation.latencyMs}ms</span>
                             )}
                             <span
                               className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
@@ -225,7 +225,7 @@ export default async function AgentDetailPage({
                 )}
                 {certifications.length > 0 && (
                   <div className="space-y-2">
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                       Certifications
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -242,17 +242,17 @@ export default async function AgentDetailPage({
           )}
 
           <section className="grid gap-6 lg:grid-cols-2">
-            <Card className="border-white/70 bg-white/80">
+            <Card className="border-white/10 bg-white/5">
               <CardContent className="space-y-3 p-6">
-                <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+                <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-400">
                   Input schema
                 </h2>
                 <SchemaBlock data={schema?.schemas?.input} />
               </CardContent>
             </Card>
-            <Card className="border-white/70 bg-white/80">
+            <Card className="border-white/10 bg-white/5">
               <CardContent className="space-y-3 p-6">
-                <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+                <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-400">
                   Output schema
                 </h2>
                 <SchemaBlock data={schema?.schemas?.output} />
@@ -261,7 +261,7 @@ export default async function AgentDetailPage({
           </section>
 
           {budget && (
-            <Card className="border-white/70 bg-white/80">
+            <Card className="border-white/10 bg-white/5">
               <CardContent className="grid gap-6 p-6 md:grid-cols-3">
                 <BudgetMetric
                   label="Monthly allocation"
@@ -302,10 +302,10 @@ export default async function AgentDetailPage({
 
 function SchemaBlock({ data }: { data?: AgentSchemaDefinition['schemas']['input'] | null }) {
   if (!data) {
-    return <p className="text-sm text-muted-foreground">Schema not published yet.</p>;
+    return <p className="text-sm text-slate-400">Schema not published yet.</p>;
   }
   return (
-    <pre className="overflow-auto rounded-2xl border border-border bg-background/70 p-4 text-xs text-muted-foreground">
+    <pre className="overflow-auto rounded-2xl border border-border bg-black/50 p-4 text-xs text-slate-400">
       {JSON.stringify(data, null, 2)}
     </pre>
   );
@@ -313,11 +313,11 @@ function SchemaBlock({ data }: { data?: AgentSchemaDefinition['schemas']['input'
 
 function StatCard({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
-    <Card className="border-white/70 bg-white/80">
+    <Card className="border-white/10 bg-white/5">
       <CardContent className="space-y-1 p-5">
-        <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">{label}</p>
-        <p className="text-2xl font-display text-foreground">{value}</p>
-        {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">{label}</p>
+        <p className="text-2xl font-display text-white">{value}</p>
+        {hint && <p className="text-xs text-slate-400">{hint}</p>}
       </CardContent>
     </Card>
   );
@@ -326,9 +326,9 @@ function StatCard({ label, value, hint }: { label: string; value: string; hint?:
 function BudgetMetric({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">{label}</p>
-      <p className="mt-2 text-xl font-semibold text-foreground">{value}</p>
-      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+      <p className="text-xs uppercase tracking-[0.3em] text-slate-400">{label}</p>
+      <p className="mt-2 text-xl font-semibold text-white">{value}</p>
+      {hint && <p className="text-xs text-slate-400">{hint}</p>}
     </div>
   );
 }

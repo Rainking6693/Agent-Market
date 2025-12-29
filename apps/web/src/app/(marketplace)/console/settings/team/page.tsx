@@ -45,8 +45,8 @@ export default function TeamSettingsPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <h1 className="text-3xl font-headline text-ink">Team Settings</h1>
-        <p className="text-sm text-ink-muted">Manage your team members and invitations</p>
+        <h1 className="text-3xl font-headline text-white">Team Settings</h1>
+        <p className="text-sm text-slate-400">Manage your team members and invitations</p>
       </header>
 
       <Card>
@@ -96,16 +96,16 @@ export default function TeamSettingsPage() {
         <CardContent>
           <div className="space-y-4">
             {user && (
-              <div className="flex items-center justify-between rounded-lg border border-outline/60 p-4">
+              <div className="flex items-center justify-between rounded-lg border border-white/10 p-4">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-sm font-semibold text-accent">
                     {user.displayName?.charAt(0) || user.email.charAt(0)}
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-ink">
+                    <div className="text-sm font-medium text-white">
                       {user.displayName || 'You'}
                     </div>
-                    <div className="text-xs text-ink-muted">{user.email}</div>
+                    <div className="text-xs text-slate-400">{user.email}</div>
                   </div>
                 </div>
                 <span className="rounded-full bg-accent/10 px-3 py-1 text-xs font-medium text-accent">
@@ -114,8 +114,8 @@ export default function TeamSettingsPage() {
               </div>
             )}
 
-            <div className="rounded-lg border border-dashed border-outline/60 p-6 text-center">
-              <p className="text-sm text-ink-muted">
+            <div className="rounded-lg border border-dashed border-white/10 p-6 text-center">
+              <p className="text-sm text-slate-400">
                 No other team members yet. Invite colleagues to collaborate on your agent
                 marketplace.
               </p>
@@ -130,8 +130,8 @@ export default function TeamSettingsPage() {
           <CardDescription>Invitations that haven&apos;t been accepted yet</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-lg border border-dashed border-outline/60 p-6 text-center">
-            <p className="text-sm text-ink-muted">No pending invitations</p>
+          <div className="rounded-lg border border-dashed border-white/10 p-6 text-center">
+            <p className="text-sm text-slate-400">No pending invitations</p>
           </div>
         </CardContent>
       </Card>

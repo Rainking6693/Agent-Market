@@ -133,11 +133,11 @@ export default function LandingPage() {
                     key={step.title}
                     className={`p-4 rounded-lg border ${
                       step.active
-                        ? 'border-yellow-400/50 bg-yellow-400/5'
+                        ? 'border-slate-400/50 bg-slate-400/5'
                         : 'border-white/10 bg-white/5'
                     }`}
                   >
-                    <p className="text-xs tracking-widest text-yellow-400 uppercase mb-2">{step.label}</p>
+                    <p className="text-xs tracking-widest text-slate-300 uppercase mb-2">{step.label}</p>
                     <p className="text-lg font-semibold text-white mb-1">{step.title}</p>
                     <p className="text-sm text-slate-400">{step.description}</p>
                   </article>

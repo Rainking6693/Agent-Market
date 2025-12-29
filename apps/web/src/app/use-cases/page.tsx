@@ -148,15 +148,15 @@ export default function UseCasesPage() {
 
         <main className="flex-1">
           {/* Hero */}
-          <section className="relative overflow-hidden bg-gradient-to-b from-white to-surface px-4 pb-20 pt-24">
+          <section className="relative overflow-hidden bg-black px-4 pb-20 pt-24">
             <div className="mx-auto max-w-5xl text-center">
-              <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
+              <p className="text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
                 Use Cases & Examples
               </p>
-              <h1 className="mt-6 text-5xl font-headline leading-tight text-foreground lg:text-6xl">
+              <h1 className="mt-6 text-5xl font-headline leading-tight text-white lg:text-6xl">
                 Real-World Multi-Agent Workflows
               </h1>
-              <p className="mt-6 text-xl font-body text-muted-foreground">
+              <p className="mt-6 text-xl font-body text-slate-400">
                 See how teams across fintech, SaaS, e-commerce, and research use Swarm Sync to scale
                 operations with autonomous agents.
               </p>
@@ -164,22 +164,22 @@ export default function UseCasesPage() {
           </section>
 
           {/* Before/After Metrics */}
-          <section className="bg-brass/5 px-4 py-16">
+          <section className="bg-black px-4 py-16">
             <div className="mx-auto max-w-6xl">
-              <h2 className="mb-12 text-center text-3xl font-headline text-foreground">
+              <h2 className="mb-12 text-center text-3xl font-headline text-white">
                 Typical Results Across Industries
               </h2>
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                 {beforeAfterMetrics.map((item) => (
-                  <Card key={item.metric} className="border-white/70 bg-white/80 text-center">
+                  <Card key={item.metric} className="border-white/10 bg-white/5 text-center">
                     <CardContent className="space-y-4 p-6">
-                      <p className="font-headline text-lg text-foreground">{item.metric}</p>
-                      <div className="space-y-2 text-sm font-body text-muted-foreground">
+                      <p className="font-headline text-lg text-white">{item.metric}</p>
+                      <div className="space-y-2 text-sm font-body text-slate-400">
                         <div>
                           <span className="opacity-60">Before:</span> {item.before}
                         </div>
                         <div>
-                          <span className="font-semibold text-foreground">After:</span>{' '}
+                          <span className="font-semibold text-white">After:</span>{' '}
                           <span className="font-semibold text-success">{item.after}</span>
                         </div>
                       </div>
@@ -197,15 +197,15 @@ export default function UseCasesPage() {
           {useCases.map((useCase, idx) => (
             <section
               key={useCase.title}
-              className={`px-4 py-20 ${idx % 2 === 0 ? 'bg-white/70' : 'bg-white/40'}`}
+              className={`px-4 py-20 ${idx % 2 === 0 ? 'bg-black' : 'bg-black'}`}
             >
               <div className="mx-auto max-w-5xl space-y-8">
                 {/* Header */}
                 <div className="space-y-4">
-                  <div className="inline-block rounded-full bg-brass/15 px-4 py-1 text-sm font-medium text-brass">
+                  <div className="inline-block rounded-full bg-white/10 px-4 py-1 text-sm font-medium text-slate-300">
                     {useCase.industry}
                   </div>
-                  <h2 className="text-4xl font-headline text-foreground">{useCase.title}</h2>
+                  <h2 className="text-4xl font-headline text-white">{useCase.title}</h2>
                 </div>
 
                 {/* Challenge/Solution */}
@@ -215,7 +215,7 @@ export default function UseCasesPage() {
                       <p className="font-headline text-sm uppercase tracking-wide text-destructive">
                         The Challenge
                       </p>
-                      <p className="font-body text-foreground">{useCase.challenge}</p>
+                      <p className="font-body text-white">{useCase.challenge}</p>
                     </CardContent>
                   </Card>
 
@@ -224,16 +224,16 @@ export default function UseCasesPage() {
                       <p className="font-headline text-sm uppercase tracking-wide text-success">
                         The Solution
                       </p>
-                      <p className="font-body text-foreground">{useCase.solution}</p>
+                      <p className="font-body text-white">{useCase.solution}</p>
                     </CardContent>
                   </Card>
                 </div>
 
                 {/* Results */}
-                <Card className="border-brass/20 bg-brass/5">
+                <Card className="border-white/10/20 bg-black">
                   <CardContent className="space-y-4 p-8">
-                    <p className="font-headline text-lg text-foreground">Results</p>
-                    <ul className="space-y-2 font-body text-foreground">
+                    <p className="font-headline text-lg text-white">Results</p>
+                    <ul className="space-y-2 font-body text-slate-300">
                       {useCase.results.map((result) => (
                         <li key={result} className="flex items-start gap-2">
                           <span className="text-success">✓</span>
@@ -246,15 +246,15 @@ export default function UseCasesPage() {
 
                 {/* Workflow */}
                 <div className="space-y-4">
-                  <p className="font-headline text-xl text-foreground">How It Works</p>
+                  <p className="font-headline text-xl text-white">How It Works</p>
                   <div className="space-y-3">
                     {useCase.workflow.map((step, stepIdx) => (
-                      <Card key={stepIdx} className="border-white/70 bg-white/80">
+                      <Card key={stepIdx} className="border-white/10 bg-white/5">
                         <CardContent className="flex gap-4 p-4">
-                          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-brass/15 text-sm font-headline text-brass">
+                          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-sm font-headline text-slate-300">
                             {stepIdx + 1}
                           </div>
-                          <p className="font-body text-muted-foreground">{step}</p>
+                          <p className="font-body text-slate-400">{step}</p>
                         </CardContent>
                       </Card>
                     ))}
@@ -265,12 +265,12 @@ export default function UseCasesPage() {
           ))}
 
           {/* CTA */}
-          <section className="bg-brass/5 px-4 py-20">
+          <section className="bg-black px-4 py-20">
             <div className="mx-auto max-w-4xl text-center space-y-8">
-              <h2 className="text-4xl font-headline text-foreground">
+              <h2 className="text-4xl font-headline text-white">
                 Ready to Build Your Agent Workflow?
               </h2>
-              <p className="text-lg font-body text-muted-foreground">
+              <p className="text-lg font-body text-slate-400">
                 Start with {TRIAL_LABEL} and see how Swarm Sync can transform your operations with
                 autonomous agents.
               </p>
@@ -282,7 +282,7 @@ export default function UseCasesPage() {
                   <Link href="/platform">Explore Platform</Link>
                 </Button>
               </div>
-              <p className="text-sm font-body text-muted-foreground">
+              <p className="text-sm font-body text-slate-400">
                 {CTA_TRIAL_BADGE}
               </p>
             </div>

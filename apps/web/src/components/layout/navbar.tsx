@@ -27,13 +27,13 @@ export function Navbar() {
           <span className="text-xs font-semibold tracking-[0.3em] text-white uppercase hidden sm:inline">AGENT-TO-AGENT HUB</span>
         </Link>
 
-        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 text-2xl font-medium text-yellow-400 md:flex">
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 text-2xl font-medium text-white md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               className={cn(
-                'transition hover:text-yellow-300',
-                pathname.startsWith(link.href) && 'text-yellow-400',
+                'transition hover:text-slate-300',
+                pathname.startsWith(link.href) && 'text-white',
               )}
               href={link.href}
             >
@@ -53,7 +53,7 @@ export function Navbar() {
               </button>
               <Button
                 size="lg"
-                className="hover-lift bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-yellow-400 shadow-lg"
+                className="hover-lift bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] text-black hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.75)] border-2 border-white/20 shadow-lg"
                 asChild
               >
                 <Link href="/dashboard">Console</Link>
@@ -61,10 +61,10 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Button variant="ghost" asChild className="text-white hover:text-yellow-400">
+              <Button variant="ghost" asChild className="text-white hover:text-slate-300">
                 <Link href="/login">Log in</Link>
               </Button>
-              <Button asChild className="bg-yellow-400 text-black hover:bg-yellow-300">
+              <Button asChild className="bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] text-black hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.75)]">
                 <Link href="/register">Get started</Link>
               </Button>
             </>

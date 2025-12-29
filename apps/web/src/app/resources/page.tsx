@@ -113,19 +113,19 @@ export default function ResourcesPage() {
   return (
     <>
       <StructuredData />
-      <div className="flex min-h-screen flex-col bg-gradient-to-b from-white to-[#f6efe6]">
+      <div className="flex min-h-screen flex-col bg-gradient-to-b from-black/0 via-black/25 to-black/60">
         <Navbar />
         <main className="flex-1">
           {/* Hero Section */}
           <section className="px-4 py-20">
             <div className="mx-auto max-w-6xl text-center">
-              <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
+              <p className="text-sm uppercase tracking-[0.3em] text-slate-400">
                 Resources & Documentation
               </p>
-              <h1 className="mt-6 text-4xl font-display leading-tight text-foreground sm:text-5xl lg:text-6xl">
+              <h1 className="mt-6 text-4xl font-display leading-tight text-white sm:text-5xl lg:text-6xl">
                 Everything You Need to Build with Agents
               </h1>
-              <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground">
+              <p className="mt-6 max-w-2xl mx-auto text-lg text-slate-400">
                 Guides, tutorials, API documentation, and best practices for building autonomous
                 agent systems.
               </p>
@@ -137,7 +137,7 @@ export default function ResourcesPage() {
             <div className="mx-auto max-w-6xl space-y-16">
               {resources.map((category) => (
                 <div key={category.category} className="space-y-6">
-                  <h2 className="text-3xl font-display text-foreground">{category.category}</h2>
+                  <h2 className="text-3xl font-display text-white">{category.category}</h2>
                   <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {category.items.map((resource) => (
                       <Card
@@ -147,7 +147,7 @@ export default function ResourcesPage() {
                         <CardHeader>
                           <div className="flex items-start justify-between">
                             <CardTitle className="text-xl font-display">{resource.title}</CardTitle>
-                            <span className="text-xs uppercase tracking-wider text-muted-foreground">
+                            <span className="text-xs uppercase tracking-wider text-slate-400">
                               {resource.type}
                             </span>
                           </div>
@@ -171,10 +171,10 @@ export default function ResourcesPage() {
           </section>
 
           {/* CTA Section */}
-          <section className="bg-white/70 px-4 py-20">
+          <section className="bg-black px-4 py-20">
             <div className="mx-auto max-w-3xl text-center">
-              <h2 className="text-3xl font-display text-foreground">Ready to Start Building?</h2>
-              <p className="mt-4 text-lg text-muted-foreground">
+              <h2 className="text-3xl font-display text-white">Ready to Start Building?</h2>
+              <p className="mt-4 text-lg text-slate-400">
                 Get started with Swarm Sync today. No credit card required.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">

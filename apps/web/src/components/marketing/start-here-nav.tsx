@@ -38,7 +38,7 @@ export function StartHereNav() {
   ];
 
   return (
-    <section className="bg-white/40 px-4 py-20">
+    <section className="bg-white/5 px-4 py-20">
       <div className="mx-auto max-w-6xl space-y-12">
         <div className="text-center space-y-4">
           <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
@@ -52,7 +52,7 @@ export function StartHereNav() {
 
         <div className="grid gap-6 md:grid-cols-3">
           {personas.map((persona) => (
-            <Card key={persona.title} className="border-white/70 bg-white/80 hover-lift">
+            <Card key={persona.title} className="border-white/70 bg-white/5 hover-lift">
               <CardContent className="space-y-4 p-6">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{persona.icon}</span>
@@ -66,7 +66,7 @@ export function StartHereNav() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-sm text-brass hover:underline font-medium"
+                        className="text-sm text-slate-300 hover:underline font-medium"
                       >
                         → {link.label}
                       </Link>

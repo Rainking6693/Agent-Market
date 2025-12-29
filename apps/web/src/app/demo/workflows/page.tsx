@@ -144,11 +144,11 @@ export default function DemoWorkflowsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div className="min-h-screen bg-black text-slate-50">
       <div className="mx-auto max-w-6xl space-y-8 px-4 py-12">
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-gray-900">🔄 Workflow Builder Demo</h1>
-          <p className="text-lg text-gray-600">
+          <h1 className="text-4xl font-bold text-white">🔄 Workflow Builder Demo</h1>
+          <p className="text-lg text-slate-400">
             Design and export agent workflows — no signup required
           </p>
         </div>
@@ -156,20 +156,20 @@ export default function DemoWorkflowsPage() {
         <div className="grid gap-6 md:grid-cols-2">
           {/* Templates Sidebar */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900">Workflow Templates</h2>
+            <h2 className="text-xl font-semibold text-white">Workflow Templates</h2>
             <div className="space-y-3">
               {WORKFLOW_TEMPLATES.map((template) => (
                 <Card
                   key={template.id}
-                  className={`cursor-pointer transition hover:shadow-lg ${
-                    selectedTemplate?.id === template.id ? 'border-brass border-2' : ''
+                  className={`cursor-pointer transition hover:shadow-lg border-white/10 bg-white/5 ${
+                    selectedTemplate?.id === template.id ? 'border-white/30 border-2' : ''
                   }`}
                   onClick={() => handleSelectTemplate(template)}
                 >
                   <CardContent className="p-4">
-                    <h3 className="font-semibold text-gray-900">{template.name}</h3>
-                    <p className="text-sm text-gray-600 mt-1">{template.description}</p>
-                    <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
+                    <h3 className="font-semibold text-white">{template.name}</h3>
+                    <p className="text-sm text-slate-400 mt-1">{template.description}</p>
+                    <div className="mt-2 flex items-center justify-between text-xs text-slate-500">
                       <span>{template.steps.length} steps</span>
                       <span>${template.budget} budget</span>
                     </div>
@@ -182,7 +182,7 @@ export default function DemoWorkflowsPage() {
           {/* Workflow Editor */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-900">Workflow JSON</h2>
+              <h2 className="text-xl font-semibold text-white">Workflow JSON</h2>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
@@ -197,7 +197,7 @@ export default function DemoWorkflowsPage() {
                 <Button
                   onClick={handleExport}
                   disabled={!workflowJson || isExporting}
-                  className="bg-brass text-white hover:bg-brass/90"
+                  className="bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] text-black hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.75)]"
                 >
                   {isExporting ? 'Exporting...' : 'Export JSON'}
                 </Button>
@@ -205,9 +205,9 @@ export default function DemoWorkflowsPage() {
             </div>
 
             {selectedTemplate && (
-              <div className="rounded-lg border border-brass/20 bg-brass/5 p-4">
-                <h3 className="font-semibold text-gray-900 mb-2">{selectedTemplate.name}</h3>
-                <div className="space-y-2 text-sm text-gray-700">
+              <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+                <h3 className="font-semibold text-white mb-2">{selectedTemplate.name}</h3>
+                <div className="space-y-2 text-sm text-slate-300">
                   {selectedTemplate.steps.map((step, index) => (
                     <div key={step.id} className="flex items-center gap-2">
                       <span className="font-semibold">{index + 1}.</span>
@@ -223,14 +223,14 @@ export default function DemoWorkflowsPage() {
               onChange={(e) => setWorkflowJson(e.target.value)}
               placeholder="Select a template or write your own workflow JSON..."
               rows={20}
-              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 font-mono text-sm text-gray-900 focus:border-brass focus:outline-none"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-mono text-sm text-white focus:border-white/30 focus:outline-none placeholder:text-slate-500"
             />
 
             {workflowJson && (
-              <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-                <p className="text-sm text-amber-800">
+              <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-4">
+                <p className="text-sm text-amber-300">
                   💡 <strong>Note:</strong> To run this workflow, please{' '}
-                  <Link href="/register" className="font-semibold underline">
+                  <Link href="/register" className="font-semibold underline text-amber-200 hover:text-white">
                     create an account
                   </Link>
                   . You can export the JSON now and import it later.
@@ -241,10 +241,10 @@ export default function DemoWorkflowsPage() {
         </div>
 
         <div className="text-center space-y-2">
-          <Link href="/" className="text-sm text-gray-600 hover:text-gray-900 underline">
+          <Link href="/" className="text-sm text-slate-400 hover:text-white underline">
             ← Back to Home
           </Link>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-slate-500">
             Workflow builder is read-only for unauthenticated users. Sign up to execute workflows.
           </p>
         </div>

@@ -47,14 +47,14 @@ export function Ap2Negotiations({ agentId }: Ap2NegotiationsProps) {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between gap-4">
         <div>
-          <CardTitle className="text-base font-semibold text-ink font-body">AP2 negotiations</CardTitle>
-          <p className="text-sm text-ink-muted font-body">Live status of autonomous procurements.</p>
+          <CardTitle className="text-base font-semibold text-white font-body">AP2 negotiations</CardTitle>
+          <p className="text-sm text-slate-400 font-body">Live status of autonomous procurements.</p>
         </div>
         <Button
           type="button"
           size="icon"
           variant="ghost"
-          className="h-9 w-9 text-ink-muted"
+          className="h-9 w-9 text-slate-400"
           onClick={() => query.refetch()}
           disabled={query.isFetching}
         >
@@ -74,30 +74,30 @@ export function Ap2Negotiations({ agentId }: Ap2NegotiationsProps) {
             {query.data.slice(0, 6).map((negotiation) => (
               <article
                 key={negotiation.id}
-                className="rounded-2xl border border-outline/50 bg-surfaceAlt/40 px-4 py-3"
+                className="rounded-2xl border border-white/10/50 bg-white/5/40 px-4 py-3"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-ink">
+                    <p className="text-sm font-semibold text-white">
                       {negotiation.requesterAgent?.name ?? 'Unknown'}{' '}
-                      <span className="text-ink-muted">&rarr;</span>{' '}
+                      <span className="text-slate-400">&rarr;</span>{' '}
                       {negotiation.responderAgent?.name ?? 'Unknown'}
                     </p>
-                    <p className="text-xs text-ink-muted">
+                    <p className="text-xs text-slate-400">
                       {negotiation.requestedService ?? 'Custom engagement'} &middot;{' '}
                       {formatDistanceToNow(new Date(negotiation.updatedAt), { addSuffix: true })}
                     </p>
                   </div>
                   <Badge
                     className={cn(
-                      'border-transparent bg-outline/30 text-ink',
+                      'border-transparent bg-white/10 text-white',
                       statusStyles[negotiation.status],
                     )}
                   >
                     {negotiation.status.toLowerCase()}
                   </Badge>
                 </div>
-                <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-ink-muted">
+                <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-slate-400">
                   {negotiation.proposedBudget ? (
                     <span>
                       Budget: <strong>${negotiation.proposedBudget.toFixed(2)}</strong>
@@ -115,12 +115,12 @@ export function Ap2Negotiations({ agentId }: Ap2NegotiationsProps) {
                   ) : null}
                 </div>
                 {negotiation.verificationStatus ? (
-                  <div className="mt-2 text-xs text-ink-muted">
+                  <div className="mt-2 text-xs text-slate-400">
                     Outcome:{' '}
                     <span
                       className={cn(
                         'font-semibold uppercase',
-                        verificationStyles[negotiation.verificationStatus] ?? 'text-ink-muted',
+                        verificationStyles[negotiation.verificationStatus] ?? 'text-slate-400',
                       )}
                     >
                       {negotiation.verificationStatus.toLowerCase()}
@@ -131,7 +131,7 @@ export function Ap2Negotiations({ agentId }: Ap2NegotiationsProps) {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-ink-muted">
+          <p className="text-sm text-slate-400">
             No negotiations yet. Launch a service request to populate this feed.
           </p>
         )}

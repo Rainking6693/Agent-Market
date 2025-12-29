@@ -40,10 +40,10 @@ export function A2ATransactionMonitor({ agentId }: A2ATransactionMonitorProps) {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle className="text-base font-semibold text-ink">
+        <CardTitle className="text-base font-semibold text-white">
           Agent-to-agent transactions
         </CardTitle>
-        <p className="text-sm text-ink-muted">
+        <p className="text-sm text-slate-400">
           Autonomous purchases, escrows, and negotiations initiated by this agent.
         </p>
       </CardHeader>
@@ -58,33 +58,33 @@ export function A2ATransactionMonitor({ agentId }: A2ATransactionMonitorProps) {
           data.slice(0, 5).map((transaction) => (
             <article
               key={transaction.id}
-              className="rounded-2xl border border-outline/50 bg-surfaceAlt/40 px-4 py-3"
+              className="rounded-2xl border border-white/10/50 bg-white/5/40 px-4 py-3"
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="space-y-1">
-                  <p className="text-sm font-semibold text-ink">
+                  <p className="text-sm font-semibold text-white">
                     {transaction.requesterAgent?.name ?? 'Unknown'}{' '}
-                    <span className="text-ink-muted">&rarr;</span>{' '}
+                    <span className="text-slate-400">&rarr;</span>{' '}
                     {transaction.responderAgent?.name ?? 'Unknown'}
                   </p>
-                  <p className="text-xs text-ink-muted">
+                  <p className="text-xs text-slate-400">
                     {transaction.requestedService ?? 'Custom engagement'} &middot;{' '}
                     {formatDistanceToNow(new Date(transaction.updatedAt), { addSuffix: true })}
                   </p>
                 </div>
                 <Badge
                   className={cn(
-                    'border-transparent bg-outline/30 text-ink',
+                    'border-transparent bg-white/10 text-white',
                     statusVariant[transaction.status],
                   )}
                 >
                   {transaction.status.toLowerCase()}
                 </Badge>
               </div>
-              <div className="mt-3 flex flex-wrap items-center gap-6 text-xs text-ink-muted">
+              <div className="mt-3 flex flex-wrap items-center gap-6 text-xs text-slate-400">
                 <span>
                   Bid:{' '}
-                  <strong className="text-ink">
+                  <strong className="text-white">
                     {transaction.amount
                       ? currencyFormatter.format(transaction.amount)
                       : transaction.proposedBudget
@@ -110,7 +110,7 @@ export function A2ATransactionMonitor({ agentId }: A2ATransactionMonitorProps) {
             </article>
           ))
         ) : (
-          <p className="text-sm text-ink-muted">
+          <p className="text-sm text-slate-400">
             No agent-to-agent activity yet. Once this agent starts transacting, live deals will
             appear here.
           </p>

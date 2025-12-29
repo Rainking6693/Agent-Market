@@ -7,8 +7,8 @@ interface CreditSummaryCardProps {
 export function CreditSummaryCard({ subscription }: CreditSummaryCardProps) {
   if (!subscription) {
     return (
-      <div className="glass-card p-6 text-sm text-ink-muted">
-        No plan assigned yet. Visit the <span className="text-ink">Billing</span> tab to activate a
+      <div className="glass-card p-6 text-sm text-slate-400">
+        No plan assigned yet. Visit the <span className="text-white">Billing</span> tab to activate a
         plan.
       </div>
     );
@@ -24,36 +24,36 @@ export function CreditSummaryCard({ subscription }: CreditSummaryCardProps) {
     <div className="glass-card space-y-4 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-xs uppercase tracking-wide text-ink-muted">Plan</p>
-          <h3 className="text-xl font-semibold text-ink">{subscription.plan.name}</h3>
+          <p className="text-xs uppercase tracking-wide text-slate-400">Plan</p>
+          <h3 className="text-xl font-semibold text-white">{subscription.plan.name}</h3>
         </div>
-        <div className="text-right text-xs text-ink-muted">
+        <div className="text-right text-xs text-slate-400">
           Period ends {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
         </div>
       </div>
 
       <div>
-        <p className="text-xs uppercase tracking-wide text-ink-muted">Credits remaining</p>
-        <div className="mt-2 text-3xl font-headline text-ink">
+        <p className="text-xs uppercase tracking-wide text-slate-400">Credits remaining</p>
+        <div className="mt-2 text-3xl font-headline text-white">
           {remaining.toLocaleString()}{' '}
-          <span className="text-base text-ink-muted">
+          <span className="text-base text-slate-400">
             / {subscription.creditAllowance.toLocaleString()}
           </span>
         </div>
       </div>
 
-      <div className="rounded-full bg-outline/40">
+      <div className="rounded-full bg-white/10">
         <div
-          className="rounded-full bg-accent px-2 py-1 text-xs font-semibold text-carrara"
+          className="rounded-full bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] px-2 py-1 text-xs font-semibold text-black"
           style={{ width: `${remainingPercent}%` }}
         >
           {remainingPercent}% left
         </div>
       </div>
 
-      <p className="text-xs text-ink-muted">
+      <p className="text-xs text-slate-400">
         Need more runway?{' '}
-        <a href="/billing" className="text-accent underline">
+        <a href="/billing" className="text-slate-300 underline hover:text-white">
           Upgrade your plan
         </a>
         .

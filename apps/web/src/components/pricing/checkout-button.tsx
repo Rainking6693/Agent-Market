@@ -81,17 +81,16 @@ export function CheckoutButton({
   return (
     <div className="space-y-2">
       <Button
-        className="w-full"
-        variant={popular ? 'default' : 'outline'}
+        className={`w-full ${popular ? 'bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] text-black hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.75)]' : 'bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] text-black hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.75)] border border-white/20'}`}
         onClick={handleCheckout}
         disabled={checkoutMutation.isPending}
       >
         {checkoutMutation.isPending ? 'Processing...' : 'Checkout with Stripe'}
       </Button>
       {error && (
-        <p className="text-xs text-center text-red-600">{error}</p>
+        <p className="text-xs text-center text-red-400">{error}</p>
       )}
-      <p className="text-center text-xs text-muted-foreground">
+      <p className="text-center text-xs text-slate-400">
         Secure payment via Stripe
       </p>
     </div>

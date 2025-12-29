@@ -86,13 +86,13 @@ export function OrgPayoutConnector() {
     <div className="glass-card space-y-3 p-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-base font-semibold text-ink">Bank payouts</h3>
-          <p className="text-xs text-ink-muted">
+          <h3 className="text-base font-semibold text-white">Bank payouts</h3>
+          <p className="text-xs text-slate-400">
             Connect the org wallet to a bank via Stripe to move funds out.
           </p>
         </div>
         <button
-          className="rounded-lg bg-ink px-3 py-2 text-xs font-semibold text-white hover:bg-ink/90 disabled:opacity-50"
+          className="rounded-lg bg-black px-3 py-2 text-xs font-semibold text-white hover:bg-black/90 disabled:opacity-50"
           onClick={startOnboarding}
           disabled={isLoading}
         >
@@ -101,7 +101,7 @@ export function OrgPayoutConnector() {
       </div>
       <div className="flex items-center gap-3">
         <button
-          className="text-xs font-semibold text-ink underline decoration-ink/40 underline-offset-4 disabled:opacity-50"
+          className="text-xs font-semibold text-white underline decoration-ink/40 underline-offset-4 disabled:opacity-50"
           onClick={fetchStatus}
           disabled={isLoading}
         >
@@ -118,7 +118,7 @@ export function OrgPayoutConnector() {
           </a>
         )}
       </div>
-      {status && <p className="text-xs text-ink">{status}</p>}
+      {status && <p className="text-xs text-white">{status}</p>}
       {!token && (
         <p className="text-[11px] text-amber-700">
           You need to be signed in for this to work (uses your session token for the API call).

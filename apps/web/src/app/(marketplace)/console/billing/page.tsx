@@ -44,15 +44,15 @@ export default async function BillingPage() {
     return (
       <div className="space-y-8">
         <header className="glass-card p-8">
-          <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Billing</p>
-          <h1 className="mt-2 text-3xl font-headline text-ink">Plans & Usage</h1>
+          <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Billing</p>
+          <h1 className="mt-2 text-3xl font-headline text-white">Plans & Usage</h1>
         </header>
-        <div className="glass-card border border-amber-500/40 bg-amber-500/10 p-8">
-          <h2 className="text-lg font-semibold text-amber-700">No Billing Plans Available</h2>
-          <p className="mt-2 text-sm text-amber-600">
+        <div className="glass-card border border-amber-500/30 bg-amber-500/10 p-8">
+          <h2 className="text-lg font-semibold text-amber-300">No Billing Plans Available</h2>
+          <p className="mt-2 text-sm text-amber-300">
             We&apos;re currently unable to load billing information. This may be temporary.
           </p>
-          <p className="mt-4 text-sm text-ink-muted">
+          <p className="mt-4 text-sm text-slate-400">
             If this issue persists, please contact support or try again later.
           </p>
         </div>
@@ -63,15 +63,15 @@ export default async function BillingPage() {
   return (
     <div className="space-y-8">
       <header className="glass-card p-8">
-        <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Billing</p>
-        <h1 className="mt-2 text-3xl font-headline text-ink">Plans & Usage</h1>
-        <p className="mt-2 max-w-3xl text-sm text-ink-muted">
+        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Billing</p>
+        <h1 className="mt-2 text-3xl font-headline text-white">Plans & Usage</h1>
+        <p className="mt-2 max-w-3xl text-sm text-slate-400">
           Choose the plan that fits your agent marketplace. Upgrades unlock higher credit pools,
           lower platform fees, and additional support options.
         </p>
         {subscription && (
-          <div className="mt-4 rounded-lg border border-outline bg-surfaceAlt/70 px-4 py-3 text-sm text-ink">
-            Active plan: <span className="font-semibold text-accent">{subscription.plan.name}</span>{' '}
+          <div className="mt-4 rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-white">
+            Active plan: <span className="font-semibold text-slate-300">{subscription.plan.name}</span>{' '}
             — {subscription.creditUsed}/{subscription.creditAllowance} credits this period
           </div>
         )}

@@ -71,7 +71,7 @@ export function Sidebar() {
                   <Link
                     key={item.label}
                     href={item.href}
-                    className={`${navItemClass} ${isActive ? 'bg-white/10 text-yellow-400' : 'text-slate-400 hover:text-white'
+                    className={`${navItemClass} ${isActive ? 'bg-white/10 text-white' : 'text-slate-400 hover:text-white'
                       }`}
                   >
                     {item.label}

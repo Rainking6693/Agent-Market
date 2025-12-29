@@ -104,15 +104,15 @@ export default function PlatformPage() {
 
         <main className="flex-1">
           {/* Hero */}
-          <section className="relative overflow-hidden bg-gradient-to-b from-white to-surface px-4 pb-20 pt-24">
+          <section className="relative overflow-hidden bg-black px-4 pb-20 pt-24">
             <div className="mx-auto max-w-5xl text-center">
-              <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
+              <p className="text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
                 Platform Overview
               </p>
-              <h1 className="mt-6 text-5xl font-headline leading-tight text-foreground lg:text-6xl">
+              <h1 className="mt-6 text-5xl font-headline leading-tight text-white lg:text-6xl">
                 Enterprise AI Agent Orchestration Platform
               </h1>
-              <p className="mt-6 text-xl font-body text-muted-foreground">
+              <p className="mt-6 text-xl font-body text-slate-400">
                 The infrastructure layer for multi-agent systems. Build, deploy, and scale
                 autonomous agent networks with built-in payments, governance, and verification.
               </p>
@@ -128,13 +128,13 @@ export default function PlatformPage() {
           </section>
 
           {/* The Infrastructure Layer */}
-          <section className="bg-white/70 px-4 py-20">
+          <section className="bg-black px-4 py-20">
             <div className="mx-auto max-w-6xl space-y-12">
               <div className="text-center space-y-4">
-                <h2 className="text-4xl font-headline text-foreground">
+                <h2 className="text-4xl font-headline text-white">
                   The Infrastructure Layer for Multi-Agent Systems
                 </h2>
-                <p className="mx-auto max-w-3xl text-lg font-body text-muted-foreground">
+                <p className="mx-auto max-w-3xl text-lg font-body text-slate-400">
                   Building autonomous agent systems in-house means solving payment rails, discovery,
                   reputation, verification, and governance. Swarm Sync provides all of this
                   out-of-the-box.
@@ -143,11 +143,11 @@ export default function PlatformPage() {
 
               <div className="grid gap-8 md:grid-cols-2">
                 {platformFeatures.map((feature) => (
-                  <Card key={feature.title} className="border-white/70 bg-white/80">
+                  <Card key={feature.title} className="border-white/10 bg-white/5">
                     <CardContent className="space-y-4 p-8">
                       <div className="text-4xl">{feature.icon}</div>
-                      <h3 className="text-2xl font-headline text-foreground">{feature.title}</h3>
-                      <p className="font-body text-muted-foreground">{feature.description}</p>
+                      <h3 className="text-2xl font-headline text-white">{feature.title}</h3>
+                      <p className="font-body text-slate-400">{feature.description}</p>
                     </CardContent>
                   </Card>
                 ))}
@@ -156,13 +156,13 @@ export default function PlatformPage() {
           </section>
 
           {/* Architecture Deep Dive */}
-          <section className="bg-white/40 px-4 py-20">
+          <section className="bg-black px-4 py-20">
             <div className="mx-auto max-w-6xl space-y-12">
               <div className="text-center space-y-4">
-                <h2 className="text-4xl font-headline text-foreground">
+                <h2 className="text-4xl font-headline text-white">
                   How It Works Under the Hood
                 </h2>
-                <p className="mx-auto max-w-3xl text-lg font-body text-muted-foreground">
+                <p className="mx-auto max-w-3xl text-lg font-body text-slate-400">
                   Swarm Sync is built on a distributed architecture designed for reliability,
                   security, and scale.
                 </p>
@@ -172,15 +172,15 @@ export default function PlatformPage() {
                 {architecturePoints.map((point, idx) => (
                   <Card
                     key={point.title}
-                    className="border-white/70 bg-white/80 transition-shadow hover:shadow-brand-panel"
+                    className="border-white/10 bg-white/5 transition-shadow hover:shadow-brand-panel"
                   >
                     <CardContent className="flex gap-6 p-8">
-                      <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-brass/15 text-2xl font-headline text-brass">
+                      <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-2xl font-headline text-white">
                         {idx + 1}
                       </div>
                       <div className="space-y-2">
-                        <h3 className="text-xl font-headline text-foreground">{point.title}</h3>
-                        <p className="font-body text-muted-foreground">{point.description}</p>
+                        <h3 className="text-xl font-headline text-white">{point.title}</h3>
+                        <p className="font-body text-slate-400">{point.description}</p>
                       </div>
                     </CardContent>
                   </Card>
@@ -190,11 +190,11 @@ export default function PlatformPage() {
           </section>
 
           {/* Integration & API */}
-          <section className="bg-white/70 px-4 py-20">
+          <section className="bg-black px-4 py-20">
             <div className="mx-auto max-w-6xl space-y-12">
               <div className="text-center space-y-4">
-                <h2 className="text-4xl font-headline text-foreground">Integration & API</h2>
-                <p className="mx-auto max-w-3xl text-lg font-body text-muted-foreground">
+                <h2 className="text-4xl font-headline text-white">Integration & API</h2>
+                <p className="mx-auto max-w-3xl text-lg font-body text-slate-400">
                   Connect your agents with our RESTful API, SDKs, and pre-built integrations for
                   popular frameworks.
                 </p>
@@ -205,11 +205,11 @@ export default function PlatformPage() {
                 {integrations.map((integration) => (
                   <Card
                     key={integration.name}
-                    className="border-white/70 bg-white/80 text-center transition-shadow hover:shadow-lg"
+                    className="border-white/10 bg-white/5 text-center transition-shadow hover:shadow-lg"
                   >
                     <CardContent className="p-6">
                       <div className="text-4xl">{integration.logo}</div>
-                      <p className="mt-4 font-headline text-lg text-foreground">
+                      <p className="mt-4 font-headline text-lg text-white">
                         {integration.name}
                       </p>
                     </CardContent>
@@ -218,10 +218,10 @@ export default function PlatformPage() {
               </div>
 
               {/* API Example */}
-              <Card className="border-brass/20 bg-ink/5">
+              <Card className="border-white/10 bg-white/5">
                 <CardContent className="p-8 space-y-4">
-                  <p className="font-headline text-lg text-foreground">Quick Start Example</p>
-                  <pre className="overflow-x-auto rounded-lg bg-ink p-6 font-mono text-sm text-carrara">
+                  <p className="font-headline text-lg text-white">Quick Start Example</p>
+                  <pre className="overflow-x-auto rounded-lg bg-black border border-white/10 p-6 font-mono text-sm text-slate-300">
                     <code>{`import { SwarmSyncClient } from '@swarmsync/sdk';
 
 const client = new SwarmSyncClient({
@@ -255,12 +255,12 @@ console.log(result.outcome); // verified or failed`}</code>
           </section>
 
           {/* CTA */}
-          <section className="bg-brass/5 px-4 py-20">
+          <section className="bg-black px-4 py-20">
             <div className="mx-auto max-w-4xl text-center space-y-8">
-              <h2 className="text-4xl font-headline text-foreground">
+              <h2 className="text-4xl font-headline text-white">
                 Ready to Build on Swarm Sync?
               </h2>
-              <p className="text-lg font-body text-muted-foreground">
+              <p className="text-lg font-body text-slate-400">
                 Join engineering teams using Swarm Sync to scale their AI operations beyond what any
                 single agent can do.
               </p>
@@ -272,7 +272,7 @@ console.log(result.outcome); // verified or failed`}</code>
                   <Link href="/agent-orchestration-guide">Read the Guide</Link>
                 </Button>
               </div>
-              <p className="text-sm font-body text-muted-foreground">
+              <p className="text-sm font-body text-slate-400">
                 {CTA_TRIAL_BADGE}
               </p>
             </div>

@@ -99,20 +99,20 @@ export default function TermsPage() {
           { name: 'Terms of Service', url: '/terms' },
         ]}
       />
-      <div className="flex min-h-screen flex-col bg-gradient-to-b from-white to-[#f6efe6]">
+      <div className="flex min-h-screen flex-col bg-gradient-to-b from-black/0 via-black/25 to-black/60">
         <Navbar />
         <main id="main-content" className="flex-1 px-4 py-16">
           <div className="mx-auto max-w-4xl space-y-12">
             <header className="space-y-4 text-center">
-              <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Legal</p>
-              <h1 className="text-4xl font-display leading-tight text-foreground sm:text-5xl">
+              <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Legal</p>
+              <h1 className="text-4xl font-display leading-tight text-white sm:text-5xl">
                 Terms of Service
               </h1>
-              <p className="text-lg text-muted-foreground">
+              <p className="text-lg text-slate-400">
                 The rules for using Swarm Sync, our agent marketplace, payments, and security
                 controls.
               </p>
-              <p className="text-sm text-muted-foreground">Last updated: November 23, 2025</p>
+              <p className="text-sm text-slate-400">Last updated: November 23, 2025</p>
             </header>
 
             <div className="space-y-8">
@@ -121,8 +121,8 @@ export default function TermsPage() {
                   key={section.title}
                   className="rounded-2xl border border-white/60 bg-white/90 p-6 shadow-sm"
                 >
-                  <h2 className="text-2xl font-display text-foreground">{section.title}</h2>
-                  <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
+                  <h2 className="text-2xl font-display text-white">{section.title}</h2>
+                  <ul className="mt-4 list-disc space-y-2 pl-5 text-slate-400">
                     {section.points.map((point) => (
                       <li key={point}>{point}</li>
                     ))}

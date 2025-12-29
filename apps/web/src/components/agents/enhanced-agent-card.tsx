@@ -39,9 +39,9 @@ export function AgentCard({
 }: AgentCardProps) {
   return (
     <Link href={`/agents/${id}`}>
-      <Card className="group h-full overflow-hidden border-white/70 bg-white/80 transition-all hover:shadow-lg hover:border-brass/30 cursor-pointer">
+      <Card className="group h-full overflow-hidden border-white/10 bg-white/5 transition-all hover:shadow-lg hover:border-white/20 cursor-pointer">
         {/* Header with avatar and category badge */}
-        <div className="relative h-24 bg-gradient-to-r from-brass/10 to-transparent p-4 flex items-start justify-between">
+          <div className="relative h-24 bg-gradient-to-r from-white/5 to-transparent p-4 flex items-start justify-between">
           {avatar && (
             <Image
               src={avatar}
@@ -61,12 +61,12 @@ export function AgentCard({
           {/* Title and certification */}
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <h3 className="font-headline text-lg text-ink line-clamp-1">{name}</h3>
+              <h3 className="font-headline text-lg text-white line-clamp-1">{name}</h3>
               {certified && (
                 <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0" />
               )}
             </div>
-            <p className="text-sm text-ink-muted line-clamp-2">{description}</p>
+            <p className="text-sm text-slate-400 line-clamp-2">{description}</p>
           </div>
 
           {/* Rating */}
@@ -76,38 +76,38 @@ export function AgentCard({
                 <Star
                   key={i}
                   className={`h-3.5 w-3.5 ${
-                    i < Math.floor(rating) ? 'fill-brass text-brass' : 'text-outline'
+                    i < Math.floor(rating) ? 'fill-slate-400 text-slate-400' : 'text-slate-600'
                   }`}
                 />
               ))}
             </div>
-            <span className="text-ink-muted">
+            <span className="text-slate-400">
               {rating.toFixed(1)} ({reviewCount})
             </span>
           </div>
 
           {/* Metrics */}
           <div className="grid grid-cols-2 gap-3 text-xs">
-            <div className="rounded-lg bg-outline/5 p-2 space-y-1">
-              <div className="flex items-center gap-1 text-ink-muted">
+            <div className="rounded-lg bg-white/5 p-2 space-y-1">
+              <div className="flex items-center gap-1 text-slate-400">
                 <TrendingUp className="h-3.5 w-3.5" />
                 Success Rate
               </div>
-              <p className="font-semibold text-ink">{successRate}%</p>
+              <p className="font-semibold text-white">{successRate}%</p>
             </div>
-            <div className="rounded-lg bg-outline/5 p-2 space-y-1">
-              <div className="flex items-center gap-1 text-ink-muted">
+            <div className="rounded-lg bg-white/5 p-2 space-y-1">
+              <div className="flex items-center gap-1 text-slate-400">
                 <Clock className="h-3.5 w-3.5" />
                 Response
               </div>
-              <p className="font-semibold text-ink">{responseTime}s</p>
+              <p className="font-semibold text-white">{responseTime}s</p>
             </div>
           </div>
 
           {/* Capabilities */}
           {capabilities.length > 0 && (
             <div className="space-y-2">
-              <p className="text-xs text-ink-muted uppercase tracking-wider">Capabilities</p>
+              <p className="text-xs text-slate-400 uppercase tracking-wider">Capabilities</p>
               <div className="flex flex-wrap gap-1.5">
                 {capabilities.slice(0, 3).map((cap) => (
                   <Badge
@@ -128,10 +128,10 @@ export function AgentCard({
           )}
 
           {/* Footer with price and action */}
-          <div className="pt-4 border-t border-outline/20 flex items-center justify-between">
+          <div className="pt-4 border-t border-white/10 flex items-center justify-between">
             <div className="text-sm">
-              <p className="text-xs text-ink-muted">Starting at</p>
-              <p className="font-headline text-ink">
+              <p className="text-xs text-slate-400">Starting at</p>
+              <p className="font-headline text-white">
                 ${(pricePerRequest / 100).toFixed(2)}
               </p>
             </div>
@@ -139,7 +139,7 @@ export function AgentCard({
               asChild
               size="sm"
               variant="outline"
-              className="text-brass hover:text-brass hover:bg-brass/5"
+              className="text-slate-300 hover:text-white hover:bg-white/10"
               onClick={(e) => {
                 e.preventDefault();
               }}

@@ -40,13 +40,13 @@ export const RunWorkflowButton = ({ workflowId }: RunWorkflowButtonProps) => {
   };
 
   return (
-    <div className="space-y-3 rounded-lg border border-outline bg-surfaceAlt/60 p-4">
-      <label className="flex flex-col gap-2 text-xs uppercase tracking-wider text-ink-muted">
+    <div className="space-y-3 rounded-lg border border-white/10 bg-white/5 p-4">
+      <label className="flex flex-col gap-2 text-xs uppercase tracking-wider text-slate-400">
         Initiator User ID
         <input
           value={initiatorId}
           onChange={(event) => setInitiatorId(event.target.value)}
-          className="rounded-lg border border-outline bg-surface px-3 py-2 text-xs font-mono text-ink focus:border-brass/40 focus:outline-none"
+          className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-mono text-white focus:border-white/40 focus:outline-none"
         />
       </label>
 
@@ -65,7 +65,7 @@ export const RunWorkflowButton = ({ workflowId }: RunWorkflowButtonProps) => {
         type="button"
         onClick={handleRun}
         disabled={isPending}
-        className="glass-button bg-accent px-4 py-2 text-xs font-semibold text-carrara shadow-accent-glow hover:bg-accent-dark disabled:cursor-not-allowed disabled:bg-outline/40"
+        className="glass-button bg-accent px-4 py-2 text-xs font-semibold text-carrara shadow-accent-glow hover:bg-accent-dark disabled:cursor-not-allowed disabled:bg-white/10"
       >
         {isPending ? 'Running...' : 'Run Workflow'}
       </button>

@@ -44,15 +44,15 @@ export function A2AOperationsPanel({ agents }: A2AOperationsPanelProps) {
       <Card className="glass-card p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Agent mesh</p>
-            <h2 className="mt-1 text-2xl font-headline text-ink">Autonomous purchasing layer</h2>
-            <p className="text-sm text-ink-muted">
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Agent mesh</p>
+            <h2 className="mt-1 text-2xl font-headline text-white">Autonomous purchasing layer</h2>
+            <p className="text-sm text-slate-400">
               Track real-time deals, network topology, and enforced budgets for the selected agent.
             </p>
           </div>
           <div className="w-full max-w-xs">
             <Select value={focusAgent.id} onValueChange={setSelectedAgentId}>
-              <SelectTrigger className="border-outline bg-surfaceAlt/60 text-left text-sm text-ink focus:border-brass/40">
+              <SelectTrigger className="border-white/10 bg-white/5 text-left text-sm text-white focus:border-white/40">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

@@ -93,8 +93,8 @@ export function OutcomeVerificationPanel({
   return (
     <section className="glass-card space-y-6 p-6">
       <div>
-        <h2 className="text-lg font-headline text-ink">Outcome-based Agreements</h2>
-        <p className="text-sm text-ink-muted">
+        <h2 className="text-lg font-headline text-white">Outcome-based Agreements</h2>
+        <p className="text-sm text-slate-400">
           Configure escrow-backed contracts and release funds only when KPIs are verified.
         </p>
       </div>
@@ -107,13 +107,13 @@ export function OutcomeVerificationPanel({
 
       <form
         onSubmit={handleCreateAgreement}
-        className="space-y-3 rounded-lg border border-outline p-4"
+        className="space-y-3 rounded-lg border border-white/10 p-4"
       >
-        <h3 className="text-sm font-semibold text-ink">Create agreement</h3>
+        <h3 className="text-sm font-semibold text-white">Create agreement</h3>
         <div className="grid gap-3 md:grid-cols-2">
           <input
             placeholder="Buyer user ID (optional)"
-            className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
+            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
             value={createPayload.buyerId}
             onChange={(event) =>
               setCreatePayload((prev) => ({ ...prev, buyerId: event.target.value }))
@@ -121,7 +121,7 @@ export function OutcomeVerificationPanel({
           />
           <input
             placeholder="Workflow ID (optional)"
-            className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
+            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
             value={createPayload.workflowId}
             onChange={(event) =>
               setCreatePayload((prev) => ({ ...prev, workflowId: event.target.value }))
@@ -131,14 +131,14 @@ export function OutcomeVerificationPanel({
         <div className="grid gap-3 md:grid-cols-2">
           <input
             placeholder="Escrow ID (optional)"
-            className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
+            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
             value={createPayload.escrowId}
             onChange={(event) =>
               setCreatePayload((prev) => ({ ...prev, escrowId: event.target.value }))
             }
           />
           <select
-            className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
+            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
             value={createPayload.outcomeType}
             onChange={(event) =>
               setCreatePayload((prev) => ({
@@ -155,7 +155,7 @@ export function OutcomeVerificationPanel({
           </select>
         </div>
         <textarea
-          className="w-full rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
           value={createPayload.targetDescription}
           onChange={(event) =>
             setCreatePayload((prev) => ({ ...prev, targetDescription: event.target.value }))
@@ -165,16 +165,16 @@ export function OutcomeVerificationPanel({
         <button
           type="submit"
           disabled={isPending}
-          className="glass-button bg-accent px-4 py-2 text-xs font-semibold text-carrara disabled:cursor-not-allowed disabled:bg-outline/40"
+          className="glass-button bg-accent px-4 py-2 text-xs font-semibold text-carrara disabled:cursor-not-allowed disabled:bg-white/10"
         >
           {isPending ? 'Saving...' : 'Create agreement'}
         </button>
       </form>
 
-      <form onSubmit={handleVerify} className="space-y-3 rounded-lg border border-outline p-4">
-        <h3 className="text-sm font-semibold text-ink">Record verification</h3>
+      <form onSubmit={handleVerify} className="space-y-3 rounded-lg border border-white/10 p-4">
+        <h3 className="text-sm font-semibold text-white">Record verification</h3>
         <select
-          className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
+          className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
           value={selectedAgreementId}
           onChange={(event) => setSelectedAgreementId(event.target.value)}
         >
@@ -186,7 +186,7 @@ export function OutcomeVerificationPanel({
           ))}
         </select>
         <select
-          className="rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
+          className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
           value={verificationStatus}
           onChange={(event) => setVerificationStatus(event.target.value as VerificationStatus)}
         >
@@ -198,7 +198,7 @@ export function OutcomeVerificationPanel({
         </select>
         <textarea
           placeholder="Verification notes"
-          className="w-full rounded-lg border border-outline bg-surfaceAlt/60 px-3 py-2 text-sm text-ink focus:border-brass/40 focus:outline-none"
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
           value={verificationNotes}
           onChange={(event) => setVerificationNotes(event.target.value)}
           rows={2}
@@ -206,31 +206,31 @@ export function OutcomeVerificationPanel({
         <button
           type="submit"
           disabled={isPending}
-          className="glass-button bg-surfaceAlt px-4 py-2 text-xs font-semibold text-ink disabled:cursor-not-allowed disabled:opacity-60"
+          className="glass-button bg-white/5 px-4 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isPending ? 'Updating...' : 'Record verification'}
         </button>
       </form>
 
-      <div className="rounded-lg border border-outline p-4">
-        <h3 className="text-sm font-semibold text-ink">Recent agreements</h3>
-        <ul className="mt-3 space-y-2 text-sm text-ink-muted">
+      <div className="rounded-lg border border-white/10 p-4">
+        <h3 className="text-sm font-semibold text-white">Recent agreements</h3>
+        <ul className="mt-3 space-y-2 text-sm text-slate-400">
           {agreements.length === 0 && (
-            <li className="text-xs text-ink-muted">No agreements found.</li>
+            <li className="text-xs text-slate-400">No agreements found.</li>
           )}
           {agreements.slice(0, 5).map((agreement) => {
             const latestVerification = agreement.verifications[0];
             return (
-              <li key={agreement.id} className="rounded-lg bg-surfaceAlt/60 p-3">
+              <li key={agreement.id} className="rounded-lg bg-white/5 p-3">
                 <div className="flex justify-between text-xs">
-                  <span className="font-semibold text-ink">{agreement.status}</span>
+                  <span className="font-semibold text-white">{agreement.status}</span>
                   <span>{new Date(agreement.updatedAt).toLocaleString()}</span>
                 </div>
-                <p className="text-xs text-ink-muted">
+                <p className="text-xs text-slate-400">
                   {agreement.outcomeType} • {agreement.targetDescription}
                 </p>
                 {latestVerification && (
-                  <p className="text-xs text-ink-muted">
+                  <p className="text-xs text-slate-400">
                     Last verification: {latestVerification.status} (
                     {new Date(latestVerification.createdAt).toLocaleDateString()})
                   </p>

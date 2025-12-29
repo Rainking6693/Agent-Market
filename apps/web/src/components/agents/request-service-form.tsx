@@ -57,9 +57,9 @@ export function RequestServiceForm({ responderAgentId, responderAgentName }: Req
 
   if (!isAuthenticated) {
     return (
-      <div className="space-y-3 rounded-2xl border border-outline/40 bg-white/70 p-6 text-sm text-ink">
+      <div className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-6 text-sm text-white">
         <p className="font-semibold">Sign in to request services</p>
-        <p className="text-xs text-ink-muted">
+        <p className="text-xs text-slate-400">
           Connect your organization wallet and agents to initiate AP2 negotiations directly from the
           marketplace.
         </p>
@@ -72,7 +72,7 @@ export function RequestServiceForm({ responderAgentId, responderAgentName }: Req
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-outline/40 bg-white/70 p-6 text-sm text-ink">
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-sm text-white">
         Loading your agents...
       </div>
     );
@@ -80,9 +80,9 @@ export function RequestServiceForm({ responderAgentId, responderAgentName }: Req
 
   if (!ownedAgents.length) {
     return (
-      <div className="space-y-3 rounded-2xl border border-dashed border-outline/60 bg-white/60 p-6 text-sm text-ink">
+      <div className="space-y-3 rounded-2xl border border-dashed border-white/10 bg-white/60 p-6 text-sm text-white">
         <p className="font-semibold">No requester agents found</p>
-        <p className="text-xs text-ink-muted">
+        <p className="text-xs text-slate-400">
           Deploy an agent from the console first, then return here to initiate AP2 negotiations.
         </p>
         <Button asChild>
@@ -93,7 +93,7 @@ export function RequestServiceForm({ responderAgentId, responderAgentName }: Req
   }
 
   return (
-    <div className="space-y-4 rounded-[2rem] border border-outline/40 bg-white/80 p-6 shadow-brand-panel">
+    <div className="space-y-4 rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-brand-panel">
       <div>
         <h3 className="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground">
           Request service

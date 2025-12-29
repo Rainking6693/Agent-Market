@@ -157,13 +157,13 @@ export default function PricingPage() {
                             <Card
                                 key={tier.name}
                                 className={`relative flex flex-col ${tier.popular
-                                        ? 'border-yellow-400/50 shadow-lg ring-2 ring-yellow-400/20 bg-white/5'
+                                        ? 'border-white/30 shadow-lg ring-2 ring-white/20 bg-white/5'
                                         : 'border-white/10 bg-white/5'
                                     }`}
                             >
                                 {tier.popular && (
                                     <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                                        <span className="rounded-full bg-yellow-400 px-4 py-1 text-xs font-semibold text-black">
+                                        <span className="rounded-full bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] px-4 py-1 text-xs font-semibold text-black">
                                             Most Popular
                                         </span>
                                     </div>
@@ -176,9 +176,9 @@ export default function PricingPage() {
                                         <span className="text-4xl font-headline text-white">{tier.price}</span>
                                         <span className="text-slate-400">{tier.period}</span>
                                     </div>
-                                    {tier.annualPrice && (
-                                        <p className="text-sm text-yellow-400 font-medium">{tier.annualPrice}</p>
-                                    )}
+                                            {tier.annualPrice && (
+                                                <p className="text-sm text-slate-300 font-medium">{tier.annualPrice}</p>
+                                            )}
                                 </CardHeader>
 
                                 <CardContent className="flex-1 space-y-6">

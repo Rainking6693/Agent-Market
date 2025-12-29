@@ -77,8 +77,8 @@ export default function TestLibraryPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-headline text-ink">Test Library</h1>
-        <p className="mt-2 text-sm text-ink-muted">
+        <h1 className="text-3xl font-headline text-white">Test Library</h1>
+        <p className="mt-2 text-sm text-slate-400">
           Browse and run quality test suites on your agents
         </p>
       </div>
@@ -86,21 +86,21 @@ export default function TestLibraryPage() {
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-4">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
             placeholder="Search test suites..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-lg border border-outline/40 bg-surface px-10 py-2 text-sm text-ink placeholder:text-ink-muted focus:border-brass focus:outline-none"
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-10 py-2 text-sm text-white placeholder:text-slate-500 focus:border-white/40 focus:outline-none"
           />
         </div>
         <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-ink-muted" />
+          <Filter className="h-4 w-4 text-slate-400" />
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="rounded-lg border border-outline/40 bg-surface px-3 py-2 text-sm text-ink focus:border-brass focus:outline-none"
+            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
           >
             {categories.map((cat) => (
               <option key={cat} value={cat}>
@@ -113,9 +113,9 @@ export default function TestLibraryPage() {
 
       {/* Test Suites Grid */}
       {isLoading ? (
-        <div className="py-12 text-center text-sm text-ink-muted">Loading test suites...</div>
+        <div className="py-12 text-center text-sm text-slate-400">Loading test suites...</div>
       ) : filteredSuites.length === 0 ? (
-        <div className="py-12 text-center text-sm text-ink-muted">
+        <div className="py-12 text-center text-sm text-slate-400">
           No test suites found. Try adjusting your filters.
         </div>
       ) : (
@@ -123,7 +123,7 @@ export default function TestLibraryPage() {
           {filteredSuites.map((suite) => (
             <Card
               key={suite.id}
-              className={`transition hover:border-brass/40 ${suite.isRecommended ? 'border-brass/40 bg-brass/5' : 'border-outline/40'
+              className={`transition hover:border-white/20 ${suite.isRecommended ? 'border-white/20 bg-white/5' : 'border-white/10'
                 }`}
             >
               <CardHeader>
@@ -131,7 +131,7 @@ export default function TestLibraryPage() {
                   <div className="flex-1">
                     <CardTitle className="text-lg">{suite.name}</CardTitle>
                     {suite.isRecommended && (
-                      <span className="mt-2 inline-block rounded-full bg-brass/20 px-2 py-0.5 text-xs text-brass">
+                      <span className="mt-2 inline-block rounded-full bg-white/10 px-2 py-0.5 text-xs text-slate-300">
                         Recommended
                       </span>
                     )}
@@ -140,7 +140,7 @@ export default function TestLibraryPage() {
               </CardHeader>
               <CardContent>
                 <CardDescription className="mb-4">{suite.description}</CardDescription>
-                <div className="mb-4 flex flex-wrap gap-2 text-xs text-ink-muted">
+                <div className="mb-4 flex flex-wrap gap-2 text-xs text-slate-400">
                   <span>~{Math.round(suite.estimatedDurationSec / 60)} min</span>
                   <span>•</span>
                   <span>~${suite.approximateCostUsd.toFixed(2)}</span>
@@ -164,18 +164,18 @@ export default function TestLibraryPage() {
       )}
 
       {/* Individual Tests Section */}
-      <div className="space-y-4 border-t border-outline/20 pt-8">
+      <div className="space-y-4 border-t border-white/10 pt-8">
         <div className="flex items-center gap-2">
-          <FlaskConical className="h-5 w-5 text-brass" />
-          <h2 className="text-xl font-headline text-ink">Run Individual Tests</h2>
+          <FlaskConical className="h-5 w-5 text-slate-300" />
+          <h2 className="text-xl font-headline text-white">Run Individual Tests</h2>
         </div>
-        <p className="text-sm text-ink-muted">
+        <p className="text-sm text-slate-400">
           Select specific tests to run individually instead of running full suites.
         </p>
 
         <div className="flex flex-wrap items-center gap-4">
           <select
-            className="flex-1 min-w-[300px] rounded-lg border border-outline/40 bg-surface px-4 py-2 text-sm text-ink focus:border-brass focus:outline-none"
+            className="flex-1 min-w-[300px] rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
             onChange={(e) => {
               const test = individualTests.find(t => t.id === e.target.value);
               setSelectedIndividualTest(test || null);

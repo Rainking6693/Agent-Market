@@ -33,8 +33,8 @@ export function A2ARoiSummary({ agentId }: A2ARoiSummaryProps) {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle className="text-base font-semibold text-ink font-body">A2A ROI snapshot</CardTitle>
-        <p className="text-sm text-ink-muted font-body">
+        <CardTitle className="text-base font-semibold text-white font-body">A2A ROI snapshot</CardTitle>
+        <p className="text-sm text-slate-400 font-body">
           Rolling analytics from the quality service-verified outcomes, spend, and trust.
         </p>
       </CardHeader>
@@ -47,42 +47,42 @@ export function A2ARoiSummary({ agentId }: A2ARoiSummaryProps) {
           </div>
         ) : data ? (
           <dl className="space-y-4">
-            <div className="rounded-2xl border border-outline/50 bg-surfaceAlt/40 px-4 py-3">
-              <dt className="text-xs uppercase tracking-[0.3em] text-ink-muted">Total spend</dt>
-              <dd className="text-2xl font-semibold text-ink">
+            <div className="rounded-2xl border border-white/10/50 bg-white/5/40 px-4 py-3">
+              <dt className="text-xs uppercase tracking-[0.3em] text-slate-400">Total spend</dt>
+              <dd className="text-2xl font-semibold text-white">
                 {a2aSpend !== null ? currencyFormatter.format(a2aSpend) : '—'}
               </dd>
-              <p className="text-xs text-ink-muted">
+              <p className="text-xs text-slate-400">
                 Across {engagements} engagements · Avg cost per engagement{' '}
                 {roi?.averageCostPerEngagement
                   ? currencyFormatter.format(Number(roi.averageCostPerEngagement))
                   : '—'}
               </p>
             </div>
-            <div className="rounded-2xl border border-outline/50 bg-surfaceAlt/40 px-4 py-3">
-              <dt className="text-xs uppercase tracking-[0.3em] text-ink-muted">Verified outcomes</dt>
-              <dd className="text-2xl font-semibold text-ink">
+            <div className="rounded-2xl border border-white/10/50 bg-white/5/40 px-4 py-3">
+              <dt className="text-xs uppercase tracking-[0.3em] text-slate-400">Verified outcomes</dt>
+              <dd className="text-2xl font-semibold text-white">
                 {roi?.verifiedOutcomeRate ? `${roi.verifiedOutcomeRate}%` : '—'}
               </dd>
-              <p className="text-xs text-ink-muted">
+              <p className="text-xs text-slate-400">
                 Avg cost per outcome{' '}
                 {roi?.averageCostPerOutcome
                   ? currencyFormatter.format(Number(roi.averageCostPerOutcome))
                   : '—'}
               </p>
             </div>
-            <div className="rounded-2xl border border-outline/50 bg-surfaceAlt/40 px-4 py-3">
-              <dt className="text-xs uppercase tracking-[0.3em] text-ink-muted">Agreements</dt>
-              <dd className="text-lg font-semibold text-ink">
+            <div className="rounded-2xl border border-white/10/50 bg-white/5/40 px-4 py-3">
+              <dt className="text-xs uppercase tracking-[0.3em] text-slate-400">Agreements</dt>
+              <dd className="text-lg font-semibold text-white">
                 {data.agreements.active} active · {data.agreements.completed} completed
               </dd>
-              <p className="text-xs text-ink-muted">
+              <p className="text-xs text-slate-400">
                 {data.verifications.verified} verified / {data.verifications.pending} pending
               </p>
             </div>
           </dl>
         ) : (
-          <p className="text-sm text-ink-muted">
+          <p className="text-sm text-slate-400">
             No analytics available yet. Run an evaluation or complete an escrow to populate ROI
             metrics.
           </p>

@@ -101,7 +101,7 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
       case 'QUEUED':
         return <Clock className="h-5 w-5 text-amber-400" />;
       default:
-        return <AlertCircle className="h-5 w-5 text-ink-muted" />;
+        return <AlertCircle className="h-5 w-5 text-slate-400" />;
     }
   };
 
@@ -116,27 +116,27 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
       case 'QUEUED':
         return 'text-amber-400';
       default:
-        return 'text-ink-muted';
+        return 'text-slate-400';
     }
   };
 
   return (
     <div className="space-y-6">
       {/* Trust Score Hero */}
-      <Card className="border-brass/40 bg-gradient-to-br from-brass/10 to-brass/5">
+      <Card className="border-white/10 bg-gradient-to-br from-white/10 to-white/5">
         <CardHeader>
           <CardTitle className="text-2xl">Trust Score</CardTitle>
           <CardDescription>Overall quality rating for {agentName}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-6">
-            <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-brass bg-surface text-3xl font-bold text-brass">
+            <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-white/10 bg-white/5 text-3xl font-bold text-slate-300">
               {trustScore}
             </div>
             <div className="flex-1">
-              <div className="mb-2 h-3 w-full overflow-hidden rounded-full bg-outline/30">
+              <div className="mb-2 h-3 w-full overflow-hidden rounded-full bg-white/10">
                 <div
-                  className="h-full bg-brass transition-all"
+                  className="h-full bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] transition-all"
                   style={{ width: `${trustScore}%` }}
                 />
               </div>
@@ -145,7 +145,7 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
                   {badges.map((badge) => (
                     <span
                       key={badge}
-                      className="rounded-full bg-brass/20 px-3 py-1 text-xs font-medium text-brass capitalize"
+                      className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-slate-300 capitalize"
                     >
                       {badge.replace(/-/g, ' ')}
                     </span>
@@ -202,7 +202,7 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
 
       {/* Active Test Runs with Progress */}
       {runs.filter((run) => run.status === 'QUEUED' || run.status === 'RUNNING').length > 0 && (
-        <Card className="border-brass/40 bg-gradient-to-br from-brass/10 to-brass/5">
+        <Card className="border-white/10 bg-gradient-to-br from-white/10 to-white/5">
           <CardHeader>
             <CardTitle>Active Test Runs</CardTitle>
             <CardDescription>Tests currently in progress</CardDescription>
@@ -217,21 +217,21 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
                   return (
                     <div
                       key={run.id}
-                      className="rounded-lg border border-outline/40 bg-surfaceAlt/60 p-4"
+                      className="rounded-lg border border-white/10 bg-white/5 p-4"
                     >
                       <div className="mb-2 flex items-center justify-between">
-                        <h4 className="font-semibold text-ink font-body">{run.suite.name}</h4>
+                        <h4 className="font-semibold text-white font-body">{run.suite.name}</h4>
                         <span className={`text-xs font-medium ${getStatusColor(run.status)}`}>
                           {run.status}
                         </span>
                       </div>
-                      <div className="mb-2 h-2 w-full overflow-hidden rounded-full bg-outline/30">
+                      <div className="mb-2 h-2 w-full overflow-hidden rounded-full bg-white/10">
                         <div
                           className="h-full bg-gradient-to-r from-brass to-[#bf8616] transition-all duration-500"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
-                      <p className="text-xs text-ink-muted font-body">
+                      <p className="text-xs text-slate-400 font-body">
                         {run.status === 'QUEUED'
                           ? 'Waiting to start...'
                           : run.status === 'RUNNING'
@@ -254,12 +254,12 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="py-8 text-center text-sm text-ink-muted font-body">
+            <div className="py-8 text-center text-sm text-slate-400 font-body">
               Loading test runs...
             </div>
           ) : runs.filter((run) => run.status === 'COMPLETED' || run.status === 'FAILED').length ===
             0 ? (
-            <div className="py-8 text-center text-sm text-ink-muted font-body">
+            <div className="py-8 text-center text-sm text-slate-400 font-body">
               No completed test runs yet. Start a test run to see results here.
             </div>
           ) : (
@@ -269,13 +269,13 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
                 .map((run) => (
                   <div
                     key={run.id}
-                    className="flex items-center justify-between rounded-lg border border-outline/40 bg-surfaceAlt/60 p-4"
+                    className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-4"
                   >
                     <div className="flex items-center gap-4">
                       {getStatusIcon(run.status)}
                       <div>
-                        <h4 className="font-semibold text-ink font-body">{run.suite.name}</h4>
-                        <p className="text-xs text-ink-muted capitalize font-body">
+                        <h4 className="font-semibold text-white font-body">{run.suite.name}</h4>
+                        <p className="text-xs text-slate-400 capitalize font-body">
                           {run.suite.category}
                         </p>
                       </div>
@@ -283,8 +283,8 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
                     <div className="flex items-center gap-4">
                       {run.score !== null && (
                         <div className="text-right">
-                          <p className="text-lg font-bold text-ink font-body">Score: {run.score}</p>
-                          <p className="text-xs text-ink-muted font-body">
+                          <p className="text-lg font-bold text-white font-body">Score: {run.score}</p>
+                          <p className="text-xs text-slate-400 font-body">
                             {new Date(run.createdAt).toLocaleString()}
                           </p>
                         </div>

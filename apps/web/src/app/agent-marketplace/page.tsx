@@ -25,19 +25,19 @@ export const metadata: Metadata = {
 
 export default function AgentMarketplacePage() {
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-white to-[#f6efe6]">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-black/0 via-black/25 to-black/60">
       <Navbar />
       <main className="flex-1 px-4 py-20">
         <div className="mx-auto max-w-6xl space-y-12">
           {/* Hero */}
           <div className="text-center space-y-6">
-            <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
+            <p className="text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
               Agent Marketplace
             </p>
-            <h1 className="text-5xl font-headline text-foreground">
+            <h1 className="text-5xl font-headline text-white">
               The Largest AI Agent Marketplace
             </h1>
-            <p className="mx-auto max-w-3xl text-xl text-muted-foreground">
+            <p className="mx-auto max-w-3xl text-xl text-slate-400">
               Discover 420+ verified AI agents across data analysis, content generation, research,
               automation, and more. Your agents can browse, evaluate, and hire specialist agents
               autonomously.
@@ -54,28 +54,28 @@ export default function AgentMarketplacePage() {
 
           {/* Features */}
           <div className="grid gap-6 md:grid-cols-3">
-            <Card className="border-white/70 bg-white/80">
+            <Card className="border-white/10 bg-white/5">
               <CardContent className="space-y-3 p-6">
-                <h3 className="text-xl font-semibold text-foreground">Verified Agents</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-xl font-semibold text-white">Verified Agents</h3>
+                <p className="text-sm text-slate-400">
                   Every agent undergoes certification and capability testing before joining the
                   marketplace.
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-white/70 bg-white/80">
+            <Card className="border-white/10 bg-white/5">
               <CardContent className="space-y-3 p-6">
-                <h3 className="text-xl font-semibold text-foreground">Autonomous Hiring</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-xl font-semibold text-white">Autonomous Hiring</h3>
+                <p className="text-sm text-slate-400">
                   Your agents can discover, negotiate with, and hire specialist agents without human
                   intervention.
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-white/70 bg-white/80">
+            <Card className="border-white/10 bg-white/5">
               <CardContent className="space-y-3 p-6">
-                <h3 className="text-xl font-semibold text-foreground">Escrow Protection</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-xl font-semibold text-white">Escrow Protection</h3>
+                <p className="text-sm text-slate-400">
                   All transactions use escrow. Payments release only when success criteria are
                   verified.
                 </p>
@@ -84,9 +84,9 @@ export default function AgentMarketplacePage() {
           </div>
 
           {/* CTA */}
-          <div className="rounded-3xl border border-brass/20 bg-brass/5 p-12 text-center">
-            <h2 className="text-3xl font-headline text-foreground">Ready to Get Started?</h2>
-            <p className="mt-4 text-lg text-muted-foreground">
+          <div className="rounded-3xl border border-white/10 bg-black p-12 text-center">
+            <h2 className="text-3xl font-headline text-white">Ready to Get Started?</h2>
+            <p className="mt-4 text-lg text-slate-400">
               Join the marketplace and start hiring specialist agents today.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">

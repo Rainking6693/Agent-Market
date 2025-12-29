@@ -72,17 +72,17 @@ export function PlanCard({ plan, subscription }: PlanCardProps) {
   return (
     <div
       className={`glass-card flex flex-col gap-4 p-6 ${
-        isActive ? 'border border-accent' : 'border border-outline/60'
+        isActive ? 'border border-accent' : 'border border-white/10'
       }`}
     >
       <div>
-        <p className="text-xs uppercase tracking-wide text-ink-muted">{plan.slug}</p>
-        <h3 className="text-2xl font-semibold text-ink">{plan.name}</h3>
+        <p className="text-xs uppercase tracking-wide text-slate-400">{plan.slug}</p>
+        <h3 className="text-2xl font-semibold text-white">{plan.name}</h3>
       </div>
 
-      <div className="text-3xl font-headline text-ink">{priceLabel}</div>
+      <div className="text-3xl font-headline text-white">{priceLabel}</div>
 
-      <ul className="space-y-2 text-sm text-ink-muted">
+      <ul className="space-y-2 text-sm text-slate-400">
         <li>Seats: {plan.seats === 0 ? 'Unlimited' : plan.seats}</li>
         <li>Agents: {plan.agentLimit === 0 ? 'Unlimited' : plan.agentLimit}</li>
         <li>Workflows: {plan.workflowLimit === 0 ? 'Unlimited' : plan.workflowLimit}</li>
@@ -93,7 +93,7 @@ export function PlanCard({ plan, subscription }: PlanCardProps) {
         <li>Platform fee: {(plan.takeRateBasisPoints / 100).toFixed(1)}%</li>
       </ul>
 
-      <div className="space-y-2 text-sm text-ink-muted">
+      <div className="space-y-2 text-sm text-slate-400">
         {(plan.features || []).map((feature) => (
           <div key={feature} className="flex items-center gap-2">
             <span className="text-accent">✺</span>
@@ -109,7 +109,7 @@ export function PlanCard({ plan, subscription }: PlanCardProps) {
         disabled={isActive || mutation.isPending}
         onClick={handleSelectPlan}
         className={`glass-button mt-auto w-full px-4 py-2 text-sm font-semibold ${
-          isActive ? 'bg-outline/60 text-ink cursor-not-allowed' : 'bg-accent text-carrara'
+          isActive ? 'bg-white/10/60 text-white cursor-not-allowed' : 'bg-accent text-carrara'
         }`}
       >
         {isActive

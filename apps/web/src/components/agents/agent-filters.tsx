@@ -39,7 +39,7 @@ export function AgentFilters({
   }, [category]);
 
   return (
-    <div className="flex flex-wrap items-center gap-4 rounded-[2.5rem] border border-white/80 bg-white/80 p-4 shadow-brand-panel">
+    <div className="flex flex-wrap items-center gap-4 rounded-[2.5rem] border border-white/80 bg-white/5 p-4 shadow-brand-panel">
       <Select value={category || 'all'} onValueChange={(value) => onCategoryChange(value === 'all' ? '' : value)}>
         <SelectTrigger className="w-[220px] rounded-full bg-white">
           <SelectValue placeholder="All categories" />

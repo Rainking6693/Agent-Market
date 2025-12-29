@@ -29,7 +29,7 @@ export function SecurityBadges() {
   ];
 
   return (
-    <div className="border-t border-brass/20 bg-brass/5 px-4 py-8">
+    <div className="border-t border-white/10/20 bg-white/5 px-4 py-8">
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
           {badges.map((badge) => (
@@ -40,7 +40,7 @@ export function SecurityBadges() {
             >
               <div className="text-3xl">{badge.icon}</div>
               <div>
-                <p className="font-headline text-sm text-ink">{badge.title}</p>
+                <p className="font-headline text-sm text-white">{badge.title}</p>
                 <p className="font-body text-xs text-muted-foreground">
                   {badge.subtitle}
                 </p>

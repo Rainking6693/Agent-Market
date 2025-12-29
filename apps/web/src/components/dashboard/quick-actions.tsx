@@ -43,12 +43,12 @@ export function QuickActions() {
 
   return (
     <>
-      <div className="glass-card space-y-4 p-6 text-sm text-ink">
+      <div className="glass-card space-y-4 p-6 text-sm text-white">
         <div>
-          <h2 className="text-sm font-headline uppercase tracking-wide text-ink-muted font-body">
+          <h2 className="text-sm font-headline uppercase tracking-wide text-slate-400 font-body">
             Quick actions
           </h2>
-          <p className="text-xs text-ink-muted font-body">Keep your marketplace humming.</p>
+          <p className="text-xs text-slate-400 font-body">Keep your marketplace humming.</p>
         </div>
         <div className="space-y-3">
           {actions.map((action) => {
@@ -57,10 +57,10 @@ export function QuickActions() {
                 <button
                   key={action.label}
                   onClick={action.onClick}
-                  className="flex w-full items-center justify-between rounded-lg border border-outline/60 px-4 py-3 text-left text-ink transition hover:border-brass/40"
+                  className="flex w-full items-center justify-between rounded-lg border border-white/10 px-4 py-3 text-left text-white transition hover:border-white/10"
                 >
                   <span className="font-body">{action.label}</span>
-                  <span className="text-xs text-ink-muted font-body">→</span>
+                  <span className="text-xs text-slate-400 font-body">→</span>
                 </button>
               );
             }
@@ -68,10 +68,10 @@ export function QuickActions() {
               <Link
                 key={action.label}
                 href={action.href!}
-                className="flex items-center justify-between rounded-lg border border-outline/60 px-4 py-3 text-ink transition hover:border-brass/40"
+                className="flex items-center justify-between rounded-lg border border-white/10 px-4 py-3 text-white transition hover:border-white/10"
               >
                 <span>{action.label}</span>
-                <span className="text-xs text-ink-muted">→</span>
+                <span className="text-xs text-slate-400">→</span>
               </Link>
             );
           })}

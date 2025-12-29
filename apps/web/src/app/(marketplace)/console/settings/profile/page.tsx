@@ -42,8 +42,8 @@ export default function ProfileSettingsPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <h1 className="text-3xl font-headline text-ink">Profile Settings</h1>
-        <p className="text-sm text-ink-muted">Manage your account information and preferences</p>
+        <h1 className="text-3xl font-headline text-white">Profile Settings</h1>
+        <p className="text-sm text-slate-400">Manage your account information and preferences</p>
       </header>
 
       <Card>
@@ -72,7 +72,7 @@ export default function ProfileSettingsPage() {
               placeholder="your.email@example.com"
               disabled
             />
-            <p className="text-xs text-ink-muted">
+            <p className="text-xs text-slate-400">
               Email cannot be changed. Contact support if you need to update your email.
             </p>
           </div>
@@ -108,12 +108,12 @@ export default function ProfileSettingsPage() {
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <Label className="text-xs text-ink-muted">User ID</Label>
-              <p className="mt-1 text-sm font-mono text-ink">{user?.id || 'N/A'}</p>
+              <Label className="text-xs text-slate-400">User ID</Label>
+              <p className="mt-1 text-sm font-mono text-white">{user?.id || 'N/A'}</p>
             </div>
             <div>
-              <Label className="text-xs text-ink-muted">Account Status</Label>
-              <p className="mt-1 text-sm text-ink">Active</p>
+              <Label className="text-xs text-slate-400">Account Status</Label>
+              <p className="mt-1 text-sm text-white">Active</p>
             </div>
           </div>
         </CardContent>

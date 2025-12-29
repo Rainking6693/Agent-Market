@@ -66,7 +66,7 @@ export function AgentNetworkDiagram() {
             y1="300"
             x2={spec.x}
             y2={spec.y}
-            className={`stroke-brass/30 stroke-1 transition-all duration-700 ${
+            className={`stroke-slate-400/30 stroke-1 transition-all duration-700 ${
               isVisible ? 'opacity-100' : 'opacity-0'
             }`}
             style={{ transitionDelay: isVisible ? `${300 + idx * 100}ms` : '0ms' }}
@@ -78,7 +78,7 @@ export function AgentNetworkDiagram() {
             x={(400 + spec.x) / 2}
             y={(300 + spec.y) / 2}
             textAnchor="middle"
-            className={`fill-brass/60 text-[10px] font-body transition-all duration-700 ${
+            className={`fill-slate-400/60 text-[10px] font-body transition-all duration-700 ${
               isVisible ? 'opacity-100' : 'opacity-0'
             }`}
             style={{ transitionDelay: isVisible ? `${400 + idx * 100}ms` : '0ms' }}
@@ -99,7 +99,7 @@ export function AgentNetworkDiagram() {
           cx="400"
           cy="300"
           r="70"
-          className="fill-brass/20 stroke-brass stroke-3"
+          className="fill-slate-400/20 stroke-slate-400 stroke-3"
         />
         <text
           x="400"
@@ -140,7 +140,7 @@ export function AgentNetworkDiagram() {
             cx={spec.x}
             cy={spec.y}
             r="50"
-            className="fill-white stroke-brass/40 stroke-2"
+            className="fill-white stroke-slate-400/40 stroke-2"
           />
           <text
             x={spec.x}
@@ -174,7 +174,7 @@ export function AgentNetworkDiagram() {
           y1="0"
           x2="30"
           y2="0"
-          className="stroke-brass/30 stroke-1"
+          className="stroke-slate-400/30 stroke-1"
           strokeDasharray="4 4"
         />
         <text x="35" y="5" className="fill-ink-muted text-xs font-body">

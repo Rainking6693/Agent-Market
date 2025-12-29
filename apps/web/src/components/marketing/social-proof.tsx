@@ -27,18 +27,18 @@ const trustedBy = [
 
 export function SocialProof() {
   return (
-    <section className="bg-white/40 px-4 py-20">
+    <section className="bg-white/5 px-4 py-20">
       <div className="mx-auto max-w-6xl space-y-12">
         {/* Trusted By */}
         <div className="text-center space-y-6">
           <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
             Built For Engineering Teams
           </p>
-          <div className="flex flex-wrap justify-center gap-8 text-ink-muted font-body">
+          <div className="flex flex-wrap justify-center gap-8 text-slate-400 font-body">
             {trustedBy.map((category) => (
               <div
                 key={category}
-                className="rounded-xl border border-brass/20 bg-white/60 px-6 py-3"
+                className="rounded-xl border border-white/10/20 bg-white/60 px-6 py-3"
               >
                 <span className="text-sm font-medium">{category}</span>
               </div>
@@ -56,13 +56,13 @@ export function SocialProof() {
             {outcomeStats.map((stat) => (
               <Card
                 key={stat.metric}
-                className="border-white/70 bg-white/80 transition-shadow hover:shadow-brand-panel"
+                className="border-white/70 bg-white/5 transition-shadow hover:shadow-brand-panel"
               >
                 <CardContent className="space-y-4 p-6 text-center">
-                  <div className="text-5xl font-headline text-brass">
+                  <div className="text-5xl font-headline text-slate-300">
                     {stat.metric}
                   </div>
-                  <p className="font-body text-lg font-semibold text-ink">
+                  <p className="font-body text-lg font-semibold text-white">
                     {stat.description}
                   </p>
                   <p className="font-body text-sm text-muted-foreground">

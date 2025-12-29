@@ -55,7 +55,7 @@ export function AgentFlowDiagram() {
         }`}
         style={{ transitionDelay: isVisible ? '300ms' : '0ms' }}
       >
-        <circle cx="120" cy="100" r="40" className="fill-brass/20 stroke-brass stroke-2" />
+        <circle cx="120" cy="100" r="40" className="fill-slate-400/20 stroke-slate-400 stroke-2" />
         <text x="120" y="100" textAnchor="middle" className="fill-ink font-headline text-sm" dy="5">
           Human
         </text>
@@ -70,7 +70,7 @@ export function AgentFlowDiagram() {
       {/* Arrow 1 */}
       <path
         d="M 160 100 L 280 100"
-        className={`stroke-brass stroke-2 fill-none transition-all duration-700 ${
+        className={`stroke-slate-400 stroke-2 fill-none transition-all duration-700 ${
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}
         style={{ transitionDelay: isVisible ? '500ms' : '0ms' }}
@@ -90,7 +90,7 @@ export function AgentFlowDiagram() {
           width="120"
           height="80"
           rx="12"
-          className="fill-brass/10 stroke-brass stroke-2"
+          className="fill-slate-400/10 stroke-slate-400 stroke-2"
         />
         <text x="340" y="95" textAnchor="middle" className="fill-ink font-headline text-sm">
           Agent Runs
@@ -106,7 +106,7 @@ export function AgentFlowDiagram() {
       {/* Arrow 2 */}
       <path
         d="M 340 140 L 340 220"
-        className={`stroke-brass stroke-2 fill-none transition-all duration-700 ${
+        className={`stroke-slate-400 stroke-2 fill-none transition-all duration-700 ${
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}
         style={{ transitionDelay: isVisible ? '800ms' : '0ms' }}
@@ -126,7 +126,7 @@ export function AgentFlowDiagram() {
           width="120"
           height="80"
           rx="12"
-          className="fill-brass/10 stroke-brass stroke-2"
+          className="fill-slate-400/10 stroke-slate-400 stroke-2"
         />
         <text x="340" y="255" textAnchor="middle" className="fill-ink font-headline text-sm">
           Discovers
@@ -142,7 +142,7 @@ export function AgentFlowDiagram() {
       {/* Arrow 3 */}
       <path
         d="M 400 260 L 520 260"
-        className={`stroke-brass stroke-2 fill-none transition-all duration-700 ${
+        className={`stroke-slate-400 stroke-2 fill-none transition-all duration-700 ${
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}
         style={{ transitionDelay: isVisible ? '1100ms' : '0ms' }}
@@ -162,7 +162,7 @@ export function AgentFlowDiagram() {
           width="120"
           height="80"
           rx="12"
-          className="fill-brass/10 stroke-brass stroke-2"
+          className="fill-slate-400/10 stroke-slate-400 stroke-2"
         />
         <text x="580" y="255" textAnchor="middle" className="fill-ink font-headline text-sm">
           Negotiates
@@ -178,7 +178,7 @@ export function AgentFlowDiagram() {
       {/* Arrow 4 */}
       <path
         d="M 580 300 L 580 380"
-        className={`stroke-brass stroke-2 fill-none transition-all duration-700 ${
+        className={`stroke-slate-400 stroke-2 fill-none transition-all duration-700 ${
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}
         style={{ transitionDelay: isVisible ? '1400ms' : '0ms' }}
@@ -198,7 +198,7 @@ export function AgentFlowDiagram() {
           width="120"
           height="80"
           rx="12"
-          className="fill-brass/10 stroke-brass stroke-2"
+          className="fill-slate-400/10 stroke-slate-400 stroke-2"
         />
         <text x="580" y="415" textAnchor="middle" className="fill-ink font-headline text-sm">
           Executes
@@ -214,7 +214,7 @@ export function AgentFlowDiagram() {
       {/* Arrow 5 */}
       <path
         d="M 520 420 L 400 420"
-        className={`stroke-brass stroke-2 fill-none transition-all duration-700 ${
+        className={`stroke-slate-400 stroke-2 fill-none transition-all duration-700 ${
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}
         style={{ transitionDelay: isVisible ? '1700ms' : '0ms' }}
@@ -234,7 +234,7 @@ export function AgentFlowDiagram() {
           width="120"
           height="80"
           rx="12"
-          className="fill-brass/10 stroke-brass stroke-2"
+          className="fill-slate-400/10 stroke-slate-400 stroke-2"
         />
         <text x="340" y="415" textAnchor="middle" className="fill-ink font-headline text-sm">
           Verify & Pay
@@ -247,7 +247,7 @@ export function AgentFlowDiagram() {
       {/* Arrow 6 - back to human */}
       <path
         d="M 280 420 L 160 420 L 160 100"
-        className={`stroke-brass/50 stroke-2 fill-none stroke-dasharray-4 transition-all duration-700 ${
+        className={`stroke-slate-400/50 stroke-2 fill-none stroke-dasharray-4 transition-all duration-700 ${
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}
         style={{ transitionDelay: isVisible ? '2000ms' : '0ms' }}
@@ -274,7 +274,7 @@ export function AgentFlowDiagram() {
           refY="3"
           orient="auto"
         >
-          <polygon points="0 0, 10 3, 0 6" className="fill-brass" />
+          <polygon points="0 0, 10 3, 0 6" className="fill-slate-400" />
         </marker>
       </defs>
 

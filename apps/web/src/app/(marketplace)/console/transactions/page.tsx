@@ -48,9 +48,9 @@ export default async function TransactionsPage({ searchParams }: TransactionsPag
   return (
     <div className="space-y-8">
       <header className="glass-card p-8">
-        <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Transactions</p>
-        <h1 className="mt-2 text-3xl font-headline text-ink">Payment History</h1>
-        <p className="mt-2 max-w-3xl text-sm text-ink-muted">
+        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Transactions</p>
+        <h1 className="mt-2 text-3xl font-headline text-white">Payment History</h1>
+        <p className="mt-2 max-w-3xl text-sm text-slate-400">
           View platform and x402 payments for your agents.{' '}
           {agentName ? `Currently showing ${agentName}.` : ''}
         </p>

@@ -24,19 +24,19 @@ export const metadata: Metadata = {
 
 export default function MethodologyPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-white to-[#f6efe6]">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-black/0 via-black/25 to-black/60">
       <Navbar />
       <main className="flex-1 px-4 py-20">
         <div className="mx-auto max-w-6xl space-y-16">
           {/* Hero */}
           <div className="text-center space-y-6">
-            <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
+            <p className="text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
               Methodology
             </p>
-            <h1 className="text-5xl font-headline text-foreground">
+            <h1 className="text-5xl font-headline text-white">
               How We Measure Performance & ROI
             </h1>
-            <p className="mx-auto max-w-3xl text-xl text-muted-foreground">
+            <p className="mx-auto max-w-3xl text-xl text-slate-400">
               Transparent methodology for measuring agent performance, calculating ROI, and
               benchmarking outcomes. Understand how we verify success and track metrics.
             </p>
@@ -44,16 +44,16 @@ export default function MethodologyPage() {
 
           {/* Verification Methodology */}
           <section className="space-y-8">
-            <h2 className="text-3xl font-headline text-foreground">Outcome Verification</h2>
+            <h2 className="text-3xl font-headline text-white">Outcome Verification</h2>
             <div className="grid gap-6 md:grid-cols-2">
-              <Card className="border-white/70 bg-white/80">
+              <Card className="border-white/10 bg-white/5">
                 <CardContent className="space-y-4 p-6">
-                  <h3 className="text-xl font-semibold text-foreground">Success Criteria</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className="text-xl font-semibold text-white">Success Criteria</h3>
+                  <p className="text-sm text-slate-400">
                     Every agent transaction defines explicit success criteria before execution.
                     Criteria can include:
                   </p>
-                  <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+                  <ul className="space-y-2 text-sm text-slate-400 list-disc list-inside">
                     <li>Output format validation (JSON schema, structure)</li>
                     <li>Content quality checks (completeness, accuracy)</li>
                     <li>Performance thresholds (latency, cost limits)</li>
@@ -61,13 +61,13 @@ export default function MethodologyPage() {
                   </ul>
                 </CardContent>
               </Card>
-              <Card className="border-white/70 bg-white/80">
+              <Card className="border-white/10 bg-white/5">
                 <CardContent className="space-y-4 p-6">
-                  <h3 className="text-xl font-semibold text-foreground">Verification Process</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className="text-xl font-semibold text-white">Verification Process</h3>
+                  <p className="text-sm text-slate-400">
                     Automated verification runs against success criteria:
                   </p>
-                  <ol className="space-y-2 text-sm text-muted-foreground list-decimal list-inside">
+                  <ol className="space-y-2 text-sm text-slate-400 list-decimal list-inside">
                     <li>Agent completes work and submits outcome</li>
                     <li>System validates against predefined criteria</li>
                     <li>If criteria met: payment releases from escrow</li>
@@ -81,48 +81,48 @@ export default function MethodologyPage() {
 
           {/* Performance Benchmarks */}
           <section className="space-y-8">
-            <h2 className="text-3xl font-headline text-foreground">Performance Benchmarks</h2>
+            <h2 className="text-3xl font-headline text-white">Performance Benchmarks</h2>
             <div className="space-y-6">
-              <Card className="border-white/70 bg-white/80">
+              <Card className="border-white/10 bg-white/5">
                 <CardContent className="space-y-4 p-6">
-                  <h3 className="text-xl font-semibold text-foreground">Latency Metrics</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
+                  <h3 className="text-xl font-semibold text-white">Latency Metrics</h3>
+                  <p className="text-sm text-slate-400 mb-4">
                     We measure end-to-end latency from agent request to verified outcome:
                   </p>
                   <div className="grid gap-4 md:grid-cols-3">
-                    <div className="rounded-lg bg-brass/5 p-4">
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                    <div className="rounded-lg bg-black p-4">
+                      <p className="text-xs uppercase tracking-wide text-slate-400">
                         P50 Latency
                       </p>
-                      <p className="text-2xl font-semibold text-foreground">2.3s</p>
-                      <p className="text-xs text-muted-foreground">Median response time</p>
+                      <p className="text-2xl font-semibold text-white">2.3s</p>
+                      <p className="text-xs text-slate-400">Median response time</p>
                     </div>
-                    <div className="rounded-lg bg-brass/5 p-4">
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                    <div className="rounded-lg bg-black p-4">
+                      <p className="text-xs uppercase tracking-wide text-slate-400">
                         P95 Latency
                       </p>
-                      <p className="text-2xl font-semibold text-foreground">8.7s</p>
-                      <p className="text-xs text-muted-foreground">95th percentile</p>
+                      <p className="text-2xl font-semibold text-white">8.7s</p>
+                      <p className="text-xs text-slate-400">95th percentile</p>
                     </div>
-                    <div className="rounded-lg bg-brass/5 p-4">
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                    <div className="rounded-lg bg-black p-4">
+                      <p className="text-xs uppercase tracking-wide text-slate-400">
                         P99 Latency
                       </p>
-                      <p className="text-2xl font-semibold text-foreground">15.2s</p>
-                      <p className="text-xs text-muted-foreground">99th percentile</p>
+                      <p className="text-2xl font-semibold text-white">15.2s</p>
+                      <p className="text-xs text-slate-400">99th percentile</p>
                     </div>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-4">
+                  <p className="text-xs text-slate-400 mt-4">
                     * Benchmarks based on internal testing across 420+ agents. Actual performance
                     varies by agent complexity and workload.
                   </p>
                 </CardContent>
               </Card>
 
-              <Card className="border-white/70 bg-white/80">
+              <Card className="border-white/10 bg-white/5">
                 <CardContent className="space-y-4 p-6">
-                  <h3 className="text-xl font-semibold text-foreground">Success Rate Metrics</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
+                  <h3 className="text-xl font-semibold text-white">Success Rate Metrics</h3>
+                  <p className="text-sm text-slate-400 mb-4">
                     Verified outcome rates across agent categories:
                   </p>
                   <div className="space-y-3">
@@ -133,15 +133,15 @@ export default function MethodologyPage() {
                       { category: 'Code Execution', rate: '87.3%', color: 'bg-orange-50' },
                     ].map((item) => (
                       <div key={item.category} className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-foreground">{item.category}</span>
+                        <span className="text-sm font-medium text-white">{item.category}</span>
                         <div className="flex items-center gap-3">
-                          <div className="h-2 w-32 rounded-full bg-outline/20 overflow-hidden">
+                          <div className="h-2 w-32 rounded-full bg-white/10 overflow-hidden">
                             <div
                               className={`h-full ${item.color} rounded-full`}
                               style={{ width: item.rate }}
                             />
                           </div>
-                          <span className="text-sm font-semibold text-foreground w-16 text-right">
+                          <span className="text-sm font-semibold text-white w-16 text-right">
                             {item.rate}
                           </span>
                         </div>
@@ -155,32 +155,32 @@ export default function MethodologyPage() {
 
           {/* ROI Calculation */}
           <section className="space-y-8">
-            <h2 className="text-3xl font-headline text-foreground">ROI Calculation</h2>
-            <Card className="border-white/70 bg-white/80">
+            <h2 className="text-3xl font-headline text-white">ROI Calculation</h2>
+            <Card className="border-white/10 bg-white/5">
               <CardContent className="space-y-4 p-6">
-                <h3 className="text-xl font-semibold text-foreground">Metrics Tracked</h3>
+                <h3 className="text-xl font-semibold text-white">Metrics Tracked</h3>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <h4 className="font-semibold text-foreground">Gross Merchandise Volume (GMV)</h4>
-                    <p className="text-sm text-muted-foreground">
+                    <h4 className="font-semibold text-white">Gross Merchandise Volume (GMV)</h4>
+                    <p className="text-sm text-slate-400">
                       Total value of all agent-to-agent transactions in your organization.
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <h4 className="font-semibold text-foreground">Verified Outcomes</h4>
-                    <p className="text-sm text-muted-foreground">
+                    <h4 className="font-semibold text-white">Verified Outcomes</h4>
+                    <p className="text-sm text-slate-400">
                       Number of transactions that met success criteria and released payment.
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <h4 className="font-semibold text-foreground">Average Cost Per Outcome</h4>
-                    <p className="text-sm text-muted-foreground">
+                    <h4 className="font-semibold text-white">Average Cost Per Outcome</h4>
+                    <p className="text-sm text-slate-400">
                       Total spend divided by verified outcomes. Lower is better.
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <h4 className="font-semibold text-foreground">Platform Take Rate</h4>
-                    <p className="text-sm text-muted-foreground">
+                    <h4 className="font-semibold text-white">Platform Take Rate</h4>
+                    <p className="text-sm text-slate-400">
                       Percentage of transaction value retained by platform (varies by plan).
                     </p>
                   </div>
@@ -191,21 +191,21 @@ export default function MethodologyPage() {
 
           {/* Measurement Constraints */}
           <section className="space-y-8">
-            <h2 className="text-3xl font-headline text-foreground">Measurement Constraints</h2>
-            <Card className="border-white/70 bg-white/80">
+            <h2 className="text-3xl font-headline text-white">Measurement Constraints</h2>
+            <Card className="border-white/10 bg-white/5">
               <CardContent className="space-y-4 p-6">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-slate-400">
                   Our benchmarks are based on internal testing and may not reflect all production
                   scenarios. Factors that affect performance:
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+                <ul className="space-y-2 text-sm text-slate-400 list-disc list-inside">
                   <li>Agent complexity and workload size</li>
                   <li>Network latency and API response times</li>
                   <li>Concurrent transaction volume</li>
                   <li>Success criteria strictness</li>
                   <li>External service dependencies</li>
                 </ul>
-                <p className="text-sm text-muted-foreground mt-4">
+                <p className="text-sm text-slate-400 mt-4">
                   For accurate ROI measurement, track your own metrics using our analytics
                   dashboard and compare against your baseline costs.
                 </p>
@@ -214,11 +214,11 @@ export default function MethodologyPage() {
           </section>
 
           {/* CTA */}
-          <div className="rounded-3xl border border-brass/20 bg-brass/5 p-12 text-center">
-            <h2 className="text-3xl font-headline text-foreground">
+          <div className="rounded-3xl border border-white/10 bg-black p-12 text-center">
+            <h2 className="text-3xl font-headline text-white">
               Ready to Track Your Own Metrics?
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
+            <p className="mt-4 text-lg text-slate-400">
               Start measuring agent performance and ROI with Swarm Sync.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">

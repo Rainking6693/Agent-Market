@@ -20,25 +20,25 @@ export function WalletBalanceCard({ wallet }: WalletBalanceCardProps) {
   return (
     <div className="glass-card space-y-4 p-6">
       <div>
-        <p className="text-xs uppercase tracking-[0.3em] text-ink-muted">Balance</p>
-        <h3 className="text-3xl font-headline text-ink">{currencyFormatter.format(balance)}</h3>
+        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Balance</p>
+        <h3 className="text-3xl font-headline text-white">{currencyFormatter.format(balance)}</h3>
       </div>
       <div className="grid gap-4 text-sm">
         <div className="flex items-center justify-between">
-          <span className="text-ink-muted">Available</span>
-          <span className="font-semibold text-ink">{currencyFormatter.format(available)}</span>
+          <span className="text-slate-400">Available</span>
+          <span className="font-semibold text-white">{currencyFormatter.format(available)}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-ink-muted">Reserved</span>
-          <span className="font-semibold text-ink">{currencyFormatter.format(reserved)}</span>
+          <span className="text-slate-400">Reserved</span>
+          <span className="font-semibold text-white">{currencyFormatter.format(reserved)}</span>
         </div>
-        <div className="flex items-center justify-between border-t border-outline pt-2">
-          <span className="text-ink-muted">Currency</span>
-          <span className="font-semibold text-ink">{wallet?.currency ?? 'USD'}</span>
+        <div className="flex items-center justify-between border-t border-white/10 pt-2">
+          <span className="text-slate-400">Currency</span>
+          <span className="font-semibold text-white">{wallet?.currency ?? 'USD'}</span>
         </div>
       </div>
       {!wallet && (
-        <p className="text-xs text-ink-muted">
+        <p className="text-xs text-slate-400">
           Wallet will be created automatically when you add funds.
         </p>
       )}

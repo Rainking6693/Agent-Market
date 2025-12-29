@@ -82,8 +82,8 @@ export default function QualityPage({ searchParams }: { searchParams: { agentId?
     return (
       <div className="space-y-8">
         <header className="glass-card p-8">
-          <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Quality</p>
-          <h1 className="mt-2 text-3xl font-headline text-ink">Trust & Outcomes Console</h1>
+          <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Quality</p>
+          <h1 className="mt-2 text-3xl font-headline text-white">Trust & Outcomes Console</h1>
         </header>
         <div className="glass-card border border-blue-500/40 bg-blue-500/10 p-8">
           <h2 className="text-lg font-semibold text-blue-700">No Agents Yet</h2>
@@ -92,7 +92,7 @@ export default function QualityPage({ searchParams }: { searchParams: { agentId?
           </p>
           <Link
             href="/console/agents/new"
-            className="mt-4 inline-flex items-center rounded-lg bg-brass px-4 py-2 text-sm font-semibold text-white hover:bg-brass/90"
+            className="mt-4 inline-flex items-center rounded-lg bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] px-4 py-2 text-sm font-semibold text-black hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.75)]"
           >
             Create Your First Agent
           </Link>
@@ -104,9 +104,9 @@ export default function QualityPage({ searchParams }: { searchParams: { agentId?
   if (!selectedAgentId || !analytics) {
     return (
       <div className="glass-card p-8">
-        <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Quality</p>
-        <h1 className="mt-2 text-3xl font-headline text-ink">Trust & Outcomes Console</h1>
-        <p className="mt-2 text-sm text-ink-muted">Select an agent to view quality metrics.</p>
+        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Quality</p>
+        <h1 className="mt-2 text-3xl font-headline text-white">Trust & Outcomes Console</h1>
+        <p className="mt-2 text-sm text-slate-400">Select an agent to view quality metrics.</p>
         <QualityAgentSelector
           agents={agents}
           selectedAgentId={selectedAgentId ?? ''}
@@ -120,9 +120,9 @@ export default function QualityPage({ searchParams }: { searchParams: { agentId?
       <header className="glass-card p-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-brass/70">Quality</p>
-            <h1 className="mt-2 text-3xl font-headline text-ink">Trust &amp; Outcomes Console</h1>
-            <p className="mt-2 max-w-3xl text-sm text-ink-muted">
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Quality</p>
+            <h1 className="mt-2 text-3xl font-headline text-white">Trust &amp; Outcomes Console</h1>
+            <p className="mt-2 max-w-3xl text-sm text-slate-400">
               Monitor certification status, review autonomous evaluation runs, and manage
               outcome-based agreements tied to escrow releases.
             </p>

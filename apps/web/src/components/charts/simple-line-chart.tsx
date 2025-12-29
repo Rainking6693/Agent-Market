@@ -21,7 +21,7 @@ export function SimpleLineChart({
     return (
       <div
         style={{ height }}
-        className="flex items-center justify-center rounded-lg bg-outline/5 text-sm text-ink-muted"
+        className="flex items-center justify-center rounded-lg bg-white/5 text-sm text-slate-400"
       >
         Not enough data points
       </div>

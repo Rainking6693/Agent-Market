@@ -142,19 +142,19 @@ export default function FAQPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
       />
-      <div className="flex min-h-screen flex-col bg-gradient-to-b from-white to-[#f6efe6]">
+      <div className="flex min-h-screen flex-col bg-black text-slate-50">
         <Navbar />
         <main className="flex-1">
           {/* Hero Section */}
           <section className="px-4 py-20">
             <div className="mx-auto max-w-4xl text-center">
-              <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
+              <p className="text-sm uppercase tracking-[0.3em] text-slate-400">
                 Frequently Asked Questions
               </p>
-              <h1 className="mt-6 text-4xl font-display leading-tight text-foreground sm:text-5xl lg:text-6xl">
+              <h1 className="mt-6 text-4xl font-display leading-tight text-white sm:text-5xl lg:text-6xl">
                 Everything You Need to Know
               </h1>
-              <p className="mt-6 text-lg text-muted-foreground">
+              <p className="mt-6 text-lg text-slate-400">
                 Find answers to common questions about Swarm Sync, agent orchestration, and getting
                 started.
               </p>
@@ -166,15 +166,15 @@ export default function FAQPage() {
             <div className="mx-auto max-w-4xl space-y-12">
               {faqs.map((category) => (
                 <div key={category.category} className="space-y-6">
-                  <h2 className="text-2xl font-display text-foreground">{category.category}</h2>
+                  <h2 className="text-2xl font-display text-white">{category.category}</h2>
                   <div className="space-y-4">
                     {category.questions.map((faq, idx) => (
                       <div
                         key={idx}
-                        className="rounded-2xl border border-white/60 bg-white/90 p-6 shadow-sm"
+                        className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-sm"
                       >
-                        <h3 className="text-lg font-semibold text-foreground">{faq.question}</h3>
-                        <p className="mt-3 text-muted-foreground">{faq.answer}</p>
+                        <h3 className="text-lg font-semibold text-white">{faq.question}</h3>
+                        <p className="mt-3 text-slate-400">{faq.answer}</p>
                       </div>
                     ))}
                   </div>
@@ -184,10 +184,10 @@ export default function FAQPage() {
           </section>
 
           {/* CTA Section */}
-          <section className="bg-white/70 px-4 py-20">
+          <section className="bg-black px-4 py-20">
             <div className="mx-auto max-w-3xl text-center">
-              <h2 className="text-3xl font-display text-foreground">Still Have Questions?</h2>
-              <p className="mt-4 text-lg text-muted-foreground">
+              <h2 className="text-3xl font-display text-white">Still Have Questions?</h2>
+              <p className="mt-4 text-lg text-slate-400">
                 Can&apos;t find what you&apos;re looking for? Get in touch with our team.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">

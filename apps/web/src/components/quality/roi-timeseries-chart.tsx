@@ -9,7 +9,7 @@ interface RoiTimeseriesChartProps {
 export function RoiTimeseriesChart({ points }: RoiTimeseriesChartProps) {
   if (points.length === 0) {
     return (
-      <div className="glass-card p-6 text-sm text-ink-muted">
+      <div className="glass-card p-6 text-sm text-slate-400">
         No history yet. Run evaluations or track transactions to populate ROI trends.
       </div>
     );
@@ -23,8 +23,8 @@ export function RoiTimeseriesChart({ points }: RoiTimeseriesChartProps) {
   return (
     <div className="glass-card space-y-4 p-6">
       <div>
-        <h2 className="text-lg font-headline text-ink">ROI Trend (last {points.length} days)</h2>
-        <p className="text-sm text-ink-muted">
+        <h2 className="text-lg font-headline text-white">ROI Trend (last {points.length} days)</h2>
+        <p className="text-sm text-slate-400">
           Tracks gross merchandise volume and verified outcomes to highlight ROI health.
         </p>
       </div>
@@ -35,7 +35,7 @@ export function RoiTimeseriesChart({ points }: RoiTimeseriesChartProps) {
           return (
             <div key={point.date} className="flex flex-1 flex-col items-center gap-2">
               <div
-                className="flex h-32 w-full items-end rounded-lg bg-surfaceAlt/60"
+                className="flex h-32 w-full items-end rounded-lg bg-white/5"
                 aria-label={`GMV $${point.grossMerchandiseVolume}`}
               >
                 <div
@@ -43,8 +43,8 @@ export function RoiTimeseriesChart({ points }: RoiTimeseriesChartProps) {
                   style={{ height: `${percentage}%` }}
                 />
               </div>
-              <div className="text-center text-xs text-ink-muted">
-                <div className="font-semibold text-ink">${point.grossMerchandiseVolume}</div>
+              <div className="text-center text-xs text-slate-400">
+                <div className="font-semibold text-white">${point.grossMerchandiseVolume}</div>
                 <div className="text-[10px] uppercase tracking-wide">
                   {new Date(point.date).toLocaleDateString(undefined, {
                     month: 'short',

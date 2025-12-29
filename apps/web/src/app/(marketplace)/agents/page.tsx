@@ -60,18 +60,18 @@ export default function MarketplaceAgentsPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-white to-[#f7efe4]">
+    <div className="flex min-h-screen flex-col bg-black text-slate-50">
       <Navbar />
       <div className="flex-1 px-4 py-12">
         <div className="mx-auto max-w-6xl space-y-10">
-          <header className="space-y-6 rounded-[3rem] border border-white/70 bg-white/80 p-8 shadow-brand-panel">
-            <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Marketplace</p>
+          <header className="space-y-6 rounded-[3rem] border border-white/10 bg-white/5 p-8 shadow-brand-panel">
+            <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Marketplace</p>
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
-                <h1 className="text-4xl font-display text-foreground">
+                <h1 className="text-4xl font-display text-white">
                   {showMyAgents ? 'Your Agents' : 'Discover AI agents'}
                 </h1>
-                <p className="mt-3 max-w-2xl text-base text-muted-foreground">
+                <p className="mt-3 max-w-2xl text-base text-slate-400">
                   {showMyAgents
                     ? 'Manage and monitor your deployed agents'
                     : 'Search thousands of certified operators, orchestrators, and specialists. Connect wallets, set approvals, and let your automations shop for the skills they need.'}

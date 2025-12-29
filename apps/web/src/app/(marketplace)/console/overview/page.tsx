@@ -80,11 +80,11 @@ export default function OverviewPage() {
             {/* Slim Header */}
             <header className="space-y-4">
                 <div>
-                    <p className="text-xs uppercase tracking-[0.35em] text-ink-muted">Overview</p>
-                    <h1 className="mt-1 text-3xl font-headline text-ink">
+                    <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Overview</p>
+                    <h1 className="mt-1 text-3xl font-headline text-white">
                         {greeting}, {firstName}
                     </h1>
-                    <p className="mt-1 text-sm text-ink-muted">
+                    <p className="mt-1 text-sm text-slate-400">
                         {orgSlug} • {statusPills.map(p => `${p.label}: ${p.state}`).join(' • ')}
                     </p>
                 </div>
@@ -92,13 +92,13 @@ export default function OverviewPage() {
                 <div className="flex flex-wrap gap-3">
                     <Link
                         href="/console/agents/new"
-                        className="rounded-lg bg-brass px-4 py-2 text-sm font-medium text-white transition hover:bg-brass/90"
+                        className="rounded-lg bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] px-4 py-2 text-sm font-medium text-black transition hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.75)]"
                     >
                         + Create Agent
                     </Link>
                     <Link
                         href="/workflows"
-                        className="rounded-lg border border-outline/40 bg-surface px-4 py-2 text-sm font-medium text-ink transition hover:bg-surfaceAlt"
+                        className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
                     >
                         Launch Workflow
                     </Link>
@@ -125,19 +125,19 @@ export default function OverviewPage() {
                                     <div
                                         key={i}
                                         className={`rounded-lg border p-3 text-sm ${alert.type === 'warning'
-                                            ? 'border-amber-200 bg-amber-50 text-amber-900'
-                                            : 'border-sky-200 bg-sky-50 text-sky-900'
+                                            ? 'border-amber-500/30 bg-amber-500/10 text-amber-300'
+                                            : 'border-blue-500/30 bg-blue-500/10 text-blue-300'
                                             }`}
                                     >
                                         <p>{alert.message}</p>
-                                        <Link href={alert.action} className="mt-1 inline-block text-xs font-medium underline">
+                                        <Link href={alert.action} className="mt-1 inline-block text-xs font-medium underline hover:text-white">
                                             Take action →
                                         </Link>
                                     </div>
                                 ))}
                             </div>
                         ) : (
-                            <p className="text-sm text-ink-muted">All systems operational. No action needed.</p>
+                            <p className="text-sm text-slate-400">All systems operational. No action needed.</p>
                         )}
                     </CardContent>
                 </Card>

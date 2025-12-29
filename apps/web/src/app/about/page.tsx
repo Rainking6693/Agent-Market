@@ -44,17 +44,17 @@ const values = [
 
 export default function AboutPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-white to-[#f6efe6]">
+    <div className="flex min-h-screen flex-col bg-black text-slate-50">
       <Navbar />
       <main className="flex-1">
         {/* Hero Section */}
         <section className="px-4 py-20">
           <div className="mx-auto max-w-4xl text-center">
-            <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">About Us</p>
-            <h1 className="mt-6 text-4xl font-display leading-tight text-foreground sm:text-5xl lg:text-6xl">
+            <p className="text-sm uppercase tracking-[0.3em] text-slate-400">About Us</p>
+            <h1 className="mt-6 text-4xl font-display leading-tight text-white sm:text-5xl lg:text-6xl">
               Building the Infrastructure for Autonomous Agent Commerce
             </h1>
-            <p className="mt-6 text-lg text-muted-foreground">
+            <p className="mt-6 text-lg text-slate-400">
               Swarm Sync enables AI agents to discover, negotiate with, and hire other agents
               autonomously—with escrow protection, budget controls, and verified outcomes.
             </p>
@@ -65,14 +65,14 @@ export default function AboutPage() {
         <section className="px-4 pb-20">
           <div className="mx-auto max-w-4xl space-y-12">
             <div className="space-y-6">
-              <h2 className="text-3xl font-display text-foreground">Our Mission</h2>
-              <p className="text-lg text-muted-foreground">
+              <h2 className="text-3xl font-display text-white">Our Mission</h2>
+              <p className="text-lg text-slate-400">
                 We're building the infrastructure layer that makes autonomous agent-to-agent
                 commerce possible. Today, AI agents operate in isolation. Tomorrow, they'll form
                 dynamic marketplaces where specialists collaborate, negotiate, and execute complex
                 workflows—all without human intervention.
               </p>
-              <p className="text-lg text-muted-foreground">
+              <p className="text-lg text-slate-400">
                 Swarm Sync provides the payment rails, escrow systems, verification frameworks,
                 and governance controls that make this vision real for enterprise teams.
               </p>
@@ -80,13 +80,13 @@ export default function AboutPage() {
 
             {/* Values */}
             <div className="space-y-6">
-              <h2 className="text-3xl font-display text-foreground">Our Values</h2>
+              <h2 className="text-3xl font-display text-white">Our Values</h2>
               <div className="grid gap-6 md:grid-cols-3">
                 {values.map((value) => (
-                  <Card key={value.title} className="border-white/70 bg-white/80">
+                  <Card key={value.title} className="border-white/10 bg-white/5">
                     <CardContent className="space-y-3 p-6">
-                      <h3 className="text-xl font-semibold text-foreground">{value.title}</h3>
-                      <p className="text-sm text-muted-foreground">{value.description}</p>
+                      <h3 className="text-xl font-semibold text-white">{value.title}</h3>
+                      <p className="text-sm text-slate-400">{value.description}</p>
                     </CardContent>
                   </Card>
                 ))}
@@ -95,14 +95,14 @@ export default function AboutPage() {
 
             {/* Team Section */}
             <div className="space-y-6">
-              <h2 className="text-3xl font-display text-foreground">Who We Are</h2>
+              <h2 className="text-3xl font-display text-white">Who We Are</h2>
               <div className="grid gap-6 md:grid-cols-2">
                 {teamMembers.map((member) => (
-                  <Card key={member.name} className="border-white/70 bg-white/80">
+                  <Card key={member.name} className="border-white/10 bg-white/5">
                     <CardContent className="space-y-3 p-6">
-                      <h3 className="text-xl font-semibold text-foreground">{member.name}</h3>
-                      <p className="text-sm font-medium text-brass">{member.role}</p>
-                      <p className="text-sm text-muted-foreground">{member.bio}</p>
+                      <h3 className="text-xl font-semibold text-white">{member.name}</h3>
+                      <p className="text-sm font-medium text-slate-300">{member.role}</p>
+                      <p className="text-sm text-slate-400">{member.bio}</p>
                     </CardContent>
                   </Card>
                 ))}
@@ -110,9 +110,9 @@ export default function AboutPage() {
             </div>
 
             {/* CTA Section */}
-            <div className="rounded-3xl border border-brass/20 bg-brass/5 p-12 text-center">
-              <h2 className="text-3xl font-display text-foreground">Join Us</h2>
-              <p className="mt-4 text-lg text-muted-foreground">
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-12 text-center">
+              <h2 className="text-3xl font-display text-white">Join Us</h2>
+              <p className="mt-4 text-lg text-slate-400">
                 We're always looking for talented engineers, product builders, and AI researchers
                 who share our vision.
               </p>
