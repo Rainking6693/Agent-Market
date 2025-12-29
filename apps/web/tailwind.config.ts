@@ -1,5 +1,4 @@
 import tailwindcssAnimate from 'tailwindcss-animate';
-
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
@@ -7,53 +6,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        border: '#A39F9A', // Updated to new brand color for borders/dividers
+        border: '#1F2A37',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
-        foreground: '#333333', // Updated to new brand color for body text
-        primary: {
-          DEFAULT: '#9C6234', // Updated to new brand color for primary buttons/CTAs
-          foreground: '#FFFFFF',
-        },
-        secondary: {
-          DEFAULT: '#F2E8D5', // Carrara
-          foreground: '#121212',
-        },
-        destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
-        },
-        muted: {
-          DEFAULT: '#F6EFE6', // Shell
-          foreground: '#5A5249', // Ink Muted
-        },
-        accent: {
-          DEFAULT: '#B18F4F', // Updated to new brand color for secondary actions/headings
-          foreground: '#FFFFFF',
-        },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
-        },
-        card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
-        },
-        carrara: '#F2E8D5',
-        shell: '#F6EFE6',
-        surface: '#FBF5ED',
-        surfaceAlt: '#EFE2D3',
-        ink: '#121212',
-        'ink-muted': '#5A5249',
-        brass: '#9C6234', // Updated to match new primary CTA color
-        accentTone: '#8C7BFF',
-        'accent-dark': '#5A3EE8',
-        outline: '#A39F9A', // Updated to new brand color for borders/dividers
-        sidebar: '#181514',
-        success: '#2D5016',
-        'success-light': '#4A7C2E',
-        'antique-bronze': '#704A07',
+        foreground: 'hsl(var(--foreground))',
+        obsidian: '#03050A',
+        'obsidian-deep': '#010103',
+        'primary-gold': '#D4AF37',
+        'primary-gold-strong': '#FFD700',
+        'secondary-bronze': '#CD7F32',
+        'secondary-bronze-dark': '#B87333',
+        'metallic-silver': '#C0C0C0',
+        'metallic-slate': '#94A3B8',
+        'accent-ice': '#1F2A37',
+        'glow-blue': '#3EA3FF',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -61,28 +28,28 @@ const config: Config = {
         sm: 'calc(var(--radius) - 8px)',
       },
       boxShadow: {
-        'brand-panel': '0 28px 80px rgba(18, 18, 18, 0.12)',
-        'accent-glow': '0 20px 45px rgba(140, 123, 255, 0.28)',
+        'obsidian-panel': '0 30px 90px rgba(0, 0, 0, 0.8)',
+        'metallic-glow': '0 12px 35px rgba(212, 175, 55, 0.4)',
+        'inner-metallic': 'inset 0 1px 0 rgba(255,255,255,0.35)',
       },
       fontFamily: {
-        display: ['Bauer Bodoni', 'Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', 'serif'],
-        body: ['Bauer Bodoni', 'Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', 'serif'],
-        headline: ['Bauer Bodoni', 'Bodoni MT', 'Bodoni', 'Baskerville', 'Baskerville Old Face', 'Goudy Old Style', 'Garamond', 'Times New Roman', 'serif'],
+        display: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
+        body: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
+        headline: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'Courier New', 'monospace'],
       },
-      keyframes: {
-        'accordion-down': {
-          from: { height: '0' },
-          to: { height: 'var(--radix-accordion-content-height)' },
-        },
-        'accordion-up': {
-          from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: '0' },
-        },
-      },
       animation: {
-        'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out',
+        'glitch': 'glitch 4s steps(10) infinite',
+      },
+      keyframes: {
+        glitch: {
+          '0%, 20%, 40%, 60%, 80%, 100%': { transform: 'translate(0)' },
+          '10%': { transform: 'translate(-2px, -2px)' },
+          '30%': { transform: 'translate(2px, 2px)' },
+          '50%': { transform: 'translate(-1px, 1px)' },
+          '70%': { transform: 'translate(1px, -1px)' },
+          '90%': { transform: 'translate(-1px, -1px)' },
+        },
       },
     },
   },

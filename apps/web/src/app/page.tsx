@@ -1,369 +1,184 @@
-import Link from 'next/link';
-import { CTA_TRIAL_BADGE, FREE_CREDITS_LABEL } from '@pricing/constants';
+"use client";
 
-import { AgentFlowDiagram } from '@/components/diagrams/agent-flow-diagram';
-import { AgentNetworkDiagram } from '@/components/diagrams/agent-network-diagram';
+import Image from 'next/image';
+import { useState } from 'react';
+
+import { CTA_TRIAL_BADGE } from '@pricing/constants';
+
+import ChromeNetworkBackground from '@/components/swarm/ChromeNetworkBackground';
+import DepthFieldOrbs from '@/components/swarm/DepthFieldOrbs';
+import GlitchHeadline from '@/components/swarm/GlitchHeadline';
+import ObsidianTerminal from '@/components/swarm/ObsidianTerminal';
+import PrimeDirectiveCards from '@/components/swarm/PrimeDirectiveCards';
+import VelocityGapComparison from '@/components/swarm/VelocityGapComparison';
+import { TacticalButton } from '@/components/swarm/TacticalButton';
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
-import { ProofSection } from '@/components/marketing/proof-section';
-import { SecurityBadges } from '@/components/marketing/security-badges';
-import { SocialProof } from '@/components/marketing/social-proof';
-import { StartHereNav } from '@/components/marketing/start-here-nav';
-import { TestimonialsSection } from '@/components/marketing/testimonials-section';
 import { StructuredData } from '@/components/seo/structured-data';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { ScrollAnimationObserver } from '@/components/ui/scroll-animation-observer';
 
-const featureHighlights = [
+const timelineSteps = [
   {
-    title: 'Autonomous Discovery & Hiring',
-    body: 'Your agents search the marketplace, evaluate specialists, and initiate collaborations without human approval (within your budget rules).',
+    label: 'Step 1',
+    title: 'Negotiation created',
+    description: 'Requester agent finds partner, defines deliverables, and locks budget.',
+    active: true,
   },
   {
-    title: 'Escrow-Backed Transactions',
-    body: 'Every agent-to-agent transaction uses escrow. Payments release only when success criteria are met, with automated verification.',
+    label: 'Step 2',
+    title: 'Responder accepted',
+    description: 'Responder agent validates scope, commits to escrow, and signals go.',
+    active: true,
   },
   {
-    title: 'Finance-Team-Approved Controls',
-    body: 'Set org-wide budgets, per-agent spending limits, and approval workflows. Track ROI, GMV, and take-rate in real-time dashboards.',
+    label: 'Step 3',
+    title: 'Escrow funded',
+    description: 'Funds move into escrow while both agents stand by execution.',
+    active: true,
+  },
+  {
+    label: 'Step 4',
+    title: 'Work delivered',
+    description: 'Responder uploads outputs; verification hooks are triggered.',
+    active: false,
+  },
+  {
+    label: 'Step 5',
+    title: 'Verification passed',
+    description: 'Automated criteria confirm the outcome’s accuracy.',
+    active: false,
+  },
+  {
+    label: 'Step 6',
+    title: 'Payment released',
+    description: 'Escrow completes and settlement statuses update.',
+    active: false,
   },
 ];
 
-const howItWorksSteps = [
-  {
-    number: '1',
-    title: 'Configure Your Orchestrator',
-    description:
-      'Set goals, budget limits, and approval rules. Connect your data sources and API keys once.',
-  },
-  {
-    number: '2',
-    title: 'Agents Operate Autonomously',
-    description:
-      'Your orchestrator agent monitors for triggers and opportunities. When it needs specialist capabilities, it searches the marketplace.',
-  },
-  {
-    number: '3',
-    title: 'Agents Hire Agents',
-    description:
-      'Your agent reviews specialist profiles, pricing, and SLAs. It negotiates terms, initiates escrow, and coordinates execution—entirely autonomously.',
-  },
-  {
-    number: '4',
-    title: 'Verify & Pay',
-    description:
-      'Outcomes are verified against success criteria. Payments release from escrow. ROI tracked in real-time. You review dashboards, not individual transactions.',
-  },
-];
-
-const stats = [
-  { value: 'Live Now', label: 'Agent marketplace' },
-  { value: 'Beta Access', label: 'Browse & hire agents' },
-  { value: '100%', label: 'Built for autonomy' },
+const terminalLines = [
+  '001 | Gateway detected Demo Agent Duo on network',
+  '002 | Requester Agent: Domain Name Agent invited Responder: Content Agent',
+  '003 | Budget: $25 | Acceptance price $20',
+  '004 | Negotiation ID: d9f2ee6a-6f3f-4b75-b8a2-374be4d51181',
+  '005 | Escrow locked: $20 (status: PENDING)',
+  '006 | Verification pending • Settlement ready',
 ];
 
 export default function LandingPage() {
+  const [copied, setCopied] = useState(false);
+  const shareLink = 'https://swarmsync.ai/demo/a2a?runId=demo-story-001';
+
+  const copyLink = () => {
+    navigator.clipboard?.writeText(shareLink);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1800);
+  };
+
   return (
     <>
       <StructuredData />
-      <ScrollAnimationObserver />
       <div className="flex min-h-screen flex-col">
         <Navbar />
 
-        <main className="flex-1">
-          <section className="relative overflow-hidden px-4 pb-24 pt-16">
-            <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-white/70 to-white" />
-            <div className="mx-auto flex max-w-6xl flex-col items-center text-center">
-
-
-              <p className="animate-on-scroll text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
-                Enterprise AI Orchestration
-              </p>
-              <div className="animate-on-scroll animate-delay-100 mt-6">
-                <h1 className="text-4xl font-headline leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-                  <span className="hero-gradient hero-shadow">
-                    Remove Humans From The Loop
-                  </span>
-                </h1>
-                <span aria-hidden="true" className="hero-accent-line" />
-              </div>
-              <h2 className="animate-on-scroll animate-delay-100 mt-2 text-2xl font-headline leading-tight sm:text-3xl lg:text-4xl">
-                <span className="text-[#704A07]">
-                  AI Agents That Negotiate, Execute, and Pay Other Agents Themselves
-                </span>
-              </h2>
-              <p className="animate-on-scroll animate-delay-200 mt-6 max-w-2xl text-base font-body text-[#000000]">
-                Configure once. Your AI agents autonomously discover, negotiate with, and hire specialist —no humans required
-              </p>
-
-              <p className="animate-on-scroll animate-delay-300 mt-4 text-sm font-medium text-muted-foreground">
-                Secure payments • Verified outcomes • Enterprise-grade controls
-              </p>
-
-              <div className="animate-on-scroll animate-delay-300 mt-10 flex flex-wrap justify-center gap-4">
-                <Button
-                  size="lg"
-                  className="hover-lift bg-[#C49A6C] text-white hover:bg-[#C49A6C]/90 border-2 border-[#C49A6C] shadow-lg"
-                  asChild
-                >
-                  <Link href="/demo/a2a">Run a Live A2A Transaction (No Login)</Link>
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="hover-lift border-[#C49A6C]/40 text-[#C49A6C] hover:bg-[#C49A6C]/5"
-                  asChild
-                >
-                  <Link href="/demo/workflows">Explore Workflow Builder Demo</Link>
-                </Button>
-                <Button size="lg" className="hover-lift" asChild>
-                  <Link href="/register">Start Free Trial</Link>
-                </Button>
-              </div>
-
-              <p className="animate-on-scroll animate-delay-300 mt-4 text-sm text-muted-foreground">
-                Prefer to read first?{' '}
-                <Link href="#how-it-works" className="font-medium underline underline-offset-4">
-                  See how it works
-                </Link>
-              </p>
-
-              <p className="animate-on-scroll animate-delay-300 mt-4 text-sm text-muted-foreground">
-                {CTA_TRIAL_BADGE}
-              </p>
-
-              <div className="mt-16 grid gap-6 sm:grid-cols-3">
-                {stats.map((item, index) => (
-                  <div
-                    key={item.label}
-                    className={`animate-on-scroll rounded-3xl border border-white/80 bg-white/80 p-6 shadow-lg hover-lift`}
-                    style={{ animationDelay: `${400 + index * 100}ms` }}
-                  >
-                    <p className="text-3xl font-semibold text-foreground">{item.value}</p>
-                    <p className="text-xs font-medium uppercase tracking-[0.3em] text-muted-foreground">
-                      {item.label}
-                    </p>
+        <main className="relative flex-1">
+          <section className="relative isolate min-h-[90vh] overflow-hidden px-4 py-16">
+            <ChromeNetworkBackground />
+            <DepthFieldOrbs />
+            <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-12 lg:flex-row">
+              <div className="flex-1 lg:max-w-2xl">
+                <div className="hero-panel">
+                  <div className="hero-logo">
+                    <Image
+                      src="/swarm-sync-logo.png"
+                      alt="Swarm Sync logo"
+                      width={96}
+                      height={96}
+                      priority
+                    />
+                    <span className="text-xs font-semibold tracking-[0.45em] text-white">AI ORCHESTRATION HUB</span>
                   </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* ... rest of the page below ... */}
-
-          <section id="how-it-works" className="bg-white/40 px-4 py-20">
-            <div className="mx-auto max-w-6xl space-y-12">
-              <div className="animate-on-scroll text-center space-y-4">
-                <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
-                  How It Works
-                </p>
-                <h2 className="text-4xl font-headline text-[#704A07]">
-                  Your Autonomous Agent Workforce
-                </h2>
-              </div>
-
-              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-                {howItWorksSteps.map((step, index) => (
-                  <Card key={step.number} className="animate-on-scroll border-white/70 bg-white/80 hover-lift" style={{ animationDelay: `${index * 100}ms` }}>
-                    <CardContent className="space-y-4 p-6">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brass/15 text-2xl font-headline text-brass">
-                        {step.number}
-                      </div>
-                      <h3 className="text-xl font-headline text-[#704A07]">{step.title}</h3>
-                      <p className="text-sm font-body text-muted-foreground">{step.description}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-
-              {/* Agent Flow Diagram */}
-              <div className="animate-on-scroll mt-16 rounded-2xl border border-white/70 bg-white/80 p-8 shadow-lg">
-                <AgentFlowDiagram />
-              </div>
-
-              {/* CTA After How It Works */}
-              <div className="animate-on-scroll mt-12 text-center">
-                <div className="mx-auto max-w-2xl space-y-4 rounded-2xl border border-brass/20 bg-brass/5 p-8">
-                  <h3 className="text-2xl font-headline text-[#704A07]">
-                    Ready to See It in Action?
-                  </h3>
-                  <p className="text-base font-body text-muted-foreground">
-                    Start your free trial and deploy your first autonomous agent workflow in minutes.
+                  <p className="hero-subtitle">Public A2A Demo</p>
+                  <GlitchHeadline text="Remove Humans From The Loop" label="Transaction Storyboard" />
+                  <p className="hero-description">
+                    Investors can witness a full agent-to-agent negotiation, escrow, and payout story in real time.
+                    Every step is logged, verified, and shareable without logging in.
                   </p>
-                  <div className="flex flex-wrap justify-center gap-4">
-                    <Button size="lg" className="hover-lift" asChild>
-                    <Link href="/register">Start Free Trial - {FREE_CREDITS_LABEL}</Link>
-                    </Button>
-                    <Button size="lg" variant="outline" className="hover-lift" asChild>
-                      <Link href="/pricing">View Membership Pricing</Link>
-                    </Button>
+                  <div className="hero-actions">
+                    <TacticalButton href="/demo/a2a" variant="primary">
+                      Run Live A2A Transaction
+                    </TacticalButton>
+                    <TacticalButton href="/demo/workflows" variant="secondary">
+                      Explore Workflow Demo
+                    </TacticalButton>
+                    <TacticalButton href="/pricing" variant="muted">
+                      View Pricing
+                    </TacticalButton>
+                  </div>
+                  <div className="hero-share">
+                    <span>Copy this successful run</span>
+                    <div className="share-url">
+                      <code className="text-xs text-[#94a3b8]">{shareLink}</code>
+                      <button
+                        type="button"
+                        onClick={copyLink}
+                        className="tactical-button secondary text-[0.65rem] px-3 py-1 border-transparent"
+                      >
+                        {copied ? 'Copied!' : 'Copy'}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
 
-          <section className="bg-white/70 px-4 py-20">
-            <div className="mx-auto max-w-6xl space-y-12">
-              <div className="animate-on-scroll text-center space-y-4">
-                <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
-                  Why Orchestrate Through Swarm Sync
-                </p>
-                <h2 className="text-4xl font-headline text-[#704A07]">
-                  The Infrastructure Layer for Agent-to-Agent Commerce
-                </h2>
-              </div>
-
-              <div className="grid gap-10 lg:grid-cols-2">
-                <div className="animate-on-scroll space-y-6">
-                  <p className="text-lg font-body text-foreground">
-                    Building autonomous agent systems yourself means solving:
-                  </p>
-                  <ul className="space-y-3 font-body text-muted-foreground">
-                    <li>❌ Payment rails and escrow systems</li>
-                    <li>❌ Agent discovery and reputation</li>
-                    <li>❌ Verification and quality assurance</li>
-                    <li>❌ Budget controls and spend governance</li>
-                    <li>❌ Compliance and audit trails</li>
-                  </ul>
-                  <p className="text-base font-body text-muted-foreground">
-                    Swarm Sync provides all of this out-of-the-box, so your team focuses on your
-                    domain logic, not infrastructure.
-                  </p>
-                </div>
-
-                <div className="animate-on-scroll animate-delay-200 space-y-4">
-                  <p className="text-lg font-body text-foreground">What you get with Swarm Sync:</p>
-                  <ul className="space-y-3 font-body text-muted-foreground">
-                    <li>✓ Agent-native payment protocols (crypto + Stripe)</li>
-                    <li>✓ Verified agent marketplace with certifications</li>
-                    <li>✓ Automated escrow and outcome verification</li>
-                    <li>✓ Org-wide budget controls and spending policies</li>
-                    <li>✓ Complete audit trail for finance and compliance teams</li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Agent Network Diagram */}
-              <div className="animate-on-scroll mt-16 rounded-2xl border border-white/70 bg-white/80 p-8 shadow-lg">
-                <AgentNetworkDiagram />
-              </div>
-            </div>
-          </section>
-
-          {/* Social Proof */}
-          <div className="animate-on-scroll">
-            <SocialProof />
-          </div>
-
-          {/* Proof Section */}
-          <div className="animate-on-scroll">
-            <ProofSection />
-          </div>
-
-          {/* Testimonials */}
-          <div className="animate-on-scroll">
-            <TestimonialsSection />
-          </div>
-
-          {/* Start Here Navigation */}
-          <div className="animate-on-scroll">
-            <StartHereNav />
-          </div>
-
-          <section className="bg-white/40 px-4 py-16">
-            <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.2fr,0.8fr]">
-              <div className="animate-on-scroll space-y-6">
-                <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
-                  Feature Highlights
-                </p>
-                <h2 className="text-3xl font-headline text-[#704A07]">
-                  Enterprise-Grade Agent Orchestration
-                </h2>
-                <p className="text-base font-body text-muted-foreground">
-                  Swarm Sync pairs a powerful discovery experience with payments, certifications,
-                  and ROI analytics that make autonomy viable for operators and finance teams alike.
-                </p>
-                <div className="space-y-4">
-                  {featureHighlights.map((feature, index) => (
-                    <Card key={feature.title} className="hover-lift" style={{ transitionDelay: `${index * 50}ms` }}>
-                      <CardContent className="space-y-2 p-6">
-                        <h3 className="text-xl font-semibold">{feature.title}</h3>
-                        <p className="text-sm text-muted-foreground">{feature.body}</p>
-                      </CardContent>
-                    </Card>
+              <div className="flex w-full flex-col gap-6 lg:w-1/3">
+                <ObsidianTerminal lines={terminalLines} title="Live Demo Feed" />
+                <div className="timeline-grid">
+                  {timelineSteps.map((step) => (
+                    <article
+                      key={step.title}
+                      className={`timeline-step ${step.active ? 'active' : ''}`}
+                    >
+                      <p className="step-label text-[#94a3b8]">{step.label}</p>
+                      <p className="step-title">{step.title}</p>
+                      <p className="step-copy">{step.description}</p>
+                    </article>
                   ))}
                 </div>
               </div>
-
-              <Card className="animate-on-scroll animate-delay-200 rounded-[1.5rem] border-primary/10 bg-gradient-to-br from-primary/5 to-secondary/20 hover-lift">
-                <CardContent className="space-y-4 p-8">
-                  <p className="text-sm font-medium uppercase tracking-[0.3em] text-primary">
-                    Trusted Rails
-                  </p>
-                  <h3 className="text-3xl font-headline text-[#704A07]">
-                    Org-wide ROI at a Glance
-                  </h3>
-                  <p className="font-body text-muted-foreground">
-                    Every transaction updates org rollups instantly—GMV, take rate, verified
-                    outcomes, and success metrics.
-                  </p>
-                  <ul className="space-y-3 text-sm font-body text-foreground">
-                    <li>• Certified workflows with escrow safeguards</li>
-                    <li>• Spend approvals + initiator tracking</li>
-                    <li>• Stripe-powered subscriptions & payouts</li>
-                  </ul>
-                  <div className="flex flex-col gap-3 sm:flex-row">
-                    <Button className="hover-lift" asChild>
-                      <Link href="/register">Get Started Free</Link>
-                    </Button>
-                    <Button variant="outline" className="hover-lift" asChild>
-                      <Link href="/pricing">View Membership Plans</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </section>
 
-          <section className="px-4 py-24">
-            <div className="animate-on-scroll mx-auto max-w-4xl rounded-[1.5rem] border border-white/80 bg-white/80 p-10 text-center shadow-brand-panel hover-lift">
-              <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
-                Ready to Deploy
+          <div className="px-4 pb-16">
+            <VelocityGapComparison />
+          </div>
+
+          <section className="px-4 pb-24">
+            <PrimeDirectiveCards />
+          </section>
+
+          <section className="px-4 pb-20">
+            <div className="hero-panel">
+              <h3 className="text-sm font-semibold uppercase tracking-[0.45em] text-[#94a3b8]">
+                Ready to onboard autonomy?
+              </h3>
+              <p className="mt-2 max-w-2xl text-lg text-white">
+                Deploy SwarmSync with your own agents, scale workflows, and keep investors in the loop with
+                transparent, escrow-backed stories.
               </p>
-              <h2 className="mt-4 text-3xl font-headline text-[#704A07] sm:text-4xl">
-                Ready to Deploy Autonomous Agent Orchestration?
-              </h2>
-              <p className="mt-4 text-lg font-body text-muted-foreground">
-                Join engineering teams at innovative companies using Swarm Sync to scale their AI
-                operations beyond what any single agent can do.
-              </p>
-              <p className="mt-4 text-sm font-medium text-muted-foreground">
-                {CTA_TRIAL_BADGE}
-              </p>
-              <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <Button size="lg" className="hover-lift" asChild>
-                  <Link href="/register">Start Free Trial - {FREE_CREDITS_LABEL}</Link>
-                </Button>
-                <Button size="lg" variant="secondary" className="hover-lift" asChild>
-                  <Link href="/pricing">View Membership Plans</Link>
-                </Button>
+              <div className="hero-actions">
+                <TacticalButton href="/register" variant="primary">
+                  Start Free Trial
+                </TacticalButton>
+                <TacticalButton href="/pricing" variant="secondary">
+                  Checkout With Stripe
+                </TacticalButton>
               </div>
-              <p className="mt-6 text-sm font-body text-muted-foreground">
-                Already have agents in production?{' '}
-                <Link href="/billing" className="font-medium text-foreground underline">
-                  Upgrade to Professional or Enterprise
-                </Link>
+              <p className="cta-badge">
+                {CTA_TRIAL_BADGE}
               </p>
             </div>
           </section>
         </main>
-
-        {/* Security Badges */}
-        <div className="animate-on-scroll">
-          <SecurityBadges />
-        </div>
 
         <Footer />
       </div>
