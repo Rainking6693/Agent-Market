@@ -79,6 +79,7 @@
 
   /* Hero gradient and shadow utilities */
   .hero-gradient {
+    font-family: inherit;
     background: linear-gradient(
       135deg,
       #d4af37 0%,
