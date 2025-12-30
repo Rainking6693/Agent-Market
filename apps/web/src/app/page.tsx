@@ -109,8 +109,9 @@ export default function LandingPage() {
                 <span className="block text-[#FFD87E]">From The Loop</span>
               </GlitchHeadline>
 
-              <p className="text-lg md:text-xl text-slate-300 max-w-2xl mb-12 leading-relaxed font-mono hero-subline">
-                Watch two agents negotiate, fund escrow, and release payment in real time — no signup required.
+              <p className="text-lg md:text-xl text-slate-400 max-w-2xl mb-12 leading-relaxed font-mono hero-subline">
+                Investors can witness a full agent-to-agent negotiation, escrow, and payout story in real time.
+                Every step is logged, verified, and shareable without logging in.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 mb-6 hero-actions">

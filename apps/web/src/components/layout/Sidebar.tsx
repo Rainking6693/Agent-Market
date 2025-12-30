@@ -47,19 +47,20 @@ const sections = [
   },
 ];
 
-const navItemClass = 'block rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/10';
+const navItemClass =
+  'block rounded-lg px-3 py-2 text-sm transition-colors duration-200 sidebar-link';
 
 export function Sidebar() {
   const pathname = usePathname();
   const { user } = useAuth();
 
   return (
-    <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-white/10 bg-black p-6 text-slate-50 lg:flex">
-      <div className="space-y-8">
+    <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-border bg-surface p-6 text-text lg:flex">
+      <div className="space-y-6">
 
         {sections.map((section) => (
           <Fragment key={section.title}>
-            <div className="text-[0.7rem] font-semibold uppercase tracking-wide text-slate-500">
+            <div className="sidebar-label">
               {section.title}
             </div>
             <nav className="space-y-1">
@@ -71,8 +72,7 @@ export function Sidebar() {
                   <Link
                     key={item.label}
                     href={item.href}
-                    className={`${navItemClass} ${isActive ? 'bg-white/10 text-white' : 'text-slate-400 hover:text-white'
-                      }`}
+                    className={`${navItemClass} ${isActive ? 'sidebar-link-active' : 'hover:text-text'}`}
                   >
                     {item.label}
                   </Link>
@@ -86,16 +86,16 @@ export function Sidebar() {
       {user && (
         <Link
           href="/console/settings/profile"
-          className="block rounded-2xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/10 cursor-pointer"
+          className="block rounded-2xl border border-border bg-surface2/70 p-4 transition-colors hover:border-white/20 cursor-pointer"
         >
-          <div className="text-[0.65rem] uppercase tracking-wide text-slate-500">Signed in as</div>
+          <div className="text-[0.65rem] uppercase tracking-wide text-muted">Signed in as</div>
           <div className="mt-2 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-sm font-semibold text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface2 text-sm font-semibold text-text">
               {user.displayName?.charAt(0) || user.email.charAt(0)}
             </div>
             <div>
-              <div className="text-sm font-semibold text-white">{user.displayName || 'User'}</div>
-              <div className="text-xs text-slate-400">{user.email}</div>
+              <div className="text-sm font-semibold text-text">{user.displayName || 'User'}</div>
+              <div className="text-xs text-text2">{user.email}</div>
             </div>
           </div>
         </Link>

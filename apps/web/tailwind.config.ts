@@ -6,11 +6,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        border: '#1F2A37',
+        border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        text: 'hsl(var(--text))',
+        'text-2': 'hsl(var(--text2))',
+        muted: 'hsl(var(--muted))',
+        disabled: 'hsl(var(--disabled))',
+        surface: 'hsl(var(--surface))',
+        'surface-2': 'hsl(var(--surface2))',
+        accent: '#4338CA',
+        'accent-strong': '#6F7BFF',
+        'accent-soft': '#CBDAFF',
         obsidian: '#03050A',
         'obsidian-deep': '#010103',
         'primary-gold': '#D4AF37',

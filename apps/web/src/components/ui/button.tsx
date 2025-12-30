@@ -7,17 +7,17 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ring-offset-background",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ring-offset-background disabled:pointer-events-none",
   {
     variants: {
       variant: {
         default:
-          "text-white bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] shadow-[0_15px_30px_-15px_rgba(0,0,0,0.65)] hover:-translate-y-0.5 hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.75)]",
+          "bg-accent text-white shadow-[0_15px_40px_-20px_rgba(67,56,202,0.9)] hover:-translate-y-0.5 hover:shadow-[0_20px_45px_-15px_rgba(67,56,202,0.85)] focus-visible:ring-accent focus-visible:ring-offset-2",
         secondary:
-          "bg-transparent text-white border border-[#94A3B8] hover:bg-white/10 hover:border-white/80",
-        outline: "border border-input bg-transparent hover:bg-black/40 hover:text-white",
-        ghost: "hover:bg-black/20 hover:text-white",
-        link: "text-white underline-offset-4 hover:underline",
+          "bg-surface border border-border text-text hover:bg-surface-2 hover:border-white/20 focus-visible:ring-accent focus-visible:ring-offset-2",
+        outline: "border border-border bg-transparent text-text hover:bg-surface-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+        ghost: "bg-transparent text-text2 hover:bg-surface dark:hover:bg-surface cursor-pointer",
+        link: "text-accent underline-offset-4 hover:underline",
       },
       size: {
         default: "h-11 px-6 py-2",

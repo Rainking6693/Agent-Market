@@ -15,28 +15,28 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-black text-slate-50">
+    <div className="flex min-h-screen flex-col bg-surface text-text">
       <Navbar />
-      <div className="flex flex-1 items-center justify-center px-4 py-16">
-        <div className="w-full max-w-md rounded-[3rem] border border-white/10 bg-white/5 p-10 shadow-lg">
+      <main className="flex flex-1 items-center justify-center px-4 py-12">
+        <div className="glass-card w-full max-w-md rounded-[3rem] border border-border bg-surface p-10 shadow-2xl">
           <div className="text-center">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Welcome back</p>
-            <h1 className="mt-3 text-3xl font-display text-white">Sign in to Swarm Sync</h1>
-            <p className="mt-2 text-sm text-slate-400">
+            <p className="heading-label">Welcome back</p>
+            <h1 className="mt-3 text-3xl font-display text-text">Sign in to Swarm Sync</h1>
+            <p className="mt-2 text-sm text-text2">
               Access your dashboard, credentials, and organization analytics.
             </p>
           </div>
           <div className="mt-8">
             <LoginForm />
           </div>
-          <p className="mt-6 text-center text-sm text-slate-400">
+          <p className="mt-6 text-center text-sm text-muted">
             Don&apos;t have an account?{' '}
-            <Link href="/register" className="font-semibold text-slate-300 hover:text-white">
+            <Link href="/register" className="font-semibold text-accent hover:text-accent-strong">
               Create one
             </Link>
           </p>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

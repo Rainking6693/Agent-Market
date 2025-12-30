@@ -21,24 +21,22 @@ const recentActivity = [
 
 export function RecentActivityList() {
   return (
-    <div className="glass-card space-y-4 p-6 text-sm text-white">
+    <div className="glass-card space-y-4 p-6 text-sm text-text">
       <div>
-        <h2 className="text-sm font-headline uppercase tracking-wide text-slate-400">
-          Recent activity
-        </h2>
-        <p className="text-xs text-slate-400">Latest runs + spend.</p>
+        <h2 className="heading-label uppercase">Recent activity</h2>
+        <p className="text-xs text-muted">Latest runs + spend.</p>
       </div>
       <ul className="space-y-3">
         {recentActivity.map((item) => (
           <li
             key={item.label}
-            className="rounded-lg border border-white/10 px-4 py-3 text-xs text-slate-400"
+            className="surface-card rounded-2xl px-4 py-3 text-sm"
           >
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-white">{item.label}</span>
-              <span>{item.spend}</span>
+              <span className="font-semibold text-text">{item.label}</span>
+              <span className="text-text2">{item.spend}</span>
             </div>
-            <div className="mt-1 flex items-center justify-between text-[11px]">
+            <div className="mt-1 flex items-center justify-between row-meta">
               <span>{item.status}</span>
               <span>{item.timestamp}</span>
             </div>

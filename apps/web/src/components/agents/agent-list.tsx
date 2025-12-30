@@ -31,7 +31,7 @@ export const AgentList = ({ agents }: AgentListProps) => {
   }
 
   return (
-    <div className="glass-card overflow-hidden">
+    <div className="surface-card overflow-hidden">
       <table className="min-w-full divide-y divide-outline/60">
         <thead>
           <tr className="bg-white/5 text-left text-xs uppercase tracking-wider text-slate-400">

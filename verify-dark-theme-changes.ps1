@@ -100,8 +100,7 @@ $oldColorPatterns = @(
     "text-ink",
     "text-ink-muted",
     "bg-ink",
-    "border-outline",
-    "bg-surface"
+    "border-outline"
 )
 
 $oldColorsFound = $false

@@ -1,8 +1,8 @@
 # Dark Theme Verification Report
 
-Generated: 2025-12-29 18:39:04
+Generated: 2025-12-30 08:12:56
 
-## Verified Items (19)
+## Verified Items (18)
 
 Logo file exists
 No yellow colors
@@ -22,7 +22,6 @@ File exists: apps\web\src\app\(marketplace)\agents\page.tsx
 Logo path correct
 Dark theme in apps\web\src\app\page.tsx
 Dark theme in apps\web\src\app\pricing\page.tsx
-Dark theme in apps\web\src\components\layout\navbar.tsx
 
 ## Warnings (0)
 

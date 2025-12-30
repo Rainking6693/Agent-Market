@@ -20,20 +20,20 @@ export function Navbar() {
   const { isAuthenticated, logout } = useAuth();
   const [open, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-black/80 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-border bg-surface2/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
         <Link href="/" className="flex items-center gap-2" aria-label="Swarm Sync homepage">
           <Image src="/swarm-sync-logo.png" alt="Swarm Sync logo" width={40} height={40} priority className="h-10 w-auto" />
-          <span className="text-xs font-semibold tracking-[0.3em] text-white uppercase hidden sm:inline">AGENT-TO-AGENT HUB</span>
+          <span className="text-xs font-semibold tracking-[0.3em] text-text2 uppercase hidden sm:inline">AGENT-TO-AGENT HUB</span>
         </Link>
 
-        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 text-2xl font-medium text-[#c4d7ff] md:flex">
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 text-2xl font-medium text-text2 md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               className={cn(
-                'transition hover:text-white',
-                pathname.startsWith(link.href) && 'text-[#4338CA]',
+                'transition hover:text-text',
+                pathname.startsWith(link.href) && 'text-text',
               )}
               href={link.href}
             >
@@ -47,13 +47,12 @@ export function Navbar() {
             <>
               <button
                 onClick={logout}
-                className="text-2xl font-medium text-[#4338CA] transition hover:text-white"
+                className="text-2xl font-medium text-text2 transition hover:text-text"
               >
                 Sign out
               </button>
               <Button
                 size="lg"
-                className="hover-lift bg-gradient-to-br from-[#6F7BFF] to-[#4338CA] text-white hover:shadow-[0_20px_45px_-15px_rgba(67,56,202,0.75)] border-2 border-white/20 shadow-lg"
                 asChild
               >
                 <Link href="/dashboard">Console</Link>
@@ -61,13 +60,10 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Button variant="ghost" asChild className="text-[#4338CA] hover:text-white">
+              <Button variant="ghost" asChild className="text-text2 hover:text-text">
                 <Link href="/login">Sign in</Link>
               </Button>
-              <Button
-                asChild
-                className="bg-gradient-to-br from-[#6F7BFF] via-[#7A8BFF] to-[#4338CA] text-white hover:shadow-[0_20px_45px_-15px_rgba(67,56,202,0.75)]"
-              >
+              <Button asChild>
                 <Link href="/register">Console</Link>
               </Button>
             </>
@@ -89,7 +85,7 @@ export function Navbar() {
       {open && (
         <div
           id="mobile-navigation"
-          className="border-t border-white/10 bg-black/90 px-4 py-4 md:hidden"
+          className="border-t border-border bg-surface2/90 px-4 py-4 md:hidden"
         >
           <nav className="flex flex-col gap-4 text-sm" aria-label="Mobile navigation">
             {navLinks.map((link) => (
@@ -97,8 +93,8 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'font-medium text-muted-foreground',
-                  pathname.startsWith(link.href) && 'text-foreground',
+                  'font-medium text-text2',
+                  pathname.startsWith(link.href) && 'text-text',
                 )}
               >
                 {link.label}
@@ -116,11 +112,11 @@ export function Navbar() {
                 </>
               ) : (
                 <>
-                  <Button variant="outline" asChild>
-                    <Link href="/login">Log in</Link>
+                  <Button variant="ghost" asChild>
+                    <Link href="/login">Sign in</Link>
                   </Button>
                   <Button asChild>
-                    <Link href="/register">Get started</Link>
+                    <Link href="/register">Console</Link>
                   </Button>
                 </>
               )}
