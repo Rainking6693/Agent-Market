@@ -81,7 +81,7 @@ export default function LandingPage() {
   };
 
   return (
-    <>
+    <div>
       <StructuredData />
       <div className="flex min-h-screen flex-col bg-black">
         <Navbar />
@@ -226,6 +226,6 @@ export default function LandingPage() {
 
         <Footer />
       </div>
-    </>
+    </div>
   );
 }
