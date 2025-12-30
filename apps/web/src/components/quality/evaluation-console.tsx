@@ -46,7 +46,7 @@ export function EvaluationConsole({ agentId, evaluations }: EvaluationConsolePro
   };
 
   return (
-    <div className="glass-card space-y-6 p-6">
+    <div className="surface-card space-y-6 p-6">
       <div>
         <h2 className="text-lg font-headline text-white">Evaluation Runner</h2>
         <p className="text-sm text-slate-400">
@@ -61,12 +61,12 @@ export function EvaluationConsole({ agentId, evaluations }: EvaluationConsolePro
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-3 rounded-lg border border-white/10 p-4">
+      <form onSubmit={handleSubmit} className="space-y-3 surface-card border p-4">
         <div className="grid gap-3 md:grid-cols-2">
           <label className="text-xs uppercase tracking-wide text-slate-400">
             Scenario name
             <input
-              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
+                className="mt-1 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               value={scenarioName}
               onChange={(event) => setScenarioName(event.target.value)}
             />
@@ -91,14 +91,14 @@ export function EvaluationConsole({ agentId, evaluations }: EvaluationConsolePro
             >
               <option value="passed">Passed</option>
               <option value="failed">Failed</option>
-            </select>
-          </label>
+                </select>
+              </label>
           <label className="text-xs uppercase tracking-wide text-slate-400">
             Latency (ms)
             <input
               type="number"
               min={0}
-              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               value={latencyMs}
               onChange={(event) => setLatencyMs(Number(event.target.value))}
             />
@@ -118,7 +118,7 @@ export function EvaluationConsole({ agentId, evaluations }: EvaluationConsolePro
 
         <textarea
           placeholder="Logs / notes"
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
+          className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           value={notes}
           onChange={(event) => setNotes(event.target.value)}
           rows={3}

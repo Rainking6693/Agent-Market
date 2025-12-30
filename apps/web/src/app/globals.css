@@ -104,7 +104,7 @@ body {
 
   .input-dark:focus {
     border-color: hsl(var(--accent));
-    box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.25);
+    box-shadow: 0 0 0 2px rgba(67, 56, 202, 0.25);
   }
 
   .input-dark:disabled {
@@ -298,6 +298,13 @@ body {
     filter: drop-shadow(0 20px 45px rgba(67, 56, 202, 0.7));
   }
 
+  .hero-overlay {
+    border-radius: 2rem;
+    background: linear-gradient(90deg, rgba(6, 7, 18, 0.92) 0%, rgba(6, 7, 18, 0.70) 45%, rgba(6, 7, 18, 0.00) 78%);
+    box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+  }
+
   .hero-actions {
     flex-wrap: wrap;
     align-items: center;
@@ -402,9 +409,13 @@ body {
   }
 
   .hero-subline {
-    color: rgba(248, 250, 252, 0.85);
+    color: #B7BED3;
+    line-height: 1.75;
   }
 
+  .hero-eyebrow {
+    letter-spacing: 0.25em;
+  }
   .hero-actions .chrome-cta {
     min-width: 250px;
   }
@@ -455,15 +466,18 @@ body {
   }
 
   .hero-share code {
-    background: rgba(15, 15, 25, 0.65);
+    background: #0B0E1C;
+    border: 1px solid rgba(180, 190, 255, 0.12);
     padding: 0.15rem 0.35rem;
     border-radius: 0.35rem;
     font-family: 'JetBrains Mono', 'Space Grotesk', monospace;
+    color: #B7BED3;
   }
 
   .hero-share button {
-    border-color: rgba(255, 255, 255, 0.35);
+    border-color: rgba(180, 190, 255, 0.18);
     color: #ffffff;
+    background: rgba(255, 255, 255, 0.04);
   }
 
   .transaction-storyboard h3 {
@@ -535,10 +549,10 @@ body {
   }
 
   .tactical-button.secondary {
-    background: transparent;
-    border-color: rgba(255, 255, 255, 0.35);
-    color: #ffffff;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(180, 190, 255, 0.18);
+    color: #EDEFF7;
+    box-shadow: none;
   }
 
   .tactical-button.muted {

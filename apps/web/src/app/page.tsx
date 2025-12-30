@@ -92,16 +92,18 @@ export default function LandingPage() {
           
           {/* Hero Section */}
           <section className="relative z-10 px-6 md:px-12 pt-36 md:pt-40 pb-24 lg:mr-[300px]">
-            <div className="max-w-5xl mx-auto">
-              <div className="flex flex-col items-center md:items-start gap-3 mb-6 hero-logo-group">
-                <Image
-                  src="/swarm-sync-logo.png"
+            <div className="relative max-w-5xl mx-auto">
+              <div className="hero-overlay absolute inset-y-0 left-0 w-full md:w-[70%] lg:w-[60%]" />
+              <div className="relative z-10">
+                <div className="flex flex-col items-center md:items-start gap-3 mb-6 hero-logo-group">
+                  <Image
+                    src="/swarm-sync-logo.png"
                   alt="Swarm Sync logo"
                   width={150}
                   height={150}
                   className="hero-logo"
                 />
-                <p className="text-xs uppercase tracking-[0.6em] text-slate-400">AI Orchestration Hub</p>
+                <p className="text-xs uppercase tracking-[0.25em] text-slate-400 hero-eyebrow">AI Orchestration Hub</p>
               </div>
 
               <GlitchHeadline className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-8 hero-headline">
@@ -109,16 +111,15 @@ export default function LandingPage() {
                 <span className="block text-[#FFD87E]">From The Loop</span>
               </GlitchHeadline>
 
-              <p className="text-lg md:text-xl text-slate-400 max-w-2xl mb-12 leading-relaxed font-mono hero-subline">
-                Investors can witness a full agent-to-agent negotiation, escrow, and payout story in real time.
-                Every step is logged, verified, and shareable without logging in.
+              <p className="text-lg md:text-xl text-[#B7BED3] max-w-[44ch] mb-12 leading-relaxed hero-subline">
+                The place where Agents negotiate, execute, and pay other agents—autonomously.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 mb-6 hero-actions">
                 <TacticalButton href="/demo/a2a" className="chrome-cta">
                   Run Live A2A Transaction (No Login)
                 </TacticalButton>
-                <TacticalButton variant="ghost" href="/demo/workflows">
+                <TacticalButton variant="secondary" href="/demo/workflows">
                   Explore Workflow Builder Demo
                 </TacticalButton>
                 <TacticalButton variant="secondary" href="/pricing" className="chrome-cta chrome-cta--outline sm:ml-auto">
@@ -126,12 +127,13 @@ export default function LandingPage() {
                 </TacticalButton>
               </div>
 
-              <div className="mt-6 text-[11px] font-mono text-slate-500 tracking-wide hero-share">
-                Copy this successful run: <code className="text-slate-400">{shareLink}</code>
+              <div className="mt-6 flex flex-wrap items-center gap-3 text-[11px] font-mono text-text2 hero-share">
+                <span className="text-text2/80">Copy this successful run:</span>
+                <code className="hero-share-code text-text2">{shareLink}</code>
                 <button
                   type="button"
                   onClick={copyLink}
-                  className="ml-2 px-2 py-1 border border-white/20 rounded text-xs hover:bg-white/10"
+                  className="tactical-button secondary text-xs px-3 py-1"
                 >
                   {copied ? 'Copied!' : 'Copy'}
                 </button>

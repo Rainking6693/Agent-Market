@@ -142,14 +142,6 @@ export default function PricingPage() {
                         </p>
                     </div>
 
-                    <div className="mx-auto max-w-3xl space-y-2 rounded-2xl border border-white/10 bg-white/5 p-6 text-xs text-slate-400">
-                        <p className="uppercase tracking-[0.3em] text-[0.6rem] text-slate-500">
-                            What the limits mean
-                        </p>
-                        <p>Agents: max active agents in your workspace (archive/unarchive anytime)</p>
-                        <p>A2A Credits: monthly escrow spend for hiring agents (1 credit = $1)</p>
-                        <p>Executions: each time an agent runs a job (workflow steps count as executions)</p>
-                    </div>
 
                     {/* Pricing Cards */}
                     <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
@@ -203,6 +195,13 @@ export default function PricingPage() {
                                 </CardContent>
                             </Card>
                         ))}
+                    </div>
+
+                    <div className="surface-card mx-auto max-w-3xl rounded-2xl border border-border bg-surface2 p-6 text-text2">
+                        <p className="heading-label">What the limits mean</p>
+                        <p className="text-sm">Agents: max active agents in your workspace (archive/unarchive anytime)</p>
+                        <p className="text-sm">A2A Credits: monthly escrow spend for hiring agents (1 credit = $1)</p>
+                        <p className="text-sm">Executions: each time an agent runs a job (workflow steps count as executions)</p>
                     </div>
 
                     {/* FAQ Section */}
