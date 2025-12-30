@@ -27,13 +27,13 @@ export function Navbar() {
           <span className="text-xs font-semibold tracking-[0.3em] text-white uppercase hidden sm:inline">AGENT-TO-AGENT HUB</span>
         </Link>
 
-        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 text-2xl font-medium text-white md:flex">
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 text-2xl font-medium text-[#c4d7ff] md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               className={cn(
-                'transition hover:text-slate-300',
-                pathname.startsWith(link.href) && 'text-white',
+                'transition hover:text-white',
+                pathname.startsWith(link.href) && 'text-[#4338CA]',
               )}
               href={link.href}
             >
@@ -47,13 +47,13 @@ export function Navbar() {
             <>
               <button
                 onClick={logout}
-                className="text-2xl font-medium text-white transition hover:text-slate-300"
+                className="text-2xl font-medium text-[#4338CA] transition hover:text-white"
               >
                 Sign out
               </button>
               <Button
                 size="lg"
-                className="hover-lift bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] text-black hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.75)] border-2 border-white/20 shadow-lg"
+                className="hover-lift bg-gradient-to-br from-[#6F7BFF] to-[#4338CA] text-white hover:shadow-[0_20px_45px_-15px_rgba(67,56,202,0.75)] border-2 border-white/20 shadow-lg"
                 asChild
               >
                 <Link href="/dashboard">Console</Link>
@@ -61,11 +61,14 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Button variant="ghost" asChild className="text-white hover:text-slate-300">
-                <Link href="/login">Log in</Link>
+              <Button variant="ghost" asChild className="text-[#4338CA] hover:text-white">
+                <Link href="/login">Sign in</Link>
               </Button>
-              <Button asChild className="bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] text-black hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.75)]">
-                <Link href="/register">Get started</Link>
+              <Button
+                asChild
+                className="bg-gradient-to-br from-[#6F7BFF] via-[#7A8BFF] to-[#4338CA] text-white hover:shadow-[0_20px_45px_-15px_rgba(67,56,202,0.75)]"
+              >
+                <Link href="/register">Console</Link>
               </Button>
             </>
           )}

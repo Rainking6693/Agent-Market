@@ -13,6 +13,7 @@ import PrimeDirectiveCards from '@/components/swarm/PrimeDirectiveCards';
 import VelocityGapComparison from '@/components/swarm/VelocityGapComparison';
 import { TacticalButton } from '@/components/swarm/TacticalButton';
 import { Footer } from '@/components/layout/footer';
+import { Navbar } from '@/components/layout/navbar';
 import { StructuredData } from '@/components/seo/structured-data';
 
 const timelineSteps = [
@@ -83,13 +84,14 @@ export default function LandingPage() {
     <>
       <StructuredData />
       <div className="flex min-h-screen flex-col bg-black">
+        <Navbar />
 
         <main className="relative flex-1 bg-black text-slate-50 overflow-x-hidden">
           <ChromeNetworkBackground />
           <DepthFieldOrbs />
           
           {/* Hero Section */}
-          <section className="relative z-10 px-6 md:px-12 pt-56 md:pt-64 pb-24 lg:mr-[300px]">
+          <section className="relative z-10 px-6 md:px-12 pt-36 md:pt-40 pb-24 lg:mr-[300px]">
             <div className="max-w-5xl mx-auto">
               <div className="flex flex-col items-center md:items-start gap-3 mb-6 hero-logo-group">
                 <Image
@@ -207,8 +209,10 @@ export default function LandingPage() {
                 transparent, escrow-backed stories.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-                <TacticalButton href="/register">Start Free Trial</TacticalButton>
-                <TacticalButton variant="ghost" href="/pricing">
+                <TacticalButton href="/register" className="chrome-cta">
+                  Start Free Trial
+                </TacticalButton>
+                <TacticalButton variant="ghost" href="/pricing" className="chrome-cta chrome-cta--outline">
                   Checkout With Stripe
                 </TacticalButton>
               </div>

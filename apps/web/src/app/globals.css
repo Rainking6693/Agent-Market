@@ -226,9 +226,9 @@ body {
   }
 
   .chrome-cta {
-    background: linear-gradient(135deg, #ffd700 0%, #d4af37 50%, #4338ca 100%);
+    background: linear-gradient(135deg, #cbd5ff 0%, #8b95ff 45%, #4338ca 100%);
     color: #050505;
-    box-shadow: 0 25px 50px rgba(67, 56, 202, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    box-shadow: 0 25px 50px rgba(67, 56, 202, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.65);
   }
 
   .chrome-cta.chrome-cta--outline {
@@ -319,7 +319,7 @@ body {
   }
 
   .hero-headline span {
-    letter-spacing: 0.25em;
+    letter-spacing: 0.08em;
     display: block;
   }
 
@@ -451,9 +451,9 @@ body {
   }
 
   .tactical-button.primary {
-    background: linear-gradient(120deg, var(--primary-gold-strong), var(--primary-gold));
-    color: #050505;
-    box-shadow: 0 25px 40px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    background: linear-gradient(120deg, #4338CA, #6F7BFF 40%, #CED2FF 100%);
+    color: #ffffff;
+    box-shadow: 0 25px 45px rgba(67, 56, 202, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.5);
   }
 
   .tactical-button.secondary {
