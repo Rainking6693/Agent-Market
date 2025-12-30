@@ -13,7 +13,6 @@ import PrimeDirectiveCards from '@/components/swarm/PrimeDirectiveCards';
 import VelocityGapComparison from '@/components/swarm/VelocityGapComparison';
 import { TacticalButton } from '@/components/swarm/TacticalButton';
 import { Footer } from '@/components/layout/footer';
-import { Navbar } from '@/components/layout/navbar';
 import { StructuredData } from '@/components/seo/structured-data';
 
 const timelineSteps = [
@@ -22,36 +21,42 @@ const timelineSteps = [
     title: 'Negotiation created',
     description: 'Requester agent finds partner, defines deliverables, and locks budget.',
     active: true,
+    timestamp: '6:35:22 PM',
   },
   {
     label: 'Step 2',
     title: 'Responder accepted',
     description: 'Responder agent validates scope, commits to escrow, and signals go.',
     active: true,
+    timestamp: '6:35:26 PM',
   },
   {
     label: 'Step 3',
     title: 'Escrow funded',
     description: 'Funds move into escrow while both agents stand by execution.',
     active: true,
+    timestamp: '6:35:32 PM',
   },
   {
     label: 'Step 4',
     title: 'Work delivered',
     description: 'Responder uploads outputs; verification hooks are triggered.',
     active: false,
+    timestamp: '6:35:48 PM',
   },
   {
     label: 'Step 5',
     title: 'Verification passed',
-    description: 'Automated criteria confirm the outcome’s accuracy.',
+    description: 'Automated criteria confirm the outcome accuracy.',
     active: false,
+    timestamp: '6:35:52 PM',
   },
   {
     label: 'Step 6',
     title: 'Payment released',
     description: 'Escrow completes and settlement statuses update.',
     active: false,
+    timestamp: '6:35:56 PM',
   },
 ];
 
@@ -78,7 +83,6 @@ export default function LandingPage() {
     <>
       <StructuredData />
       <div className="flex min-h-screen flex-col bg-black">
-        <Navbar />
 
         <main className="relative flex-1 bg-black text-slate-50 overflow-x-hidden">
           <ChromeNetworkBackground />
@@ -87,26 +91,39 @@ export default function LandingPage() {
           {/* Hero Section */}
           <section className="relative z-10 px-6 md:px-12 pt-56 md:pt-64 pb-24 lg:mr-[300px]">
             <div className="max-w-5xl mx-auto">
-              <GlitchHeadline className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-8">
-                Remove Humans From The Loop
+              <div className="flex flex-col items-center md:items-start gap-3 mb-6 hero-logo-group">
+                <Image
+                  src="/swarm-sync-logo.png"
+                  alt="Swarm Sync logo"
+                  width={150}
+                  height={150}
+                  className="hero-logo"
+                />
+                <p className="text-xs uppercase tracking-[0.6em] text-slate-400">AI Orchestration Hub</p>
+              </div>
+
+              <GlitchHeadline className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-8 hero-headline">
+                <span className="block">Remove Humans</span>
+                <span className="block text-[#FFD87E]">From The Loop</span>
               </GlitchHeadline>
 
-              <p className="text-lg md:text-xl text-slate-400 max-w-2xl mb-12 leading-relaxed font-mono">
-                Investors can witness a full agent-to-agent negotiation, escrow, and payout story in real time.
-                Every step is logged, verified, and shareable without logging in.
+              <p className="text-lg md:text-xl text-slate-300 max-w-2xl mb-12 leading-relaxed font-mono hero-subline">
+                Watch two agents negotiate, fund escrow, and release payment in real time — no signup required.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                <TacticalButton href="/demo/a2a">Run Live A2A Transaction (No Login)</TacticalButton>
+              <div className="flex flex-col sm:flex-row gap-4 mb-6 hero-actions">
+                <TacticalButton href="/demo/a2a" className="chrome-cta">
+                  Run Live A2A Transaction (No Login)
+                </TacticalButton>
                 <TacticalButton variant="ghost" href="/demo/workflows">
                   Explore Workflow Builder Demo
                 </TacticalButton>
-                <TacticalButton href="/pricing" className="sm:ml-auto">
+                <TacticalButton variant="secondary" href="/pricing" className="chrome-cta chrome-cta--outline sm:ml-auto">
                   View Pricing
                 </TacticalButton>
               </div>
 
-              <div className="mt-6 text-[11px] font-mono text-slate-500 tracking-wide">
+              <div className="mt-6 text-[11px] font-mono text-slate-500 tracking-wide hero-share">
                 Copy this successful run: <code className="text-slate-400">{shareLink}</code>
                 <button
                   type="button"
@@ -121,27 +138,39 @@ export default function LandingPage() {
 
           {/* Terminal and Timeline Sidebar */}
           <section className="relative z-10 px-6 md:px-12 pb-24 lg:mr-[300px]">
-            <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
-              <div className="bg-black/80 border border-white/10 rounded-lg p-6">
-                <div className="text-xs tracking-widest text-blue-400 uppercase mb-4">Live Demo Feed</div>
-                <ObsidianTerminal lines={terminalLines} title="Live Demo Feed" />
+            <div className="max-w-5xl mx-auto">
+              <div className="transaction-storyboard mb-10">
+                <p className="text-xs tracking-[0.35em] uppercase text-slate-400">Transaction Storyboard</p>
+                <h3 className="text-3xl font-semibold text-white">Outcomes-first view</h3>
+                <p className="text-sm text-slate-500 mt-1">
+                  Every stage mirrors how investor capital moves between agents and escrow.
+                </p>
               </div>
-              
-              <div className="grid gap-4">
-                {timelineSteps.map((step) => (
-                  <article
-                    key={step.title}
-                    className={`p-4 rounded-lg border ${
-                      step.active
-                        ? 'border-slate-400/50 bg-slate-400/5'
-                        : 'border-white/10 bg-white/5'
-                    }`}
-                  >
-                    <p className="text-xs tracking-widest text-slate-300 uppercase mb-2">{step.label}</p>
-                    <p className="text-lg font-semibold text-white mb-1">{step.title}</p>
-                    <p className="text-sm text-slate-400">{step.description}</p>
-                  </article>
-                ))}
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="bg-black/80 border border-white/10 rounded-lg p-6">
+                  <div className="text-xs tracking-widest text-blue-400 uppercase mb-4">Live Demo Feed</div>
+                  <ObsidianTerminal lines={terminalLines} title="Live Demo Feed" />
+                </div>
+                <div className="grid gap-4">
+                  {timelineSteps.map((step) => (
+                    <article
+                      key={step.title}
+                      className={`timeline-card p-4 rounded-lg border ${
+                        step.active
+                          ? 'border-slate-400/60 bg-slate-400/5'
+                          : 'border-white/10 bg-white/5'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.35em] text-slate-400 mb-3">
+                        <span className={`status-dot ${step.active ? 'status-dot--active' : ''}`} />
+                        <span>{step.timestamp}</span>
+                      </div>
+                      <p className="text-xs tracking-widest text-slate-300 uppercase mb-2">{step.label}</p>
+                      <p className="text-lg font-semibold text-white mb-1">{step.title}</p>
+                      <p className="text-sm text-slate-400">{step.description}</p>
+                    </article>
+                  ))}
+                </div>
               </div>
             </div>
           </section>

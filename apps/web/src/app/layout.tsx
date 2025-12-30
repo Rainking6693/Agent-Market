@@ -96,9 +96,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={`${inter.variable} min-h-screen bg-background font-body text-foreground antialiased`}
       >
-        <a href="#main-content" className="skip-to-content">
-          Skip to main content
-        </a>
         <Providers>{children}</Providers>
         <CookieConsent />
       </body>

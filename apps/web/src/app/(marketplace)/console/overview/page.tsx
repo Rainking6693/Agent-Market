@@ -69,7 +69,7 @@ export default function OverviewPage() {
     // Determine alerts/next steps
     const alerts = [];
     if (!subscription) {
-        alerts.push({ type: 'warning', message: 'No billing plan configured', action: '/billing' });
+        alerts.push({ type: 'warning', message: 'No billing plan configured', action: '/billing', tone: 'violet' });
     }
     if (agents.length === 0) {
         alerts.push({ type: 'info', message: 'Create your first agent to get started', action: '/agents/new' });
@@ -96,13 +96,13 @@ export default function OverviewPage() {
                     >
                         + Create Agent
                     </Link>
-                    <Link
-                        href="/workflows"
-                        className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
-                    >
-                        Launch Workflow
-                    </Link>
-                </div>
+                <Link
+                    href="/workflows"
+                    className="rounded-lg border border-[#4338CA]/70 bg-gradient-to-br from-[#4338CA] via-[#6F7BFF]/80 to-[#4338CA]/60 px-4 py-2 text-sm font-medium text-white transition hover:brightness-110"
+                >
+                    Launch Workflow
+                </Link>
+            </div>
             </header>
 
             {/* KPI Row - Max 4 cards */}
@@ -124,13 +124,19 @@ export default function OverviewPage() {
                                 {alerts.map((alert, i) => (
                                     <div
                                         key={i}
-                                        className={`rounded-lg border p-3 text-sm ${alert.type === 'warning'
-                                            ? 'border-amber-500/30 bg-amber-500/10 text-amber-300'
-                                            : 'border-blue-500/30 bg-blue-500/10 text-blue-300'
-                                            }`}
+                                        className={`rounded-lg border p-3 text-sm ${
+                                            alert.tone === 'violet'
+                                                ? 'alert-violet'
+                                                : alert.type === 'warning'
+                                                    ? 'border-amber-500/30 bg-amber-500/10 text-amber-300'
+                                                    : 'border-blue-500/30 bg-blue-500/10 text-blue-300'
+                                        }`}
                                     >
                                         <p>{alert.message}</p>
-                                        <Link href={alert.action} className="mt-1 inline-block text-xs font-medium underline hover:text-white">
+                                        <Link
+                                            href={alert.action}
+                                            className="mt-1 inline-block text-xs font-medium underline dashboard-link-violet"
+                                        >
                                             Take action →
                                         </Link>
                                     </div>
