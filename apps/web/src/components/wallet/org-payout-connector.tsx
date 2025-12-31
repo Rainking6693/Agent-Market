@@ -83,11 +83,11 @@ export function OrgPayoutConnector() {
   };
 
   return (
-    <div className="glass-card space-y-3 p-4">
+    <div className="card space-y-3 p-4">
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-base font-semibold text-white">Bank payouts</h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[var(--text-muted)]">
             Connect the org wallet to a bank via Stripe to move funds out.
           </p>
         </div>

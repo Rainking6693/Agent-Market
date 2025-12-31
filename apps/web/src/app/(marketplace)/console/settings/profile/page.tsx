@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { BackgroundToggle } from '@/components/settings/background-toggle';
 import { useAuth } from '@/hooks/use-auth';
 
 export default function ProfileSettingsPage() {
@@ -42,8 +43,8 @@ export default function ProfileSettingsPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <h1 className="text-3xl font-headline text-white">Profile Settings</h1>
-        <p className="text-sm text-slate-400">Manage your account information and preferences</p>
+        <h1 className="text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}">Profile Settings</h1>
+        <p className="text-sm text-[var(--text-muted)]">Manage your account information and preferences</p>
       </header>
 
       <Card>
@@ -72,7 +73,7 @@ export default function ProfileSettingsPage() {
               placeholder="your.email@example.com"
               disabled
             />
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-[var(--text-muted)]">
               Email cannot be changed. Contact support if you need to update your email.
             </p>
           </div>
@@ -108,14 +109,24 @@ export default function ProfileSettingsPage() {
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <Label className="text-xs text-slate-400">User ID</Label>
-              <p className="mt-1 text-sm font-mono text-white">{user?.id || 'N/A'}</p>
+              <Label className="text-xs text-[var(--text-muted)]">User ID</Label>
+              <p className="mt-1 text-sm font-mono text-[var(--text-primary)]">{user?.id || 'N/A'}</p>
             </div>
             <div>
-              <Label className="text-xs text-slate-400">Account Status</Label>
-              <p className="mt-1 text-sm text-white">Active</p>
+              <Label className="text-xs text-[var(--text-muted)]">Account Status</Label>
+              <p className="mt-1 text-sm text-[var(--text-primary)]">Active</p>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle font-display>Display Preferences</CardTitle>
+          <CardDescription font-ui>Customize your interface appearance</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <BackgroundToggle />
         </CardContent>
       </Card>
     </div>

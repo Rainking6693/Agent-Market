@@ -113,10 +113,10 @@ export default function BuildVsBuyPage() {
             <p className="text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
               Build vs. Buy
             </p>
-            <h1 className="mt-6 text-5xl font-headline leading-tight text-white lg:text-6xl">
+            <h1 className="mt-6 text-5xl font-display leading-tight text-white lg:text-6xl">
               Swarm Sync vs. Building Your Own
             </h1>
-            <p className="mt-6 text-xl font-body text-slate-400">
+            <p className="mt-6 text-xl font-ui text-slate-400">
               An honest comparison of building a custom agent orchestration platform in-house versus
               using Swarm Sync.
             </p>
@@ -126,15 +126,15 @@ export default function BuildVsBuyPage() {
         {/* Cost Analysis */}
         <section className="bg-black px-4 py-20">
           <div className="mx-auto max-w-6xl space-y-12">
-            <h2 className="text-center text-4xl font-headline text-white">Cost Analysis</h2>
+            <h2 className="text-center text-4xl font-display text-white">Cost Analysis</h2>
 
             <div className="grid gap-8 lg:grid-cols-2">
               {/* Build Your Own */}
               <Card className="border-destructive/20">
                 <CardContent className="space-y-6 p-8">
                   <div className="space-y-2">
-                    <p className="font-headline text-2xl text-white">Building In-House</p>
-                    <p className="font-body text-sm text-slate-400">
+                    <p className="font-display text-2xl text-white">Building In-House</p>
+                    <p className="font-ui text-sm text-slate-400">
                       Typical costs for enterprise development team
                     </p>
                   </div>
@@ -142,20 +142,20 @@ export default function BuildVsBuyPage() {
                   {Object.values(costAnalysis.buildYourOwn).map((item) => (
                     <div key={item.label} className="space-y-1 border-b border-white/10 pb-4">
                       <div className="flex justify-between">
-                        <span className="font-body text-sm text-white">{item.label}</span>
-                        <span className="font-headline text-base text-destructive">
+                        <span className="font-ui text-sm text-white">{item.label}</span>
+                        <span className="font-display text-base text-destructive">
                           {item.cost}
                         </span>
                       </div>
-                      <p className="font-body text-xs text-slate-400">{item.details}</p>
+                      <p className="font-ui text-xs text-slate-400">{item.details}</p>
                     </div>
                   ))}
 
                   <div className="rounded-lg bg-destructive/10 p-4">
-                    <p className="font-headline text-lg text-destructive">
+                    <p className="font-display text-lg text-destructive">
                       Total 3-Year Cost: $1.8M - $3.6M+
                     </p>
-                    <p className="font-body text-xs text-slate-400">
+                    <p className="font-ui text-xs text-slate-400">
                       Not including opportunity cost of delayed time-to-market
                     </p>
                   </div>
@@ -166,8 +166,8 @@ export default function BuildVsBuyPage() {
               <Card className="border-success/20 bg-success/5">
                 <CardContent className="space-y-6 p-8">
                   <div className="space-y-2">
-                    <p className="font-headline text-2xl text-white">Using Swarm Sync</p>
-                    <p className="font-body text-sm text-slate-400">
+                    <p className="font-display text-2xl text-white">Using Swarm Sync</p>
+                    <p className="font-ui text-sm text-slate-400">
                       Transparent, predictable pricing
                     </p>
                   </div>
@@ -175,18 +175,18 @@ export default function BuildVsBuyPage() {
                   {Object.values(costAnalysis.swarmSync).map((item) => (
                     <div key={item.label} className="space-y-1 border-b border-white/10 pb-4">
                       <div className="flex justify-between">
-                        <span className="font-body text-sm text-white">{item.label}</span>
-                        <span className="font-headline text-base text-success">{item.cost}</span>
+                        <span className="font-ui text-sm text-white">{item.label}</span>
+                        <span className="font-display text-base text-success">{item.cost}</span>
                       </div>
-                      <p className="font-body text-xs text-slate-400">{item.details}</p>
+                      <p className="font-ui text-xs text-slate-400">{item.details}</p>
                     </div>
                   ))}
 
                   <div className="rounded-lg bg-success/10 p-4">
-                    <p className="font-headline text-lg text-success">
+                    <p className="font-display text-lg text-success">
                       Total 3-Year Cost: $10.7k - $Custom
                     </p>
-                    <p className="font-body text-xs text-slate-400">
+                    <p className="font-ui text-xs text-slate-400">
                       99% cost savings vs. building in-house
                     </p>
                   </div>
@@ -199,7 +199,7 @@ export default function BuildVsBuyPage() {
         {/* Feature Comparison Table */}
         <section className="bg-black px-4 py-20">
           <div className="mx-auto max-w-5xl space-y-8">
-            <h2 className="text-center text-4xl font-headline text-white">
+            <h2 className="text-center text-4xl font-display text-white">
               Feature Comparison
             </h2>
 
@@ -207,23 +207,23 @@ export default function BuildVsBuyPage() {
               <table className="w-full">
                 <thead className="bg-white/5">
                   <tr>
-                    <th className="p-4 text-left font-headline text-sm text-white">Feature</th>
-                    <th className="p-4 text-left font-headline text-sm text-white">
+                    <th className="p-4 text-left font-display text-sm text-white">Feature</th>
+                    <th className="p-4 text-left font-display text-sm text-white">
                       Build Your Own
                     </th>
-                    <th className="p-4 text-left font-headline text-sm text-success">Swarm Sync</th>
+                    <th className="p-4 text-left font-display text-sm text-success">Swarm Sync</th>
                   </tr>
                 </thead>
                 <tbody>
                   {comparisonTable.map((row, idx) => (
                     <tr key={row.feature} className={idx % 2 === 0 ? 'bg-white/50' : ''}>
-                      <td className="p-4 font-body text-sm font-medium text-white">
+                      <td className="p-4 font-ui text-sm font-medium text-white">
                         {row.feature}
                       </td>
-                      <td className="p-4 font-body text-sm text-slate-400">
+                      <td className="p-4 font-ui text-sm text-slate-400">
                         {row.buildYourOwn}
                       </td>
-                      <td className="p-4 font-body text-sm text-success">{row.swarmSync}</td>
+                      <td className="p-4 font-ui text-sm text-success">{row.swarmSync}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -235,15 +235,15 @@ export default function BuildVsBuyPage() {
         {/* When to Build vs. When to Buy */}
         <section className="bg-black px-4 py-20">
           <div className="mx-auto max-w-4xl space-y-12">
-            <h2 className="text-center text-4xl font-headline text-white">
+            <h2 className="text-center text-4xl font-display text-white">
               When to Build vs. When to Buy
             </h2>
 
             <div className="grid gap-8 md:grid-cols-2">
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="space-y-4 p-8">
-                  <p className="font-headline text-xl text-white">Consider Building If...</p>
-                  <ul className="space-y-3 font-body text-sm text-slate-400">
+                  <p className="font-display text-xl text-white">Consider Building If...</p>
+                  <ul className="space-y-3 font-ui text-sm text-slate-400">
                     <li>✓ You have 12-18 months to build before go-to-market</li>
                     <li>✓ Your use case is highly proprietary and unique</li>
                     <li>✓ You have 3-4 senior engineers available full-time</li>
@@ -255,8 +255,8 @@ export default function BuildVsBuyPage() {
 
               <Card className="border-success/20 bg-success/5">
                 <CardContent className="space-y-4 p-8">
-                  <p className="font-headline text-xl text-white">Use Swarm Sync If...</p>
-                  <ul className="space-y-3 font-body text-sm text-white">
+                  <p className="font-display text-xl text-white">Use Swarm Sync If...</p>
+                  <ul className="space-y-3 font-ui text-sm text-white">
                     <li>✓ You need to launch in days/weeks, not months</li>
                     <li>✓ Your team should focus on core product, not infrastructure</li>
                     <li>✓ You want proven, battle-tested agent orchestration</li>
@@ -272,10 +272,10 @@ export default function BuildVsBuyPage() {
         {/* CTA */}
         <section className="bg-black px-4 py-20">
           <div className="mx-auto max-w-4xl text-center space-y-8">
-            <h2 className="text-4xl font-headline text-white">
+            <h2 className="text-4xl font-display text-white">
               Start Orchestrating in Minutes, Not Months
             </h2>
-            <p className="text-lg font-body text-slate-400">
+            <p className="text-lg font-ui text-slate-400">
               Get {FREE_CREDITS_LABEL} and see why teams choose Swarm Sync over building in-house.
             </p>
             <div className="flex flex-wrap justify-center gap-4">

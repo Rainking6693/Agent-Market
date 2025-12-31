@@ -78,7 +78,7 @@ export function PayoutSettings({ agentId }: PayoutSettingsProps) {
 
   if (accountLoading) {
     return (
-      <Card className="border-white/70 bg-white/5">
+      <Card className="border-white/70 bg-[var(--surface-raised)]">
         <CardContent className="p-6">
           <div className="h-12 w-full animate-pulse rounded-lg bg-white/10" />
         </CardContent>
@@ -123,13 +123,13 @@ export function PayoutSettings({ agentId }: PayoutSettingsProps) {
       )}
 
       {!account?.isOnboarded && showSetup && (
-        <Card className="border-white/70 bg-white/5">
+        <Card className="border-white/70 bg-[var(--surface-raised)]">
           <CardHeader>
-            <CardTitle className="font-headline">Set Up Stripe Connect</CardTitle>
+            <CardTitle className="font-display">Set Up Stripe Connect</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="block text-xs uppercase tracking-wide text-slate-400 mb-2">
+              <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-2">
                 Email Address
               </label>
               <input
@@ -137,10 +137,10 @@ export function PayoutSettings({ agentId }: PayoutSettingsProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400/50"
+                className="w-full rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white placeholder:text-[var(--text-muted)]/50"
               />
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-[var(--text-muted)]">
               You&apos;ll be redirected to Stripe to complete your account setup. We accept business accounts
               from over 50 countries.
             </p>
@@ -166,17 +166,17 @@ export function PayoutSettings({ agentId }: PayoutSettingsProps) {
 
       {/* Payout History */}
       {account?.isOnboarded && (
-        <Card className="border-white/70 bg-white/5">
+        <Card className="border-white/70 bg-[var(--surface-raised)]">
           <CardHeader>
-            <CardTitle className="font-headline">Payout History</CardTitle>
+            <CardTitle className="font-display">Payout History</CardTitle>
           </CardHeader>
           <CardContent>
             {history.length === 0 ? (
-              <p className="text-sm text-slate-400 italic">No payouts yet.</p>
+              <p className="text-sm text-[var(--text-muted)] italic">No payouts yet.</p>
             ) : (
               <div className="space-y-3">
                 {history.map((payout) => (
-                  <div key={payout.id} className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-4">
+                  <div key={payout.id} className="flex items-center justify-between rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] p-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         {payout.status === 'COMPLETED' && (
@@ -189,11 +189,11 @@ export function PayoutSettings({ agentId }: PayoutSettingsProps) {
                           ${(payout.amount / 100).toFixed(2)} {payout.currency}
                         </p>
                       </div>
-                      <p className="text-xs text-slate-400 mt-1">
+                      <p className="text-xs text-[var(--text-muted)] mt-1">
                         {new Date(payout.createdAt).toLocaleDateString()} • {payout.status}
                       </p>
                       {payout.description && (
-                        <p className="text-xs text-slate-400">{payout.description}</p>
+                        <p className="text-xs text-[var(--text-muted)]">{payout.description}</p>
                       )}
                     </div>
                   </div>

@@ -34,7 +34,7 @@ export default function AgentMarketplacePage() {
             <p className="text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
               Agent Marketplace
             </p>
-            <h1 className="text-5xl font-headline text-white">
+            <h1 className="text-5xl font-display text-white">
               The Largest AI Agent Marketplace
             </h1>
             <p className="mx-auto max-w-3xl text-xl text-slate-400">
@@ -85,7 +85,7 @@ export default function AgentMarketplacePage() {
 
           {/* CTA */}
           <div className="rounded-3xl border border-white/10 bg-black p-12 text-center">
-            <h2 className="text-3xl font-headline text-white">Ready to Get Started?</h2>
+            <h2 className="text-3xl font-display text-white">Ready to Get Started?</h2>
             <p className="mt-4 text-lg text-slate-400">
               Join the marketplace and start hiring specialist agents today.
             </p>

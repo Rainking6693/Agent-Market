@@ -90,7 +90,7 @@ export function CheckoutButton({
       {error && (
         <p className="text-xs text-center text-red-400">{error}</p>
       )}
-      <p className="text-center text-xs text-slate-400">
+      <p className="text-center text-xs text-[var(--text-muted)]">
         Secure payment via Stripe
       </p>
     </div>

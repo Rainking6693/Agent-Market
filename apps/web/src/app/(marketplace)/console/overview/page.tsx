@@ -94,15 +94,15 @@ export default function OverviewPage() {
     }
 
   return (
-    <div className="dashboard space-y-8">
+    <div className="dashboard space-y-6">
             {/* Slim Header */}
             <header className="space-y-4">
                 <div>
-                    <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Overview</p>
-                    <h1 className="mt-1 text-3xl font-headline text-white">
+                    <p className="text-xs uppercase tracking-[0.35em] text-[var(--text-muted)] font-ui">Overview</p>
+                    <h1 className="mt-1 text-3xl font-semibold text-[var(--text-primary)] font-display" style={{ fontSize: '32px', lineHeight: '1.2' }}>
                         {greeting}, {firstName}
                     </h1>
-                    <p className="mt-1 text-sm text-slate-400">
+                    <p className="mt-1 text-sm text-[var(--text-muted)] font-ui">
                         {orgSlug} • {statusPills.map(p => `${p.label}: ${p.state}`).join(' • ')}
                     </p>
                 </div>
@@ -110,13 +110,15 @@ export default function OverviewPage() {
                 <div className="flex flex-wrap gap-3">
                     <Link
                         href="/console/agents/new"
-                        className="rounded-lg bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] px-4 py-2 text-sm font-medium text-black transition hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.75)]"
+                        className="btn-secondary rounded-xl px-4 py-2 text-sm font-medium transition"
+                        font-ui
                     >
                         + Create Agent
                     </Link>
                 <Link
                     href="/workflows"
-                    className="rounded-lg border border-[#4338CA]/70 bg-gradient-to-br from-[#4338CA] via-[#6F7BFF]/80 to-[#4338CA]/60 px-4 py-2 text-sm font-medium text-white transition hover:brightness-110"
+                    className="btn-primary rounded-xl px-4 py-2 text-sm font-semibold transition"
+                    font-ui
                 >
                     Launch Workflow
                 </Link>
@@ -124,7 +126,7 @@ export default function OverviewPage() {
             </header>
 
             {/* KPI Row - Max 4 cards */}
-            <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 <CreditSummaryCard subscription={subscription} />
                 {orgSummary && <OrgOverviewCard summary={orgSummary} />}
             </section>
@@ -134,7 +136,7 @@ export default function OverviewPage() {
                 {/* Next Steps / Alerts */}
                 <Card>
                     <CardHeader>
-                        <CardTitle className="text-lg">Next Steps</CardTitle>
+                        <CardTitle className="text-lg" font-display>Next Steps</CardTitle>
                     </CardHeader>
                     <CardContent>
                 {alerts.length > 0 ? (
@@ -144,7 +146,7 @@ export default function OverviewPage() {
                                 key={i}
                                 className={`rounded-lg border p-3 text-sm ${
                                     alert.tone === 'violet'
-                                        ? 'alert-violet'
+                                        ? 'border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
                                         : alert.type === 'warning'
                                             ? 'border-amber-500/30 bg-amber-500/10 text-amber-300'
                                             : 'border-blue-500/30 bg-blue-500/10 text-blue-300'
@@ -153,7 +155,8 @@ export default function OverviewPage() {
                                 <p>{alert.message}</p>
                                 <Link
                                     href={alert.action}
-                                    className="mt-1 inline-block text-xs font-medium underline dashboard-link-violet"
+                                    className="mt-1 inline-block text-xs font-medium underline text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                                    font-ui
                                 >
                                     Take action →
                                 </Link>
@@ -161,18 +164,18 @@ export default function OverviewPage() {
                         ))}
                     </div>
                 ) : (
-                    <p className="text-sm text-slate-400">All systems operational. No action needed.</p>
+                    <p className="text-sm text-[var(--text-muted)]" font-ui>All systems operational. No action needed.</p>
                 )}
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                     {defaultNextSteps.map((step) => (
                         <Link
                             key={step.title}
                             href={step.href}
-                            className="rounded-2xl border border-white/10 bg-surface/70 px-4 py-3 text-sm font-semibold text-text transition hover:border-white/30 hover:text-white"
+                            className="card-inner rounded-xl border border-[var(--border-base)] px-4 py-3 text-sm transition hover:border-[var(--border-hover)]"
                         >
-                            <p className="text-[0.7rem] uppercase tracking-[0.3em] text-slate-400">Next</p>
-                            <p className="text-base font-headline text-white">{step.title}</p>
-                            <p className="text-xs text-slate-400">{step.detail}</p>
+                            <p className="text-[0.7rem] uppercase tracking-[0.3em] text-[var(--text-muted)]" font-ui>Next</p>
+                            <p className="text-base font-semibold text-[var(--text-primary)]" font-display>{step.title}</p>
+                            <p className="text-xs text-[var(--text-secondary)]" font-ui>{step.detail}</p>
                         </Link>
                     ))}
                 </div>
@@ -182,7 +185,7 @@ export default function OverviewPage() {
                 {/* Recent Activity */}
                 <Card>
                     <CardHeader>
-                        <CardTitle className="text-lg">Recent Activity</CardTitle>
+                        <CardTitle className="text-lg" font-display>Recent Activity</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <RecentActivityList />
@@ -195,7 +198,7 @@ export default function OverviewPage() {
                 <Card>
                     <CardHeader>
                         <div className="flex items-center justify-between">
-                            <CardTitle className="text-lg">Performance</CardTitle>
+                            <CardTitle className="text-lg" font-display>Performance</CardTitle>
 
                         </div>
                     </CardHeader>

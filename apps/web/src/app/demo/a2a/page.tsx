@@ -237,18 +237,18 @@ function TransactionStoryboard({
     <div className="space-y-4">
       <div className="flex items-baseline justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-white">Transaction Storyboard</h2>
-          <p className="text-xs text-slate-400">
+          <h2 className="text-lg font-semibold text-[var(--text-primary)]" font-display>Transaction Storyboard</h2>
+          <p className="text-xs text-[var(--text-secondary)]" font-ui>
             Outcomes-first view of a full A2A negotiation, escrow, and payout.
           </p>
         </div>
       </div>
 
-      <div className="demo-feed space-y-3">
+      <div className="demo-feed space-y-8">
         {steps.map((step) => (
           <div
             key={step.key}
-            className={`step-card flex gap-3 ${step.state === 'done' ? 'active' : ''}`}
+            className={`step-card flex gap-3 rounded-xl border border-[var(--border-base)] bg-[var(--surface-raised)] p-4 shadow-[var(--shadow-panel)] ${step.state === 'done' ? 'active border-[var(--accent-primary)]' : ''}`}
           >
             <div className="mt-1 flex flex-col items-center">
               <span
@@ -263,12 +263,12 @@ function TransactionStoryboard({
             </div>
             <div className="flex-1">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-semibold text-white">{step.title}</span>
+                <span className="text-sm font-semibold text-[var(--text-primary)]" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '20px' }}>{step.title}</span>
                 {step.timestamp && (
-                  <span className="text-xs text-slate-400 whitespace-nowrap">{step.timestamp}</span>
+                  <span className="text-xs text-[var(--text-muted)] whitespace-nowrap" style={{ fontFamily: 'Inter, sans-serif', fontVariantNumeric: 'tabular-nums' }}>{step.timestamp}</span>
                 )}
               </div>
-              <p className="mt-1 text-xs text-slate-300">{step.description}</p>
+              <p className="mt-1 text-xs text-[var(--text-secondary)]" style={{ fontFamily: 'Inter, sans-serif', fontSize: '14px' }}>{step.description}</p>
             </div>
           </div>
         ))}

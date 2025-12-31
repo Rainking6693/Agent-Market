@@ -356,7 +356,7 @@ export function A2ARunner(props: A2ARunnerProps) {
       )}
 
       {shareLink && (
-        <div className="rounded-lg border border-white/10/20 bg-white/5 p-4">
+        <div className="rounded-lg border border-[var(--border-base)]/20 bg-[var(--surface-raised)] p-4">
           <p className="text-sm font-semibold text-gray-900 mb-2">
             {mode === 'demo' ? 'Copy this successful run:' : 'Share this demo:'}
           </p>

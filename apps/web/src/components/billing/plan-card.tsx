@@ -71,18 +71,18 @@ export function PlanCard({ plan, subscription }: PlanCardProps) {
 
   return (
     <div
-      className={`glass-card flex flex-col gap-4 p-6 ${
-        isActive ? 'border border-accent' : 'border border-white/10'
+      className={`card flex flex-col gap-4 p-6 ${
+        isActive ? 'border border-accent' : 'border border-[var(--border-base)]'
       }`}
     >
       <div>
-        <p className="text-xs uppercase tracking-wide text-slate-400">{plan.slug}</p>
+        <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">{plan.slug}</p>
         <h3 className="text-2xl font-semibold text-white">{plan.name}</h3>
       </div>
 
-      <div className="text-3xl font-headline text-white">{priceLabel}</div>
+      <div className="text-3xl font-display text-white">{priceLabel}</div>
 
-      <ul className="space-y-2 text-sm text-slate-400">
+      <ul className="space-y-2 text-sm text-[var(--text-muted)]">
         <li>Seats: {plan.seats === 0 ? 'Unlimited' : plan.seats}</li>
         <li>Agents: {plan.agentLimit === 0 ? 'Unlimited' : plan.agentLimit}</li>
         <li>Workflows: {plan.workflowLimit === 0 ? 'Unlimited' : plan.workflowLimit}</li>
@@ -93,7 +93,7 @@ export function PlanCard({ plan, subscription }: PlanCardProps) {
         <li>Platform fee: {(plan.takeRateBasisPoints / 100).toFixed(1)}%</li>
       </ul>
 
-      <div className="space-y-2 text-sm text-slate-400">
+      <div className="space-y-2 text-sm text-[var(--text-muted)]">
         {(plan.features || []).map((feature) => (
           <div key={feature} className="flex items-center gap-2">
             <span className="text-accent">✺</span>

@@ -21,8 +21,8 @@ export default function LimitsPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <h1 className="text-3xl font-headline text-white">Account Limits</h1>
-        <p className="text-sm text-slate-400">
+        <h1 className="text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}">Account Limits</h1>
+        <p className="text-sm text-[var(--text-muted)]">
           View and manage your account limits, budgets, and spending controls
         </p>
       </header>
@@ -35,20 +35,20 @@ export default function LimitsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-400">Total Agents</span>
-              <span className="text-2xl font-semibold text-white">{totalAgents}</span>
+              <span className="text-sm text-[var(--text-muted)]">Total Agents</span>
+              <span className="text-2xl font-semibold text-[var(--text-primary)]">{totalAgents}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-400">Active Agents</span>
+              <span className="text-sm text-[var(--text-muted)]">Active Agents</span>
               <span className="text-2xl font-semibold text-emerald-600">{activeAgents}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-400">Draft Agents</span>
-              <span className="text-2xl font-semibold text-white">
+              <span className="text-sm text-[var(--text-muted)]">Draft Agents</span>
+              <span className="text-2xl font-semibold text-[var(--text-primary)]">
                 {agents.filter((a) => a.status === 'DRAFT').length}
               </span>
             </div>
-            <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-slate-400">
+            <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-[var(--text-muted)]">
               <p>No hard limit on agents. Create as many as you need.</p>
             </div>
           </CardContent>
@@ -62,22 +62,22 @@ export default function LimitsPage() {
           <CardContent className="space-y-4">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Wallet Spend Ceiling</span>
-                <span className="text-sm font-semibold text-white">Not configured</span>
+                <span className="text-sm text-[var(--text-muted)]">Wallet Spend Ceiling</span>
+                <span className="text-sm font-semibold text-[var(--text-primary)]">Not configured</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Auto-approve Threshold</span>
-                <span className="text-sm font-semibold text-white">Not configured</span>
+                <span className="text-sm text-[var(--text-muted)]">Auto-approve Threshold</span>
+                <span className="text-sm font-semibold text-[var(--text-primary)]">Not configured</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Monthly Budget Limits</span>
-                <span className="text-sm font-semibold text-white">
+                <span className="text-sm text-[var(--text-muted)]">Monthly Budget Limits</span>
+                <span className="text-sm font-semibold text-[var(--text-primary)]">
                   {/* Budgets are managed per-agent, not returned in list API */}
                   Configure per agent
                 </span>
               </div>
             </div>
-            <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-slate-400">
+            <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-[var(--text-muted)]">
               <p>
                 Configure budget limits per agent in the{' '}
                 <a href="/console/agents" className="text-primary underline hover:no-underline">
@@ -97,19 +97,19 @@ export default function LimitsPage() {
           <CardContent className="space-y-4">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Plan</span>
-                <span className="text-sm font-semibold text-white">Free Tier</span>
+                <span className="text-sm text-[var(--text-muted)]">Plan</span>
+                <span className="text-sm font-semibold text-[var(--text-primary)]">Free Tier</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Monthly Credits</span>
-                <span className="text-sm font-semibold text-white">Unlimited</span>
+                <span className="text-sm text-[var(--text-muted)]">Monthly Credits</span>
+                <span className="text-sm font-semibold text-[var(--text-primary)]">Unlimited</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">API Rate Limit</span>
-                <span className="text-sm font-semibold text-white">1000 req/min</span>
+                <span className="text-sm text-[var(--text-muted)]">API Rate Limit</span>
+                <span className="text-sm font-semibold text-[var(--text-primary)]">1000 req/min</span>
               </div>
             </div>
-            <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-slate-400">
+            <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-[var(--text-muted)]">
               <p>
                 Upgrade your plan in{' '}
                 <a href="/billing" className="text-primary underline hover:no-underline">
@@ -129,19 +129,19 @@ export default function LimitsPage() {
           <CardContent className="space-y-4">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">API Calls (this month)</span>
-                <span className="text-sm font-semibold text-white">-</span>
+                <span className="text-sm text-[var(--text-muted)]">API Calls (this month)</span>
+                <span className="text-sm font-semibold text-[var(--text-primary)]">-</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Credits Used</span>
-                <span className="text-sm font-semibold text-white">-</span>
+                <span className="text-sm text-[var(--text-muted)]">Credits Used</span>
+                <span className="text-sm font-semibold text-[var(--text-primary)]">-</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Workflows Executed</span>
-                <span className="text-sm font-semibold text-white">-</span>
+                <span className="text-sm text-[var(--text-muted)]">Workflows Executed</span>
+                <span className="text-sm font-semibold text-[var(--text-primary)]">-</span>
               </div>
             </div>
-            <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-slate-400">
+            <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-[var(--text-muted)]">
               <p>Detailed usage analytics coming soon.</p>
             </div>
           </CardContent>

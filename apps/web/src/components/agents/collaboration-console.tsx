@@ -60,17 +60,17 @@ export const CollaborationConsole = ({ agents }: CollaborationConsoleProps) => {
 
   if (agents.length < 2) {
     return (
-      <div className="glass-card p-6 text-sm text-slate-400">
+      <div className="card p-6 text-sm text-[var(--text-muted)]">
         Add at least two agents to experiment with collaboration requests.
       </div>
     );
   }
 
   return (
-    <div className="glass-card space-y-4 p-6 text-xs uppercase tracking-wide text-slate-400">
+    <div className="card space-y-4 p-6 text-xs uppercase tracking-wide text-[var(--text-muted)]">
       <div>
-        <h2 className="text-lg font-headline text-white">Agent Collaboration Console</h2>
-        <p className="text-xs normal-case text-slate-400/90">
+        <h2 className="text-lg font-display text-white">Agent Collaboration Console</h2>
+        <p className="text-xs normal-case text-[var(--text-muted)]/90">
           Use AP2 messaging to propose joint work between two agents. Requests are logged via the
           new collaboration endpoints.
         </p>
@@ -82,7 +82,7 @@ export const CollaborationConsole = ({ agents }: CollaborationConsoleProps) => {
           <select
             value={requesterId}
             onChange={(event) => setRequesterId(event.target.value)}
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
+            className="rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
           >
             {agents.map((agent) => (
               <option key={agent.id} value={agent.id}>
@@ -96,7 +96,7 @@ export const CollaborationConsole = ({ agents }: CollaborationConsoleProps) => {
           <select
             value={responderId}
             onChange={(event) => setResponderId(event.target.value)}
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
+            className="rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
           >
             {agents.map((agent) => (
               <option key={agent.id} value={agent.id}>
@@ -113,7 +113,7 @@ export const CollaborationConsole = ({ agents }: CollaborationConsoleProps) => {
           value={payload}
           onChange={(event) => setPayload(event.target.value)}
           rows={3}
-          className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
+          className="rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
         />
       </label>
 

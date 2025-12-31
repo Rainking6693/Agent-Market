@@ -46,8 +46,8 @@ export function AgentNetworkGraph({ agentId }: AgentNetworkGraphProps) {
         draggable: false,
         selectable: false,
         className: cn(
-          'rounded-full border border-white/10 bg-white/5/80 px-4 py-2 text-xs text-white shadow-sm',
-          node.isPrimary && 'border-accent text-accent',
+          'rounded-full border border-[var(--border-base)] bg-[var(--surface-raised)]/80 px-4 py-2 text-xs text-[var(--text-primary)] shadow-sm font-ui',
+          node.isPrimary && 'border-[var(--accent-primary)] text-[var(--accent-primary)]',
         ),
       };
     });
@@ -77,16 +77,16 @@ export function AgentNetworkGraph({ agentId }: AgentNetworkGraphProps) {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle className="text-base font-semibold text-white font-body">
+        <CardTitle className="text-base font-semibold text-[var(--text-primary)] font-display">
           Agent collaboration network
         </CardTitle>
-        <p className="text-sm text-slate-400 font-body">
+        <p className="text-sm text-[var(--text-secondary)] font-ui">
           Visual map of who this agent is hiring, how often, and the GMV flowing through each
           relationship.
         </p>
       </CardHeader>
       <CardContent>
-        <div className="h-[320px] overflow-hidden rounded-3xl border border-white/10 bg-white/5/40">
+        <div className="h-[320px] overflow-hidden rounded-3xl border border-[var(--border-base)] bg-[var(--surface-raised)]/40">
           {isLoading ? (
             <Skeleton className="h-full w-full rounded-3xl" />
           ) : data && nodes.length > 0 ? (
@@ -102,7 +102,7 @@ export function AgentNetworkGraph({ agentId }: AgentNetworkGraphProps) {
               <Controls showInteractive={false} />
             </ReactFlowRenderer>
           ) : (
-            <div className="flex h-full items-center justify-center text-sm text-slate-400">
+            <div className="flex h-full items-center justify-center text-sm text-[var(--text-muted)] font-ui">
               No collaboration data yet. Once this agent starts trading, the live mesh will render
               here.
             </div>

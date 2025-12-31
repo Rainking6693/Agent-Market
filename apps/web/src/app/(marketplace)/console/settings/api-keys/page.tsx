@@ -78,8 +78,8 @@ export default function ApiKeysPage() {
     <div className="space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-headline text-white">API Keys</h1>
-          <p className="mt-2 text-sm text-slate-400">
+          <h1 className="text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}">API Keys</h1>
+          <p className="mt-2 text-sm text-[var(--text-muted)]">
             Create and manage API keys for programmatic access to the Agent Market
           </p>
         </div>
@@ -131,13 +131,13 @@ export default function ApiKeysPage() {
 
       {isLoading ? (
         <Card>
-          <CardContent className="p-12 text-center text-slate-400">Loading API keys...</CardContent>
+          <CardContent className="p-12 text-center text-[var(--text-muted)]">Loading API keys...</CardContent>
         </Card>
       ) : accounts.length === 0 ? (
         <Card>
           <CardContent className="p-12 text-center">
-            <p className="text-slate-400">No API keys yet</p>
-            <p className="mt-2 text-sm text-slate-400">
+            <p className="text-[var(--text-muted)]">No API keys yet</p>
+            <p className="mt-2 text-sm text-[var(--text-muted)]">
               Create your first API key to get started with programmatic access
             </p>
           </CardContent>
@@ -212,13 +212,13 @@ export default function ApiKeysPage() {
                   )}
                   <div className="grid gap-4 text-sm md:grid-cols-2">
                     <div>
-                      <Label className="text-xs text-slate-400">Scopes</Label>
+                      <Label className="text-xs text-[var(--text-muted)]">Scopes</Label>
                       <p className="mt-1">
                         {account.scopes.length > 0 ? account.scopes.join(', ') : 'No scopes'}
                       </p>
                     </div>
                     <div>
-                      <Label className="text-xs text-slate-400">Created</Label>
+                      <Label className="text-xs text-[var(--text-muted)]">Created</Label>
                       <p className="mt-1">{new Date(account.createdAt).toLocaleDateString()}</p>
                     </div>
                   </div>

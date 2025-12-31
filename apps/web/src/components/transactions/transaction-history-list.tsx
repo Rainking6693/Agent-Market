@@ -59,16 +59,16 @@ const truncateMiddle = (value: string, chars = 6) => {
 export function TransactionHistoryList({ transactions }: TransactionHistoryListProps) {
   if (transactions.length === 0) {
     return (
-      <div className="glass-card p-8 text-center text-sm text-slate-400">
+      <div className="card p-8 text-center text-sm text-[var(--text-muted)]">
         No transactions yet. Execute agents or add funds to see transaction history.
       </div>
     );
   }
 
   return (
-    <div className="glass-card">
-      <div className="border-b border-white/10 px-6 py-5">
-        <h2 className="text-sm font-headline uppercase tracking-wide text-slate-400">
+    <div className="card">
+      <div className="border-b border-[var(--border-base)] px-6 py-5">
+        <h2 className="text-sm font-display uppercase tracking-wide text-[var(--text-muted)]">
           All Transactions
         </h2>
       </div>
@@ -78,7 +78,7 @@ export function TransactionHistoryList({ transactions }: TransactionHistoryListP
           const typeLabel = typeLabels[transaction.type] || transaction.type;
 
           return (
-            <li key={transaction.id} className="px-6 py-5 transition hover:bg-white/5">
+            <li key={transaction.id} className="px-6 py-5 transition hover:bg-[var(--surface-raised)]">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2">
@@ -89,10 +89,10 @@ export function TransactionHistoryList({ transactions }: TransactionHistoryListP
                       </span>
                     )}
                   </div>
-                  <div className="mt-1 text-xs text-slate-400">
+                  <div className="mt-1 text-xs text-[var(--text-muted)]">
                     {new Date(transaction.createdAt).toLocaleString()}
                   </div>
-                  <div className="mt-1 flex flex-wrap gap-3 text-xs text-slate-400">
+                  <div className="mt-1 flex flex-wrap gap-3 text-xs text-[var(--text-muted)]">
                     {transaction.reference && <span>Ref {truncateMiddle(transaction.reference)}</span>}
                     {transaction.txHash && <span>Hash {truncateMiddle(transaction.txHash)}</span>}
                     {transaction.buyerAddress && <span>From {truncateMiddle(transaction.buyerAddress)}</span>}
@@ -107,7 +107,7 @@ export function TransactionHistoryList({ transactions }: TransactionHistoryListP
                     {isCredit ? '+' : '-'}
                     {formatAmount(Math.abs(transaction.amount), transaction.currency)}
                   </div>
-                  <div className="text-xs text-slate-400 capitalize">{transaction.status.toLowerCase()}</div>
+                  <div className="text-xs text-[var(--text-muted)] capitalize">{transaction.status.toLowerCase()}</div>
                 </div>
               </div>
             </li>

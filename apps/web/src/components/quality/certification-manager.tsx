@@ -75,10 +75,10 @@ export function CertificationManager({ agentId, certifications }: CertificationM
   };
 
   return (
-    <div className="glass-card space-y-6 p-6">
+    <div className="card space-y-6 p-6">
       <div>
-        <h2 className="text-lg font-headline text-white">Certification Workflow</h2>
-        <p className="text-sm text-slate-400">
+        <h2 className="text-lg font-display text-white">Certification Workflow</h2>
+        <p className="text-sm text-[var(--text-muted)]">
           Track review cycles and advance agents through the quality gates defined in your
           checklist.
         </p>
@@ -90,17 +90,17 @@ export function CertificationManager({ agentId, certifications }: CertificationM
         </div>
       )}
 
-      <form onSubmit={handleCreate} className="space-y-3 rounded-lg border border-white/10 p-4">
+      <form onSubmit={handleCreate} className="space-y-3 rounded-lg border border-[var(--border-base)] p-4">
         <h3 className="text-sm font-semibold text-white">Create record</h3>
         <input
           placeholder="Checklist ID (optional)"
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
+          className="w-full rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
           value={createChecklistId}
           onChange={(event) => setCreateChecklistId(event.target.value)}
         />
         <textarea
           placeholder="Notes"
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
+          className="w-full rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
           value={createNotes}
           onChange={(event) => setCreateNotes(event.target.value)}
           rows={2}
@@ -114,10 +114,10 @@ export function CertificationManager({ agentId, certifications }: CertificationM
         </button>
       </form>
 
-      <form onSubmit={handleAdvance} className="space-y-3 rounded-lg border border-white/10 p-4">
+      <form onSubmit={handleAdvance} className="space-y-3 rounded-lg border border-[var(--border-base)] p-4">
         <h3 className="text-sm font-semibold text-white">Advance status</h3>
         <select
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
+          className="w-full rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
           value={advanceCertificationId}
           onChange={(event) => setAdvanceCertificationId(event.target.value)}
         >
@@ -129,7 +129,7 @@ export function CertificationManager({ agentId, certifications }: CertificationM
           ))}
         </select>
         <select
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
+          className="w-full rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
           value={advanceStatus}
           onChange={(event) => setAdvanceStatus(event.target.value)}
         >
@@ -141,7 +141,7 @@ export function CertificationManager({ agentId, certifications }: CertificationM
         </select>
         <textarea
           placeholder="Reviewer notes"
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
+          className="w-full rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
           value={statusNotes}
           onChange={(event) => setStatusNotes(event.target.value)}
           rows={2}
@@ -149,28 +149,28 @@ export function CertificationManager({ agentId, certifications }: CertificationM
         <button
           type="submit"
           disabled={isPending}
-          className="glass-button bg-white/5 px-4 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+          className="glass-button bg-[var(--surface-raised)] px-4 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isPending ? 'Updating...' : 'Advance'}
         </button>
       </form>
 
-      <div className="rounded-lg border border-white/10 p-4">
+      <div className="rounded-lg border border-[var(--border-base)] p-4">
         <h3 className="text-sm font-semibold text-white">Recent activity</h3>
-        <ul className="mt-3 space-y-2 text-sm text-slate-400">
+        <ul className="mt-3 space-y-2 text-sm text-[var(--text-muted)]">
           {certifications.slice(0, 4).map((certification) => (
-            <li key={certification.id} className="rounded-lg bg-white/5 p-3">
+            <li key={certification.id} className="rounded-lg bg-[var(--surface-raised)] p-3">
               <div className="flex justify-between text-xs">
                 <span className="font-semibold text-white">{certification.status}</span>
                 <span>{new Date(certification.updatedAt).toLocaleDateString()}</span>
               </div>
               {certification.notes && (
-                <p className="mt-1 text-xs text-slate-400">{certification.notes}</p>
+                <p className="mt-1 text-xs text-[var(--text-muted)]">{certification.notes}</p>
               )}
             </li>
           ))}
           {certifications.length === 0 && (
-            <li className="text-xs text-slate-400">No certification activity yet.</li>
+            <li className="text-xs text-[var(--text-muted)]">No certification activity yet.</li>
           )}
         </ul>
       </div>

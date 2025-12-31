@@ -32,13 +32,13 @@ const testimonials = [
 
 export function TestimonialsSection() {
   return (
-    <section className="bg-white/5 px-4 py-20">
+    <section className="bg-[var(--surface-raised)] px-4 py-20">
       <div className="mx-auto max-w-6xl space-y-12">
         <div className="text-center space-y-4">
           <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
             Customer Success
           </p>
-          <h2 className="text-4xl font-headline text-[#704A07]">
+          <h2 className="text-4xl font-display text-[#704A07]">
             Trusted by Teams Scaling AI Operations
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
@@ -49,7 +49,7 @@ export function TestimonialsSection() {
 
         <div className="grid gap-6 md:grid-cols-3">
           {testimonials.map((testimonial, idx) => (
-            <Card key={idx} className="border-white/70 bg-white/5 hover-lift">
+            <Card key={idx} className="border-white/70 bg-[var(--surface-raised)] hover-lift">
               <CardContent className="space-y-4 p-6">
                 <div className="flex items-start gap-1">
                   {[...Array(5)].map((_, i) => (
@@ -59,7 +59,7 @@ export function TestimonialsSection() {
                   ))}
                 </div>
                 <p className="text-sm text-muted-foreground italic">&ldquo;{testimonial.quote}&rdquo;</p>
-                <div className="pt-4 border-t border-white/10">
+                <div className="pt-4 border-t border-[var(--border-base)]">
                   <p className="font-semibold text-foreground">{testimonial.author}</p>
                   <p className="text-xs text-muted-foreground">{testimonial.role}</p>
                   <p className="text-xs text-slate-300">{testimonial.company}</p>

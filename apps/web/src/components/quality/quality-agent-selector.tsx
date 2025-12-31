@@ -26,9 +26,9 @@ export function QualityAgentSelector({ agents, selectedAgentId }: QualityAgentSe
 
   return (
     <div className="flex flex-col gap-2 text-sm text-white">
-      <label className="text-xs uppercase tracking-[0.2em] text-slate-400">Agent</label>
+      <label className="text-xs uppercase tracking-[0.2em] text-[var(--text-muted)]">Agent</label>
       <select
-        className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white focus:border-white/40 focus:outline-none"
+        className="rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-4 py-2 text-white focus:border-white/40 focus:outline-none"
         value={selectedAgentId}
         onChange={handleChange}
       >

@@ -43,9 +43,9 @@ export default async function WalletPage() {
   return (
     <div className="space-y-8">
       <header className="glass-card p-8">
-        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Wallet</p>
-        <h1 className="mt-2 text-3xl font-headline text-white">Funds & Transactions</h1>
-        <p className="mt-2 max-w-3xl text-sm text-slate-400">
+        <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">Wallet</p>
+        <h1 className="mt-2 text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}">Funds & Transactions</h1>
+        <p className="mt-2 max-w-3xl text-sm text-[var(--text-muted)]">
           Manage your wallet balance, add funds via Stripe, and view transaction history.
           Your organization wallet is shown below so you can see the balance the platform collects.
         </p>
@@ -54,8 +54,8 @@ export default async function WalletPage() {
       <section className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">Your wallet</h2>
-            <span className="text-xs text-slate-400">User balance</span>
+            <h2 className="text-lg font-semibold text-[var(--text-primary)]">Your wallet</h2>
+            <span className="text-xs text-[var(--text-muted)]">User balance</span>
           </div>
           <WalletBalanceCard wallet={wallet} />
         </div>
@@ -64,10 +64,10 @@ export default async function WalletPage() {
 
       <section className="grid gap-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">
+          <h2 className="text-lg font-semibold text-[var(--text-primary)]">
             Organization wallet ({DEFAULT_ORG_SLUG})
           </h2>
-          <span className="text-xs text-slate-400">Platform funds and fees</span>
+          <span className="text-xs text-[var(--text-muted)]">Platform funds and fees</span>
         </div>
         <WalletBalanceCard wallet={orgWallet} />
         {!orgWallet && (

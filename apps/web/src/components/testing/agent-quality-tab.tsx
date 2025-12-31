@@ -101,7 +101,7 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
       case 'QUEUED':
         return <Clock className="h-5 w-5 text-amber-400" />;
       default:
-        return <AlertCircle className="h-5 w-5 text-slate-400" />;
+        return <AlertCircle className="h-5 w-5 text-[var(--text-muted)]" />;
     }
   };
 
@@ -116,21 +116,21 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
       case 'QUEUED':
         return 'text-amber-400';
       default:
-        return 'text-slate-400';
+        return 'text-[var(--text-muted)]';
     }
   };
 
   return (
     <div className="space-y-6">
       {/* Trust Score Hero */}
-      <Card className="border-white/10 bg-gradient-to-br from-white/10 to-white/5">
+      <Card className="border-[var(--border-base)] bg-gradient-to-br from-white/10 to-white/5">
         <CardHeader>
           <CardTitle className="text-2xl">Trust Score</CardTitle>
           <CardDescription>Overall quality rating for {agentName}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-6">
-            <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-white/10 bg-white/5 text-3xl font-bold text-slate-300">
+            <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-[var(--border-base)] bg-[var(--surface-raised)] text-3xl font-bold text-slate-300">
               {trustScore}
             </div>
             <div className="flex-1">
@@ -202,7 +202,7 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
 
       {/* Active Test Runs with Progress */}
       {runs.filter((run) => run.status === 'QUEUED' || run.status === 'RUNNING').length > 0 && (
-        <Card className="border-white/10 bg-gradient-to-br from-white/10 to-white/5">
+        <Card className="border-[var(--border-base)] bg-gradient-to-br from-white/10 to-white/5">
           <CardHeader>
             <CardTitle>Active Test Runs</CardTitle>
             <CardDescription>Tests currently in progress</CardDescription>
@@ -217,10 +217,10 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
                   return (
                     <div
                       key={run.id}
-                      className="rounded-lg border border-white/10 bg-white/5 p-4"
+                      className="rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] p-4"
                     >
                       <div className="mb-2 flex items-center justify-between">
-                        <h4 className="font-semibold text-white font-body">{run.suite.name}</h4>
+                        <h4 className="font-semibold text-white font-ui">{run.suite.name}</h4>
                         <span className={`text-xs font-medium ${getStatusColor(run.status)}`}>
                           {run.status}
                         </span>
@@ -231,7 +231,7 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
                           style={{ width: `${progress}%` }}
                         />
                       </div>
-                      <p className="text-xs text-slate-400 font-body">
+                      <p className="text-xs text-[var(--text-muted)] font-ui">
                         {run.status === 'QUEUED'
                           ? 'Waiting to start...'
                           : run.status === 'RUNNING'
@@ -254,12 +254,12 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="py-8 text-center text-sm text-slate-400 font-body">
+            <div className="py-8 text-center text-sm text-[var(--text-muted)] font-ui">
               Loading test runs...
             </div>
           ) : runs.filter((run) => run.status === 'COMPLETED' || run.status === 'FAILED').length ===
             0 ? (
-            <div className="py-8 text-center text-sm text-slate-400 font-body">
+            <div className="py-8 text-center text-sm text-[var(--text-muted)] font-ui">
               No completed test runs yet. Start a test run to see results here.
             </div>
           ) : (
@@ -269,13 +269,13 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
                 .map((run) => (
                   <div
                     key={run.id}
-                    className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-4"
+                    className="flex items-center justify-between rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] p-4"
                   >
                     <div className="flex items-center gap-4">
                       {getStatusIcon(run.status)}
                       <div>
-                        <h4 className="font-semibold text-white font-body">{run.suite.name}</h4>
-                        <p className="text-xs text-slate-400 capitalize font-body">
+                        <h4 className="font-semibold text-white font-ui">{run.suite.name}</h4>
+                        <p className="text-xs text-[var(--text-muted)] capitalize font-ui">
                           {run.suite.category}
                         </p>
                       </div>
@@ -283,8 +283,8 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
                     <div className="flex items-center gap-4">
                       {run.score !== null && (
                         <div className="text-right">
-                          <p className="text-lg font-bold text-white font-body">Score: {run.score}</p>
-                          <p className="text-xs text-slate-400 font-body">
+                          <p className="text-lg font-bold text-white font-ui">Score: {run.score}</p>
+                          <p className="text-xs text-[var(--text-muted)] font-ui">
                             {new Date(run.createdAt).toLocaleString()}
                           </p>
                         </div>

@@ -40,13 +40,13 @@ export const RunWorkflowButton = ({ workflowId }: RunWorkflowButtonProps) => {
   };
 
   return (
-    <div className="space-y-3 rounded-lg border border-white/10 bg-white/5 p-4">
-      <label className="flex flex-col gap-2 text-xs uppercase tracking-wider text-slate-400">
+    <div className="space-y-3 rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] p-4">
+      <label className="flex flex-col gap-2 text-xs uppercase tracking-wider text-[var(--text-muted)]">
         Initiator User ID
         <input
           value={initiatorId}
           onChange={(event) => setInitiatorId(event.target.value)}
-          className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-mono text-white focus:border-white/40 focus:outline-none"
+          className="rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-xs font-mono text-white focus:border-white/40 focus:outline-none"
         />
       </label>
 

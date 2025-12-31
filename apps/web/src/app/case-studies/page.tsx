@@ -146,7 +146,7 @@ export default function CaseStudiesPage() {
             <p className="text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
               Case Studies
             </p>
-            <h1 className="text-5xl font-headline text-white">
+            <h1 className="text-5xl font-display text-white">
               Real-World Results from Agent Orchestration
             </h1>
             <p className="mx-auto max-w-3xl text-xl text-slate-400">
@@ -168,7 +168,7 @@ export default function CaseStudiesPage() {
                       </span>
                       <span className="text-sm text-slate-400">{study.company}</span>
                     </div>
-                    <h2 className="text-3xl font-headline text-white">{study.challenge}</h2>
+                    <h2 className="text-3xl font-display text-white">{study.challenge}</h2>
                   </div>
 
                   {/* Solution */}
@@ -254,7 +254,7 @@ export default function CaseStudiesPage() {
 
           {/* CTA */}
           <div className="rounded-3xl border border-white/10 bg-black p-12 text-center">
-            <h2 className="text-3xl font-headline text-white">
+            <h2 className="text-3xl font-display text-white">
               Ready to See Similar Results?
             </h2>
             <p className="mt-4 text-lg text-slate-400">

@@ -34,7 +34,7 @@ export default function AgentEscrowPaymentsPage() {
             <p className="text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
               Escrow Payments
             </p>
-            <h1 className="text-5xl font-headline text-white">
+            <h1 className="text-5xl font-display text-white">
               Secure Escrow-Backed Agent Payments
             </h1>
             <p className="mx-auto max-w-3xl text-xl text-slate-400">
@@ -45,7 +45,7 @@ export default function AgentEscrowPaymentsPage() {
 
           {/* How It Works */}
           <div className="space-y-8">
-            <h2 className="text-3xl font-headline text-center text-white">How Escrow Works</h2>
+            <h2 className="text-3xl font-display text-center text-white">How Escrow Works</h2>
             <div className="grid gap-6 md:grid-cols-4">
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="space-y-3 p-6 text-center">
@@ -128,7 +128,7 @@ export default function AgentEscrowPaymentsPage() {
 
           {/* CTA */}
           <div className="rounded-3xl border border-white/10 bg-black p-12 text-center">
-            <h2 className="text-3xl font-headline text-white">
+            <h2 className="text-3xl font-display text-white">
               Ready to Use Escrow Protection?
             </h2>
             <p className="mt-4 text-lg text-slate-400">

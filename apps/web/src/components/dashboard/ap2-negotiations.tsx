@@ -47,14 +47,14 @@ export function Ap2Negotiations({ agentId }: Ap2NegotiationsProps) {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between gap-4">
         <div>
-          <CardTitle className="text-base font-semibold text-white font-body">AP2 negotiations</CardTitle>
-          <p className="text-sm text-slate-400 font-body">Live status of autonomous procurements.</p>
+          <CardTitle className="text-base font-semibold text-[var(--text-primary)] font-display">AP2 negotiations</CardTitle>
+          <p className="text-sm text-[var(--text-secondary)] font-ui">Live status of autonomous procurements.</p>
         </div>
         <Button
           type="button"
           size="icon"
           variant="ghost"
-          className="h-9 w-9 text-slate-400"
+          className="h-9 w-9 text-[var(--text-muted)]"
           onClick={() => query.refetch()}
           disabled={query.isFetching}
         >
@@ -74,38 +74,38 @@ export function Ap2Negotiations({ agentId }: Ap2NegotiationsProps) {
             {query.data.slice(0, 6).map((negotiation) => (
               <article
                 key={negotiation.id}
-                className="rounded-2xl border border-white/10/50 bg-white/5/40 px-4 py-3"
+                className="rounded-2xl border border-[var(--border-base)]/50 bg-[var(--surface-raised)]/40 px-4 py-3"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-white">
+                    <p className="text-sm font-semibold text-[var(--text-primary)] font-ui">
                       {negotiation.requesterAgent?.name ?? 'Unknown'}{' '}
-                      <span className="text-slate-400">&rarr;</span>{' '}
+                      <span className="text-[var(--text-muted)]">&rarr;</span>{' '}
                       {negotiation.responderAgent?.name ?? 'Unknown'}
                     </p>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-[var(--text-muted)] font-ui text-meta-numeric">
                       {negotiation.requestedService ?? 'Custom engagement'} &middot;{' '}
                       {formatDistanceToNow(new Date(negotiation.updatedAt), { addSuffix: true })}
                     </p>
                   </div>
                   <Badge
                     className={cn(
-                      'border-transparent bg-white/10 text-white',
+                      'border-transparent bg-white/10 text-[var(--text-primary)]',
                       statusStyles[negotiation.status],
                     )}
                   >
                     {negotiation.status.toLowerCase()}
                   </Badge>
                 </div>
-                <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-slate-400">
+                <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-[var(--text-muted)] font-ui text-meta-numeric">
                   {negotiation.proposedBudget ? (
                     <span>
-                      Budget: <strong>${negotiation.proposedBudget.toFixed(2)}</strong>
+                      Budget: <strong className="font-mono text-meta-numeric">${negotiation.proposedBudget.toFixed(2)}</strong>
                     </span>
                   ) : null}
                   {negotiation.counter?.price ? (
                     <span>
-                      Counter: <strong>${Number(negotiation.counter.price).toFixed(2)}</strong>
+                      Counter: <strong className="font-mono text-meta-numeric">${Number(negotiation.counter.price).toFixed(2)}</strong>
                     </span>
                   ) : null}
                   {negotiation.transaction?.status ? (
@@ -115,12 +115,12 @@ export function Ap2Negotiations({ agentId }: Ap2NegotiationsProps) {
                   ) : null}
                 </div>
                 {negotiation.verificationStatus ? (
-                  <div className="mt-2 text-xs text-slate-400">
+                  <div className="mt-2 text-xs text-[var(--text-muted)]">
                     Outcome:{' '}
                     <span
                       className={cn(
                         'font-semibold uppercase',
-                        verificationStyles[negotiation.verificationStatus] ?? 'text-slate-400',
+                        verificationStyles[negotiation.verificationStatus] ?? 'text-[var(--text-muted)]',
                       )}
                     >
                       {negotiation.verificationStatus.toLowerCase()}
@@ -131,7 +131,7 @@ export function Ap2Negotiations({ agentId }: Ap2NegotiationsProps) {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-[var(--text-muted)] font-ui">
             No negotiations yet. Launch a service request to populate this feed.
           </p>
         )}

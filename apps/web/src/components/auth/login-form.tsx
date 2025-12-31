@@ -8,7 +8,7 @@ export function LoginForm() {
     <div className="space-y-5">
       <EmailLoginForm />
       <SocialLoginButtons />
-      <p className="text-xs text-center text-slate-400">
+      <p className="text-xs text-center text-[var(--text-muted)]">
         By signing in, you agree to our{' '}
         <a href="/terms" className="text-slate-300 hover:text-white hover:underline font-medium">
           Terms of Service

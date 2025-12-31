@@ -45,8 +45,8 @@ export default function TeamSettingsPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <h1 className="text-3xl font-headline text-white">Team Settings</h1>
-        <p className="text-sm text-slate-400">Manage your team members and invitations</p>
+        <h1 className="text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}">Team Settings</h1>
+        <p className="text-sm text-[var(--text-muted)]">Manage your team members and invitations</p>
       </header>
 
       <Card>
@@ -102,10 +102,10 @@ export default function TeamSettingsPage() {
                     {user.displayName?.charAt(0) || user.email.charAt(0)}
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-white">
+                    <div className="text-sm font-medium text-[var(--text-primary)]">
                       {user.displayName || 'You'}
                     </div>
-                    <div className="text-xs text-slate-400">{user.email}</div>
+                    <div className="text-xs text-[var(--text-muted)]">{user.email}</div>
                   </div>
                 </div>
                 <span className="rounded-full bg-accent/10 px-3 py-1 text-xs font-medium text-accent">
@@ -115,7 +115,7 @@ export default function TeamSettingsPage() {
             )}
 
             <div className="rounded-lg border border-dashed border-white/10 p-6 text-center">
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-[var(--text-muted)]">
                 No other team members yet. Invite colleagues to collaborate on your agent
                 marketplace.
               </p>
@@ -131,7 +131,7 @@ export default function TeamSettingsPage() {
         </CardHeader>
         <CardContent>
           <div className="rounded-lg border border-dashed border-white/10 p-6 text-center">
-            <p className="text-sm text-slate-400">No pending invitations</p>
+            <p className="text-sm text-[var(--text-muted)]">No pending invitations</p>
           </div>
         </CardContent>
       </Card>

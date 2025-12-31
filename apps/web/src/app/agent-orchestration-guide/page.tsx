@@ -129,10 +129,10 @@ export default function GuideOrchesTrationPage() {
             <p className="text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
               Complete Guide
             </p>
-            <h1 className="mt-6 text-5xl font-headline leading-tight text-white lg:text-6xl">
+            <h1 className="mt-6 text-5xl font-display leading-tight text-white lg:text-6xl">
               AI Agent Orchestration: The Complete Guide
             </h1>
-            <p className="mt-6 text-xl font-body text-slate-400">
+            <p className="mt-6 text-xl font-ui text-slate-400">
               Learn how to build, deploy, and scale multi-agent systems effectively. From
               fundamentals to advanced patterns.
             </p>
@@ -144,13 +144,13 @@ export default function GuideOrchesTrationPage() {
           <div className="mx-auto max-w-4xl">
             <Card className="border-white/10 bg-white/90">
               <CardContent className="p-8">
-                <h2 className="mb-6 font-headline text-2xl text-white">Table of Contents</h2>
+                <h2 className="mb-6 font-display text-2xl text-white">Table of Contents</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {tableOfContents.map((item) => (
                     <Link
                       key={item.id}
                       href={`#${item.id}`}
-                      className="font-body text-sm text-slate-400 transition hover:text-white"
+                      className="font-ui text-sm text-slate-400 transition hover:text-white"
                     >
                       → {item.title}
                     </Link>
@@ -164,9 +164,9 @@ export default function GuideOrchesTrationPage() {
         {/* What is Agent Orchestration */}
         <section id="what-is" className="bg-black px-4 py-16">
           <div className="mx-auto max-w-4xl prose prose-lg">
-            <h2 className="font-headline text-4xl text-white">What is Agent Orchestration?</h2>
+            <h2 className="font-display text-4xl text-white">What is Agent Orchestration?</h2>
 
-            <p className="font-body text-slate-400">
+            <p className="font-ui text-slate-400">
               Agent orchestration is the practice of coordinating multiple autonomous AI agents to
               accomplish complex tasks that would be difficult or impossible for a single agent.
               Think of it as the conductor of an orchestra: each musician (agent) has specialized
@@ -174,8 +174,8 @@ export default function GuideOrchesTrationPage() {
               create the final performance.
             </p>
 
-            <h3 className="font-headline text-2xl text-white">Key Characteristics</h3>
-            <ul className="space-y-2 font-body text-slate-400">
+            <h3 className="font-display text-2xl text-white">Key Characteristics</h3>
+            <ul className="space-y-2 font-ui text-slate-400">
               <li>
                 <strong>Autonomy:</strong> Agents make decisions independently within defined
                 parameters. The human sets goals and budgets; agents figure out how to achieve them.
@@ -194,13 +194,13 @@ export default function GuideOrchesTrationPage() {
               </li>
             </ul>
 
-            <p className="font-body text-slate-400">
+            <p className="font-ui text-slate-400">
               In practice, agent orchestration might look like this: Your orchestrator receives a
               request to analyze customer sentiment from 10,000 support tickets. Instead of
               processing them all itself, it:
             </p>
 
-            <ol className="space-y-2 font-body text-slate-400">
+            <ol className="space-y-2 font-ui text-slate-400">
               <li>1. Hires a Data Extraction agent to pull tickets from your CRM</li>
               <li>2. Hires multiple Sentiment Analysis agents to process tickets in parallel</li>
               <li>3. Hires a Visualization agent to create charts and graphs</li>
@@ -208,7 +208,7 @@ export default function GuideOrchesTrationPage() {
               <li>5. Verifies each step&apos;s output and releases escrow payments only on success</li>
             </ol>
 
-            <p className="font-body text-slate-400">
+            <p className="font-ui text-slate-400">
               All of this happens autonomously, with the orchestrator negotiating pricing, managing
               budgets, and ensuring quality—no human intervention required once configured.
             </p>
@@ -218,17 +218,17 @@ export default function GuideOrchesTrationPage() {
         {/* Why Orchestration vs Monolithic */}
         <section id="why-orchestration" className="bg-black px-4 py-16">
           <div className="mx-auto max-w-4xl">
-            <h2 className="mb-8 font-headline text-4xl text-white">
+            <h2 className="mb-8 font-display text-4xl text-white">
               Why Agent-to-Agent vs. Monolithic Agents?
             </h2>
 
             <div className="grid gap-8 lg:grid-cols-2">
               <Card className="border-destructive/20 bg-destructive/5">
                 <CardContent className="space-y-4 p-6">
-                  <p className="font-headline text-lg text-destructive">
+                  <p className="font-display text-lg text-destructive">
                     ❌ Monolithic Agent Approach
                   </p>
-                  <ul className="space-y-2 font-body text-sm text-white">
+                  <ul className="space-y-2 font-ui text-sm text-white">
                     <li>• Single agent tries to do everything</li>
                     <li>• Jack-of-all-trades, master of none</li>
                     <li>• Performance degrades as complexity increases</li>
@@ -241,8 +241,8 @@ export default function GuideOrchesTrationPage() {
 
               <Card className="border-success/20 bg-success/5">
                 <CardContent className="space-y-4 p-6">
-                  <p className="font-headline text-lg text-success">✓ Multi-Agent Orchestration</p>
-                  <ul className="space-y-2 font-body text-sm text-white">
+                  <p className="font-display text-lg text-success">✓ Multi-Agent Orchestration</p>
+                  <ul className="space-y-2 font-ui text-sm text-white">
                     <li>• Specialized agents excel at specific tasks</li>
                     <li>• Best-in-class performance for each capability</li>
                     <li>• Scales horizontally—add more agents for more capacity</li>
@@ -254,7 +254,7 @@ export default function GuideOrchesTrationPage() {
               </Card>
             </div>
 
-            <p className="mt-8 font-body text-lg text-slate-400">
+            <p className="mt-8 font-ui text-lg text-slate-400">
               <strong>Real-world analogy:</strong> Building software with a single developer who
               does design, frontend, backend, DevOps, and QA vs. a team of specialists. The team of
               specialists will always outperform the generalist at scale.
@@ -265,15 +265,15 @@ export default function GuideOrchesTrationPage() {
         {/* Best Practices */}
         <section id="best-practices" className="bg-black px-4 py-16">
           <div className="mx-auto max-w-4xl space-y-8">
-            <h2 className="font-headline text-4xl text-white">
+            <h2 className="font-display text-4xl text-white">
               Best Practices for Budgets & Rules
             </h2>
 
             {bestPractices.map((practice) => (
               <Card key={practice.title} className="border-white/10 bg-white/5">
                 <CardContent className="space-y-4 p-8">
-                  <h3 className="font-headline text-2xl text-white">{practice.title}</h3>
-                  <p className="font-body text-slate-400">{practice.description}</p>
+                  <h3 className="font-display text-2xl text-white">{practice.title}</h3>
+                  <p className="font-ui text-slate-400">{practice.description}</p>
                   {practice.example && (
                     <pre className="overflow-x-auto rounded-lg bg-black/5 p-4 font-mono text-sm text-white">
                       <code>{practice.example}</code>
@@ -288,19 +288,19 @@ export default function GuideOrchesTrationPage() {
         {/* Common Patterns */}
         <section id="patterns" className="bg-black px-4 py-16">
           <div className="mx-auto max-w-4xl space-y-8">
-            <h2 className="font-headline text-4xl text-white">
+            <h2 className="font-display text-4xl text-white">
               Common Orchestration Patterns
             </h2>
 
             {patterns.map((pattern) => (
               <Card key={pattern.title} className="border-white/10 bg-white/5">
                 <CardContent className="space-y-4 p-8">
-                  <h3 className="font-headline text-2xl text-white">{pattern.title}</h3>
-                  <p className="font-body text-slate-400">{pattern.description}</p>
+                  <h3 className="font-display text-2xl text-white">{pattern.title}</h3>
+                  <p className="font-ui text-slate-400">{pattern.description}</p>
                   <div className="rounded-lg bg-white/5 p-4">
                     <p className="font-mono text-sm text-white">{pattern.diagram}</p>
                   </div>
-                  <p className="font-body text-sm text-slate-400">
+                  <p className="font-ui text-sm text-slate-400">
                     <strong>Use cases:</strong> {pattern.useCase}
                   </p>
                 </CardContent>
@@ -312,8 +312,8 @@ export default function GuideOrchesTrationPage() {
         {/* Anti-Patterns */}
         <section id="anti-patterns" className="bg-black px-4 py-16">
           <div className="mx-auto max-w-4xl space-y-8">
-            <h2 className="font-headline text-4xl text-white">Anti-Patterns to Avoid</h2>
-            <p className="font-body text-lg text-slate-400">
+            <h2 className="font-display text-4xl text-white">Anti-Patterns to Avoid</h2>
+            <p className="font-ui text-lg text-slate-400">
               Learn from common mistakes that teams make when first implementing agent
               orchestration:
             </p>
@@ -321,12 +321,12 @@ export default function GuideOrchesTrationPage() {
             {antiPatterns.map((antiPattern) => (
               <Card key={antiPattern.title} className="border-destructive/20 bg-white/5">
                 <CardContent className="space-y-4 p-8">
-                  <h3 className="font-headline text-xl text-white">{antiPattern.title}</h3>
+                  <h3 className="font-display text-xl text-white">{antiPattern.title}</h3>
                   <div className="space-y-2">
-                    <p className="font-body text-sm text-slate-400">
+                    <p className="font-ui text-sm text-slate-400">
                       <strong>Why it&apos;s bad:</strong> {antiPattern.why}
                     </p>
-                    <p className="font-body text-sm text-success">
+                    <p className="font-ui text-sm text-success">
                       <strong>✓ Fix:</strong> {antiPattern.fix}
                     </p>
                   </div>
@@ -339,10 +339,10 @@ export default function GuideOrchesTrationPage() {
         {/* Security & Performance - Placeholder sections */}
         <section id="security" className="bg-black px-4 py-16">
           <div className="mx-auto max-w-4xl">
-            <h2 className="mb-6 font-headline text-4xl text-white">Security Considerations</h2>
+            <h2 className="mb-6 font-display text-4xl text-white">Security Considerations</h2>
             <Card className="border-white/10 bg-white/5">
               <CardContent className="space-y-4 p-8">
-                <ul className="space-y-3 font-body text-slate-400">
+                <ul className="space-y-3 font-ui text-slate-400">
                   <li>
                     <strong>Data Isolation:</strong> Ensure agents cannot access data outside your
                     org boundary. Use private agents or secure API gateways.
@@ -367,12 +367,12 @@ export default function GuideOrchesTrationPage() {
 
         <section id="performance" className="bg-black px-4 py-16">
           <div className="mx-auto max-w-4xl">
-            <h2 className="mb-6 font-headline text-4xl text-white">
+            <h2 className="mb-6 font-display text-4xl text-white">
               Performance Optimization
             </h2>
             <Card className="border-white/10 bg-white/5">
               <CardContent className="space-y-4 p-8">
-                <ul className="space-y-3 font-body text-slate-400">
+                <ul className="space-y-3 font-ui text-slate-400">
                   <li>
                     <strong>Parallel Execution:</strong> Use the Parallel Execution Pattern for
                     independent tasks to minimize latency.
@@ -398,10 +398,10 @@ export default function GuideOrchesTrationPage() {
         {/* CTA */}
         <section className="bg-black px-4 py-20">
           <div className="mx-auto max-w-4xl text-center space-y-8">
-            <h2 className="text-4xl font-headline text-white">
+            <h2 className="text-4xl font-display text-white">
               Ready to Start Orchestrating?
             </h2>
-            <p className="text-lg font-body text-slate-400">
+            <p className="text-lg font-ui text-slate-400">
               Put these principles into practice with Swarm Sync. Start your free trial today.
             </p>
             <div className="flex flex-wrap justify-center gap-4">

@@ -33,7 +33,7 @@ export default function MethodologyPage() {
             <p className="text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
               Methodology
             </p>
-            <h1 className="text-5xl font-headline text-white">
+            <h1 className="text-5xl font-display text-white">
               How We Measure Performance & ROI
             </h1>
             <p className="mx-auto max-w-3xl text-xl text-slate-400">
@@ -44,7 +44,7 @@ export default function MethodologyPage() {
 
           {/* Verification Methodology */}
           <section className="space-y-8">
-            <h2 className="text-3xl font-headline text-white">Outcome Verification</h2>
+            <h2 className="text-3xl font-display text-white">Outcome Verification</h2>
             <div className="grid gap-6 md:grid-cols-2">
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="space-y-4 p-6">
@@ -81,7 +81,7 @@ export default function MethodologyPage() {
 
           {/* Performance Benchmarks */}
           <section className="space-y-8">
-            <h2 className="text-3xl font-headline text-white">Performance Benchmarks</h2>
+            <h2 className="text-3xl font-display text-white">Performance Benchmarks</h2>
             <div className="space-y-6">
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="space-y-4 p-6">
@@ -155,7 +155,7 @@ export default function MethodologyPage() {
 
           {/* ROI Calculation */}
           <section className="space-y-8">
-            <h2 className="text-3xl font-headline text-white">ROI Calculation</h2>
+            <h2 className="text-3xl font-display text-white">ROI Calculation</h2>
             <Card className="border-white/10 bg-white/5">
               <CardContent className="space-y-4 p-6">
                 <h3 className="text-xl font-semibold text-white">Metrics Tracked</h3>
@@ -191,7 +191,7 @@ export default function MethodologyPage() {
 
           {/* Measurement Constraints */}
           <section className="space-y-8">
-            <h2 className="text-3xl font-headline text-white">Measurement Constraints</h2>
+            <h2 className="text-3xl font-display text-white">Measurement Constraints</h2>
             <Card className="border-white/10 bg-white/5">
               <CardContent className="space-y-4 p-6">
                 <p className="text-sm text-slate-400">
@@ -215,7 +215,7 @@ export default function MethodologyPage() {
 
           {/* CTA */}
           <div className="rounded-3xl border border-white/10 bg-black p-12 text-center">
-            <h2 className="text-3xl font-headline text-white">
+            <h2 className="text-3xl font-display text-white">
               Ready to Track Your Own Metrics?
             </h2>
             <p className="mt-4 text-lg text-slate-400">

@@ -80,8 +80,8 @@ export function BudgetControlsCard({ agentId }: BudgetControlsCardProps) {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle className="text-base font-semibold text-white font-body">Budget controls</CardTitle>
-        <p className="text-sm text-slate-400 font-body">
+        <CardTitle className="text-base font-semibold text-[var(--text-primary)] font-display">Budget controls</CardTitle>
+        <p className="text-sm text-[var(--text-secondary)] font-ui">
           Guard rails for this agent&apos;s wallet-auto top ups, per-deal caps, and approval thresholds.
         </p>
       </CardHeader>
@@ -105,7 +105,7 @@ export function BudgetControlsCard({ agentId }: BudgetControlsCardProps) {
                 defaultValue={data.monthlyLimit}
                 onBlur={(event) => handleBlur('monthlyLimit', event.target.value)}
               />
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[var(--text-muted)] font-ui text-meta-numeric">
                 {currencyFormatter.format(data.spentThisPeriod)} spent · {resetCopy}
               </p>
             </div>
@@ -155,10 +155,10 @@ export function BudgetControlsCard({ agentId }: BudgetControlsCardProps) {
               </Select>
             </div>
 
-            <div className="flex items-center justify-between rounded-2xl border border-white/10/50 bg-white/5/40 px-4 py-3">
+            <div className="flex items-center justify-between rounded-2xl border border-[var(--border-base)]/50 bg-[var(--surface-raised)]/40 px-4 py-3">
               <div>
-                <p className="text-sm font-medium text-white">Auto reload credits</p>
-                <p className="text-xs text-slate-400">
+                <p className="text-sm font-medium text-[var(--text-primary)] font-ui">Auto reload credits</p>
+                <p className="text-xs text-[var(--text-muted)] font-ui">
                   Keeps the monthly budget replenished when it drops under 20%.
                 </p>
               </div>
@@ -173,7 +173,7 @@ export function BudgetControlsCard({ agentId }: BudgetControlsCardProps) {
             </div>
 
             {mutation.isPending ? (
-              <p className="text-xs text-slate-400">Saving updates…</p>
+              <p className="text-xs text-[var(--text-muted)]">Saving updates…</p>
             ) : null}
           </>
         )}

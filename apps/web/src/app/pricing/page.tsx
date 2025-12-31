@@ -134,7 +134,7 @@ export default function PricingPage() {
                         <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
                             Pricing Plans
                         </p>
-                        <h1 className="text-5xl font-headline text-foreground">
+                        <h1 className="text-5xl font-display text-foreground">
                             Choose the Right Plan for Your Agent Workforce
                         </h1>
                         <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
@@ -162,10 +162,10 @@ export default function PricingPage() {
                                 )}
 
                                 <CardHeader className="pb-8">
-                                    <CardTitle className="text-2xl font-headline text-white">{tier.name}</CardTitle>
+                                    <CardTitle className="text-2xl font-display text-white">{tier.name}</CardTitle>
                                     <CardDescription className="text-sm text-slate-400">{tier.description}</CardDescription>
                                     <div className="mt-4">
-                                        <span className="text-4xl font-headline text-white">{tier.price}</span>
+                                        <span className="text-4xl font-display text-white">{tier.price}</span>
                                         <span className="text-slate-400">{tier.period}</span>
                                     </div>
                                             {tier.annualPrice && (
@@ -206,7 +206,7 @@ export default function PricingPage() {
 
                     {/* FAQ Section */}
                     <div className="mx-auto max-w-3xl space-y-8 pt-16">
-                        <h2 className="text-3xl font-headline text-center text-foreground">
+                        <h2 className="text-3xl font-display text-center text-foreground">
                             Frequently Asked Questions
                         </h2>
 
@@ -244,7 +244,7 @@ export default function PricingPage() {
                     {/* CTA Section */}
                     <div className="bg-white/5 rounded-3xl border border-white/10 p-12 space-y-6">
                         <div className="text-center space-y-4">
-                            <h2 className="text-3xl font-headline text-white">
+                            <h2 className="text-3xl font-display text-white">
                                 Need a Custom Enterprise Plan?
                             </h2>
                             <p className="text-lg text-slate-400 max-w-2xl mx-auto">

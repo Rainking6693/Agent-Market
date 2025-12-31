@@ -20,20 +20,20 @@ export function BillingDashboard({ agentId }: BillingDashboardProps) {
     <div className="space-y-8">
       {/* Header */}
       <header className="space-y-2">
-        <h1 className="text-4xl font-headline text-white">Billing & Payments</h1>
-        <p className="text-sm text-slate-400">Manage subscriptions, invoices, and payout settings</p>
+        <h1 className="text-4xl font-display text-white">Billing & Payments</h1>
+        <p className="text-sm text-[var(--text-muted)]">Manage subscriptions, invoices, and payout settings</p>
       </header>
 
       {/* Tab Navigation */}
-      <div className="flex gap-3 border-b border-white/10">
+      <div className="flex gap-3 border-b border-[var(--border-base)]">
         {(['overview', 'invoices', 'payouts'] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`pb-3 text-sm font-semibold uppercase tracking-wide transition ${
               activeTab === tab
-                ? 'border-b-2 border-white/10 text-white'
-                : 'text-slate-400 hover:text-white'
+                ? 'border-b-2 border-[var(--border-base)] text-white'
+                : 'text-[var(--text-muted)] hover:text-white'
             }`}
           >
             {tab === 'overview' && 'Subscription & Credits'}
@@ -49,9 +49,9 @@ export function BillingDashboard({ agentId }: BillingDashboardProps) {
       {activeTab === 'payouts' && agentId && <PayoutSettings agentId={agentId} />}
 
       {!agentId && activeTab === 'payouts' && (
-        <Card className="border-white/10 bg-white/5">
+        <Card className="border-[var(--border-base)] bg-[var(--surface-raised)]">
           <CardContent className="p-6 text-center">
-            <p className="text-sm text-slate-400">No agent associated with this account.</p>
+            <p className="text-sm text-[var(--text-muted)]">No agent associated with this account.</p>
           </CardContent>
         </Card>
       )}
@@ -63,27 +63,27 @@ function BillingOverview() {
   return (
     <div className="space-y-6">
       {/* Current Plan */}
-      <Card className="border-white/70 bg-white/5">
+      <Card className="border-white/70 bg-[var(--surface-raised)]">
         <CardHeader>
-          <CardTitle className="font-headline">Current Plan</CardTitle>
+          <CardTitle className="font-display">Current Plan</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-6 md:grid-cols-2">
           <div className="space-y-4">
             <div>
-              <p className="text-xs uppercase tracking-wide text-slate-400">Plan Tier</p>
-              <p className="mt-1 text-2xl font-headline text-white">Growth</p>
-              <p className="text-sm text-slate-400">$99/month</p>
+              <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Plan Tier</p>
+              <p className="mt-1 text-2xl font-display text-white">Growth</p>
+              <p className="text-sm text-[var(--text-muted)]">$99/month</p>
             </div>
             <div>
-              <p className="text-xs uppercase tracking-wide text-slate-400">Renews</p>
+              <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Renews</p>
               <p className="mt-1 text-lg font-semibold text-white">Dec 16, 2025</p>
             </div>
           </div>
           <div className="space-y-4">
             <div>
-              <p className="text-xs uppercase tracking-wide text-slate-400">Monthly Credits</p>
-              <p className="mt-1 text-2xl font-headline text-white">10,000</p>
-              <p className="text-sm text-slate-400">$100 credit value</p>
+              <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Monthly Credits</p>
+              <p className="mt-1 text-2xl font-display text-white">10,000</p>
+              <p className="text-sm text-[var(--text-muted)]">$100 credit value</p>
             </div>
             <Button variant="secondary" className="w-full rounded-full">
               Manage Subscription
@@ -93,15 +93,15 @@ function BillingOverview() {
       </Card>
 
       {/* Credit Usage */}
-      <Card className="border-white/70 bg-white/5">
+      <Card className="border-white/70 bg-[var(--surface-raised)]">
         <CardHeader>
-          <CardTitle className="font-headline">Credit Usage (This Month)</CardTitle>
+          <CardTitle className="font-display">Credit Usage (This Month)</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-semibold text-white">Used: 3,240 / 10,000</span>
-              <span className="text-xs text-slate-400">32% used</span>
+              <span className="text-xs text-[var(--text-muted)]">32% used</span>
             </div>
             <div className="h-3 w-full rounded-full bg-white/10 overflow-hidden">
               <div
@@ -111,16 +111,16 @@ function BillingOverview() {
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-lg bg-white/5 p-4">
-              <p className="text-xs uppercase tracking-wide text-slate-400">Lead Generation</p>
+            <div className="rounded-lg bg-[var(--surface-raised)] p-4">
+              <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Lead Generation</p>
               <p className="mt-2 text-lg font-semibold text-white">1,500 credits</p>
             </div>
-            <div className="rounded-lg bg-white/5 p-4">
-              <p className="text-xs uppercase tracking-wide text-slate-400">Quality Checks</p>
+            <div className="rounded-lg bg-[var(--surface-raised)] p-4">
+              <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Quality Checks</p>
               <p className="mt-2 text-lg font-semibold text-white">1,240 credits</p>
             </div>
-            <div className="rounded-lg bg-white/5 p-4">
-              <p className="text-xs uppercase tracking-wide text-slate-400">Other</p>
+            <div className="rounded-lg bg-[var(--surface-raised)] p-4">
+              <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">Other</p>
               <p className="mt-2 text-lg font-semibold text-white">500 credits</p>
             </div>
           </div>
@@ -128,16 +128,16 @@ function BillingOverview() {
       </Card>
 
       {/* Payment Method */}
-      <Card className="border-white/70 bg-white/5">
+      <Card className="border-white/70 bg-[var(--surface-raised)]">
         <CardHeader>
-          <CardTitle className="font-headline">Payment Method</CardTitle>
+          <CardTitle className="font-display">Payment Method</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center gap-4 rounded-lg border border-white/10 bg-white/5 p-4">
-            <CreditCard className="h-8 w-8 text-slate-400" />
+          <div className="flex items-center gap-4 rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] p-4">
+            <CreditCard className="h-8 w-8 text-[var(--text-muted)]" />
             <div className="flex-1">
               <p className="font-semibold text-white">Visa •••• 4242</p>
-              <p className="text-xs text-slate-400">Expires 12/2026</p>
+              <p className="text-xs text-[var(--text-muted)]">Expires 12/2026</p>
             </div>
             <Button variant="ghost" size="sm">
               Update
@@ -172,20 +172,20 @@ function InvoicesTable() {
   ];
 
   return (
-    <Card className="border-white/70 bg-white/5">
+    <Card className="border-white/70 bg-[var(--surface-raised)]">
       <CardHeader>
-        <CardTitle className="font-headline">Invoice History</CardTitle>
+        <CardTitle className="font-display">Invoice History</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
           {invoices.map((invoice) => (
             <div
               key={invoice.id}
-              className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-4"
+              className="flex items-center justify-between rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] p-4"
             >
               <div className="flex-1">
                 <p className="font-semibold text-white">{invoice.id}</p>
-                <p className="text-xs text-slate-400">{new Date(invoice.date).toLocaleDateString()}</p>
+                <p className="text-xs text-[var(--text-muted)]">{new Date(invoice.date).toLocaleDateString()}</p>
               </div>
               <p className="font-semibold text-white">${invoice.amount.toFixed(2)}</p>
               <span className="ml-4 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">

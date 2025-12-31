@@ -360,9 +360,9 @@ export default function NewAgentForm() {
 
   if (!user) {
     return (
-      <div className="space-y-6 rounded-[3rem] border border-white/10 bg-white/5 p-10 text-white">
-        <h1 className="text-3xl font-headline">Sign in to deploy agents</h1>
-        <p className="text-sm text-slate-400">You need an authenticated session to provision agents.</p>
+      <div className="space-y-6 rounded-[3rem] border border-[var(--border-base)] bg-[var(--surface-raised)] p-10 text-white">
+        <h1 className="text-3xl font-display">Sign in to deploy agents</h1>
+        <p className="text-sm text-[var(--text-muted)]">You need an authenticated session to provision agents.</p>
         <Button onClick={() => router.push('/login')} className="w-fit">
           Go to login
         </Button>
@@ -373,11 +373,11 @@ export default function NewAgentForm() {
   return (
     <div className="space-y-10">
       <header className="space-y-3">
-        <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Agents</p>
+        <p className="text-xs uppercase tracking-[0.35em] text-[var(--text-muted)]">Agents</p>
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-4xl font-headline text-white">Launch a new agent</h1>
-            <p className="mt-2 max-w-2xl text-sm text-slate-400">
+            <h1 className="text-4xl font-display text-white">Launch a new agent</h1>
+            <p className="mt-2 max-w-2xl text-sm text-[var(--text-muted)]">
               Capture the basics, declare pricing and schemas, then lock budgets.
             </p>
           </div>
@@ -387,15 +387,15 @@ export default function NewAgentForm() {
         </div>
       </header>
 
-      <Card className="border-white/10">
+      <Card className="border-[var(--border-base)]">
         <CardHeader>
-          <CardTitle className="text-sm font-headline uppercase tracking-wide text-slate-400">
+          <CardTitle className="text-sm font-display uppercase tracking-wide text-[var(--text-muted)]">
             Import Agent Configuration
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-[var(--text-muted)]">
               Upload a JSON file to pre-fill the form.
             </p>
             <div className="flex items-center gap-4">
@@ -439,7 +439,7 @@ export default function NewAgentForm() {
         </CardContent>
       </Card>
 
-      <ol className="flex flex-wrap gap-4 rounded-[2rem] border border-white/10 bg-slate-200 p-4">
+      <ol className="flex flex-wrap gap-4 rounded-[2rem] border border-[var(--border-base)] bg-slate-200 p-4">
         {steps.map((step, index) => {
           const status = stepActive(index) ? 'active' : stepComplete(index) ? 'done' : 'upcoming';
           return (
@@ -449,7 +449,7 @@ export default function NewAgentForm() {
                 'flex flex-1 min-w-[220px] items-center gap-3 rounded-2xl border px-4 py-3 text-sm transition',
                 status === 'done' && 'border-emerald-200 bg-emerald-50 text-emerald-700',
                 status === 'active' && 'border-primary/40 bg-primary/5 text-primary',
-                status === 'upcoming' && 'border-white/10/50 text-slate-400',
+                status === 'upcoming' && 'border-[var(--border-base)]/50 text-[var(--text-muted)]',
               )}
             >
               <div className="flex h-8 w-8 items-center justify-center rounded-full border border-current text-xs font-semibold">
@@ -500,9 +500,9 @@ export default function NewAgentForm() {
           </CardContent>
         </Card>
       ) : (
-        <Card className="border-white/10">
+        <Card className="border-[var(--border-base)]">
           <CardHeader className="pb-4">
-            <CardTitle className="text-2xl font-headline text-white">
+            <CardTitle className="text-2xl font-display text-white">
               {steps[currentStep].title}
             </CardTitle>
           </CardHeader>
@@ -585,7 +585,7 @@ export default function NewAgentForm() {
                       'rounded-2xl border px-4 py-2 text-sm transition',
                       visibility === option
                         ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-white/10 text-slate-400 hover:text-white',
+                        : 'border-[var(--border-base)] text-[var(--text-muted)] hover:text-white',
                     )}
                   >
                     {option === 'PUBLIC' && 'Public'}
@@ -616,7 +616,7 @@ export default function NewAgentForm() {
                         'rounded-full border px-4 py-2 text-xs uppercase tracking-wide transition',
                         isSelected
                           ? 'border-ink bg-black text-white'
-                          : 'border-white/10 text-slate-400 hover:text-white',
+                          : 'border-[var(--border-base)] text-[var(--text-muted)] hover:text-white',
                       )}
                     >
                       {category}
@@ -638,7 +638,7 @@ export default function NewAgentForm() {
                         'w-full rounded-2xl border px-4 py-3 text-left text-sm',
                         pricingModel === option.value
                           ? 'border-primary bg-primary/10 text-primary'
-                          : 'border-white/10 text-slate-400 hover:text-white',
+                          : 'border-[var(--border-base)] text-[var(--text-muted)] hover:text-white',
                       )}
                     >
                       {option.label}
@@ -679,7 +679,7 @@ export default function NewAgentForm() {
                   id="input-schema"
                   value={inputSchemaText}
                   onChange={(event) => setInputSchemaText(event.target.value)}
-                  className="text-black placeholder:text-slate-500"
+                  className="bg-white text-black placeholder:text-slate-500"
                 />
                 {schemaErrors.input && (
                   <p className="text-xs text-destructive">{schemaErrors.input}</p>
@@ -691,7 +691,7 @@ export default function NewAgentForm() {
                   id="output-schema"
                   value={outputSchemaText}
                   onChange={(event) => setOutputSchemaText(event.target.value)}
-                  className="text-black placeholder:text-slate-500"
+                  className="bg-white text-black placeholder:text-slate-500"
                 />
                 {schemaErrors.output && (
                   <p className="text-xs text-destructive">{schemaErrors.output}</p>

@@ -26,16 +26,16 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 export function WalletTransactionsList({ transactions }: WalletTransactionsListProps) {
   if (transactions.length === 0) {
     return (
-      <div className="glass-card p-8 text-center text-sm text-slate-400">
+      <div className="card p-8 text-center text-sm text-[var(--text-muted)]">
         No transactions yet. Add funds to get started.
       </div>
     );
   }
 
   return (
-    <div className="glass-card">
-      <div className="border-b border-white/10 px-6 py-5">
-        <h2 className="text-sm font-headline uppercase tracking-wide text-slate-400">
+    <div className="card">
+      <div className="border-b border-[var(--border-base)] px-6 py-5">
+        <h2 className="text-sm font-display uppercase tracking-wide text-[var(--text-muted)]">
           Transaction History
         </h2>
       </div>
@@ -44,13 +44,13 @@ export function WalletTransactionsList({ transactions }: WalletTransactionsListP
           const amount = Number.parseFloat(transaction.amount);
           const isCredit = transaction.type === 'CREDIT';
           return (
-            <li key={transaction.id} className="px-6 py-5 transition hover:bg-white/5">
+            <li key={transaction.id} className="px-6 py-5 transition hover:bg-[var(--surface-raised)]">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-sm font-semibold text-white">
                     {isCredit ? 'Fund Added' : 'Payment'}
                   </div>
-                  <div className="text-xs text-slate-400">
+                  <div className="text-xs text-[var(--text-muted)]">
                     {new Date(transaction.createdAt).toLocaleDateString()}
                     {transaction.reference && ` • ${transaction.reference}`}
                   </div>
@@ -68,7 +68,7 @@ export function WalletTransactionsList({ transactions }: WalletTransactionsListP
                     {isCredit ? '+' : '-'}
                     {currencyFormatter.format(Math.abs(amount))}
                   </a>
-                  <div className="text-xs text-slate-400">{transaction.status}</div>
+                  <div className="text-xs text-[var(--text-muted)]">{transaction.status}</div>
                 </div>
               </div>
             </li>

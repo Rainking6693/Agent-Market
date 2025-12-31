@@ -153,10 +153,10 @@ export default function UseCasesPage() {
               <p className="text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
                 Use Cases & Examples
               </p>
-              <h1 className="mt-6 text-5xl font-headline leading-tight text-white lg:text-6xl">
+              <h1 className="mt-6 text-5xl font-display leading-tight text-white lg:text-6xl">
                 Real-World Multi-Agent Workflows
               </h1>
-              <p className="mt-6 text-xl font-body text-slate-400">
+              <p className="mt-6 text-xl font-ui text-slate-400">
                 See how teams across fintech, SaaS, e-commerce, and research use Swarm Sync to scale
                 operations with autonomous agents.
               </p>
@@ -166,15 +166,15 @@ export default function UseCasesPage() {
           {/* Before/After Metrics */}
           <section className="bg-black px-4 py-16">
             <div className="mx-auto max-w-6xl">
-              <h2 className="mb-12 text-center text-3xl font-headline text-white">
+              <h2 className="mb-12 text-center text-3xl font-display text-white">
                 Typical Results Across Industries
               </h2>
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                 {beforeAfterMetrics.map((item) => (
                   <Card key={item.metric} className="border-white/10 bg-white/5 text-center">
                     <CardContent className="space-y-4 p-6">
-                      <p className="font-headline text-lg text-white">{item.metric}</p>
-                      <div className="space-y-2 text-sm font-body text-slate-400">
+                      <p className="font-display text-lg text-white">{item.metric}</p>
+                      <div className="space-y-2 text-sm font-ui text-slate-400">
                         <div>
                           <span className="opacity-60">Before:</span> {item.before}
                         </div>
@@ -205,26 +205,26 @@ export default function UseCasesPage() {
                   <div className="inline-block rounded-full bg-white/10 px-4 py-1 text-sm font-medium text-slate-300">
                     {useCase.industry}
                   </div>
-                  <h2 className="text-4xl font-headline text-white">{useCase.title}</h2>
+                  <h2 className="text-4xl font-display text-white">{useCase.title}</h2>
                 </div>
 
                 {/* Challenge/Solution */}
                 <div className="grid gap-8 lg:grid-cols-2">
                   <Card className="border-destructive/20 bg-destructive/5">
                     <CardContent className="space-y-2 p-6">
-                      <p className="font-headline text-sm uppercase tracking-wide text-destructive">
+                      <p className="font-display text-sm uppercase tracking-wide text-destructive">
                         The Challenge
                       </p>
-                      <p className="font-body text-white">{useCase.challenge}</p>
+                      <p className="font-ui text-white">{useCase.challenge}</p>
                     </CardContent>
                   </Card>
 
                   <Card className="border-success/20 bg-success/5">
                     <CardContent className="space-y-2 p-6">
-                      <p className="font-headline text-sm uppercase tracking-wide text-success">
+                      <p className="font-display text-sm uppercase tracking-wide text-success">
                         The Solution
                       </p>
-                      <p className="font-body text-white">{useCase.solution}</p>
+                      <p className="font-ui text-white">{useCase.solution}</p>
                     </CardContent>
                   </Card>
                 </div>
@@ -232,8 +232,8 @@ export default function UseCasesPage() {
                 {/* Results */}
                 <Card className="border-white/10/20 bg-black">
                   <CardContent className="space-y-4 p-8">
-                    <p className="font-headline text-lg text-white">Results</p>
-                    <ul className="space-y-2 font-body text-slate-300">
+                    <p className="font-display text-lg text-white">Results</p>
+                    <ul className="space-y-2 font-ui text-slate-300">
                       {useCase.results.map((result) => (
                         <li key={result} className="flex items-start gap-2">
                           <span className="text-success">✓</span>
@@ -246,15 +246,15 @@ export default function UseCasesPage() {
 
                 {/* Workflow */}
                 <div className="space-y-4">
-                  <p className="font-headline text-xl text-white">How It Works</p>
+                  <p className="font-display text-xl text-white">How It Works</p>
                   <div className="space-y-3">
                     {useCase.workflow.map((step, stepIdx) => (
                       <Card key={stepIdx} className="border-white/10 bg-white/5">
                         <CardContent className="flex gap-4 p-4">
-                          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-sm font-headline text-slate-300">
+                          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-sm font-display text-slate-300">
                             {stepIdx + 1}
                           </div>
-                          <p className="font-body text-slate-400">{step}</p>
+                          <p className="font-ui text-slate-400">{step}</p>
                         </CardContent>
                       </Card>
                     ))}
@@ -267,10 +267,10 @@ export default function UseCasesPage() {
           {/* CTA */}
           <section className="bg-black px-4 py-20">
             <div className="mx-auto max-w-4xl text-center space-y-8">
-              <h2 className="text-4xl font-headline text-white">
+              <h2 className="text-4xl font-display text-white">
                 Ready to Build Your Agent Workflow?
               </h2>
-              <p className="text-lg font-body text-slate-400">
+              <p className="text-lg font-ui text-slate-400">
                 Start with {TRIAL_LABEL} and see how Swarm Sync can transform your operations with
                 autonomous agents.
               </p>
@@ -282,7 +282,7 @@ export default function UseCasesPage() {
                   <Link href="/platform">Explore Platform</Link>
                 </Button>
               </div>
-              <p className="text-sm font-body text-slate-400">
+              <p className="text-sm font-ui text-slate-400">
                 {CTA_TRIAL_BADGE}
               </p>
             </div>

@@ -115,7 +115,7 @@ export default function ChromeNetworkBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 w-full h-full pointer-events-none"
+      className="chrome-network fixed inset-0 w-full h-full pointer-events-none"
       style={{ zIndex: 0 }}
       aria-hidden="true"
     />

@@ -43,12 +43,12 @@ export function QuickActions() {
 
   return (
     <>
-      <div className="glass-card space-y-4 p-6 text-sm text-white">
+      <div className="card space-y-4 p-6 text-sm">
         <div>
-          <h2 className="text-sm font-headline uppercase tracking-wide text-slate-400 font-body">
+          <h2 className="text-sm uppercase tracking-wide text-[var(--text-muted)] mb-1 font-ui">
             Quick actions
           </h2>
-          <p className="text-xs text-slate-400 font-body">Keep your marketplace humming.</p>
+          <p className="text-xs text-[var(--text-muted)] font-ui">Keep your marketplace humming.</p>
         </div>
         <div className="space-y-3">
           {actions.map((action) => {
@@ -57,10 +57,10 @@ export function QuickActions() {
                 <button
                   key={action.label}
                   onClick={action.onClick}
-                  className="flex w-full items-center justify-between rounded-lg border border-white/10 px-4 py-3 text-left text-white transition hover:border-white/10"
+                  className="flex w-full items-center justify-between rounded-xl border border-[var(--border-base)] bg-[var(--surface-raised)] px-4 py-3 text-left text-[var(--text-primary)] transition hover:border-[var(--border-hover)] hover:bg-[var(--surface-raised)] font-ui"
                 >
-                  <span className="font-body">{action.label}</span>
-                  <span className="text-xs text-slate-400 font-body">→</span>
+                  <span>{action.label}</span>
+                  <span className="text-xs text-[var(--text-muted)]">→</span>
                 </button>
               );
             }
@@ -68,10 +68,10 @@ export function QuickActions() {
               <Link
                 key={action.label}
                 href={action.href!}
-                className="flex items-center justify-between rounded-lg border border-white/10 px-4 py-3 text-white transition hover:border-white/10"
+                className="flex items-center justify-between rounded-xl border border-[var(--border-base)] bg-[var(--surface-raised)] px-4 py-3 text-[var(--text-primary)] transition hover:border-[var(--border-hover)] hover:bg-[var(--surface-raised)] font-ui"
               >
                 <span>{action.label}</span>
-                <span className="text-xs text-slate-400">→</span>
+                <span className="text-xs text-[var(--text-muted)]">→</span>
               </Link>
             );
           })}

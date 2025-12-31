@@ -48,8 +48,8 @@ export function EvaluationConsole({ agentId, evaluations }: EvaluationConsolePro
   return (
     <div className="surface-card space-y-6 p-6">
       <div>
-        <h2 className="text-lg font-headline text-white">Evaluation Runner</h2>
-        <p className="text-sm text-slate-400">
+        <h2 className="text-lg font-display text-white">Evaluation Runner</h2>
+        <p className="text-sm text-[var(--text-muted)]">
           Log manual or automated evaluation outcomes. GitHub Actions can push to the same endpoint
           for fully automated pipelines.
         </p>
@@ -63,7 +63,7 @@ export function EvaluationConsole({ agentId, evaluations }: EvaluationConsolePro
 
       <form onSubmit={handleSubmit} className="space-y-3 surface-card border p-4">
         <div className="grid gap-3 md:grid-cols-2">
-          <label className="text-xs uppercase tracking-wide text-slate-400">
+          <label className="text-xs uppercase tracking-wide text-[var(--text-muted)]">
             Scenario name
             <input
                 className="mt-1 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
@@ -71,10 +71,10 @@ export function EvaluationConsole({ agentId, evaluations }: EvaluationConsolePro
               onChange={(event) => setScenarioName(event.target.value)}
             />
           </label>
-          <label className="text-xs uppercase tracking-wide text-slate-400">
+          <label className="text-xs uppercase tracking-wide text-[var(--text-muted)]">
             Vertical
             <input
-              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
               value={vertical}
               onChange={(event) => setVertical(event.target.value)}
             />
@@ -82,10 +82,10 @@ export function EvaluationConsole({ agentId, evaluations }: EvaluationConsolePro
         </div>
 
         <div className="grid gap-3 md:grid-cols-3">
-          <label className="text-xs uppercase tracking-wide text-slate-400">
+          <label className="text-xs uppercase tracking-wide text-[var(--text-muted)]">
             Outcome
             <select
-              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
               value={passed ? 'passed' : 'failed'}
               onChange={(event) => setPassed(event.target.value === 'passed')}
             >
@@ -93,7 +93,7 @@ export function EvaluationConsole({ agentId, evaluations }: EvaluationConsolePro
               <option value="failed">Failed</option>
                 </select>
               </label>
-          <label className="text-xs uppercase tracking-wide text-slate-400">
+          <label className="text-xs uppercase tracking-wide text-[var(--text-muted)]">
             Latency (ms)
             <input
               type="number"
@@ -103,13 +103,13 @@ export function EvaluationConsole({ agentId, evaluations }: EvaluationConsolePro
               onChange={(event) => setLatencyMs(Number(event.target.value))}
             />
           </label>
-          <label className="text-xs uppercase tracking-wide text-slate-400">
+          <label className="text-xs uppercase tracking-wide text-[var(--text-muted)]">
             Cost ($)
             <input
               type="number"
               min={0}
               step="0.01"
-              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
+              className="mt-1 w-full rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
               value={cost}
               onChange={(event) => setCost(Number(event.target.value))}
             />
@@ -133,14 +133,14 @@ export function EvaluationConsole({ agentId, evaluations }: EvaluationConsolePro
         </button>
       </form>
 
-      <div className="rounded-lg border border-white/10 p-4">
+      <div className="rounded-lg border border-[var(--border-base)] p-4">
         <h3 className="text-sm font-semibold text-white">Recent evaluations</h3>
-        <ul className="mt-3 space-y-2 text-sm text-slate-400">
+        <ul className="mt-3 space-y-2 text-sm text-[var(--text-muted)]">
           {latestEvaluations.length === 0 && (
-            <li className="text-xs text-slate-400">No evaluations captured yet.</li>
+            <li className="text-xs text-[var(--text-muted)]">No evaluations captured yet.</li>
           )}
           {latestEvaluations.map((evaluation) => (
-            <li key={evaluation.id} className="rounded-lg bg-white/5 p-3">
+            <li key={evaluation.id} className="rounded-lg bg-[var(--surface-raised)] p-3">
               <div className="flex justify-between text-xs">
                 <span
                   className={
@@ -151,7 +151,7 @@ export function EvaluationConsole({ agentId, evaluations }: EvaluationConsolePro
                 </span>
                 <span>{new Date(evaluation.createdAt).toLocaleString()}</span>
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[var(--text-muted)]">
                 Scenario: {evaluation.scenario.name} ({evaluation.scenario.vertical ?? 'general'})
               </p>
             </li>

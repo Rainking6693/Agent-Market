@@ -85,10 +85,10 @@ export default function SecurityPage() {
             <p className="text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
               Security & Compliance
             </p>
-            <h1 className="mt-6 text-5xl font-headline leading-tight text-white lg:text-6xl">
+            <h1 className="mt-6 text-5xl font-display leading-tight text-white lg:text-6xl">
               Enterprise-Grade Security for Agent Orchestration
             </h1>
-            <p className="mt-6 text-xl font-body text-slate-400">
+            <p className="mt-6 text-xl font-ui text-slate-400">
               SOC 2-ready security controls, GDPR-aligned practices, with comprehensive protections for
               your agents and data.
             </p>
@@ -102,11 +102,11 @@ export default function SecurityPage() {
               {complianceCertifications.map((cert) => (
                 <Card key={cert.name} className="border-success/20 bg-white/5 text-center">
                   <CardContent className="space-y-2 p-6">
-                    <p className="font-headline text-base text-white">{cert.name}</p>
+                    <p className="font-display text-base text-white">{cert.name}</p>
                     <div className="rounded-full bg-success/10 px-3 py-1 text-xs font-medium text-success">
                       {cert.status}
                     </div>
-                    <p className="font-body text-xs text-slate-400">{cert.year}</p>
+                    <p className="font-ui text-xs text-slate-400">{cert.year}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -118,8 +118,8 @@ export default function SecurityPage() {
         <section className="bg-black px-4 py-20">
           <div className="mx-auto max-w-6xl space-y-12">
             <div className="text-center space-y-4">
-              <h2 className="text-4xl font-headline text-white">Security Features</h2>
-              <p className="mx-auto max-w-3xl text-lg font-body text-slate-400">
+              <h2 className="text-4xl font-display text-white">Security Features</h2>
+              <p className="mx-auto max-w-3xl text-lg font-ui text-slate-400">
                 Comprehensive security controls designed for enterprise AI agent orchestration.
               </p>
             </div>
@@ -129,8 +129,8 @@ export default function SecurityPage() {
                 <Card key={feature.title} className="border-white/10 bg-white/5">
                   <CardContent className="space-y-4 p-8">
                     <div className="text-4xl">{feature.icon}</div>
-                    <h3 className="text-2xl font-headline text-white">{feature.title}</h3>
-                    <p className="font-body text-slate-400">{feature.description}</p>
+                    <h3 className="text-2xl font-display text-white">{feature.title}</h3>
+                    <p className="font-ui text-slate-400">{feature.description}</p>
                     <div className="rounded-lg bg-white/5 p-4">
                       <p className="font-mono text-xs text-slate-400">{feature.technical}</p>
                     </div>
@@ -145,8 +145,8 @@ export default function SecurityPage() {
         <section className="bg-black px-4 py-20">
           <div className="mx-auto max-w-5xl space-y-12">
             <div className="text-center space-y-4">
-              <h2 className="text-4xl font-headline text-white">How Escrow Works</h2>
-              <p className="mx-auto max-w-3xl text-lg font-body text-slate-400">
+              <h2 className="text-4xl font-display text-white">How Escrow Works</h2>
+              <p className="mx-auto max-w-3xl text-lg font-ui text-slate-400">
                 Technical deep dive into our escrow system that protects every transaction.
               </p>
             </div>
@@ -154,12 +154,12 @@ export default function SecurityPage() {
             <div className="space-y-6">
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="flex gap-6 p-8">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-2xl font-headline text-white">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-2xl font-display text-white">
                     1
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-xl font-headline text-white">Transaction Initiated</h3>
-                    <p className="font-body text-slate-400">
+                    <h3 className="text-xl font-display text-white">Transaction Initiated</h3>
+                    <p className="font-ui text-slate-400">
                       Orchestrator agent hires a specialist agent. Agreed price is locked in escrow
                       smart contract. Agent cannot access funds yet.
                     </p>
@@ -169,12 +169,12 @@ export default function SecurityPage() {
 
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="flex gap-6 p-8">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-2xl font-headline text-white">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-2xl font-display text-white">
                     2
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-xl font-headline text-white">Work Executed</h3>
-                    <p className="font-body text-slate-400">
+                    <h3 className="text-xl font-display text-white">Work Executed</h3>
+                    <p className="font-ui text-slate-400">
                       Specialist agent completes the task and submits output. Output is stored
                       immutably with cryptographic hash for verification.
                     </p>
@@ -184,14 +184,14 @@ export default function SecurityPage() {
 
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="flex gap-6 p-8">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-2xl font-headline text-white">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-2xl font-display text-white">
                     3
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-xl font-headline text-white">
+                    <h3 className="text-xl font-display text-white">
                       Automated Verification
                     </h3>
-                    <p className="font-body text-slate-400">
+                    <p className="font-ui text-slate-400">
                       Success criteria defined at hire time are automatically verified (e.g., &quot;500+
                       records with 95% accuracy&quot;). If criteria met, escrow release is triggered.
                     </p>
@@ -201,14 +201,14 @@ export default function SecurityPage() {
 
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="flex gap-6 p-8">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-2xl font-headline text-white">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-2xl font-display text-white">
                     4
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-xl font-headline text-white">
+                    <h3 className="text-xl font-display text-white">
                       Payment Released or Refunded
                     </h3>
-                    <p className="font-body text-slate-400">
+                    <p className="font-ui text-slate-400">
                       If verification passes, escrow releases payment to specialist agent. If
                       verification fails, funds are refunded to orchestrator. Dispute resolution
                       available for edge cases.
@@ -223,15 +223,15 @@ export default function SecurityPage() {
         {/* Incident Response */}
         <section className="bg-black px-4 py-20">
           <div className="mx-auto max-w-4xl space-y-8">
-            <h2 className="text-4xl font-headline text-white">Incident Response</h2>
+            <h2 className="text-4xl font-display text-white">Incident Response</h2>
 
             <Card className="border-white/10 bg-white/5">
               <CardContent className="space-y-6 p-8">
                 <div className="space-y-2">
-                  <h3 className="font-headline text-2xl text-white">
+                  <h3 className="font-display text-2xl text-white">
                     24/7 Security Monitoring
                   </h3>
-                  <p className="font-body text-slate-400">
+                  <p className="font-ui text-slate-400">
                     Our security operations center (SOC) monitors all systems 24/7 for anomalies,
                     intrusions, and potential threats. Automated alerts and human review for
                     critical events.
@@ -239,8 +239,8 @@ export default function SecurityPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="font-headline text-2xl text-white">Breach Notification</h3>
-                  <p className="font-body text-slate-400">
+                  <h3 className="font-display text-2xl text-white">Breach Notification</h3>
+                  <p className="font-ui text-slate-400">
                     In the unlikely event of a data breach, we notify affected customers within 72
                     hours (GDPR requirement). Transparent communication and remediation plan
                     provided.
@@ -248,10 +248,10 @@ export default function SecurityPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="font-headline text-2xl text-white">
+                  <h3 className="font-display text-2xl text-white">
                     Vulnerability Disclosure
                   </h3>
-                  <p className="font-body text-slate-400">
+                  <p className="font-ui text-slate-400">
                     Responsible disclosure program for security researchers. Report vulnerabilities
                     to{' '}
                     <a href="mailto:security@swarmsync.com" className="text-slate-300 underline">
@@ -268,8 +268,8 @@ export default function SecurityPage() {
         {/* CTA */}
         <section className="bg-black px-4 py-20">
           <div className="mx-auto max-w-4xl text-center space-y-8">
-            <h2 className="text-4xl font-headline text-white">Questions About Security?</h2>
-            <p className="text-lg font-body text-slate-400">
+            <h2 className="text-4xl font-display text-white">Questions About Security?</h2>
+            <p className="text-lg font-ui text-slate-400">
               Our security team is here to answer your questions and provide detailed documentation
               for your compliance requirements.
             </p>

@@ -48,19 +48,19 @@ const sections = [
 ];
 
 const navItemClass =
-  'block rounded-lg px-3 py-2 text-sm transition-colors duration-200 sidebar-link';
+  'block rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200 sidebar-link text-[var(--text-secondary)]';
 
 export function Sidebar() {
   const pathname = usePathname();
   const { user } = useAuth();
 
   return (
-    <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-border bg-surface p-6 text-text lg:flex">
+    <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-[var(--border-base)] bg-[var(--surface-base)] p-6 text-[var(--text-primary)] lg:flex z-10">
       <div className="space-y-6">
 
         {sections.map((section) => (
           <Fragment key={section.title}>
-            <div className="sidebar-label">
+            <div className="sidebar-label text-[var(--text-muted)] border-b border-[var(--border-base)] pb-2 mb-2">
               {section.title}
             </div>
             <nav className="space-y-1">
@@ -72,7 +72,7 @@ export function Sidebar() {
                   <Link
                     key={item.label}
                     href={item.href}
-                    className={`${navItemClass} ${isActive ? 'sidebar-link-active' : 'hover:text-text'}`}
+                    className={`${navItemClass} ${isActive ? 'sidebar-link-active text-[var(--accent-primary)] border-l-3 border-[var(--accent-primary)] bg-[rgba(124,92,255,0.08)]' : 'hover:text-[var(--text-primary)] hover:bg-[rgba(255,255,255,0.04)]'}`}
                   >
                     {item.label}
                   </Link>
@@ -86,16 +86,16 @@ export function Sidebar() {
       {user && (
         <Link
           href="/console/settings/profile"
-          className="block rounded-2xl border border-border bg-surface2/70 p-4 transition-colors hover:border-white/20 cursor-pointer"
+          className="block rounded-2xl border border-[var(--border-base)] bg-[var(--surface-raised)] p-4 transition-colors hover:border-[var(--border-hover)] cursor-pointer"
         >
-          <div className="text-[0.65rem] uppercase tracking-wide text-muted">Signed in as</div>
+          <div className="text-[0.65rem] uppercase tracking-wide text-[var(--text-muted)]">Signed in as</div>
           <div className="mt-2 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface2 text-sm font-semibold text-text">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface-raised)] text-sm font-semibold text-[var(--text-primary)]">
               {user.displayName?.charAt(0) || user.email.charAt(0)}
             </div>
             <div>
-              <div className="text-sm font-semibold text-text">{user.displayName || 'User'}</div>
-              <div className="text-xs text-text2">{user.email}</div>
+              <div className="text-sm font-semibold text-[var(--text-primary)]">{user.displayName || 'User'}</div>
+              <div className="text-xs text-[var(--text-secondary)]">{user.email}</div>
             </div>
           </div>
         </Link>

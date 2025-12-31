@@ -12,16 +12,20 @@
   --bg-base: #060712;
   --surface-base: #0B0E1C;
   --surface-raised: #111524;
+  --surface-ink: #05060E;
   --text-primary: #EDEFF7;
   --text-secondary: #B7BED3;
   --text-muted: #8B93AA;
+  --text2: 210, 212, 225;
   --accent-primary: #7C5CFF;
+  --accent: 124, 92, 255;
   --border-base: rgba(180, 190, 255, 0.12);
-  --border-hover: rgba(180, 190, 255, 0.18);
+  --border-hover: rgba(180, 190, 255, 0.24);
+  --muted: 220, 227, 255;
   
   /* Shadows */
-  --shadow-panel: 0 4px 12px rgba(0, 0, 0, 0.2);
-  --shadow-focus: 0 0 0 2px rgba(124, 92, 255, 0.3);
+  --shadow-panel: 0 10px 30px rgba(0, 0, 0, 0.25);
+  --shadow-focus: 0 0 0 3px rgba(124, 92, 255, 0.35);
   
   /* Legacy Tailwind compatibility */
   --background: var(--bg-base);
@@ -48,7 +52,7 @@ body {
     background: var(--bg-base);
     color: var(--text-primary);
     overflow-x: hidden;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--font-ui), 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 16px;
     font-weight: 400;
     line-height: 1.5;
@@ -108,6 +112,33 @@ body {
     line-height: 1.4;
     font-variant-numeric: tabular-nums;
     color: var(--text-muted);
+  }
+  
+  /* Typography utility classes */
+  .font-display {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  
+  .font-ui {
+    font-family: 'Inter', sans-serif;
+  }
+  
+  /* Meta text utility - for timestamps, prices, etc. */
+  .text-meta-numeric {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-muted);
+  }
+  
+  /* Override font-headline and font-body utilities */
+  .font-headline {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  
+  .font-body {
+    font-family: 'Inter', sans-serif;
   }
 
   /* Cards / Panels */
@@ -256,13 +287,13 @@ body {
 
   /* Links */
   a {
-    color: var(--accent-primary);
+    color: var(--text-secondary);
     transition: color 0.2s ease;
   }
   
   a:hover, a:focus-visible {
-    color: var(--accent-primary);
-    opacity: 0.9;
+    color: var(--text-primary);
+    opacity: 0.95;
   }
   
   /* Grid Layouts */
@@ -277,8 +308,8 @@ body {
       align-items: center;
       justify-content: space-between;
       padding: 0.75rem 2rem;
-      background: hsl(var(--surface2));
-      border-bottom: 1px solid hsla(var(--border), 0.4);
+      background: var(--surface-ink);
+      border-bottom: 1px solid rgba(var(--text2), 0.16);
     }
 
     .nav-banner__logo {
@@ -306,17 +337,17 @@ body {
     }
 
     .nav-banner__links a {
-      color: rgba(255, 255, 255, 0.8);
+      color: var(--text-secondary);
       transition: color 0.3s ease, transform 0.2s ease;
     }
 
     .nav-banner__links a:hover {
-      color: hsl(var(--accent));
+      color: rgb(var(--accent));
       transform: translateY(-1px);
     }
 
     .nav-button {
-      background: linear-gradient(120deg, #6F7BFF, #4338CA);
+      background: linear-gradient(120deg, rgba(var(--accent), 0.9), rgba(67, 56, 202, 0.95));
       color: #fdfaff;
       padding: 0.5rem 1.45rem;
       border-radius: 999px;
@@ -727,7 +758,7 @@ body {
   
   .hero::before, .marketing-page::before {
     content: '';
-    position: absolute;
+    position: fixed;
     inset: 0;
     background: radial-gradient(circle at center, transparent 0%, rgba(6, 7, 18, 0.8) 100%);
     z-index: 1;
@@ -739,6 +770,14 @@ body {
     z-index: 2;
   }
   
+  /* Ensure background components are behind vignette */
+  .hero .depth-orbs,
+  .hero canvas,
+  .marketing-page .depth-orbs,
+  .marketing-page canvas {
+    z-index: 0;
+  }
+  
   /* App pages - Muted overlay for console feel */
   .app-page, .dashboard, .console-page {
     position: relative;
@@ -746,7 +785,7 @@ body {
   
   .app-page::before, .dashboard::before, .console-page::before {
     content: '';
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -766,6 +805,23 @@ body {
   .dashboard .depth-orbs,
   .console-page .depth-orbs {
     opacity: 0.3;
+  }
+  
+  /* Reduce ChromeNetworkBackground opacity for app pages */
+  .app-page canvas,
+  .dashboard canvas,
+  .console-page canvas {
+    opacity: 0.3;
+  }
+  
+  /* Ensure background components are behind overlay */
+  .app-page .depth-orbs,
+  .app-page canvas,
+  .dashboard .depth-orbs,
+  .dashboard canvas,
+  .console-page .depth-orbs,
+  .console-page canvas {
+    z-index: 0;
   }
   
   /* Dashboard specific */
@@ -881,5 +937,11 @@ body {
   
   .hero-nav a:hover, .hero-nav a.active {
     color: var(--accent-primary);
+  }
+  
+  /* Optional Background Toggle */
+  .no-background .depth-orbs,
+  .no-background .chrome-network {
+    display: none;
   }
 }

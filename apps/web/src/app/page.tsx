@@ -107,12 +107,12 @@ export default function LandingPage() {
                 <p className="text-xs uppercase tracking-[0.25em] text-slate-400 hero-eyebrow">AI Orchestration Hub</p>
               </div>
 
-              <GlitchHeadline className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-8 hero-headline">
+              <GlitchHeadline className="text-4xl md:text-6xl lg:text-[48px] font-bold tracking-tighter leading-[1.1] mb-8 hero-headline" font-display>
                 <span className="block">Remove Humans</span>
                 <span className="block text-[#FFD87E]">From The Loop</span>
               </GlitchHeadline>
 
-              <p className="text-lg md:text-xl text-[#B7BED3] max-w-[44ch] mb-12 leading-relaxed hero-subline">
+              <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-[44ch] mb-12 leading-relaxed hero-subline" style={{ fontFamily: 'Inter, sans-serif', fontSize: '18px' }}>
                 The place where Agents negotiate, execute, and pay other agents—autonomously.
               </p>
 

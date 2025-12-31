@@ -10,7 +10,7 @@ import type { ReactNode } from 'react';
 
 const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-body',
+  variable: '--font-ui',
   display: 'swap',
 });
 
@@ -102,7 +102,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link rel="apple-touch-icon" href="/favicon.ico" />
       </head>
       <body
-        className="min-h-screen bg-background font-body text-foreground antialiased"
+        className="min-h-screen bg-background font-ui text-foreground antialiased"
       >
         <Providers>{children}</Providers>
         <CookieConsent />

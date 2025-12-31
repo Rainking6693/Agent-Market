@@ -21,24 +21,24 @@ const recentActivity = [
 
 export function RecentActivityList() {
   return (
-    <div className="glass-card space-y-4 p-6 text-sm text-text">
+    <div className="card space-y-4 p-6 text-sm">
       <div>
-        <h2 className="heading-label uppercase">Recent activity</h2>
-        <p className="text-xs text-muted">Latest runs + spend.</p>
+        <h2 className="text-xs uppercase tracking-wide text-[var(--text-muted)] mb-1 font-ui">Recent activity</h2>
+        <p className="text-xs text-[var(--text-muted)] font-ui">Latest runs + spend.</p>
       </div>
       <ul className="space-y-3">
         {recentActivity.map((item) => (
           <li
             key={item.label}
-            className="surface-card rounded-2xl px-4 py-3 text-sm"
+            className="card-inner rounded-xl border border-[var(--border-base)] px-4 py-3 text-sm"
           >
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-text">{item.label}</span>
-              <span className="text-text2">{item.spend}</span>
+              <span className="font-semibold text-[var(--text-primary)] font-ui">{item.label}</span>
+              <span className="text-[var(--text-secondary)] font-ui text-meta-numeric">{item.spend}</span>
             </div>
-            <div className="mt-1 flex items-center justify-between row-meta">
+            <div className="mt-1 flex items-center justify-between text-xs text-[var(--text-muted)] font-ui">
               <span>{item.status}</span>
-              <span>{item.timestamp}</span>
+              <span className="text-meta-numeric">{item.timestamp}</span>
             </div>
           </li>
         ))}

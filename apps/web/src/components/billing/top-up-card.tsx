@@ -45,11 +45,11 @@ export function TopUpCard() {
   };
 
   return (
-    <div className="glass-card space-y-4 p-6">
+    <div className="card space-y-4 p-6">
       <div>
-        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Credit top-up</p>
+        <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">Credit top-up</p>
         <h3 className="text-2xl font-semibold text-white">Boost your wallet</h3>
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-[var(--text-muted)]">
           Create a one-time checkout to add funds to your organization wallet.
         </p>
       </div>

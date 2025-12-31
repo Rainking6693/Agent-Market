@@ -101,43 +101,43 @@ export const WorkflowBuilder = () => {
     <div className="space-y-8">
       {/* Header */}
       <header className="space-y-2">
-        <h2 className="text-4xl font-headline text-white">Create Workflow</h2>
-        <p className="text-sm text-slate-400">
+        <h2 className="text-4xl font-display text-white">Create Workflow</h2>
+        <p className="text-sm text-[var(--text-muted)]">
           Build multi-agent workflows by connecting agents in sequence or parallel. Set budgets,
           define handoffs, and test execution.
         </p>
       </header>
 
       {/* Main Configuration */}
-      <Card className="border-white/70 bg-white/5">
+      <Card className="border-white/70 bg-[var(--surface-raised)]">
         <CardHeader>
-          <CardTitle className="font-headline">Workflow Details</CardTitle>
+          <CardTitle className="font-display">Workflow Details</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-6 md:grid-cols-2">
           <div>
-            <label className="block text-xs uppercase tracking-wide text-slate-400 mb-2">
+            <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-2">
               Creator ID
             </label>
             <input
               value={creatorId}
               onChange={(event) => setCreatorId(event.target.value)}
               placeholder="UUID of the workflow owner"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400/50 focus:border-white/40 focus:outline-none"
+              className="w-full rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white placeholder:text-[var(--text-muted)]/50 focus:border-white/40 focus:outline-none"
             />
           </div>
           <div>
-            <label className="block text-xs uppercase tracking-wide text-slate-400 mb-2">
+            <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-2">
               Workflow Name
             </label>
             <input
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder="e.g., Research → Analysis → Archive"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400/50 focus:border-white/40 focus:outline-none"
+              className="w-full rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white placeholder:text-[var(--text-muted)]/50 focus:border-white/40 focus:outline-none"
             />
           </div>
           <div>
-            <label className="block text-xs uppercase tracking-wide text-slate-400 mb-2">
+            <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-2">
               Total Budget (credits)
             </label>
             <input
@@ -145,11 +145,11 @@ export const WorkflowBuilder = () => {
               value={budget}
               onChange={(event) => setBudget(Number(event.target.value))}
               min={1}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
+              className="w-full rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-white/40 focus:outline-none"
             />
           </div>
           <div className="md:col-span-2">
-            <label className="block text-xs uppercase tracking-wide text-slate-400 mb-2">
+            <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-2">
               Description
             </label>
             <textarea
@@ -157,16 +157,16 @@ export const WorkflowBuilder = () => {
               onChange={(event) => setDescription(event.target.value)}
               rows={3}
               placeholder="What is this workflow designed to do?"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-400/50 focus:border-white/40 focus:outline-none"
+              className="w-full rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 text-sm text-white placeholder:text-[var(--text-muted)]/50 focus:border-white/40 focus:outline-none"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Workflow Steps Builder */}
-      <Card className="border-white/70 bg-white/5">
+      <Card className="border-white/70 bg-[var(--surface-raised)]">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="font-headline">Workflow Steps</CardTitle>
+          <CardTitle className="font-display">Workflow Steps</CardTitle>
           <Button size="sm" onClick={handleAddStep} variant="secondary">
             <Plus className="h-4 w-4" />
             Add Step
@@ -174,35 +174,35 @@ export const WorkflowBuilder = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           {parsedSteps.length === 0 ? (
-            <p className="text-sm text-slate-400 italic">No steps yet. Click &quot;Add Step&quot; to start building.</p>
+            <p className="text-sm text-[var(--text-muted)] italic">No steps yet. Click &quot;Add Step&quot; to start building.</p>
           ) : (
             <div className="space-y-3">
               {parsedSteps.map((step, index) => (
-                <div key={index} className="flex items-end gap-3 rounded-lg border border-white/10 bg-white/5 p-4">
+                <div key={index} className="flex items-end gap-3 rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] p-4">
                   <div className="flex-1">
-                    <label className="block text-xs uppercase tracking-wide text-slate-400 mb-1">
+                    <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-1">
                       Agent ID
                     </label>
                     <input
                       value={step.agentId}
                       onChange={(e) => handleUpdateStep(index, 'agentId', e.target.value)}
                       placeholder="e.g., agent_research_001"
-                      className="w-full rounded border border-white/10 bg-white px-2 py-1 text-xs text-white placeholder:text-slate-400/50"
+                      className="w-full rounded border border-[var(--border-base)] bg-white px-2 py-1 text-xs text-white placeholder:text-[var(--text-muted)]/50"
                     />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs uppercase tracking-wide text-slate-400 mb-1">
+                    <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-1">
                       Job Reference
                     </label>
                     <input
                       value={step.jobReference}
                       onChange={(e) => handleUpdateStep(index, 'jobReference', e.target.value)}
                       placeholder="e.g., research"
-                      className="w-full rounded border border-white/10 bg-white px-2 py-1 text-xs text-white placeholder:text-slate-400/50"
+                      className="w-full rounded border border-[var(--border-base)] bg-white px-2 py-1 text-xs text-white placeholder:text-[var(--text-muted)]/50"
                     />
                   </div>
                   <div className="w-24">
-                    <label className="block text-xs uppercase tracking-wide text-slate-400 mb-1">
+                    <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-1">
                       Budget
                     </label>
                     <input
@@ -210,7 +210,7 @@ export const WorkflowBuilder = () => {
                       value={step.budget}
                       onChange={(e) => handleUpdateStep(index, 'budget', e.target.value)}
                       min={0}
-                      className="w-full rounded border border-white/10 bg-white px-2 py-1 text-xs text-white"
+                      className="w-full rounded border border-[var(--border-base)] bg-white px-2 py-1 text-xs text-white"
                     />
                   </div>
                   <Button
@@ -229,19 +229,19 @@ export const WorkflowBuilder = () => {
       </Card>
 
       {/* JSON Editor (Advanced) */}
-      <Card className="border-white/70 bg-white/5">
+      <Card className="border-white/70 bg-[var(--surface-raised)]">
         <CardHeader>
-          <CardTitle className="font-headline">Advanced: Raw JSON</CardTitle>
+          <CardTitle className="font-display">Advanced: Raw JSON</CardTitle>
         </CardHeader>
         <CardContent>
-          <label className="block text-xs uppercase tracking-wide text-slate-400 mb-2">
+          <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-2">
             Steps (JSON Array)
           </label>
           <textarea
             value={steps}
             onChange={(event) => setSteps(event.target.value)}
             rows={6}
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-white/40 focus:outline-none"
+            className="w-full rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 font-mono text-xs text-white focus:border-white/40 focus:outline-none"
           />
         </CardContent>
       </Card>

@@ -12,7 +12,7 @@ export function RegisterForm({ selectedPlan }: RegisterFormProps) {
     <div className="space-y-5">
       <EmailRegisterForm selectedPlan={selectedPlan} />
       <SocialLoginButtons />
-      <p className="text-xs text-center text-slate-400">
+      <p className="text-xs text-center text-[var(--text-muted)]">
         By creating an account, you agree to our{' '}
         <a href="/terms" className="text-slate-300 hover:text-white hover:underline font-medium">
           Terms of Service

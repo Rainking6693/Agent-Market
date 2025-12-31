@@ -41,18 +41,18 @@ export function A2AOperationsPanel({ agents }: A2AOperationsPanelProps) {
 
   return (
     <section className="space-y-6">
-      <Card className="glass-card p-6">
+      <Card className="card p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Agent mesh</p>
-            <h2 className="mt-1 text-2xl font-headline text-white">Autonomous purchasing layer</h2>
-            <p className="text-sm text-slate-400">
+            <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)] font-ui">Agent mesh</p>
+            <h2 className="mt-1 text-2xl font-semibold text-[var(--text-primary)] font-display">Autonomous purchasing layer</h2>
+            <p className="text-sm text-[var(--text-secondary)] font-ui">
               Track real-time deals, network topology, and enforced budgets for the selected agent.
             </p>
           </div>
           <div className="w-full max-w-xs">
             <Select value={focusAgent.id} onValueChange={setSelectedAgentId}>
-              <SelectTrigger className="border-white/10 bg-white/5 text-left text-sm text-white focus:border-white/40">
+              <SelectTrigger className="border-[var(--border-base)] bg-[var(--surface-raised)] text-left text-sm text-[var(--text-primary)] focus:border-[var(--border-hover)] focus:ring-2 focus:ring-[var(--shadow-focus)]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

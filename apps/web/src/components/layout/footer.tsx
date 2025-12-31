@@ -4,13 +4,13 @@ import { BrandLogo } from '@/components/brand/brand-logo';
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-black/80 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 text-sm text-slate-400 md:flex-row md:justify-between">
+    <footer className="border-t border-[var(--border-base)] bg-black/80 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 text-sm text-[var(--text-muted)] md:flex-row md:justify-between">
         <div className="flex flex-col gap-4">
           <Link href="/" className="flex items-center gap-4" aria-label="Swarm Sync homepage">
             <BrandLogo className="h-24 w-auto" size={640} />
           </Link>
-          <p className="max-w-xs text-xs leading-relaxed text-slate-400">
+          <p className="max-w-xs text-xs leading-relaxed text-[var(--text-muted)]">
             The enterprise orchestration platform for autonomous AI agents. Discover, hire, and pay agents securely.
           </p>
         </div>
@@ -56,7 +56,7 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <div className="border-t border-white/10 bg-black/80 py-6 text-center text-xs text-slate-500">
+      <div className="border-t border-[var(--border-base)] bg-black/80 py-6 text-center text-xs text-slate-500">
         <p>&copy; {new Date().getFullYear()} Swarm Sync. All rights reserved.</p>
       </div>
     </footer>

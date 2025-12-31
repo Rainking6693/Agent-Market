@@ -156,17 +156,17 @@ export function TestWizardModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="relative w-full max-w-5xl max-h-[90vh] overflow-hidden rounded-2xl glass-card border border-white/10 p-6 shadow-2xl">
+      <div className="relative w-full max-w-5xl max-h-[90vh] overflow-hidden rounded-2xl card border border-[var(--border-base)] p-6 shadow-2xl">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-full p-2 text-slate-400 transition hover:bg-white/5"
+          className="absolute right-4 top-4 rounded-full p-2 text-[var(--text-muted)] transition hover:bg-[var(--surface-raised)]"
         >
           <X className="h-5 w-5" />
         </button>
 
         <div className="mb-6">
-          <h2 className="text-2xl font-headline text-white">Test & Evaluate Agents</h2>
-          <p className="mt-2 text-sm text-slate-400">Run quality tests on your agents</p>
+          <h2 className="text-2xl font-display text-white">Test & Evaluate Agents</h2>
+          <p className="mt-2 text-sm text-[var(--text-muted)]">Run quality tests on your agents</p>
         </div>
 
         <div className="mb-6 flex items-center gap-4">
@@ -174,8 +174,8 @@ export function TestWizardModal({
             <div key={s} className="flex items-center gap-2">
               <div
                 className={`flex h-8 w-8 items-center justify-center rounded-full border-2 ${step >= s
-                  ? 'border-white/10 bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] text-carrara'
-                  : 'border-white/10 text-slate-400'
+                  ? 'border-[var(--border-base)] bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] text-carrara'
+                  : 'border-[var(--border-base)] text-[var(--text-muted)]'
                   }`}
               >
                 {s}
@@ -197,11 +197,11 @@ export function TestWizardModal({
           {step === 1 && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-white">Select Agents</h3>
-              <p className="text-sm text-slate-400">Choose which agents to test</p>
+              <p className="text-sm text-[var(--text-muted)]">Choose which agents to test</p>
               {isLoading ? (
-                <div className="py-8 text-center text-sm text-slate-400">Loading agents...</div>
+                <div className="py-8 text-center text-sm text-[var(--text-muted)]">Loading agents...</div>
               ) : agents.length === 0 ? (
-                <div className="py-8 text-center text-sm text-slate-400">
+                <div className="py-8 text-center text-sm text-[var(--text-muted)]">
                   No agents available. Create an agent first.
                 </div>
               ) : (
@@ -210,8 +210,8 @@ export function TestWizardModal({
                     <Card
                       key={agent.id}
                       className={`cursor-pointer transition ${selectedAgents.includes(agent.id)
-                        ? 'border-white/10 bg-white/5'
-                        : 'border-white/10 hover:border-white/10'
+                        ? 'border-[var(--border-base)] bg-[var(--surface-raised)]'
+                        : 'border-[var(--border-base)] hover:border-[var(--border-base)]'
                         }`}
                       onClick={() => {
                         setSelectedAgents((prev) =>
@@ -225,7 +225,7 @@ export function TestWizardModal({
                         <div className="flex items-center justify-between">
                           <div>
                             <h4 className="font-semibold text-white">{agent.name}</h4>
-                            <p className="text-xs text-slate-400">{agent.slug}</p>
+                            <p className="text-xs text-[var(--text-muted)]">{agent.slug}</p>
                           </div>
                           {selectedAgents.includes(agent.id) && (
                             <div className="h-5 w-5 rounded-full bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc]" />
@@ -244,14 +244,14 @@ export function TestWizardModal({
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-semibold text-white">Select Tests</h3>
-                  <p className="text-sm text-slate-400">Choose entire suites or specific tests</p>
+                  <p className="text-sm text-[var(--text-muted)]">Choose entire suites or specific tests</p>
                 </div>
-                <div className="flex rounded-lg border border-white/10 bg-white/5 p-1">
+                <div className="flex rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] p-1">
                   <button
                     onClick={() => setMode('suite')}
                     className={`rounded-md px-3 py-1 text-sm font-medium transition ${mode === 'suite'
-                      ? 'bg-white/5 text-white shadow-sm'
-                      : 'text-slate-400 hover:text-white'
+                      ? 'bg-[var(--surface-raised)] text-white shadow-sm'
+                      : 'text-[var(--text-muted)] hover:text-white'
                       }`}
                   >
                     Test Suites
@@ -259,8 +259,8 @@ export function TestWizardModal({
                   <button
                     onClick={() => setMode('individual')}
                     className={`rounded-md px-3 py-1 text-sm font-medium transition ${mode === 'individual'
-                      ? 'bg-white/5 text-white shadow-sm'
-                      : 'text-slate-400 hover:text-white'
+                      ? 'bg-[var(--surface-raised)] text-white shadow-sm'
+                      : 'text-[var(--text-muted)] hover:text-white'
                       }`}
                   >
                     Individual Tests
@@ -270,17 +270,17 @@ export function TestWizardModal({
 
               {mode === 'suite' ? (
                 isLoading ? (
-                  <div className="py-8 text-center text-sm text-slate-400">Loading test suites...</div>
+                  <div className="py-8 text-center text-sm text-[var(--text-muted)]">Loading test suites...</div>
                 ) : suites.length === 0 ? (
-                  <div className="py-8 text-center text-sm text-slate-400">No test suites available.</div>
+                  <div className="py-8 text-center text-sm text-[var(--text-muted)]">No test suites available.</div>
                 ) : (
                   <div className="grid max-h-[40vh] gap-3 overflow-y-auto pr-1 md:grid-cols-2">
                     {suites.map((suite) => (
                       <Card
                         key={suite.id}
                         className={`cursor-pointer transition ${selectedSuites.includes(suite.id)
-                          ? 'border-white/10 bg-white/5'
-                          : 'border-white/10 hover:border-white/10'
+                          ? 'border-[var(--border-base)] bg-[var(--surface-raised)]'
+                          : 'border-[var(--border-base)] hover:border-[var(--border-base)]'
                           }`}
                         onClick={() => {
                           setSelectedSuites((prev) =>
@@ -307,7 +307,7 @@ export function TestWizardModal({
                         </CardHeader>
                         <CardContent className="p-4 pt-2">
                           <CardDescription className="text-xs">{suite.description}</CardDescription>
-                          <div className="mt-3 flex items-center gap-4 text-xs text-slate-400">
+                          <div className="mt-3 flex items-center gap-4 text-xs text-[var(--text-muted)]">
                             <span>~{Math.round(suite.estimatedDurationSec / 60)} min</span>
                             <span>~${suite.approximateCostUsd.toFixed(2)}</span>
                             <span className="capitalize">{suite.category}</span>
@@ -320,17 +320,17 @@ export function TestWizardModal({
               ) : (
                 // Individual Tests View
                 isLoading ? (
-                  <div className="py-8 text-center text-sm text-slate-400">Loading tests...</div>
+                  <div className="py-8 text-center text-sm text-[var(--text-muted)]">Loading tests...</div>
                 ) : !individualTests || individualTests.length === 0 ? (
-                  <div className="py-8 text-center text-sm text-slate-400">No individual tests available.</div>
+                  <div className="py-8 text-center text-sm text-[var(--text-muted)]">No individual tests available.</div>
                 ) : (
                   <div className="grid max-h-[40vh] gap-3 overflow-y-auto pr-1 md:grid-cols-2">
                     {individualTests.map((test) => (
                       <Card
                         key={test.id}
                         className={`cursor-pointer transition ${selectedIndividualTests.includes(test.id)
-                          ? 'border-white/10 bg-white/5'
-                          : 'border-white/10 hover:border-white/10'
+                          ? 'border-[var(--border-base)] bg-[var(--surface-raised)]'
+                          : 'border-[var(--border-base)] hover:border-[var(--border-base)]'
                           }`}
                         onClick={() => {
                           setSelectedIndividualTests((prev) =>
@@ -344,7 +344,7 @@ export function TestWizardModal({
                           <div className="flex items-center justify-between">
                             <div>
                               <h4 className="font-semibold text-white">{test.id}</h4>
-                              <p className="text-xs text-slate-400">{test.suiteName} • {test.category}</p>
+                              <p className="text-xs text-[var(--text-muted)]">{test.suiteName} • {test.category}</p>
                             </div>
                             {selectedIndividualTests.includes(test.id) && (
                               <div className="h-5 w-5 rounded-full bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc]" />
@@ -363,10 +363,10 @@ export function TestWizardModal({
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-white">Review & Confirm</h3>
               {activeRunId ? (
-                <div className="space-y-4 rounded-lg border border-white/10 bg-white/5 p-4">
+                <div className="space-y-4 rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs uppercase text-slate-400">Run in progress</p>
+                      <p className="text-xs uppercase text-[var(--text-muted)]">Run in progress</p>
                       <p className="text-sm font-semibold text-white">ID: {activeRunId}</p>
                     </div>
                     <span
@@ -401,7 +401,7 @@ export function TestWizardModal({
                       }}
                     />
                   </div>
-                  <div className="flex items-center justify-between text-xs text-slate-400">
+                  <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
                     <span>
                       {progress?.status === 'completed'
                         ? 'Completed'
@@ -432,7 +432,7 @@ export function TestWizardModal({
                       return agent ? (
                         <div
                           key={agentId}
-                          className="rounded-lg border border-white/10 bg-white/5 p-3"
+                          className="rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] p-3"
                         >
                           <p className="text-sm font-medium text-white">{agent.name}</p>
                         </div>
@@ -449,14 +449,14 @@ export function TestWizardModal({
                         return suite ? (
                           <div
                             key={suiteId}
-                            className="rounded-lg border border-white/10 bg-white/5 p-3"
+                            className="rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] p-3"
                           >
                             <p className="text-sm font-medium text-white">{suite.name}</p>
-                            <p className="mt-1 text-xs text-slate-400">
+                            <p className="mt-1 text-xs text-[var(--text-muted)]">
                               ~{Math.round(suite.estimatedDurationSec / 60)} min • ~$
                               {suite.approximateCostUsd.toFixed(2)}
                             </p>
-                            <p className="mt-1 text-xs text-slate-400">{suite.description}</p>
+                            <p className="mt-1 text-xs text-[var(--text-muted)]">{suite.description}</p>
                           </div>
                         ) : null;
                       })
@@ -466,10 +466,10 @@ export function TestWizardModal({
                         return test ? (
                           <div
                             key={testId}
-                            className="rounded-lg border border-white/10 bg-white/5 p-3"
+                            className="rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] p-3"
                           >
                             <p className="text-sm font-medium text-white">{test.id}</p>
-                            <p className="mt-1 text-xs text-slate-400">
+                            <p className="mt-1 text-xs text-[var(--text-muted)]">
                               Suite: {test.suiteName}
                             </p>
                           </div>
@@ -483,7 +483,7 @@ export function TestWizardModal({
           )}
         </div>
 
-        <div className="mt-6 flex justify-between border-t border-white/10 pt-4">
+        <div className="mt-6 flex justify-between border-t border-[var(--border-base)] pt-4">
           <Button
             variant="ghost"
             onClick={() => {

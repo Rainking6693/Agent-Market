@@ -17,7 +17,7 @@ export default async function ConsoleLayout({ children }: { children: ReactNode 
       <ChromeNetworkBackground />
       <DepthFieldOrbs />
       <Sidebar />
-      <div className="flex-1 relative">
+      <div className="flex-1 relative z-10">
         {/* Logo in top-right corner */}
         <div className="absolute top-6 right-6 z-10">
           <Link href="/">

@@ -33,9 +33,9 @@ export default async function WorkflowsPage() {
   return (
     <div className="space-y-10">
       <header className="glass-card p-8">
-        <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Workflows</p>
-        <h1 className="mt-2 text-3xl font-headline text-white">Orchestration Studio</h1>
-        <p className="mt-2 max-w-4xl text-sm text-slate-400">
+        <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">Workflows</p>
+        <h1 className="mt-2 text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}">Orchestration Studio</h1>
+        <p className="mt-2 max-w-4xl text-sm text-[var(--text-muted)]">
           Design lightweight multi-agent workflows with budget guardrails. Executions are logged for
           auditability and leverage the collaboration APIs introduced earlier.
         </p>
@@ -47,10 +47,10 @@ export default async function WorkflowsPage() {
           <p className="mt-2 text-sm text-amber-300">
             {error} The workflow orchestration feature is currently experiencing issues. Our team has been notified.
           </p>
-          <p className="mt-4 text-sm text-slate-400">
+          <p className="mt-4 text-sm text-[var(--text-muted)]">
             In the meantime, you can:
           </p>
-          <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-slate-400">
+          <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-[var(--text-muted)]">
             <li>Browse available agents in the <Link href="/agents" className="text-slate-300 hover:underline">Agent Library</Link></li>
             <li>Check your <Link href="/dashboard" className="text-slate-300 hover:underline">Dashboard</Link> for existing activity</li>
             <li>Review your <Link href="/billing" className="text-slate-300 hover:underline">Billing</Link> information</li>
@@ -61,9 +61,9 @@ export default async function WorkflowsPage() {
           <WorkflowBuilder />
 
           <section className="space-y-6">
-            <h2 className="text-lg font-headline text-white">Existing Workflows</h2>
+            <h2 className="text-lg font-display text-[var(--text-primary)]">Existing Workflows</h2>
             {workflows.length === 0 ? (
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-[var(--text-muted)]">
                 No workflows yet. Create one using the builder above.
               </p>
             ) : (
@@ -72,7 +72,7 @@ export default async function WorkflowsPage() {
                   <Suspense
                     key={workflow.id}
                     fallback={
-                      <div className="glass-card p-6 text-sm text-slate-400">
+                      <div className="glass-card p-6 text-sm text-[var(--text-muted)]">
                         Loading workflow details…
                       </div>
                     }
@@ -93,7 +93,7 @@ export default async function WorkflowsPage() {
 
       <Link
         href="/agents"
-        className="glass-button inline-flex w-fit items-center border border-white/10 bg-transparent px-4 py-2 text-sm text-white"
+        className="glass-button inline-flex w-fit items-center border border-white/10 bg-transparent px-4 py-2 text-sm text-[var(--text-primary)]"
       >
         ← Back to Agent Library
       </Link>

@@ -50,7 +50,7 @@ export function AgentNetworkDiagram() {
         x="400"
         y="30"
         textAnchor="middle"
-        className={`fill-ink text-xl font-headline transition-all duration-1000 delay-200 ${
+        className={`fill-ink text-xl font-display transition-all duration-1000 delay-200 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
         }`}
       >
@@ -78,7 +78,7 @@ export function AgentNetworkDiagram() {
             x={(400 + spec.x) / 2}
             y={(300 + spec.y) / 2}
             textAnchor="middle"
-            className={`fill-slate-400/60 text-[10px] font-body transition-all duration-700 ${
+            className={`fill-slate-400/60 text-[10px] font-ui transition-all duration-700 ${
               isVisible ? 'opacity-100' : 'opacity-0'
             }`}
             style={{ transitionDelay: isVisible ? `${400 + idx * 100}ms` : '0ms' }}
@@ -105,7 +105,7 @@ export function AgentNetworkDiagram() {
           x="400"
           y="285"
           textAnchor="middle"
-          className="fill-ink font-headline text-lg"
+          className="fill-ink font-display text-lg"
         >
           🎯
         </text>
@@ -113,7 +113,7 @@ export function AgentNetworkDiagram() {
           x="400"
           y="305"
           textAnchor="middle"
-          className="fill-ink font-headline text-base"
+          className="fill-ink font-display text-base"
         >
           Your
         </text>
@@ -121,7 +121,7 @@ export function AgentNetworkDiagram() {
           x="400"
           y="325"
           textAnchor="middle"
-          className="fill-ink font-headline text-base"
+          className="fill-ink font-display text-base"
         >
           Orchestrator
         </text>
@@ -154,7 +154,7 @@ export function AgentNetworkDiagram() {
             x={spec.x}
             y={spec.y + 20}
             textAnchor="middle"
-            className="fill-ink-muted font-body text-xs"
+            className="fill-ink-muted font-ui text-xs"
           >
             {spec.label}
           </text>
@@ -177,7 +177,7 @@ export function AgentNetworkDiagram() {
           className="stroke-slate-400/30 stroke-1"
           strokeDasharray="4 4"
         />
-        <text x="35" y="5" className="fill-ink-muted text-xs font-body">
+        <text x="35" y="5" className="fill-ink-muted text-xs font-ui">
           Autonomous Discovery & Hiring
         </text>
       </g>

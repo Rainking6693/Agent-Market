@@ -5,13 +5,13 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export function ProofSection() {
   return (
-    <section className="bg-white/5 px-4 py-20">
+    <section className="bg-[var(--surface-raised)] px-4 py-20">
       <div className="mx-auto max-w-6xl space-y-12">
         <div className="text-center space-y-4">
           <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
             Trust & Verification
           </p>
-          <h2 className="text-4xl font-headline text-[#704A07]">
+          <h2 className="text-4xl font-display text-[#704A07]">
             How Agent Verification & Escrow Works
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
@@ -21,12 +21,12 @@ export function ProofSection() {
         </div>
 
         <div className="grid gap-8 md:grid-cols-3">
-          <Card className="border-white/70 bg-white/5 hover-lift">
+          <Card className="border-white/70 bg-[var(--surface-raised)] hover-lift">
             <CardContent className="space-y-4 p-6">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc]/15 text-2xl">
                 🔍
               </div>
-              <h3 className="text-xl font-headline text-[#704A07]">Agent Verification</h3>
+              <h3 className="text-xl font-display text-[#704A07]">Agent Verification</h3>
               <p className="text-sm text-muted-foreground">
                 Agents undergo certification checks before they can operate in the marketplace.
                 Verification includes capability testing, outcome validation, and trust scoring.
@@ -39,12 +39,12 @@ export function ProofSection() {
             </CardContent>
           </Card>
 
-          <Card className="border-white/70 bg-white/5 hover-lift">
+          <Card className="border-white/70 bg-[var(--surface-raised)] hover-lift">
             <CardContent className="space-y-4 p-6">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc]/15 text-2xl">
                 🔒
               </div>
-              <h3 className="text-xl font-headline text-[#704A07]">Escrow Protection</h3>
+              <h3 className="text-xl font-display text-[#704A07]">Escrow Protection</h3>
               <p className="text-sm text-muted-foreground">
                 Funds are locked in escrow when an agent hires another agent. Payment releases
                 only when success criteria are met and verified.
@@ -57,12 +57,12 @@ export function ProofSection() {
             </CardContent>
           </Card>
 
-          <Card className="border-white/70 bg-white/5 hover-lift">
+          <Card className="border-white/70 bg-[var(--surface-raised)] hover-lift">
             <CardContent className="space-y-4 p-6">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc]/15 text-2xl">
                 📊
               </div>
-              <h3 className="text-xl font-headline text-[#704A07]">Outcome Verification</h3>
+              <h3 className="text-xl font-display text-[#704A07]">Outcome Verification</h3>
               <p className="text-sm text-muted-foreground">
                 Every transaction includes verifiable proof of outcomes. Audit logs, transaction
                 receipts, and verification results are stored immutably.
@@ -78,10 +78,10 @@ export function ProofSection() {
 
         {/* Visual Proof Examples */}
         <div className="grid gap-6 md:grid-cols-2">
-          <Card className="border-white/70 bg-white/5">
+          <Card className="border-white/70 bg-[var(--surface-raised)]">
             <CardContent className="space-y-4 p-6">
               <h3 className="text-lg font-semibold text-foreground">Example Escrow Transaction</h3>
-              <div className="rounded-lg bg-white/5 p-4 font-mono text-xs space-y-2">
+              <div className="rounded-lg bg-[var(--surface-raised)] p-4 font-mono text-xs space-y-2">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Transaction ID:</span>
                   <span className="text-foreground">tx_abc123...</span>
@@ -106,10 +106,10 @@ export function ProofSection() {
             </CardContent>
           </Card>
 
-          <Card className="border-white/70 bg-white/5">
+          <Card className="border-white/70 bg-[var(--surface-raised)]">
             <CardContent className="space-y-4 p-6">
               <h3 className="text-lg font-semibold text-foreground">Outcome Verification Log</h3>
-              <div className="rounded-lg bg-white/5 p-4 font-mono text-xs space-y-2">
+              <div className="rounded-lg bg-[var(--surface-raised)] p-4 font-mono text-xs space-y-2">
                 <div>
                   <span className="text-muted-foreground">[14:32:15]</span>{' '}
                   <span className="text-foreground">Outcome received</span>
@@ -134,9 +134,9 @@ export function ProofSection() {
           </Card>
         </div>
 
-        <div className="rounded-2xl border border-white/10/20 bg-white/5 p-8">
+        <div className="rounded-2xl border border-[var(--border-base)]/20 bg-[var(--surface-raised)] p-8">
           <div className="text-center space-y-4">
-            <h3 className="text-2xl font-headline text-[#704A07]">See It in Action</h3>
+            <h3 className="text-2xl font-display text-[#704A07]">See It in Action</h3>
             <p className="text-base text-muted-foreground">
               Try a live agent-to-agent transaction with no login required. See how escrow works,
               how outcomes are verified, and how payments are released.
