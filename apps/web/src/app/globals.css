@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -40,15 +38,11 @@ body {
     --radius: 1.5rem;
   }
 
-  * {
-    @apply border-border;
-  }
-
   body {
     background: hsl(var(--bg));
     color: hsl(var(--text));
     overflow-x: hidden;
-    font-family: "Space Grotesk", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: var(--font-body), "Inter", "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     min-height: 100vh;
     @apply antialiased;
   }
@@ -94,17 +88,19 @@ body {
     background: hsl(var(--surface));
     border: 1px solid hsla(var(--border), 0.2);
     color: hsl(var(--text));
-    border-radius: 999px;
+    border-radius: 0.75rem;
     padding: 0.65rem 1.25rem;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
   }
 
   .input-dark::placeholder {
     color: hsl(var(--muted));
   }
 
-  .input-dark:focus {
+  .input-dark:focus-visible {
     border-color: hsl(var(--accent));
-    box-shadow: 0 0 0 2px rgba(67, 56, 202, 0.25);
+    box-shadow: 0 0 0 2px rgba(67, 56, 202, 0.35);
+    outline: none;
   }
 
   .input-dark:disabled {
@@ -138,6 +134,7 @@ body {
     h4,
     h5,
     h6 {
+      font-family: var(--font-display), "Space Grotesk", "Inter", system-ui, sans-serif;
       color: var(--foreground);
       letter-spacing: 0.02em;
     }

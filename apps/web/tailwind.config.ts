@@ -42,9 +42,9 @@ const config: Config = {
         'inner-metallic': 'inset 0 1px 0 rgba(255,255,255,0.35)',
       },
       fontFamily: {
-        display: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
-        body: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
-        headline: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
+        body: ['var(--font-body)', 'Inter', 'Space Grotesk', 'system-ui', 'sans-serif'],
+        headline: ['var(--font-display)', 'Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'Courier New', 'monospace'],
       },
       animation: {

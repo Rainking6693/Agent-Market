@@ -14,11 +14,14 @@ export class DemoService {
   private readonly DEMO_AGENT_IDS = process.env.DEMO_AGENT_IDS?.split(',') || [];
 
   // Demo-safe prompts (pre-approved service requests)
-  private readonly DEMO_PROMPTS = [
-    'Generate a summary of the top 3 AI trends in 2024',
-    'Create a brief product description for a new SaaS tool',
-    'Write a short email response to a customer inquiry',
-  ];
+  private readonly DEMO_PROMPTS = process.env.DEMO_PROMPTS
+    ? process.env.DEMO_PROMPTS.split(',').map((prompt) => prompt.trim()).filter(Boolean)
+    : [
+        'Generate a summary of the top 3 AI trends in 2024',
+        'Create a brief product description for a new SaaS tool',
+        'Write a short email response to a customer inquiry',
+      ];
+  private readonly enforcePromptAllowlist = process.env.ENFORCE_DEMO_PROMPTS === 'true';
 
   private readonly isStrictDemoMode =
     process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging';
@@ -122,7 +125,11 @@ export class DemoService {
     }
 
     // Only validate prompts if DEMO_PROMPTS is explicitly configured
-    if (this.DEMO_PROMPTS.length > 0 && !this.DEMO_PROMPTS.includes(service)) {
+    if (
+      this.enforcePromptAllowlist &&
+      this.DEMO_PROMPTS.length > 0 &&
+      !this.DEMO_PROMPTS.includes(service)
+    ) {
       throw new Error('Only demo-safe prompts are allowed in public demos');
     }
   }

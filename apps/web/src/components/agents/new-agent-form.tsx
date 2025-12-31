@@ -439,7 +439,7 @@ export default function NewAgentForm() {
         </CardContent>
       </Card>
 
-      <ol className="flex flex-wrap gap-4 rounded-[2rem] border border-white/10 bg-white/60 p-4">
+      <ol className="flex flex-wrap gap-4 rounded-[2rem] border border-white/10 bg-slate-200 p-4">
         {steps.map((step, index) => {
           const status = stepActive(index) ? 'active' : stepComplete(index) ? 'done' : 'upcoming';
           return (
@@ -456,8 +456,8 @@ export default function NewAgentForm() {
                 {status === 'done' ? <CheckCircle2 className="h-4 w-4" /> : index + 1}
               </div>
               <div>
-                <div className="font-semibold">{step.title}</div>
-                <div className="text-xs text-slate-400">{step.description}</div>
+                <div className="font-semibold text-slate-900">{step.title}</div>
+                <div className="text-xs text-slate-700">{step.description}</div>
               </div>
             </li>
           );
