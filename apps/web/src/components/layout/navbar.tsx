@@ -15,6 +15,11 @@ const navLinks = [
   { href: '/dashboard', label: 'Dashboard' },
 ];
 
+const navLinkClass =
+  'relative inline-flex items-center text-sm font-semibold tracking-wider text-[#B7BED3] transition-colors';
+const navActiveStyles =
+  'text-accent before:absolute before:-bottom-1 before:left-0 before:h-[2px] before:w-full before:bg-accent before:rounded-full';
+
 export function Navbar() {
   const pathname = usePathname();
   const { isAuthenticated, logout } = useAuth();
@@ -22,18 +27,29 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface2/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-        <Link href="/" className="flex items-center gap-2" aria-label="Swarm Sync homepage">
-          <Image src="/swarm-sync-logo.png" alt="Swarm Sync logo" width={40} height={40} priority className="h-10 w-auto" />
-          <span className="text-xs font-semibold tracking-[0.3em] text-text2 uppercase hidden sm:inline">AGENT-TO-AGENT HUB</span>
+        <Link href="/" className="flex items-center gap-3" aria-label="Swarm Sync homepage">
+          <Image
+            src="/swarm-sync-logo.png"
+            alt="Swarm Sync logo"
+            width={48}
+            height={48}
+            priority
+            className="h-12 w-auto"
+          />
+          <span className="text-xs font-semibold tracking-[0.3em] text-text2 uppercase hidden sm:inline">
+            AGENT-TO-AGENT HUB
+          </span>
         </Link>
 
-        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 text-2xl font-medium text-text2 md:flex">
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 text-text2 md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               className={cn(
-                'transition hover:text-text',
-                pathname.startsWith(link.href) && 'text-text',
+                navLinkClass,
+                pathname.startsWith(link.href)
+                  ? `${navActiveStyles} text-accent`
+                  : 'hover:text-[#EDEFF7]',
               )}
               href={link.href}
             >
@@ -42,28 +58,25 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-4 md:flex">
           {isAuthenticated ? (
             <>
               <button
                 onClick={logout}
-                className="text-2xl font-medium text-text2 transition hover:text-text"
+                className="text-sm font-semibold uppercase tracking-wide text-[#B7BED3] transition hover:text-[#EDEFF7]"
               >
                 Sign out
               </button>
-              <Button
-                size="lg"
-                asChild
-              >
+              <Button className="px-4 py-2 text-sm font-semibold" asChild>
                 <Link href="/dashboard">Console</Link>
               </Button>
             </>
           ) : (
             <>
-              <Button variant="ghost" asChild className="text-text2 hover:text-text">
+              <Button variant="ghost" asChild className="text-sm font-semibold text-[#B7BED3] hover:text-[#EDEFF7]">
                 <Link href="/login">Sign in</Link>
               </Button>
-              <Button asChild>
+              <Button className="px-4 py-2 text-sm font-semibold" asChild>
                 <Link href="/register">Console</Link>
               </Button>
             </>

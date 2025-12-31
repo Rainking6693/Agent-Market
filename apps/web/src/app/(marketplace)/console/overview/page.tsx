@@ -26,6 +26,24 @@ const statusPills = [
     },
 ];
 
+const defaultNextSteps = [
+    {
+        title: 'Configure billing',
+        detail: 'Connect Stripe, add payment info, and unlock credits.',
+        href: '/console/billing',
+    },
+    {
+        title: 'Add agents',
+        detail: 'Register your first agents so workflows have collaborators.',
+        href: '/console/agents/new',
+    },
+    {
+        title: 'Launch a workflow',
+        detail: 'Run agent orchestration workflows to observe spend and outcomes.',
+        href: '/console/workflows',
+    },
+];
+
 export default function OverviewPage() {
     const user = useAuthStore((state) => state.user);
 
@@ -119,34 +137,47 @@ export default function OverviewPage() {
                         <CardTitle className="text-lg">Next Steps</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {alerts.length > 0 ? (
-                            <div className="space-y-3">
-                                {alerts.map((alert, i) => (
-                                    <div
-                                        key={i}
-                                        className={`rounded-lg border p-3 text-sm ${
-                                            alert.tone === 'violet'
-                                                ? 'alert-violet'
-                                                : alert.type === 'warning'
-                                                    ? 'border-amber-500/30 bg-amber-500/10 text-amber-300'
-                                                    : 'border-blue-500/30 bg-blue-500/10 text-blue-300'
-                                        }`}
-                                    >
-                                        <p>{alert.message}</p>
-                                        <Link
-                                            href={alert.action}
-                                            className="mt-1 inline-block text-xs font-medium underline dashboard-link-violet"
-                                        >
-                                            Take action →
-                                        </Link>
-                                    </div>
-                                ))}
+                {alerts.length > 0 ? (
+                    <div className="space-y-3">
+                        {alerts.map((alert, i) => (
+                            <div
+                                key={i}
+                                className={`rounded-lg border p-3 text-sm ${
+                                    alert.tone === 'violet'
+                                        ? 'alert-violet'
+                                        : alert.type === 'warning'
+                                            ? 'border-amber-500/30 bg-amber-500/10 text-amber-300'
+                                            : 'border-blue-500/30 bg-blue-500/10 text-blue-300'
+                                }`}
+                            >
+                                <p>{alert.message}</p>
+                                <Link
+                                    href={alert.action}
+                                    className="mt-1 inline-block text-xs font-medium underline dashboard-link-violet"
+                                >
+                                    Take action →
+                                </Link>
                             </div>
-                        ) : (
-                            <p className="text-sm text-slate-400">All systems operational. No action needed.</p>
-                        )}
-                    </CardContent>
-                </Card>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-sm text-slate-400">All systems operational. No action needed.</p>
+                )}
+                <div className="mt-4 grid gap-3 md:grid-cols-2">
+                    {defaultNextSteps.map((step) => (
+                        <Link
+                            key={step.title}
+                            href={step.href}
+                            className="rounded-2xl border border-white/10 bg-surface/70 px-4 py-3 text-sm font-semibold text-text transition hover:border-white/30 hover:text-white"
+                        >
+                            <p className="text-[0.7rem] uppercase tracking-[0.3em] text-slate-400">Next</p>
+                            <p className="text-base font-headline text-white">{step.title}</p>
+                            <p className="text-xs text-slate-400">{step.detail}</p>
+                        </Link>
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
 
                 {/* Recent Activity */}
                 <Card>

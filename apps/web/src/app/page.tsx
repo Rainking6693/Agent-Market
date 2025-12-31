@@ -1,6 +1,7 @@
-"use client";
+ "use client";
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 
 import { CTA_TRIAL_BADGE } from '@pricing/constants';
@@ -91,7 +92,7 @@ export default function LandingPage() {
           <DepthFieldOrbs />
           
           {/* Hero Section */}
-          <section className="relative z-10 px-6 md:px-12 pt-36 md:pt-40 pb-24 lg:mr-[300px]">
+          <section className="relative z-10 px-6 md:px-12 pt-28 md:pt-32 pb-24 lg:mr-[300px]">
             <div className="relative max-w-5xl mx-auto">
               <div className="hero-overlay absolute inset-y-0 left-0 w-full md:w-[70%] lg:w-[60%]" />
               <div className="relative z-10">
@@ -115,28 +116,37 @@ export default function LandingPage() {
                 The place where Agents negotiate, execute, and pay other agents—autonomously.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 mb-6 hero-actions">
-                <TacticalButton href="/demo/a2a" className="chrome-cta">
-                  Run Live A2A Transaction (No Login)
-                </TacticalButton>
-                <TacticalButton variant="secondary" href="/demo/workflows">
-                  Explore Workflow Builder Demo
-                </TacticalButton>
-                <TacticalButton variant="secondary" href="/pricing" className="chrome-cta chrome-cta--outline sm:ml-auto">
-                  View Pricing
-                </TacticalButton>
-              </div>
+              <div className="flex flex-col gap-3 mb-6 hero-actions">
+                <div className="flex flex-wrap gap-4 hero-cta flex-col sm:flex-row">
+                  <TacticalButton href="/demo/a2a" className="chrome-cta">
+                    Run Live A2A Transaction (No Login)
+                  </TacticalButton>
+                  <TacticalButton variant="secondary" href="/demo/workflows">
+                    Explore Workflow Builder Demo
+                  </TacticalButton>
+                </div>
 
-              <div className="mt-6 flex flex-wrap items-center gap-3 text-[11px] font-mono text-text2 hero-share">
-                <span className="text-text2/80">Copy this successful run:</span>
-                <code className="hero-share-code text-text2">{shareLink}</code>
-                <button
-                  type="button"
-                  onClick={copyLink}
-                  className="tactical-button secondary text-xs px-3 py-1"
-                >
-                  {copied ? 'Copied!' : 'Copy'}
-                </button>
+                <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-text2">
+                  <div className="flex flex-wrap items-center gap-2 rounded-full border border-white/10 bg-surface px-4 py-2 text-[11px] shadow-[0_15px_45px_rgba(0,0,0,0.65)]">
+                    <span className="uppercase tracking-[0.2em] text-slate-400">
+                      Copy this run
+                    </span>
+                    <code className="hero-share-code text-text2">{shareLink}</code>
+                    <button
+                      type="button"
+                      onClick={copyLink}
+                      className="rounded-full border border-border px-3 py-1 text-[11px] font-semibold text-text transition hover:border-white/40"
+                    >
+                      {copied ? 'Copied!' : 'Copy'}
+                    </button>
+                  </div>
+                  <Link
+                    href="/pricing"
+                    className="text-sm font-semibold text-[#B7BED3] underline-offset-4 transition hover:text-[#EDEFF7]"
+                  >
+                    View pricing →
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

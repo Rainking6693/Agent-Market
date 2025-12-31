@@ -60,7 +60,7 @@ body {
   }
 
   .sidebar-label {
-    color: hsl(var(--muted));
+    color: hsl(var(--text2));
     letter-spacing: 0.15em;
     font-size: 0.75rem;
     font-weight: 600;
@@ -221,7 +221,7 @@ body {
   .orb-one {
     top: 8%;
     right: 10%;
-    background: radial-gradient(circle, rgba(212, 175, 55, 0.4) 0%, rgba(212, 175, 55, 0) 70%);
+    background: radial-gradient(circle, rgba(67, 56, 202, 0.45) 0%, rgba(67, 56, 202, 0) 70%);
   }
 
   .orb-two {
@@ -383,19 +383,17 @@ body {
   }
 
   .alert-violet {
-    border-color: rgba(67, 56, 202, 0.7);
-    background: rgba(67, 56, 202, 0.12);
-    color: rgba(215, 225, 255, 0.92);
+    border-color: rgba(67, 56, 202, 0.6);
+    background: rgba(67, 56, 202, 0.18);
+    color: rgba(255, 255, 255, 0.92);
   }
 
-  .alert-violet a {
-    color: #c4d7ff;
-  }
-
+  .alert-violet a,
   .dashboard-link-violet {
-    color: #c4d7ff;
+    color: #cdd7ff;
   }
 
+  .alert-violet a:hover,
   .dashboard-link-violet:hover {
     color: #ffffff;
   }
