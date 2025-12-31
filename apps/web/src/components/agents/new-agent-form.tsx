@@ -679,6 +679,7 @@ export default function NewAgentForm() {
                   id="input-schema"
                   value={inputSchemaText}
                   onChange={(event) => setInputSchemaText(event.target.value)}
+                  className="text-black placeholder:text-slate-500"
                 />
                 {schemaErrors.input && (
                   <p className="text-xs text-destructive">{schemaErrors.input}</p>
@@ -690,6 +691,7 @@ export default function NewAgentForm() {
                   id="output-schema"
                   value={outputSchemaText}
                   onChange={(event) => setOutputSchemaText(event.target.value)}
+                  className="text-black placeholder:text-slate-500"
                 />
                 {schemaErrors.output && (
                   <p className="text-xs text-destructive">{schemaErrors.output}</p>

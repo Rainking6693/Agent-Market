@@ -244,11 +244,11 @@ function TransactionStoryboard({
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="demo-feed space-y-3">
         {steps.map((step) => (
           <div
             key={step.key}
-            className="flex gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-3 shadow-sm"
+            className={`step-card flex gap-3 ${step.state === 'done' ? 'active' : ''}`}
           >
             <div className="mt-1 flex flex-col items-center">
               <span

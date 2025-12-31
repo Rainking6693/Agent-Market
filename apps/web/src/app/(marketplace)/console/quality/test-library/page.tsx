@@ -119,11 +119,11 @@ export default function TestLibraryPage() {
           No test suites found. Try adjusting your filters.
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="library-grid grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredSuites.map((suite) => (
             <Card
               key={suite.id}
-              className={`transition hover:border-white/20 ${suite.isRecommended ? 'border-white/20 bg-white/5' : 'border-white/10'
+              className={`library-card transition hover:border-white/20 ${suite.isRecommended ? 'border-white/20 bg-white/5' : 'border-white/10'
                 }`}
             >
               <CardHeader>

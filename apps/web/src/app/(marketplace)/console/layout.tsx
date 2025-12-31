@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import ChromeNetworkBackground from '@/components/swarm/ChromeNetworkBackground';
+import DepthFieldOrbs from '@/components/swarm/DepthFieldOrbs';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { requireAuth } from '@/lib/auth-guard';
 
@@ -11,7 +13,9 @@ export default async function ConsoleLayout({ children }: { children: ReactNode 
   await requireAuth('/overview');
 
   return (
-    <div className="flex min-h-screen w-full bg-black text-slate-50">
+    <div className="console-page app-page flex min-h-screen w-full bg-black text-slate-50">
+      <ChromeNetworkBackground />
+      <DepthFieldOrbs />
       <Sidebar />
       <div className="flex-1 relative">
         {/* Logo in top-right corner */}

@@ -93,8 +93,8 @@ export default function OverviewPage() {
         alerts.push({ type: 'info', message: 'Create your first agent to get started', action: '/agents/new' });
     }
 
-    return (
-        <div className="space-y-8">
+  return (
+    <div className="dashboard space-y-8">
             {/* Slim Header */}
             <header className="space-y-4">
                 <div>
