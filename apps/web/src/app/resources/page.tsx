@@ -142,7 +142,7 @@ export default function ResourcesPage() {
                     {category.items.map((resource) => (
                       <Card
                         key={resource.title}
-                        className="border-white/60 bg-white/90 transition-all hover:shadow-brand-panel"
+                        className="border-white/20 bg-[var(--surface-base)] transition-all hover:shadow-brand-panel"
                       >
                         <CardHeader>
                           <div className="flex items-start justify-between">
@@ -151,7 +151,7 @@ export default function ResourcesPage() {
                               {resource.type}
                             </span>
                           </div>
-                          <CardDescription className="text-sm">
+                          <CardDescription className="text-sm text-[var(--text-secondary)]">
                             {resource.description}
                           </CardDescription>
                         </CardHeader>
