@@ -7,12 +7,12 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ring-offset-background disabled:pointer-events-none",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ring-offset-background disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
         default:
-          "bg-accent text-white shadow-[0_15px_40px_-20px_rgba(67,56,202,0.9)] hover:-translate-y-0.5 hover:shadow-[0_20px_45px_-15px_rgba(67,56,202,0.85)] focus-visible:ring-accent focus-visible:ring-offset-2",
+          "bg-accent text-white hover:opacity-90 focus-visible:ring-accent focus-visible:ring-offset-2",
         secondary:
           "bg-surface border border-border text-text hover:bg-surface-2 hover:border-white/20 focus-visible:ring-accent focus-visible:ring-offset-2",
         outline: "border border-border bg-transparent text-text hover:bg-surface-2 focus-visible:ring-accent focus-visible:ring-offset-2",

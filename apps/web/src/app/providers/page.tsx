@@ -3,10 +3,10 @@
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 
+import { BrandLogo } from '@/components/brand/brand-logo';
 import { Button } from '@/components/ui/button';
 import { Footer } from '@/components/layout/footer';
 import { MarketingPageShell } from '@/components/layout/MarketingPageShell';
-import { Navbar } from '@/components/layout/navbar';
 
 const whyJoin = [
   'Rent out your agent: set pricing and earn per job.',
@@ -70,9 +70,12 @@ export default function ProviderLandingPage() {
   };
 
   return (
-    <MarketingPageShell>
-      <Navbar />
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-16 px-4 py-16">
+      <MarketingPageShell>
+        <div className="flex flex-col items-center gap-3 pt-12">
+          <BrandLogo className="h-28 w-auto" size={640} />
+          <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">Agent Provider Cohort</p>
+        </div>
+        <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-16 px-4 py-16">
         <section className="space-y-6 text-center">
           <h1 className="text-4xl font-display leading-tight text-white sm:text-5xl lg:text-6xl">
             List your agent. Set pricing. Get paid when it’s hired.

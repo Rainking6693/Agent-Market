@@ -7,7 +7,7 @@
 
 :root {
   color-scheme: dark;
-  
+
   /* Design Tokens - Colors */
   --bg-base: #060712;
   --surface-base: #0B0E1C;
@@ -20,13 +20,13 @@
   --accent-primary: #7C5CFF;
   --accent: 124, 92, 255;
   --border-base: rgba(180, 190, 255, 0.12);
-  --border-hover: rgba(180, 190, 255, 0.24);
+  --border-hover: rgba(180, 190, 255, 0.18);
   --muted: 220, 227, 255;
-  
+
   /* Shadows */
-  --shadow-panel: 0 10px 30px rgba(0, 0, 0, 0.25);
-  --shadow-focus: 0 0 0 3px rgba(124, 92, 255, 0.35);
-  
+  --shadow-panel: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-focus: 0 0 0 2px rgba(124, 92, 255, 0.3);
+
   /* Legacy Tailwind compatibility */
   --background: var(--bg-base);
   --foreground: var(--text-primary);
@@ -59,35 +59,35 @@ body {
     min-height: 100vh;
     @apply antialiased;
   }
-  
+
   /* Typography Scale */
   h1 {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 48px;
     font-weight: 700;
     line-height: 1.1;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
   }
-  
+
   h2 {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 32px;
     font-weight: 700;
     line-height: 1.2;
-    letter-spacing: 0.02em;
+    letter-spacing: 0;
     color: var(--text-primary);
   }
-  
+
   h3 {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 24px;
     font-weight: 600;
     line-height: 1.3;
-    letter-spacing: 0.02em;
+    letter-spacing: 0;
     color: var(--text-primary);
   }
-  
+
   p {
     font-family: 'Inter', sans-serif;
     font-size: 16px;
@@ -96,16 +96,18 @@ body {
     letter-spacing: 0em;
     color: var(--text-primary);
   }
-  
-  label, .label {
+
+  label,
+  .label {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     font-weight: 500;
     line-height: 1.4;
     color: var(--text-secondary);
   }
-  
-  .meta, .text-meta {
+
+  .meta,
+  .text-meta {
     font-family: 'Inter', sans-serif;
     font-size: 12px;
     font-weight: 400;
@@ -113,16 +115,16 @@ body {
     font-variant-numeric: tabular-nums;
     color: var(--text-muted);
   }
-  
+
   /* Typography utility classes */
   .font-display {
     font-family: 'Space Grotesk', sans-serif;
   }
-  
+
   .font-ui {
     font-family: 'Inter', sans-serif;
   }
-  
+
   /* Meta text utility - for timestamps, prices, etc. */
   .text-meta-numeric {
     font-family: 'Inter', sans-serif;
@@ -131,29 +133,31 @@ body {
     font-variant-numeric: tabular-nums;
     color: var(--text-muted);
   }
-  
+
   /* Override font-headline and font-body utilities */
   .font-headline {
     font-family: 'Space Grotesk', sans-serif;
   }
-  
+
   .font-body {
     font-family: 'Inter', sans-serif;
   }
 
   /* Cards / Panels */
-  .card, .glass-card {
+  .card,
+  .glass-card {
     background: var(--surface-base);
     border: 1px solid var(--border-base);
     border-radius: 12px;
     padding: 24px;
     box-shadow: var(--shadow-panel);
   }
-  
-  .card-inner, .panel-inner {
+
+  .card-inner,
+  .panel-inner {
     background: var(--surface-raised);
   }
-  
+
   /* Navigation */
   .nav-item {
     color: var(--text-secondary);
@@ -163,17 +167,17 @@ body {
     padding: 12px 16px;
     transition: all 0.2s ease;
   }
-  
+
   .nav-item:hover {
     color: var(--text-primary);
     background: rgba(255, 255, 255, 0.04);
   }
-  
+
   .nav-item.active {
     color: var(--accent-primary);
     border-left: 3px solid var(--accent-primary);
   }
-  
+
   .sidebar-label {
     color: var(--text-muted);
     font-size: 12px;
@@ -182,14 +186,14 @@ body {
     border-bottom: 1px solid var(--border-base);
     margin-bottom: 8px;
   }
-  
+
   .sidebar-link {
     color: var(--text-secondary);
     font-weight: 500;
     font-size: 14px;
     padding: 12px 16px;
   }
-  
+
   .sidebar-link-active {
     color: var(--accent-primary);
     border-left: 3px solid var(--accent-primary);
@@ -210,11 +214,11 @@ body {
     transition: opacity 0.2s ease;
     cursor: pointer;
   }
-  
+
   .btn-primary:hover {
     opacity: 0.9;
   }
-  
+
   .btn-secondary {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid var(--border-base);
@@ -227,14 +231,15 @@ body {
     transition: all 0.2s ease;
     cursor: pointer;
   }
-  
+
   .btn-secondary:hover {
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--border-hover);
   }
-  
+
   /* Inputs */
-  .input, .input-dark {
+  .input,
+  .input-dark {
     background: var(--surface-raised);
     border: 1px solid var(--border-base);
     color: var(--text-primary);
@@ -244,22 +249,25 @@ body {
     font-size: 14px;
     transition: all 0.2s ease;
   }
-  
-  .input::placeholder, .input-dark::placeholder {
+
+  .input::placeholder,
+  .input-dark::placeholder {
     color: var(--text-muted);
   }
-  
-  .input:focus, .input-dark:focus {
+
+  .input:focus,
+  .input-dark:focus {
     box-shadow: var(--shadow-focus);
     border-color: var(--border-hover);
     outline: none;
   }
-  
-  .input:disabled, .input-dark:disabled {
+
+  .input:disabled,
+  .input-dark:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
-  
+
   .surface-card {
     background: var(--surface-base);
     border: 1px solid var(--border-base);
@@ -290,69 +298,76 @@ body {
     color: var(--text-secondary);
     transition: color 0.2s ease;
   }
-  
-  a:hover, a:focus-visible {
+
+  a:hover,
+  a:focus-visible {
     color: var(--text-primary);
     opacity: 0.95;
   }
-  
+
   /* Grid Layouts */
-  .grid-agents, .library-grid {
+  .grid-agents,
+  .library-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 24px;
   }
 
-    .nav-banner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 2rem;
-      background: var(--surface-ink);
-      border-bottom: 1px solid rgba(var(--text2), 0.16);
-    }
+  .nav-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 2rem;
+    background: var(--surface-ink);
+    border-bottom: 1px solid rgba(var(--text2), 0.16);
+  }
 
-    .nav-banner__logo {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      font-size: 0.7rem;
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-      color: #f3f4ff;
-    }
+  .nav-banner__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: #f3f4ff;
+  }
 
-    .nav-banner__logo img {
-      border-radius: 50%;
-      width: 84px;
-      height: 84px;
-      box-shadow: 0 0 25px rgba(67, 56, 202, 0.6);
-    }
+  .nav-banner__logo img {
+    border-radius: 50%;
+    width: 84px;
+    height: 84px;
+    box-shadow: 0 0 25px rgba(67, 56, 202, 0.6);
+  }
 
-    .nav-banner__links {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      font-weight: 600;
-    }
+  .nav-banner__links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: 600;
+  }
 
-    .nav-banner__links a {
-      color: var(--text-secondary);
-      transition: color 0.3s ease, transform 0.2s ease;
-    }
+  .nav-banner__links a {
+    color: var(--text-secondary);
+    transition: color 0.3s ease, transform 0.2s ease;
+  }
 
-    .nav-banner__links a:hover {
-      color: rgb(var(--accent));
-      transform: translateY(-1px);
-    }
+  .nav-banner__links a:hover {
+    color: rgb(var(--accent));
+    transform: translateY(-1px);
+  }
 
-    .nav-button {
-      background: linear-gradient(120deg, rgba(var(--accent), 0.9), rgba(67, 56, 202, 0.95));
-      color: #fdfaff;
-      padding: 0.5rem 1.45rem;
-      border-radius: 999px;
-      box-shadow: 0 15px 35px rgba(67, 56, 202, 0.45);
-    }
+  .nav-button {
+    background: var(--accent-primary);
+    color: #ffffff;
+    padding: 0.5rem 1.45rem;
+    border-radius: 12px;
+    box-shadow: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .nav-button:hover {
+    opacity: 0.9;
+  }
 
 
   .depth-orbs {
@@ -394,9 +409,11 @@ body {
     0% {
       transform: translateY(0px) scale(1);
     }
+
     50% {
       transform: translateY(-15px) scale(1.05);
     }
+
     100% {
       transform: translateY(0px) scale(1);
     }
@@ -462,22 +479,36 @@ body {
   }
 
   .chrome-cta {
-    background: linear-gradient(135deg, #cbd5ff 0%, #8b95ff 45%, #4338ca 100%);
-    color: #050505;
-    box-shadow: 0 25px 50px rgba(67, 56, 202, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    background: var(--accent-primary);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: none;
+    letter-spacing: 0;
+    box-shadow: none;
+    border: none;
+    transition: opacity 0.2s ease;
   }
 
   .chrome-cta.chrome-cta--outline {
-    background: rgba(67, 56, 202, 0.15);
-    border-color: rgba(255, 255, 255, 0.18);
-    color: #ffffff;
-    box-shadow: 0 20px 40px rgba(67, 56, 202, 0.4);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-base);
+    color: var(--text-primary);
+    box-shadow: none;
   }
 
-  .chrome-cta:hover,
+  .chrome-cta:hover {
+    opacity: 0.9;
+    box-shadow: none;
+  }
+
   .chrome-cta.chrome-cta--outline:hover {
-    transform: translateY(-2px) scale(1.01);
-    box-shadow: 0 35px 65px rgba(67, 56, 202, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--border-hover);
+    box-shadow: none;
   }
 
   .velocity-grid {
@@ -565,6 +596,7 @@ body {
   .hero-eyebrow {
     letter-spacing: 0.25em;
   }
+
   .hero-actions .chrome-cta {
     min-width: 250px;
   }
@@ -676,14 +708,14 @@ body {
 
   .tactical-button {
     border: 1px solid transparent;
-    border-radius: 999px;
+    border-radius: 12px;
     padding: 0.9rem 1.6rem;
     font-size: 0.9rem;
     font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+    letter-spacing: 0;
+    text-transform: none;
     text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease;
     display: inline-flex;
     gap: 0.4rem;
     align-items: center;
@@ -692,41 +724,46 @@ body {
   }
 
   .tactical-button.primary {
-    background: linear-gradient(120deg, #4338CA, #6F7BFF 40%, #CED2FF 100%);
+    background: var(--accent-primary);
     color: #ffffff;
-    box-shadow: 0 25px 45px rgba(67, 56, 202, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    box-shadow: none;
+    border: none;
   }
 
   .tactical-button.secondary {
     background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(180, 190, 255, 0.18);
-    color: #EDEFF7;
+    border-color: var(--border-base);
+    color: var(--text-primary);
     box-shadow: none;
   }
 
   .tactical-button.muted {
     background: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.75);
+    color: var(--text-secondary);
+    box-shadow: none;
   }
 
   .tactical-button.ghost {
     background: transparent;
-    border-color: rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.7);
+    border-color: var(--border-base);
+    color: var(--text-secondary);
     box-shadow: none;
   }
 
-  .tactical-button:hover {
-    transform: translateY(-2px) scale(1.01);
-    box-shadow: 0 30px 50px rgba(212, 175, 55, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  .tactical-button.primary:hover {
+    opacity: 0.9;
+  }
+
+  .tactical-button.secondary:hover,
+  .tactical-button.muted:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--border-hover);
   }
 
   .tactical-button.ghost:hover {
-    transform: translateY(-2px) scale(1.01);
-    border-color: rgba(255, 255, 255, 0.4);
-    color: rgba(255, 255, 255, 1);
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    border-color: var(--border-hover);
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.04);
   }
 
   .cta-lower {
@@ -748,15 +785,17 @@ body {
     color: rgba(255, 255, 255, 0.65);
     font-size: 0.75rem;
   }
-  
+
   /* Page-Level Background Strategy */
-  
+
   /* Marketing pages - Keep starfield with vignette */
-  .hero, .marketing-page {
+  .hero,
+  .marketing-page {
     position: relative;
   }
-  
-  .hero::before, .marketing-page::before {
+
+  .hero::before,
+  .marketing-page::before {
     content: '';
     position: fixed;
     inset: 0;
@@ -764,12 +803,13 @@ body {
     z-index: 1;
     pointer-events: none;
   }
-  
-  .hero > *, .marketing-page > * {
+
+  .hero>*,
+  .marketing-page>* {
     position: relative;
     z-index: 2;
   }
-  
+
   /* Ensure background components are behind vignette */
   .hero .depth-orbs,
   .hero canvas,
@@ -777,13 +817,17 @@ body {
   .marketing-page canvas {
     z-index: 0;
   }
-  
+
   /* App pages - Muted overlay for console feel */
-  .app-page, .dashboard, .console-page {
+  .app-page,
+  .dashboard,
+  .console-page {
     position: relative;
   }
-  
-  .app-page::before, .dashboard::before, .console-page::before {
+
+  .app-page::before,
+  .dashboard::before,
+  .console-page::before {
     content: '';
     position: fixed;
     top: 0;
@@ -794,26 +838,28 @@ body {
     z-index: 1;
     pointer-events: none;
   }
-  
-  .app-page > *, .dashboard > *, .console-page > * {
+
+  .app-page>*,
+  .dashboard>*,
+  .console-page>* {
     position: relative;
     z-index: 2;
   }
-  
+
   /* Reduce starfield opacity for app pages */
   .app-page .depth-orbs,
   .dashboard .depth-orbs,
   .console-page .depth-orbs {
     opacity: 0.3;
   }
-  
+
   /* Reduce ChromeNetworkBackground opacity for app pages */
   .app-page canvas,
   .dashboard canvas,
   .console-page canvas {
     opacity: 0.3;
   }
-  
+
   /* Ensure background components are behind overlay */
   .app-page .depth-orbs,
   .app-page canvas,
@@ -823,41 +869,43 @@ body {
   .console-page canvas {
     z-index: 0;
   }
-  
+
   /* Dashboard specific */
   .dashboard .sidebar {
     background: var(--surface-base);
     border-right: 1px solid var(--border-base);
   }
-  
+
   .dashboard .card-recent {
     box-shadow: var(--shadow-panel);
     margin-bottom: 24px;
   }
-  
-  .dashboard h1, .dashboard h2, .dashboard h3 {
+
+  .dashboard h1,
+  .dashboard h2,
+  .dashboard h3 {
     font-family: 'Space Grotesk', sans-serif;
     color: var(--text-primary);
   }
-  
+
   .dashboard .label {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     color: var(--text-secondary);
   }
-  
+
   .dashboard .meta {
     font-family: 'Inter', sans-serif;
     font-size: 12px;
     color: var(--text-muted);
     font-variant-numeric: tabular-nums;
   }
-  
+
   /* Test Library / Cards Grid */
   .library-grid {
     gap: 24px;
   }
-  
+
   .library-card {
     background: var(--surface-base);
     border-radius: 12px;
@@ -865,24 +913,25 @@ body {
     padding: 24px;
     border: 1px solid var(--border-base);
   }
-  
+
   .library-card h3 {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 24px;
     color: var(--text-primary);
   }
-  
-  .library-card p, .library-card .label {
+
+  .library-card p,
+  .library-card .label {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     color: var(--text-secondary);
   }
-  
+
   /* Live Demo / Step Timeline */
   .demo-feed {
     position: relative;
   }
-  
+
   .step-card {
     background: var(--surface-raised);
     border: 1px solid var(--border-base);
@@ -891,30 +940,30 @@ body {
     padding: 16px;
     margin-bottom: 32px;
   }
-  
+
   .step-card h4 {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 20px;
     color: var(--text-primary);
   }
-  
+
   .step-card p {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     color: var(--text-secondary);
   }
-  
+
   .step-card .timestamp {
     font-family: 'Inter', sans-serif;
     font-size: 12px;
     color: var(--text-muted);
     font-variant-numeric: tabular-nums;
   }
-  
+
   .step-card.active {
     border-color: var(--accent-primary);
   }
-  
+
   /* Hero Section Refinements */
   .hero-headline {
     font-family: 'Space Grotesk', sans-serif;
@@ -923,7 +972,7 @@ body {
     color: var(--text-primary);
     line-height: 1.1;
   }
-  
+
   .hero-subline {
     font-family: 'Inter', sans-serif;
     font-size: 18px;
@@ -934,8 +983,9 @@ body {
   .hero-nav a {
     color: var(--text-secondary);
   }
-  
-  .hero-nav a:hover, .hero-nav a.active {
+
+  .hero-nav a:hover,
+  .hero-nav a.active {
     color: var(--accent-primary);
   }
 
@@ -978,5 +1028,73 @@ body {
   .no-background .depth-orbs,
   .no-background .chrome-network {
     display: none;
+  }
+
+  /* Tailwind Utility Overrides - Enforce Tactical Design */
+
+  /* Remove pill shapes - enforce 12px radius */
+  .rounded-full {
+    border-radius: 12px !important;
+  }
+
+  /* Enforce consistent border radius across all rounded utilities */
+  .rounded-2xl,
+  .rounded-xl,
+  .rounded-lg {
+    border-radius: 12px !important;
+  }
+
+  /* Remove excessive letter-spacing from uppercase text */
+  .uppercase {
+    letter-spacing: 0.05em !important;
+  }
+
+  /* Ensure all cards use tactical styling */
+  [class*="rounded-2xl"][class*="border"] {
+    border-radius: 12px !important;
+    box-shadow: var(--shadow-panel) !important;
+  }
+
+  /* Override any glow shadows */
+  [class*="shadow-lg"],
+  [class*="shadow-xl"],
+  [class*="shadow-2xl"] {
+    box-shadow: var(--shadow-panel) !important;
+  }
+
+  /* Ensure buttons don't have glows */
+  button[class*="shadow"],
+  a[class*="shadow"] {
+    box-shadow: none !important;
+  }
+
+  /* Focus states should use tactical focus ring */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    box-shadow: var(--shadow-focus) !important;
+    outline: none !important;
+  }
+
+  /* Timestamp and meta text utilities */
+  .tabular-nums,
+  [class*="tabular"] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Hero-specific overrides */
+  .hero .glitch-headline {
+    font-size: 48px !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  /* Remove letter-spacing from hero actions */
+  .hero-actions .chrome-cta {
+    letter-spacing: 0 !important;
+  }
+
+  .chrome-cta.chrome-cta--outline {
+    letter-spacing: 0 !important;
   }
 }
