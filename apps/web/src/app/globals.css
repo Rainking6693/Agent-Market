@@ -930,7 +930,7 @@ body {
     color: var(--text-secondary);
     line-height: 1.5;
   }
-  
+
   .hero-nav a {
     color: var(--text-secondary);
   }
@@ -938,7 +938,42 @@ body {
   .hero-nav a:hover, .hero-nav a.active {
     color: var(--accent-primary);
   }
-  
+
+  .transaction-storyboard {
+    border-bottom: 1px solid var(--border-base);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .timeline-card {
+    background: var(--surface-base);
+    border: 1px solid var(--border-base);
+    box-shadow: var(--shadow-panel);
+    transition: border-color 0.2s ease;
+  }
+
+  .timeline-card p {
+    color: var(--text-secondary);
+  }
+
+  .timeline-card .status-dot {
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+  }
+
+  .timeline-card .status-dot--active {
+    background: var(--accent-primary);
+  }
+
+  .timeline-card .timestamp {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-muted);
+  }
+
   /* Optional Background Toggle */
   .no-background .depth-orbs,
   .no-background .chrome-network {

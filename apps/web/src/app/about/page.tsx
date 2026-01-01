@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 import { Footer } from '@/components/layout/footer';
+import { MarketingPageShell } from '@/components/layout/MarketingPageShell';
 import { Navbar } from '@/components/layout/navbar';
 import { SecurityBadges } from '@/components/marketing/security-badges';
 import { Button } from '@/components/ui/button';
@@ -44,7 +45,7 @@ const values = [
 
 export default function AboutPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-black text-slate-50">
+    <MarketingPageShell className="flex flex-col">
       <Navbar />
       <main className="flex-1">
         {/* Hero Section */}
@@ -131,7 +132,7 @@ export default function AboutPage() {
         <SecurityBadges />
       </main>
       <Footer />
-    </div>
+    </MarketingPageShell>
   );
 }
 

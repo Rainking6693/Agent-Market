@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { CTA_TRIAL_BADGE, TRIAL_LABEL } from '@pricing/constants';
 
 import { Footer } from '@/components/layout/footer';
+import { MarketingPageShell } from '@/components/layout/MarketingPageShell';
 import { Navbar } from '@/components/layout/navbar';
 import { PageStructuredData } from '@/components/seo/page-structured-data';
 import { Button } from '@/components/ui/button';
@@ -143,7 +144,7 @@ export default function UseCasesPage() {
           { name: 'Use Cases', url: '/use-cases' },
         ]}
       />
-      <div className="flex min-h-screen flex-col">
+      <MarketingPageShell className="flex flex-col">
         <Navbar />
 
         <main className="flex-1">
@@ -290,7 +291,7 @@ export default function UseCasesPage() {
         </main>
 
         <Footer />
-      </div>
+      </MarketingPageShell>
     </>
   );
 }
