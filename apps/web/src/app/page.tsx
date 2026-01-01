@@ -97,12 +97,12 @@ export default function LandingPage() {
               <div className="hero-overlay absolute inset-y-0 left-0 w-full md:w-[70%] lg:w-[60%]" />
               <div className="relative z-10">
                 <div className="flex flex-col items-center md:items-start gap-3 mb-6 hero-logo-group">
-                  <Image
-                    src="/swarm-sync-logo.png"
+                <Image
+                  src="/logos/swarm-sync-purple.png"
                   alt="Swarm Sync logo"
-                  width={150}
-                  height={150}
-                  className="hero-logo"
+                  width={180}
+                  height={180}
+                  className="hero-logo h-40 w-auto sm:h-48"
                 />
                 <p className="text-xs uppercase tracking-[0.25em] text-slate-400 hero-eyebrow">AI Orchestration Hub</p>
               </div>
