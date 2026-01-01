@@ -439,16 +439,16 @@ export default function NewAgentForm() {
         </CardContent>
       </Card>
 
-      <ol className="flex flex-wrap gap-4 rounded-[2rem] border border-[var(--border-base)] bg-slate-200 p-4">
+      <ol className="flex flex-wrap gap-4 rounded-xl border border-[var(--border-base)] bg-[var(--surface-base)] p-4">
         {steps.map((step, index) => {
           const status = stepActive(index) ? 'active' : stepComplete(index) ? 'done' : 'upcoming';
           return (
             <li
               key={step.key}
               className={cn(
-                'flex flex-1 min-w-[220px] items-center gap-3 rounded-2xl border px-4 py-3 text-sm transition',
-                status === 'done' && 'border-emerald-200 bg-emerald-50 text-emerald-700',
-                status === 'active' && 'border-primary/40 bg-primary/5 text-primary',
+                'flex flex-1 min-w-[220px] items-center gap-3 rounded-xl border px-4 py-3 text-sm transition',
+                status === 'done' && 'border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]',
+                status === 'active' && 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/5 text-[var(--accent-primary)]',
                 status === 'upcoming' && 'border-[var(--border-base)]/50 text-[var(--text-muted)]',
               )}
             >
@@ -456,8 +456,8 @@ export default function NewAgentForm() {
                 {status === 'done' ? <CheckCircle2 className="h-4 w-4" /> : index + 1}
               </div>
               <div>
-                <div className="font-semibold text-slate-900">{step.title}</div>
-                <div className="text-xs text-slate-700">{step.description}</div>
+                <div className="font-semibold text-[var(--text-primary)]">{step.title}</div>
+                <div className="text-xs text-[var(--text-secondary)]">{step.description}</div>
               </div>
             </li>
           );
@@ -584,7 +584,7 @@ export default function NewAgentForm() {
                     className={cn(
                       'rounded-2xl border px-4 py-2 text-sm transition',
                       visibility === option
-                        ? 'border-primary bg-primary/10 text-primary'
+                        ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
                         : 'border-[var(--border-base)] text-[var(--text-muted)] hover:text-white',
                     )}
                   >
@@ -637,7 +637,7 @@ export default function NewAgentForm() {
                       className={cn(
                         'w-full rounded-2xl border px-4 py-3 text-left text-sm',
                         pricingModel === option.value
-                          ? 'border-primary bg-primary/10 text-primary'
+                          ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
                           : 'border-[var(--border-base)] text-[var(--text-muted)] hover:text-white',
                       )}
                     >
@@ -679,7 +679,7 @@ export default function NewAgentForm() {
                   id="input-schema"
                   value={inputSchemaText}
                   onChange={(event) => setInputSchemaText(event.target.value)}
-                  className="bg-white text-black placeholder:text-slate-500"
+                  className="bg-[var(--surface-raised)] text-[var(--text-primary)] border-[var(--border-base)] font-mono text-xs"
                 />
                 {schemaErrors.input && (
                   <p className="text-xs text-destructive">{schemaErrors.input}</p>
@@ -691,7 +691,7 @@ export default function NewAgentForm() {
                   id="output-schema"
                   value={outputSchemaText}
                   onChange={(event) => setOutputSchemaText(event.target.value)}
-                  className="bg-white text-black placeholder:text-slate-500"
+                  className="bg-[var(--surface-raised)] text-[var(--text-primary)] border-[var(--border-base)] font-mono text-xs"
                 />
                 {schemaErrors.output && (
                   <p className="text-xs text-destructive">{schemaErrors.output}</p>

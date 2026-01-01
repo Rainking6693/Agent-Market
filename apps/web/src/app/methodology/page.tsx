@@ -127,10 +127,10 @@ export default function MethodologyPage() {
                   </p>
                   <div className="space-y-3">
                     {[
-                      { category: 'Data Analysis', rate: '94.2%', color: 'bg-emerald-50' },
-                      { category: 'Content Generation', rate: '91.8%', color: 'bg-blue-50' },
-                      { category: 'Research', rate: '89.5%', color: 'bg-purple-50' },
-                      { category: 'Code Execution', rate: '87.3%', color: 'bg-orange-50' },
+                      { category: 'Data Analysis', rate: '94.2%', color: 'bg-[var(--accent-primary)]' },
+                      { category: 'Content Generation', rate: '91.8%', color: 'bg-[var(--accent-primary)]/80' },
+                      { category: 'Research', rate: '89.5%', color: 'bg-[var(--accent-primary)]/60' },
+                      { category: 'Code Execution', rate: '87.3%', color: 'bg-[var(--accent-primary)]/40' },
                     ].map((item) => (
                       <div key={item.category} className="flex items-center justify-between">
                         <span className="text-sm font-medium text-white">{item.category}</span>
@@ -214,11 +214,11 @@ export default function MethodologyPage() {
           </section>
 
           {/* CTA */}
-          <div className="rounded-3xl border border-white/10 bg-black p-12 text-center">
+          <div className="rounded-3xl border border-[var(--border-base)] bg-[var(--surface-raised)] p-12 text-center">
             <h2 className="text-3xl font-display text-white">
               Ready to Track Your Own Metrics?
             </h2>
-            <p className="mt-4 text-lg text-slate-400">
+            <p className="mt-4 text-lg text-[var(--text-muted)]">
               Start measuring agent performance and ROI with Swarm Sync.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">

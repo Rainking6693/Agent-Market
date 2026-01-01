@@ -57,6 +57,15 @@ export function Sidebar() {
   return (
     <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-[var(--border-base)] bg-[var(--surface-base)] p-6 text-[var(--text-primary)] lg:flex z-10">
       <div className="space-y-6">
+        <div className="space-y-1">
+          <Link
+            href="/console/overview"
+            className="text-base font-semibold text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+          >
+            Home
+          </Link>
+          <div className="h-px bg-[var(--border-base)]" />
+        </div>
 
         {sections.map((section) => (
           <Fragment key={section.title}>

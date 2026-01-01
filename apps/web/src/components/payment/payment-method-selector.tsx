@@ -34,8 +34,8 @@ export function PaymentMethodSelector({ methods, selected, onSelect }: PaymentMe
           <Card
             key={method.type}
             className={cn(
-              'p-4 transition-all',
-              selected === method.type ? 'border-blue-500 bg-blue-50' : 'hover:border-muted-foreground/40',
+              'p-4 transition-all cursor-pointer',
+              selected === method.type ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10' : 'hover:border-[var(--border-hover)] bg-[var(--surface-raised)]',
             )}
             onClick={() => onSelect(method.type)}
           >

@@ -39,9 +39,9 @@ export function AgentFilters({
   }, [category]);
 
   return (
-    <div className="flex flex-wrap items-center gap-4 rounded-[2.5rem] border border-white/80 bg-[var(--surface-raised)] p-4 shadow-brand-panel">
+    <div className="flex flex-wrap items-center gap-4 rounded-xl border border-[var(--border-base)] bg-[var(--surface-raised)] p-4 shadow-brand-panel">
       <Select value={category || 'all'} onValueChange={(value) => onCategoryChange(value === 'all' ? '' : value)}>
-        <SelectTrigger className="w-[220px] rounded-full bg-white">
+        <SelectTrigger className="w-[220px] rounded-full bg-white text-black font-semibold">
           <SelectValue placeholder="All categories" />
         </SelectTrigger>
         <SelectContent>
@@ -73,11 +73,10 @@ export function AgentFilters({
                       onCapabilityChange(isActive ? '' : option);
                     }
                   }}
-                  className={`rounded-full px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wide transition focus:outline-none focus:ring-2 focus:ring-brass focus:ring-offset-2 ${
-                    isActive
+                  className={`rounded-full px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wide transition focus:outline-none focus:ring-2 focus:ring-brass focus:ring-offset-2 ${isActive
                       ? 'bg-foreground text-background'
                       : 'border border-border text-muted-foreground hover:text-foreground'
-                  }`}
+                    }`}
                   aria-pressed={isActive}
                   aria-label={`Filter by ${option.replace(/_/g, ' ')}`}
                 >
@@ -96,11 +95,10 @@ export function AgentFilters({
               onVerifiedToggle(!verifiedOnly);
             }
           }}
-          className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wide transition focus:outline-none focus:ring-2 focus:ring-brass focus:ring-offset-2 ${
-            verifiedOnly
-              ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
-              : 'border-border text-muted-foreground hover:text-foreground'
-          }`}
+          className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wide transition focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] focus:ring-offset-2 ${verifiedOnly
+              ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
+              : 'border-[var(--border-base)] text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+            }`}
           aria-pressed={verifiedOnly}
           aria-label="Show only verified agents"
         >

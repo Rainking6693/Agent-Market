@@ -93,8 +93,8 @@ export default function OverviewPage() {
         alerts.push({ type: 'info', message: 'Create your first agent to get started', action: '/agents/new' });
     }
 
-  return (
-    <div className="dashboard space-y-6">
+    return (
+        <div className="dashboard space-y-6">
             {/* Slim Header */}
             <header className="space-y-4">
                 <div>
@@ -110,19 +110,19 @@ export default function OverviewPage() {
                 <div className="flex flex-wrap gap-3">
                     <Link
                         href="/console/agents/new"
-                        className="btn-secondary rounded-xl px-4 py-2 text-sm font-medium transition"
+                        className="tactical-button secondary"
                         font-ui
                     >
                         + Create Agent
                     </Link>
-                <Link
-                    href="/workflows"
-                    className="btn-primary rounded-xl px-4 py-2 text-sm font-semibold transition"
-                    font-ui
-                >
-                    Launch Workflow
-                </Link>
-            </div>
+                    <Link
+                        href="/workflows"
+                        className="tactical-button primary"
+                        font-ui
+                    >
+                        Launch Workflow
+                    </Link>
+                </div>
             </header>
 
             {/* KPI Row - Max 4 cards */}
@@ -139,48 +139,47 @@ export default function OverviewPage() {
                         <CardTitle className="text-lg" font-display>Next Steps</CardTitle>
                     </CardHeader>
                     <CardContent>
-                {alerts.length > 0 ? (
-                    <div className="space-y-3">
-                        {alerts.map((alert, i) => (
-                            <div
-                                key={i}
-                                className={`rounded-lg border p-3 text-sm ${
-                                    alert.tone === 'violet'
-                                        ? 'border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
-                                        : alert.type === 'warning'
-                                            ? 'border-amber-500/30 bg-amber-500/10 text-amber-300'
-                                            : 'border-blue-500/30 bg-blue-500/10 text-blue-300'
-                                }`}
-                            >
-                                <p>{alert.message}</p>
-                                <Link
-                                    href={alert.action}
-                                    className="mt-1 inline-block text-xs font-medium underline text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                                    font-ui
-                                >
-                                    Take action →
-                                </Link>
+                        {alerts.length > 0 ? (
+                            <div className="space-y-3">
+                                {alerts.map((alert, i) => (
+                                    <div
+                                        key={i}
+                                        className={`rounded-lg border p-3 text-sm ${alert.tone === 'violet' || alert.type === 'info'
+                                                ? 'border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
+                                                : alert.type === 'warning'
+                                                    ? 'border-amber-500/30 bg-amber-500/10 text-amber-300'
+                                                    : 'border-[var(--border-base)] bg-[var(--surface-raised)] text-[var(--text-secondary)]'
+                                            }`}
+                                    >
+                                        <p>{alert.message}</p>
+                                        <Link
+                                            href={alert.action}
+                                            className="mt-1 inline-block text-xs font-medium underline text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                                            font-ui
+                                        >
+                                            Take action →
+                                        </Link>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                ) : (
-                    <p className="text-sm text-[var(--text-muted)]" font-ui>All systems operational. No action needed.</p>
-                )}
-                <div className="mt-4 grid gap-3 md:grid-cols-2">
-                    {defaultNextSteps.map((step) => (
-                        <Link
-                            key={step.title}
-                            href={step.href}
-                            className="card-inner rounded-xl border border-[var(--border-base)] px-4 py-3 text-sm transition hover:border-[var(--border-hover)]"
-                        >
-                            <p className="text-[0.7rem] uppercase tracking-[0.3em] text-[var(--text-muted)]" font-ui>Next</p>
-                            <p className="text-base font-semibold text-[var(--text-primary)]" font-display>{step.title}</p>
-                            <p className="text-xs text-[var(--text-secondary)]" font-ui>{step.detail}</p>
-                        </Link>
-                    ))}
-                </div>
-            </CardContent>
-        </Card>
+                        ) : (
+                            <p className="text-sm text-[var(--text-muted)]" font-ui>All systems operational. No action needed.</p>
+                        )}
+                        <div className="mt-4 grid gap-3 md:grid-cols-2">
+                            {defaultNextSteps.map((step) => (
+                                <Link
+                                    key={step.title}
+                                    href={step.href}
+                                    className="card-inner rounded-xl border border-[var(--border-base)] px-4 py-3 text-sm transition hover:border-[var(--border-hover)]"
+                                >
+                                    <p className="text-[0.7rem] uppercase tracking-[0.3em] text-[var(--text-muted)]" font-ui>Next</p>
+                                    <p className="text-base font-semibold text-[var(--text-primary)]" font-display>{step.title}</p>
+                                    <p className="text-xs text-[var(--text-secondary)]" font-ui>{step.detail}</p>
+                                </Link>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
 
                 {/* Recent Activity */}
                 <Card>
