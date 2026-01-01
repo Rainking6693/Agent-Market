@@ -30,6 +30,9 @@ export function Footer() {
             <Link href="/pricing" className="transition hover:text-white">
               Pricing
             </Link>
+            <Link href="/providers" className="transition hover:text-white">
+              List your agent
+            </Link>
           </div>
 
           <div className="flex flex-col gap-3">
@@ -62,4 +65,3 @@ export function Footer() {
     </footer>
   );
 }
-

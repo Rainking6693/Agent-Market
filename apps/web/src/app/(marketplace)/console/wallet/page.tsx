@@ -44,7 +44,7 @@ export default async function WalletPage() {
     <div className="space-y-8">
       <header className="glass-card p-8">
         <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">Wallet</p>
-        <h1 className="mt-2 text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}">Funds & Transactions</h1>
+        <h1 className="mt-2 text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', lineHeight: '1.2' }}>Funds & Transactions</h1>
         <p className="mt-2 max-w-3xl text-sm text-[var(--text-muted)]">
           Manage your wallet balance, add funds via Stripe, and view transaction history.
           Your organization wallet is shown below so you can see the balance the platform collects.

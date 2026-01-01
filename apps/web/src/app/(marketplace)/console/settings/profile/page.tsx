@@ -43,7 +43,7 @@ export default function ProfileSettingsPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <h1 className="text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}">Profile Settings</h1>
+        <h1 className="text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', lineHeight: '1.2' }}>Profile Settings</h1>
         <p className="text-sm text-[var(--text-muted)]">Manage your account information and preferences</p>
       </header>
 

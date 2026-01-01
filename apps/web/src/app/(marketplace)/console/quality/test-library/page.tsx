@@ -77,7 +77,7 @@ export default function TestLibraryPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}>Test Library</h1>
+        <h1 className="text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', lineHeight: '1.2' }}>Test Library</h1>
         <p className="mt-2 text-sm text-[var(--text-muted)] font-ui">
           Browse and run quality test suites on your agents
         </p>

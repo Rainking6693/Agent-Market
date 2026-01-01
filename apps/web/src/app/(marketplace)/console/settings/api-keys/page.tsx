@@ -78,7 +78,7 @@ export default function ApiKeysPage() {
     <div className="space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}">API Keys</h1>
+          <h1 className="text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', lineHeight: '1.2' }}>API Keys</h1>
           <p className="mt-2 text-sm text-[var(--text-muted)]">
             Create and manage API keys for programmatic access to the Agent Market
           </p>

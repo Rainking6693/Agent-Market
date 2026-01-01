@@ -83,7 +83,7 @@ export default function QualityPage({ searchParams }: { searchParams: { agentId?
       <div className="space-y-8">
         <header className="glass-card p-8">
           <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">Quality</p>
-          <h1 className="mt-2 text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}">Trust & Outcomes Console</h1>
+          <h1 className="mt-2 text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', lineHeight: '1.2' }}>Trust & Outcomes Console</h1>
         </header>
         <div className="glass-card border border-blue-500/40 bg-blue-500/10 p-8">
           <h2 className="text-lg font-semibold text-blue-700">No Agents Yet</h2>
@@ -105,7 +105,7 @@ export default function QualityPage({ searchParams }: { searchParams: { agentId?
     return (
       <div className="glass-card p-8">
         <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">Quality</p>
-        <h1 className="mt-2 text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}">Trust & Outcomes Console</h1>
+        <h1 className="mt-2 text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', lineHeight: '1.2' }}>Trust & Outcomes Console</h1>
         <p className="mt-2 text-sm text-[var(--text-muted)]">Select an agent to view quality metrics.</p>
         <QualityAgentSelector
           agents={agents}
@@ -121,7 +121,7 @@ export default function QualityPage({ searchParams }: { searchParams: { agentId?
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">Quality</p>
-            <h1 className="mt-2 text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}">Trust &amp; Outcomes Console</h1>
+            <h1 className="mt-2 text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', lineHeight: '1.2' }}>Trust &amp; Outcomes Console</h1>
             <p className="mt-2 max-w-3xl text-sm text-[var(--text-muted)]">
               Monitor certification status, review autonomous evaluation runs, and manage
               outcome-based agreements tied to escrow releases.

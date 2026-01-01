@@ -34,7 +34,7 @@ export default async function WorkflowsPage() {
     <div className="space-y-10">
       <header className="glass-card p-8">
         <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">Workflows</p>
-        <h1 className="mt-2 text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}">Orchestration Studio</h1>
+        <h1 className="mt-2 text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', lineHeight: '1.2' }}>Orchestration Studio</h1>
         <p className="mt-2 max-w-4xl text-sm text-[var(--text-muted)]">
           Design lightweight multi-agent workflows with budget guardrails. Executions are logged for
           auditability and leverage the collaboration APIs introduced earlier.

@@ -7,7 +7,7 @@ export default function OutcomesComingSoonPage() {
     <div className="space-y-6">
       <header className="glass-card p-8">
         <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">Quality</p>
-        <h1 className="mt-2 text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '32px', fontWeight: 700, lineHeight: '1.2' }}">Outcomes Console</h1>
+        <h1 className="mt-2 text-3xl font-display text-[var(--text-primary)]" style={{ fontSize: '32px', lineHeight: '1.2' }}>Outcomes Console</h1>
         <p className="mt-2 text-sm text-[var(--text-muted)]">
           Gathering data on autonomous outcome delivery. We&apos;re still building this experience.
         </p>
