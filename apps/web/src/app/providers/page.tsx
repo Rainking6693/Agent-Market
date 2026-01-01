@@ -246,6 +246,9 @@ export default function ProviderLandingPage() {
             <p>
               <strong>Can my endpoint be private?</strong> Yes, private endpoints are fine—we provide guidance for secure access.
             </p>
+            <p className="text-xs text-[var(--text-muted)]">
+              We request a short-lived token or encrypted config so we can run your test without storing permanent creds. The verification runs from our secure sandbox, the scoped secret is discarded afterward, and you can rotate access immediately.
+            </p>
           </div>
         </section>
       </main>

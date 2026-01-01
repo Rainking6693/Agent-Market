@@ -797,25 +797,25 @@ body {
   .hero::before,
   .marketing-page::before {
     content: '';
-    position: fixed;
+    position: absolute;
     inset: 0;
-    background: radial-gradient(circle at center, transparent 0%, rgba(6, 7, 18, 0.8) 100%);
-    z-index: 1;
+    background: radial-gradient(circle at center, transparent 0%, rgba(6, 7, 18, 0.85) 100%);
+    z-index: 5;
     pointer-events: none;
   }
 
   .hero>*,
   .marketing-page>* {
     position: relative;
-    z-index: 2;
+    z-index: 10;
   }
 
   /* Ensure background components are behind vignette */
-  .hero .depth-orbs,
   .hero canvas,
-  .marketing-page .depth-orbs,
-  .marketing-page canvas {
-    z-index: 0;
+  .hero .depth-orbs,
+  .marketing-page canvas,
+  .marketing-page .depth-orbs {
+    z-index: 0 !important;
   }
 
   /* App pages - Muted overlay for console feel */
@@ -829,13 +829,13 @@ body {
   .dashboard::before,
   .console-page::before {
     content: '';
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(6, 7, 18, 0.6);
-    z-index: 1;
+    background: rgba(6, 7, 18, 0.75);
+    z-index: 5;
     pointer-events: none;
   }
 
@@ -843,31 +843,22 @@ body {
   .dashboard>*,
   .console-page>* {
     position: relative;
-    z-index: 2;
+    z-index: 10;
   }
 
   /* Reduce starfield opacity for app pages */
+  .app-page canvas,
+  .dashboard canvas,
+  .console-page canvas {
+    opacity: 0.25 !important;
+    z-index: 0 !important;
+  }
+
   .app-page .depth-orbs,
   .dashboard .depth-orbs,
   .console-page .depth-orbs {
-    opacity: 0.3;
-  }
-
-  /* Reduce ChromeNetworkBackground opacity for app pages */
-  .app-page canvas,
-  .dashboard canvas,
-  .console-page canvas {
-    opacity: 0.3;
-  }
-
-  /* Ensure background components are behind overlay */
-  .app-page .depth-orbs,
-  .app-page canvas,
-  .dashboard .depth-orbs,
-  .dashboard canvas,
-  .console-page .depth-orbs,
-  .console-page canvas {
-    z-index: 0;
+    opacity: 0.2 !important;
+    z-index: 0 !important;
   }
 
   /* Dashboard specific */
@@ -1050,9 +1041,15 @@ body {
   }
 
   /* Ensure all cards use tactical styling */
-  [class*="rounded-2xl"][class*="border"] {
+  [class*="rounded-2xl"][class*="border"],
+  [class*="rounded-xl"][class*="border"],
+  [class*="rounded-lg"][class*="border"],
+  [class*="rounded"][class*="bg-black"],
+  [class*="rounded"][class*="bg-slate"] {
+    background: var(--surface-base) !important;
     border-radius: 12px !important;
     box-shadow: var(--shadow-panel) !important;
+    border-color: var(--border-base) !important;
   }
 
   /* Override any glow shadows */
@@ -1096,5 +1093,45 @@ body {
 
   .chrome-cta.chrome-cta--outline {
     letter-spacing: 0 !important;
+  }
+
+  /* Force all dark card backgrounds to use surface-base */
+  .bg-black\/80,
+  .bg-black\/90,
+  [class*="bg-black/"],
+  [class*="bg-slate-900"],
+  [class*="bg-slate-950"] {
+    background: var(--surface-base) !important;
+  }
+
+  /* Ensure proper surface layering for nested elements */
+  .bg-white\/5,
+  .bg-white\/10,
+  [class*="bg-white/"],
+  [class*="bg-slate-400/"] {
+    background: var(--surface-raised) !important;
+  }
+
+  /* Override border colors to use tactical borders */
+  .border-white\/10,
+  .border-white\/20,
+  [class*="border-white/"],
+  [class*="border-slate"] {
+    border-color: var(--border-base) !important;
+  }
+
+  /* Ensure text colors follow hierarchy */
+  .text-slate-50,
+  .text-white {
+    color: var(--text-primary) !important;
+  }
+
+  .text-slate-300,
+  .text-slate-400 {
+    color: var(--text-secondary) !important;
+  }
+
+  .text-slate-500 {
+    color: var(--text-muted) !important;
   }
 }
