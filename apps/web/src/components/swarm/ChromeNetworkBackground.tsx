@@ -78,7 +78,7 @@ export default function ChromeNetworkBackground() {
             const lineWidth = 0.5 + Math.max(node.pulseIntensity, otherNode.pulseIntensity) * 2;
 
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(255, 255, 255, ${baseOpacity + pulseBoost})`;
+            ctx.strokeStyle = `rgba(124, 92, 255, ${baseOpacity + pulseBoost})`;
             ctx.lineWidth = lineWidth;
             ctx.moveTo(node.x, node.y);
             ctx.lineTo(otherNode.x, otherNode.y);
@@ -90,12 +90,12 @@ export default function ChromeNetworkBackground() {
         const nodeOpacity = 0.8 + node.pulseIntensity * 0.2;
 
         ctx.save();
-        ctx.shadowColor = `rgba(255, 255, 255, ${nodeOpacity})`;
+        ctx.shadowColor = `rgba(124, 92, 255, ${nodeOpacity})`;
         ctx.shadowBlur = nodeGlow;
 
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-        ctx.fillStyle = node.pulseIntensity > 0.5 ? "#FFFFFF" : "#94A3B8";
+        ctx.fillStyle = node.pulseIntensity > 0.5 ? "#FFFFFF" : "#7C5CFF";
         ctx.fill();
 
         ctx.restore();

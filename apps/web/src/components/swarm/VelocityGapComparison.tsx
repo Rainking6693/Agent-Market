@@ -10,16 +10,16 @@ const metrics = [
 export default function VelocityGapComparison() {
   return (
     <section className="primed-section">
-      <h2 className="text-sm font-medium uppercase tracking-[0.4em] text-[#94A3B8] drop-shadow-sm">
+      <h2 className="text-sm font-semibold uppercase tracking-[0.4em] text-[var(--accent-primary)]">
         Velocity Gap
       </h2>
-      <p className="mt-2 text-3xl font-semibold text-white">Why Autonomy Wins</p>
+      <p className="mt-2 text-3xl font-bold tracking-tighter text-[var(--text-primary)]">Why Autonomy Wins</p>
       <div className="velocity-grid">
         {metrics.map((metric) => (
           <div key={metric.label} className="velocity-card">
-            <p className="label">{metric.label}</p>
-            <p className="value">{metric.value}</p>
-            <p className="text-xs uppercase tracking-[0.2em] text-[#cbd5f5]">{metric.detail}</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">{metric.label}</p>
+            <p className="mt-2 text-2xl font-bold text-[var(--text-primary)]">{metric.value}</p>
+            <p className="mt-1 text-xs uppercase tracking-[0.1em] text-[var(--text-muted)]">{metric.detail}</p>
           </div>
         ))}
       </div>
