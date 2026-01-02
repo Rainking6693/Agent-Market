@@ -98,11 +98,11 @@ export default function LandingPage() {
               <div className="relative z-10">
                 <div className="flex flex-col items-center md:items-start gap-3 mb-8 hero-logo-group">
                   <Image
-                    src="/logos/swarm-sync-tactical.png"
+                    src="/logos/swarm-sync-tactical-black.png"
                     alt="Swarm Sync logo"
                     width={320}
                     height={120}
-                    className="hero-logo h-32 w-auto sm:h-40 transition-all"
+                    className="hero-logo h-32 w-auto sm:h-40 transition-all mix-blend-screen"
                     priority
                   />
                 </div>
@@ -172,8 +172,8 @@ export default function LandingPage() {
                     <article
                       key={step.title}
                       className={`timeline-card p-4 rounded-lg border ${step.active
-                          ? 'border-slate-400/60 bg-slate-400/5'
-                          : 'border-white/10 bg-white/5'
+                        ? 'border-slate-400/60 bg-slate-400/5'
+                        : 'border-white/10 bg-white/5'
                         }`}
                     >
                       <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.35em] text-slate-400 mb-3">

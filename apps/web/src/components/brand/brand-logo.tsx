@@ -13,8 +13,7 @@ interface BrandLogoProps {
   variant?: 'default' | 'transparent';
 }
 
-const LOGO_SRC_DEFAULT = '/logos/swarm-sync-tactical.png';
-const LOGO_SRC_TRANSPARENT = '/logos/swarm-sync-tactical.png';
+const LOGO_SRC_TACTICAL = '/logos/swarm-sync-tactical-black.png';
 
 export function BrandLogo({
   size = 256,
@@ -23,15 +22,14 @@ export function BrandLogo({
   alt = 'Swarm Sync logo',
   variant = 'default',
 }: BrandLogoProps) {
-  const src = variant === 'transparent' ? LOGO_SRC_TRANSPARENT : LOGO_SRC_DEFAULT;
   return (
     <Image
-      src={src}
+      src={LOGO_SRC_TACTICAL}
       alt={alt}
       width={size}
       height={size}
       priority={priority}
-      className={cn('h-auto w-auto object-contain', className)}
+      className={cn('h-auto w-auto object-contain mix-blend-screen', className)}
     />
   );
 }
