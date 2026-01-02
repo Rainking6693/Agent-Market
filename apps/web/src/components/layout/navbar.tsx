@@ -27,18 +27,15 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border-base)] bg-[var(--surface-base)]/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-          <Link href="/" className="flex items-center gap-3" aria-label="Swarm Sync homepage">
-            <Image
-              src="/logos/swarm-sync-purple.png"
-              alt="Swarm Sync logo"
-              width={52}
-              height={52}
-              priority
-              className="h-14 w-auto"
-            />
-          <span className="text-xs font-medium tracking-[0.3em] text-[var(--text-muted)] uppercase hidden sm:inline" font-ui>
-            AGENT-TO-AGENT HUB
-          </span>
+        <Link href="/" className="flex items-center gap-4 group" aria-label="Swarm Sync homepage">
+          <Image
+            src="/logos/swarm-sync-tactical.png"
+            alt="Swarm Sync logo"
+            width={180}
+            height={60}
+            priority
+            className="h-12 w-auto transition-transform duration-300 group-hover:scale-105"
+          />
         </Link>
 
         <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 md:flex" font-ui>

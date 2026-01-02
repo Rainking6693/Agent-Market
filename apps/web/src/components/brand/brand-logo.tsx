@@ -13,8 +13,8 @@ interface BrandLogoProps {
   variant?: 'default' | 'transparent';
 }
 
-const LOGO_SRC_DEFAULT = '/logos/swarm-sync-purple.png';
-const LOGO_SRC_TRANSPARENT = '/logos/swarm-sync-purple.png';
+const LOGO_SRC_DEFAULT = '/logos/swarm-sync-tactical.png';
+const LOGO_SRC_TRANSPARENT = '/logos/swarm-sync-tactical.png';
 
 export function BrandLogo({
   size = 256,

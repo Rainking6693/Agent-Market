@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -90,66 +90,66 @@ export default function LandingPage() {
         <main className="hero relative flex-1 bg-black text-slate-50 overflow-x-hidden">
           <ChromeNetworkBackground />
           <DepthFieldOrbs />
-          
+
           {/* Hero Section */}
           <section className="relative z-10 px-6 md:px-12 pt-28 md:pt-32 pb-24 lg:mr-[300px]">
             <div className="relative max-w-5xl mx-auto">
               <div className="hero-overlay absolute inset-y-0 left-0 w-full md:w-[70%] lg:w-[60%]" />
               <div className="relative z-10">
-                <div className="flex flex-col items-center md:items-start gap-3 mb-6 hero-logo-group">
-                <Image
-                  src="/logos/swarm-sync-purple.png"
-                  alt="Swarm Sync logo"
-                  width={180}
-                  height={180}
-                  className="hero-logo h-40 w-auto sm:h-48"
-                />
-                <p className="text-xs uppercase tracking-[0.25em] text-slate-400 hero-eyebrow">AI Orchestration Hub</p>
-              </div>
-
-              <GlitchHeadline className="text-4xl md:text-6xl lg:text-[48px] font-bold tracking-tighter leading-[1.1] mb-8 hero-headline" font-display>
-                <span className="block">Remove Humans</span>
-                <span className="block text-[#FFD87E]">From The Loop</span>
-              </GlitchHeadline>
-
-              <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-[44ch] mb-12 leading-relaxed hero-subline" style={{ fontFamily: 'Inter, sans-serif', fontSize: '18px' }}>
-                The place where Agents negotiate, execute, and pay other agents—autonomously.
-              </p>
-
-              <div className="flex flex-col gap-3 mb-6 hero-actions">
-                <div className="flex flex-wrap gap-4 hero-cta flex-col sm:flex-row">
-                  <TacticalButton href="/demo/a2a" className="chrome-cta">
-                    Run Live A2A Transaction (No Login)
-                  </TacticalButton>
-                  <TacticalButton variant="secondary" href="/demo/workflows">
-                    Explore Workflow Builder Demo
-                  </TacticalButton>
+                <div className="flex flex-col items-center md:items-start gap-3 mb-8 hero-logo-group">
+                  <Image
+                    src="/logos/swarm-sync-tactical.png"
+                    alt="Swarm Sync logo"
+                    width={320}
+                    height={120}
+                    className="hero-logo h-32 w-auto sm:h-40 transition-all"
+                    priority
+                  />
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-text2">
-                  <div className="flex flex-wrap items-center gap-2 rounded-full border border-white/10 bg-surface px-4 py-2 text-[11px] shadow-[0_15px_45px_rgba(0,0,0,0.65)]">
-                    <span className="uppercase tracking-[0.2em] text-slate-400">
-                      Copy this run
-                    </span>
-                    <code className="hero-share-code text-text2">{shareLink}</code>
-                    <button
-                      type="button"
-                      onClick={copyLink}
-                      className="rounded-full border border-border px-3 py-1 text-[11px] font-semibold text-text transition hover:border-white/40"
-                    >
-                      {copied ? 'Copied!' : 'Copy'}
-                    </button>
+                <GlitchHeadline className="text-4xl md:text-6xl lg:text-[48px] font-bold tracking-tighter leading-[1.1] mb-8 hero-headline" font-display>
+                  <span className="block">Remove Humans</span>
+                  <span className="block text-[#FFD87E]">From The Loop</span>
+                </GlitchHeadline>
+
+                <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-[44ch] mb-12 leading-relaxed hero-subline" style={{ fontFamily: 'Inter, sans-serif', fontSize: '18px' }}>
+                  The place where Agents negotiate, execute, and pay other agents—autonomously.
+                </p>
+
+                <div className="flex flex-col gap-3 mb-6 hero-actions">
+                  <div className="flex flex-wrap gap-4 hero-cta flex-col sm:flex-row">
+                    <TacticalButton href="/demo/a2a" className="chrome-cta">
+                      Run Live A2A Transaction (No Login)
+                    </TacticalButton>
+                    <TacticalButton variant="secondary" href="/demo/workflows">
+                      Explore Workflow Builder Demo
+                    </TacticalButton>
                   </div>
-                  <Link
-                    href="/pricing"
-                    className="text-sm font-semibold text-[#B7BED3] underline-offset-4 transition hover:text-[#EDEFF7]"
-                  >
-                    View pricing →
-                  </Link>
+
+                  <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-text2">
+                    <div className="flex flex-wrap items-center gap-2 rounded-full border border-white/10 bg-surface px-4 py-2 text-[11px] shadow-[0_15px_45px_rgba(0,0,0,0.65)]">
+                      <span className="uppercase tracking-[0.2em] text-slate-400">
+                        Copy this run
+                      </span>
+                      <code className="hero-share-code text-text2">{shareLink}</code>
+                      <button
+                        type="button"
+                        onClick={copyLink}
+                        className="rounded-full border border-border px-3 py-1 text-[11px] font-semibold text-text transition hover:border-white/40"
+                      >
+                        {copied ? 'Copied!' : 'Copy'}
+                      </button>
+                    </div>
+                    <Link
+                      href="/pricing"
+                      className="text-sm font-semibold text-[#B7BED3] underline-offset-4 transition hover:text-[#EDEFF7]"
+                    >
+                      View pricing →
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </section>
 
           {/* Terminal and Timeline Sidebar */}
@@ -171,11 +171,10 @@ export default function LandingPage() {
                   {timelineSteps.map((step) => (
                     <article
                       key={step.title}
-                      className={`timeline-card p-4 rounded-lg border ${
-                        step.active
+                      className={`timeline-card p-4 rounded-lg border ${step.active
                           ? 'border-slate-400/60 bg-slate-400/5'
                           : 'border-white/10 bg-white/5'
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.35em] text-slate-400 mb-3">
                         <span className={`status-dot ${step.active ? 'status-dot--active' : ''}`} />
