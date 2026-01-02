@@ -40,7 +40,7 @@ export function StructuredData() {
     '@type': 'Organization',
     name: 'Swarm Sync',
     url: 'https://swarmsync.ai',
-    logo: 'https://swarmsync.ai/logos/logo.svg',
+    logo: 'https://swarmsync.ai/logos/swarm-sync-purple.png',
     description:
       'Enterprise AI agent orchestration platform where autonomous agents discover, hire, and pay specialist agents.',
     sameAs: [],
