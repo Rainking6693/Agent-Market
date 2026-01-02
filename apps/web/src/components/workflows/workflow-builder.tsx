@@ -65,20 +65,58 @@ export const WorkflowBuilder = () => {
   );
 
   const handleSubmit = () => {
+    // Clear previous messages
+    setError(null);
+    setMessage(null);
+
+    // Validate required fields
+    const validationErrors: string[] = [];
+
+    if (!name.trim()) {
+      validationErrors.push('Workflow name is required');
+    }
+
+    if (!creatorId.trim()) {
+      validationErrors.push('Creator ID is required');
+    }
+
+    if (budget <= 0) {
+      validationErrors.push('Budget must be greater than 0');
+    }
+
+    // Parse and validate steps
     let parsed: unknown;
     try {
       parsed = JSON.parse(steps);
       if (!Array.isArray(parsed)) {
-        throw new Error('Steps must be an array');
+        validationErrors.push('Steps must be a JSON array');
+      } else if (parsed.length === 0) {
+        validationErrors.push('At least one workflow step is required');
+      } else {
+        // Validate each step
+        for (let i = 0; i < parsed.length; i++) {
+          const step = parsed[i] as { agentId?: string; jobReference?: string; budget?: number };
+          if (!step.agentId || !step.agentId.trim()) {
+            validationErrors.push(`Step ${i + 1}: Agent ID is required`);
+          }
+          if (!step.jobReference || !step.jobReference.trim()) {
+            validationErrors.push(`Step ${i + 1}: Job Reference is required`);
+          }
+          if (step.budget === undefined || step.budget < 0) {
+            validationErrors.push(`Step ${i + 1}: Budget must be 0 or greater`);
+          }
+        }
+        setParsedSteps(parsed as Array<{ agentId: string; jobReference: string; budget: number }>);
       }
-      setParsedSteps(parsed);
     } catch (err) {
-      setError('Steps must be valid JSON array.');
-      return;
+      validationErrors.push('Steps must be valid JSON. Check syntax and try again.');
     }
 
-    setError(null);
-    setMessage(null);
+    // Show validation errors if any
+    if (validationErrors.length > 0) {
+      setError(validationErrors.join('. '));
+      return;
+    }
 
     startTransition(async () => {
       try {
@@ -89,10 +127,34 @@ export const WorkflowBuilder = () => {
           budget,
           steps: parsedSteps,
         });
-        setMessage(`Workflow ${workflow.name} created.`);
+        setMessage(`Workflow "${workflow.name}" created successfully! You can now run it from the list below.`);
+        // Reset form after successful creation
+        setName('Sample orchestration');
+        setDescription('Two-stage research and analysis flow.');
+        setBudget(10);
+        setCreatorId('');
+        setParsedSteps([]);
+        setSteps(defaultSteps);
       } catch (err) {
-        console.error(err);
-        setError('Failed to create workflow.');
+        console.error('Workflow creation error:', err);
+        // Extract more helpful error message
+        let errorMessage = 'Failed to create workflow. ';
+        if (err instanceof Error) {
+          if (err.message.includes('network') || err.message.includes('fetch')) {
+            errorMessage += 'Network error - please check your connection and try again.';
+          } else if (err.message.includes('401') || err.message.includes('unauthorized')) {
+            errorMessage += 'You must be logged in to create workflows.';
+          } else if (err.message.includes('403') || err.message.includes('forbidden')) {
+            errorMessage += 'You do not have permission to create workflows.';
+          } else if (err.message.includes('400')) {
+            errorMessage += 'Invalid workflow data. Please check all fields and try again.';
+          } else {
+            errorMessage += err.message;
+          }
+        } else {
+          errorMessage += 'An unexpected error occurred. Please try again.';
+        }
+        setError(errorMessage);
       }
     });
   };

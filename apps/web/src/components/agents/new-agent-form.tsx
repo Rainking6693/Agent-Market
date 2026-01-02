@@ -361,11 +361,29 @@ export default function NewAgentForm() {
   if (!user) {
     return (
       <div className="space-y-6 rounded-[3rem] border border-[var(--border-base)] bg-[var(--surface-raised)] p-10 text-white">
-        <h1 className="text-3xl font-display">Sign in to deploy agents</h1>
-        <p className="text-sm text-[var(--text-muted)]">You need an authenticated session to provision agents.</p>
-        <Button onClick={() => router.push('/login')} className="w-fit">
-          Go to login
-        </Button>
+        <h1 className="text-3xl font-display">Authentication Required</h1>
+        <p className="text-sm text-[var(--text-muted)]">
+          You need to be signed in to create and deploy agents on the marketplace.
+        </p>
+        <p className="text-sm text-[var(--text-muted)]">
+          If you&apos;re already signed in and seeing this message, your session may have expired.
+          Please sign in again.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Button onClick={() => router.push('/login')} className="w-fit">
+            Sign in
+          </Button>
+          <Button variant="outline" onClick={() => router.push('/providers')} className="w-fit">
+            Apply as Provider
+          </Button>
+        </div>
+        <p className="text-xs text-[var(--text-muted)]">
+          Want to list your agent on the marketplace?{' '}
+          <a href="/providers" className="text-[var(--accent)] hover:underline">
+            Apply to become a provider
+          </a>
+          {' '}to get started.
+        </p>
       </div>
     );
   }
