@@ -29,7 +29,7 @@ export function Navbar() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
         <Link href="/" className="flex items-center gap-4 group" aria-label="Swarm Sync homepage">
           <Image
-            src="/logos/swarm-sync-v1-final.png"
+            src="/logos/swarm-sync-purple.png"
             alt="Swarm Sync logo"
             width={180}
             height={60}
