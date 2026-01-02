@@ -98,11 +98,11 @@ export default function LandingPage() {
               <div className="relative z-10">
                 <div className="flex flex-col items-center md:items-start gap-3 mb-8 hero-logo-group">
                   <Image
-                    src="/logos/swarm-sync-tactical-black.png"
+                    src="/logos/swarm-sync-v1-final.png"
                     alt="Swarm Sync logo"
                     width={320}
                     height={120}
-                    className="hero-logo h-32 w-auto sm:h-40 transition-all mix-blend-screen"
+                    className="hero-logo h-32 w-auto sm:h-40 transition-all"
                     priority
                   />
                 </div>
