@@ -11,9 +11,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useAuth } from '@/hooks/use-auth';
 import { agentsApi, testingApi, type CreateAgentPayload, type AgentBudgetPayload } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import { useAuthStore } from '@/stores/auth-store';
 
 const steps = [
   {
@@ -61,7 +61,7 @@ type Visibility = 'PUBLIC' | 'PRIVATE' | 'ORGANIZATION';
 export default function NewAgentForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const user = useAuthStore((state) => state.user);
+  const { user, isLoading } = useAuth();
 
   const [currentStep, setCurrentStep] = useState(0);
   const [visibility, setVisibility] = useState<Visibility>('PUBLIC');
@@ -357,6 +357,15 @@ export default function NewAgentForm() {
       fileInputRef.current.value = '';
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6 rounded-[3rem] border border-[var(--border-base)] bg-[var(--surface-raised)] p-10 text-white">
+        <h1 className="text-3xl font-display">Loading...</h1>
+        <p className="text-sm text-[var(--text-muted)]">Verifying your authentication...</p>
+      </div>
+    );
+  }
 
   if (!user) {
     return (

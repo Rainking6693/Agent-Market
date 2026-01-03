@@ -151,9 +151,12 @@ export default function TechnicalArchitecture() {
       </div>
 
       {/* Section Navigation */}
-      <div className="flex flex-wrap justify-center gap-3 mb-8">
+      <div className="flex flex-wrap justify-center gap-3 mb-8" role="tablist" aria-label="Technical architecture sections">
         <button
           onClick={() => setActiveSection('a2a')}
+          role="tab"
+          aria-selected={activeSection === 'a2a'}
+          aria-controls="a2a-panel"
           className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${
             activeSection === 'a2a'
               ? 'bg-[var(--accent-primary)] text-white'
@@ -164,6 +167,9 @@ export default function TechnicalArchitecture() {
         </button>
         <button
           onClick={() => setActiveSection('patterns')}
+          role="tab"
+          aria-selected={activeSection === 'patterns'}
+          aria-controls="patterns-panel"
           className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${
             activeSection === 'patterns'
               ? 'bg-[var(--accent-primary)] text-white'
@@ -174,6 +180,9 @@ export default function TechnicalArchitecture() {
         </button>
         <button
           onClick={() => setActiveSection('mcp')}
+          role="tab"
+          aria-selected={activeSection === 'mcp'}
+          aria-controls="mcp-panel"
           className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${
             activeSection === 'mcp'
               ? 'bg-[var(--accent-primary)] text-white'
@@ -186,7 +195,7 @@ export default function TechnicalArchitecture() {
 
       {/* A2A Protocol Section */}
       {activeSection === 'a2a' && (
-        <div className="a2a-protocol">
+        <div id="a2a-panel" role="tabpanel" aria-labelledby="a2a-tab" className="a2a-protocol">
           <div className="grid md:grid-cols-4 gap-4 mb-8" role="group" aria-label="A2A protocol components">
             {a2aProtocolComponents.map((comp) => (
               <button
@@ -256,7 +265,7 @@ export default function TechnicalArchitecture() {
 
       {/* Design Patterns Section */}
       {activeSection === 'patterns' && (
-        <div className="design-patterns grid md:grid-cols-3 gap-6">
+        <div id="patterns-panel" role="tabpanel" aria-labelledby="patterns-tab" className="design-patterns grid md:grid-cols-3 gap-6">
           {designPatterns.map((pattern) => (
             <div
               key={pattern.name}
@@ -281,7 +290,7 @@ export default function TechnicalArchitecture() {
 
       {/* MCP + RAG Section */}
       {activeSection === 'mcp' && (
-        <div className="mcp-rag grid md:grid-cols-2 gap-8">
+        <div id="mcp-panel" role="tabpanel" aria-labelledby="mcp-tab" className="mcp-rag grid md:grid-cols-2 gap-8">
           {/* MCP Server */}
           <div className="mcp-section p-6 rounded-lg border border-[var(--border-base)] bg-[var(--surface-base)]">
             <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2">

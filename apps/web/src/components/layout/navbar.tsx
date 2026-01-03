@@ -4,7 +4,7 @@ import { Menu } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
@@ -24,21 +24,62 @@ export function Navbar() {
   const pathname = usePathname();
   const { isAuthenticated, logout } = useAuth();
   const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Handle Escape key to close mobile menu
+  // Handle Escape key and focus trap for mobile menu
   useEffect(() => {
+    if (!open) return;
+
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && open) {
+      if (e.key === 'Escape') {
         setOpen(false);
+        menuButtonRef.current?.focus();
       }
     };
+
+    // Focus trap implementation
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab' || !menuRef.current) return;
+
+      const focusableElements = menuRef.current.querySelectorAll<HTMLElement>(
+        'a, button, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement.focus();
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement.focus();
+      }
+    };
+
     document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    document.addEventListener('keydown', handleTab);
+
+    // Prevent body scroll when menu is open
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('keydown', handleTab);
+      document.body.style.overflow = '';
+    };
   }, [open]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border-base)] bg-[var(--surface-base)]/90 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+      {/* Skip Navigation Link */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-[var(--accent-primary)] focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-2 focus:ring-white"
+      >
+        Skip to main content
+      </a>
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         {/* Logo - Top Left (Standard Convention) */}
         <Link href="/" className="flex items-center gap-4 group flex-shrink-0" aria-label="Swarm Sync homepage">
           <Image
@@ -47,7 +88,7 @@ export function Navbar() {
             width={180}
             height={60}
             priority
-            className="h-12 w-auto md:h-14 transition-transform duration-300 group-hover:scale-105"
+            className="h-10 w-auto md:h-11 transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:hover:transform-none"
           />
         </Link>
 
@@ -63,6 +104,7 @@ export function Navbar() {
                   : 'hover:text-[var(--text-primary)]',
               )}
               href={link.href}
+              aria-current={pathname.startsWith(link.href) ? 'page' : undefined}
             >
               {link.label}
             </Link>
@@ -85,11 +127,11 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Button variant="ghost" asChild className="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-ui">
+              <Button variant="ghost" asChild className="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-ui min-h-[44px]">
                 <Link href="/login">Sign in</Link>
               </Button>
               <Button className="px-4 py-2 text-sm font-semibold min-h-[44px]" asChild>
-                <Link href="/register">Console</Link>
+                <Link href="/register">Get Started</Link>
               </Button>
             </>
           )}
@@ -97,6 +139,7 @@ export function Navbar() {
 
         {/* Mobile Menu Button */}
         <button
+          ref={menuButtonRef}
           type="button"
           className="inline-flex rounded-full border border-border p-2 min-h-[44px] min-w-[44px] md:hidden items-center justify-center"
           onClick={() => setOpen((prev) => !prev)}
@@ -111,7 +154,11 @@ export function Navbar() {
       {/* Mobile Navigation Drawer */}
       {open && (
         <div
+          ref={menuRef}
           id="mobile-navigation"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation menu"
           className="border-t border-[var(--border-base)] bg-[var(--surface-base)]/90 px-4 py-4 md:hidden"
         >
           <nav className="flex flex-col gap-4 text-sm" aria-label="Mobile navigation">
@@ -124,6 +171,7 @@ export function Navbar() {
                   'font-medium text-[var(--text-secondary)] min-h-[44px] flex items-center font-ui',
                   pathname.startsWith(link.href) && 'text-[var(--accent-primary)]',
                 )}
+                aria-current={pathname.startsWith(link.href) ? 'page' : undefined}
               >
                 {link.label}
               </Link>
@@ -144,7 +192,7 @@ export function Navbar() {
                     <Link href="/login">Sign in</Link>
                   </Button>
                   <Button asChild className="min-h-[44px]">
-                    <Link href="/register">Console</Link>
+                    <Link href="/register">Get Started</Link>
                   </Button>
                 </>
               )}

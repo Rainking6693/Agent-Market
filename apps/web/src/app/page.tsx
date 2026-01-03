@@ -91,7 +91,7 @@ export default function LandingPage() {
       <div className="flex min-h-screen flex-col bg-black">
         <Navbar />
 
-        <main className="hero relative flex-1 bg-black text-slate-50 overflow-x-hidden">
+        <main id="main-content" className="hero relative flex-1 bg-black text-slate-50 overflow-x-hidden">
           <ChromeNetworkBackground />
           <DepthFieldOrbs />
 

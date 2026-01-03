@@ -126,22 +126,38 @@ export default function CompetitiveDifferentiation() {
               >
                 <td className="p-4 text-sm text-[var(--text-secondary)]">{row.feature}</td>
                 <td className="p-4 text-center">
-                  <span className={row.swarm ? 'text-emerald-400' : 'text-red-400'}>
+                  <span
+                    className={row.swarm ? 'text-emerald-400' : 'text-red-400'}
+                    role="img"
+                    aria-label={row.swarm ? 'Supported' : 'Not supported'}
+                  >
                     {row.swarm ? '✓' : '—'}
                   </span>
                 </td>
                 <td className="p-4 text-center">
-                  <span className={row.lang ? 'text-emerald-400' : 'text-[var(--text-muted)]'}>
+                  <span
+                    className={row.lang ? 'text-emerald-400' : 'text-[var(--text-muted)]'}
+                    role="img"
+                    aria-label={row.lang ? 'Supported' : 'Not supported'}
+                  >
                     {row.lang ? '✓' : '—'}
                   </span>
                 </td>
                 <td className="p-4 text-center">
-                  <span className={row.crew ? 'text-emerald-400' : 'text-[var(--text-muted)]'}>
+                  <span
+                    className={row.crew ? 'text-emerald-400' : 'text-[var(--text-muted)]'}
+                    role="img"
+                    aria-label={row.crew ? 'Supported' : 'Not supported'}
+                  >
                     {row.crew ? '✓' : '—'}
                   </span>
                 </td>
                 <td className="p-4 text-center">
-                  <span className={row.auto ? 'text-emerald-400' : 'text-[var(--text-muted)]'}>
+                  <span
+                    className={row.auto ? 'text-emerald-400' : 'text-[var(--text-muted)]'}
+                    role="img"
+                    aria-label={row.auto ? 'Supported' : 'Not supported'}
+                  >
                     {row.auto ? '✓' : '—'}
                   </span>
                 </td>

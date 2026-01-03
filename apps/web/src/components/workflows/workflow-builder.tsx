@@ -35,7 +35,8 @@ export const WorkflowBuilder = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const [creatorId, setCreatorId] = useState('');
+  // Pre-filled with authenticated user ID (Ben Stone)
+  const [creatorId, setCreatorId] = useState('e9b91865-be00-4b76-a293-446e1be9151c');
   const [parsedSteps, setParsedSteps] = useState<Array<{ agentId: string; jobReference: string; budget: number }>>([]);
 
   const handleAddStep = useCallback(() => {
