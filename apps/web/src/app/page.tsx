@@ -52,7 +52,7 @@ export default function ComingSoonPage() {
     <div className="flex min-h-screen flex-col bg-black">
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-[var(--border-base)] bg-[var(--surface-base)]/90 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
           <Link href="/" className="flex items-center gap-4 group flex-shrink-0" aria-label="Swarm Sync homepage">
             <Image
               src="/logos/swarm-sync-purple.png"
@@ -60,7 +60,7 @@ export default function ComingSoonPage() {
               width={180}
               height={60}
               priority
-              className="h-10 w-auto md:h-11 transition-transform duration-300 group-hover:scale-105"
+              className="h-12 w-auto md:h-14 transition-transform duration-300 group-hover:scale-105"
             />
           </Link>
 
@@ -78,7 +78,7 @@ export default function ComingSoonPage() {
       {/* Main Content */}
       <main id="main-content" className="flex-1 bg-black text-slate-50">
         {/* Hero Section */}
-        <section className="relative px-6 md:px-12 pt-24 md:pt-32 pb-16">
+        <section className="relative px-6 md:px-12 pt-12 md:pt-16 pb-16">
           <div className="max-w-4xl mx-auto text-center">
             {/* Status Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/30 mb-8">
