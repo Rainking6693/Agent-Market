@@ -6,7 +6,7 @@ const SMTP_PORT = process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : undefi
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS;
 const SMTP_FROM = process.env.SMTP_FROM ?? 'no-reply@swarmsync.ai';
-const RECIPIENT = process.env.PROVIDER_APPLICATION_RECIPIENT ?? 'bullrushinvestments@gmail.com';
+const RECIPIENT = process.env.PROVIDER_APPLICATION_RECIPIENT ?? 'rainking6693@gmail.com';
 
 const createTransporter = () => {
   if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) {
