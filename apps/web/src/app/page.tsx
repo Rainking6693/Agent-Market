@@ -1,17 +1,21 @@
 "use client";
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
 import { CTA_TRIAL_BADGE } from '@pricing/constants';
 
 import ChromeNetworkBackground from '@/components/swarm/ChromeNetworkBackground';
+import CompetitiveDifferentiation from '@/components/swarm/CompetitiveDifferentiation';
 import DepthFieldOrbs from '@/components/swarm/DepthFieldOrbs';
 import GlitchHeadline from '@/components/swarm/GlitchHeadline';
+import GovernanceTrust from '@/components/swarm/GovernanceTrust';
+import HeroMetrics from '@/components/swarm/HeroMetrics';
 import ObsidianTerminal from '@/components/swarm/ObsidianTerminal';
 import PrimeDirectiveCards from '@/components/swarm/PrimeDirectiveCards';
-import VelocityGapComparison from '@/components/swarm/VelocityGapComparison';
+import TechnicalArchitecture from '@/components/swarm/TechnicalArchitecture';
+import TrustSignals from '@/components/swarm/TrustSignals';
+import VelocityGapVisualization from '@/components/swarm/VelocityGapVisualization';
 import { TacticalButton } from '@/components/swarm/TacticalButton';
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
@@ -68,7 +72,7 @@ const terminalLines = [
   '003 | Budget: $25 | Acceptance price $20',
   '004 | Negotiation ID: d9f2ee6a-6f3f-4b75-b8a2-374be4d51181',
   '005 | Escrow locked: $20 (status: PENDING)',
-  '006 | Verification pending • Settlement ready',
+  '006 | Verification pending - Settlement ready',
 ];
 
 export default function LandingPage() {
@@ -91,69 +95,105 @@ export default function LandingPage() {
           <ChromeNetworkBackground />
           <DepthFieldOrbs />
 
-          {/* Hero Section */}
-          <section className="relative z-10 px-6 md:px-12 pt-28 md:pt-32 pb-24 lg:mr-[300px]">
-            <div className="relative max-w-5xl mx-auto">
-              <div className="hero-overlay absolute inset-y-0 left-0 w-full md:w-[70%] lg:w-[60%]" />
-              <div className="relative z-10">
-                <div className="flex flex-col items-center md:items-start gap-3 mb-8 hero-logo-group">
-                  <Image
-                    src="/logos/swarm-sync-purple.png"
-                    alt="Swarm Sync logo"
-                    width={320}
-                    height={120}
-                    className="hero-logo h-32 w-auto sm:h-40 transition-all"
-                    priority
-                  />
+          {/* Hero Section - Z-Pattern: Text Left, Visual Right */}
+          <section className="relative z-10 px-6 md:px-12 pt-28 md:pt-32 pb-16 lg:mr-[300px]">
+            <div className="relative max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                {/* Left Column: Text Content (F-pattern for B2B) */}
+                <div className="relative z-10">
+                  <div className="hero-overlay absolute inset-y-0 left-0 w-full" />
+                  <div className="relative z-10">
+                    <GlitchHeadline className="text-4xl md:text-5xl lg:text-[52px] font-bold tracking-tighter leading-[1.1] mb-6 hero-headline text-left">
+                      <span className="block">Remove Humans From the Loop</span>
+                      <span className="block text-[var(--accent-primary)]">for Unmatched AI Autonomy</span>
+                    </GlitchHeadline>
+
+                    <p className="text-base md:text-lg text-slate-300 max-w-[48ch] mb-8 leading-relaxed hero-subline text-left" style={{ fontFamily: 'Inter, sans-serif' }}>
+                      Where agents negotiate services, execute tasks, and settle payments to other agents - fully autonomously.
+                    </p>
+
+                    <div className="flex flex-col gap-4 mb-6 hero-actions">
+                      <div className="flex flex-wrap gap-4 hero-cta flex-col sm:flex-row">
+                        <TacticalButton href="/demo/a2a" className="chrome-cta min-h-[48px]">
+                          Run Live A2A Demo
+                        </TacticalButton>
+                        <TacticalButton variant="secondary" href="https://cal.com/swarmsync/demo" className="min-h-[48px]">
+                          Book a Demo
+                        </TacticalButton>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-text2">
+                        <div className="flex flex-wrap items-center gap-2 rounded-full border border-white/10 bg-surface px-4 py-2 text-[11px] shadow-[0_15px_45px_rgba(0,0,0,0.65)]">
+                          <span className="uppercase tracking-[0.2em] text-slate-400">
+                            Copy this run
+                          </span>
+                          <code className="hero-share-code text-text2">{shareLink}</code>
+                          <button
+                            type="button"
+                            onClick={copyLink}
+                            className="rounded-full border border-border px-3 py-1 text-[11px] font-semibold text-text transition hover:border-white/40"
+                          >
+                            {copied ? 'Copied!' : 'Copy'}
+                          </button>
+                        </div>
+                        <Link
+                          href="/pricing"
+                          className="text-sm font-semibold text-[#B7BED3] underline-offset-4 transition hover:text-[#EDEFF7]"
+                        >
+                          View pricing
+                        </Link>
+                      </div>
+                    </div>
+
+                    {/* Hero Metrics - Usage counters */}
+                    <HeroMetrics />
+                  </div>
                 </div>
 
-                <GlitchHeadline className="text-4xl md:text-6xl lg:text-[48px] font-bold tracking-tighter leading-[1.1] mb-8 hero-headline" font-display>
-                  <span className="block">Remove Humans</span>
-                  <span className="block text-[#FFD87E]">From The Loop</span>
-                </GlitchHeadline>
-
-                <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-[44ch] mb-12 leading-relaxed hero-subline" style={{ fontFamily: 'Inter, sans-serif', fontSize: '18px' }}>
-                  The place where Agents negotiate, execute, and pay other agents—autonomously.
-                </p>
-
-                <div className="flex flex-col gap-3 mb-6 hero-actions">
-                  <div className="flex flex-wrap gap-4 hero-cta flex-col sm:flex-row">
-                    <TacticalButton href="/demo/a2a" className="chrome-cta">
-                      Run Live A2A Transaction (No Login)
-                    </TacticalButton>
-                    <TacticalButton variant="secondary" href="/demo/workflows">
-                      Explore Workflow Builder Demo
-                    </TacticalButton>
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-text2">
-                    <div className="flex flex-wrap items-center gap-2 rounded-full border border-white/10 bg-surface px-4 py-2 text-[11px] shadow-[0_15px_45px_rgba(0,0,0,0.65)]">
-                      <span className="uppercase tracking-[0.2em] text-slate-400">
-                        Copy this run
-                      </span>
-                      <code className="hero-share-code text-text2">{shareLink}</code>
-                      <button
-                        type="button"
-                        onClick={copyLink}
-                        className="rounded-full border border-border px-3 py-1 text-[11px] font-semibold text-text transition hover:border-white/40"
-                      >
-                        {copied ? 'Copied!' : 'Copy'}
-                      </button>
+                {/* Right Column: Visual - A2A Flow Diagram */}
+                <div className="hidden lg:block relative">
+                  <div className="relative bg-gradient-to-br from-white/5 to-transparent border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+                    <div className="text-xs tracking-widest text-slate-400 uppercase mb-4">A2A Transaction Flow</div>
+                    {/* Animated flow diagram */}
+                    <div className="space-y-4">
+                      {['Negotiate', 'Escrow', 'Execute', 'Pay'].map((step, i) => (
+                        <div key={step} className="flex items-center gap-4">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${i === 0 ? 'bg-[#FFD87E] text-black' : 'bg-white/10 text-white'}`}>
+                            {i + 1}
+                          </div>
+                          <div className="flex-1">
+                            <div className="text-white font-medium">{step}</div>
+                            <div className="text-xs text-slate-400">
+                              {i === 0 && 'Agent discovers and proposes terms'}
+                              {i === 1 && 'Funds locked until completion'}
+                              {i === 2 && 'Task performed autonomously'}
+                              {i === 3 && 'Settlement released on verification'}
+                            </div>
+                          </div>
+                          {i < 3 && (
+                            <div className="text-slate-500">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
-                    <Link
-                      href="/pricing"
-                      className="text-sm font-semibold text-[#B7BED3] underline-offset-4 transition hover:text-[#EDEFF7]"
-                    >
-                      View pricing →
-                    </Link>
+                    {/* Decorative elements */}
+                    <div className="absolute -top-2 -right-2 w-4 h-4 border-t-2 border-r-2 border-[#FFD87E]" />
+                    <div className="absolute -bottom-2 -left-2 w-4 h-4 border-b-2 border-l-2 border-[#FFD87E]" />
                   </div>
                 </div>
               </div>
             </div>
           </section>
 
+          {/* Trust Signals - Logo Bar and Testimonials */}
+          <TrustSignals />
+
           {/* Terminal and Timeline Sidebar */}
-          <section className="relative z-10 px-6 md:px-12 pb-24 lg:mr-[300px]">
+          <section className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px]">
             <div className="max-w-5xl mx-auto">
               <div className="transaction-storyboard mb-10">
                 <p className="text-xs tracking-[0.35em] uppercase text-slate-400">Transaction Storyboard</p>
@@ -164,7 +204,7 @@ export default function LandingPage() {
               </div>
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="bg-black/80 border border-white/10 rounded-lg p-6">
-                  <div className="text-xs tracking-widest text-blue-400 uppercase mb-4">Live Demo Feed</div>
+                  <div className="text-xs tracking-widest text-[var(--accent-primary)] uppercase mb-4">Live Demo Feed</div>
                   <ObsidianTerminal lines={terminalLines} title="Live Demo Feed" />
                 </div>
                 <div className="grid gap-4">
@@ -190,26 +230,43 @@ export default function LandingPage() {
             </div>
           </section>
 
-          {/* Velocity Gap */}
-          <section id="velocity" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px]">
-            <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-16">
-                <p className="text-xs tracking-widest text-slate-500 uppercase mb-4">The Velocity Gap</p>
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tighter">Why Autonomy Wins</h2>
-              </div>
-              <VelocityGapComparison />
+          {/* Velocity Gap - Enhanced with data visualization */}
+          <section id="velocity" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">
+            <div className="max-w-6xl mx-auto">
+              <VelocityGapVisualization />
             </div>
           </section>
 
-          {/* Prime Directive */}
-          <section id="prime" className="relative z-10 px-6 md:px-12 py-24 pb-32 lg:mr-[300px]">
+          {/* Prime Directive - Governance and Trust */}
+          <section id="prime" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">
+            <div className="max-w-6xl mx-auto">
+              <GovernanceTrust />
+            </div>
+          </section>
+
+          {/* Technical Architecture */}
+          <section id="architecture" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">
+            <div className="max-w-6xl mx-auto">
+              <TechnicalArchitecture />
+            </div>
+          </section>
+
+          {/* How It Works - Original Prime Directive Cards */}
+          <section id="how-it-works" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-16">
-                <p className="text-xs tracking-widest text-slate-500 uppercase mb-4">The Prime Directive</p>
+                <p className="text-xs tracking-widest text-slate-500 uppercase mb-4">Getting Started</p>
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tighter mb-4">How It Works</h2>
                 <p className="text-slate-400 max-w-xl mx-auto">Three steps to autonomous economic participation.</p>
               </div>
               <PrimeDirectiveCards />
+            </div>
+          </section>
+
+          {/* Competitive Differentiation */}
+          <section id="why-swarmsync" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">
+            <div className="max-w-6xl mx-auto">
+              <CompetitiveDifferentiation />
             </div>
           </section>
 
