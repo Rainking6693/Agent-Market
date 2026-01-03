@@ -1,14 +1,19 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 import { Footer } from '@/components/layout/footer';
 
-export default function ComingSoonPage() {
+function BetaGateContent() {
+  const searchParams = useSearchParams();
+  const { data: session } = useSession();
   const [formState, setFormState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const from = searchParams?.get('from') || '';
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,15 +68,6 @@ export default function ComingSoonPage() {
               className="h-10 w-auto md:h-11 transition-transform duration-300 group-hover:scale-105"
             />
           </Link>
-
-          <div className="flex items-center gap-4">
-            <Link
-              href="/login"
-              className="text-sm font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-            >
-              Have an invite?
-            </Link>
-          </div>
         </div>
       </header>
 
@@ -79,45 +75,39 @@ export default function ComingSoonPage() {
       <main id="main-content" className="flex-1 bg-black text-slate-50">
         {/* Hero Section */}
         <section className="relative px-6 md:px-12 pt-24 md:pt-32 pb-16">
-          <div className="max-w-4xl mx-auto text-center">
-            {/* Status Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/30 mb-8">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent-primary)] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent-primary)]"></span>
-              </span>
-              <span className="text-sm font-semibold text-[var(--accent-primary)]">Private Beta</span>
+          <div className="max-w-3xl mx-auto text-center">
+            {/* Lock Icon */}
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/30 mb-8">
+              <svg className="w-10 h-10 text-[var(--accent-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
             </div>
 
-            {/* Main Heading */}
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-6">
-              <span className="block">SwarmSync is</span>
-              <span className="block text-[var(--accent-primary)]">Coming Soon</span>
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-[1.1] mb-6">
+              <span className="block">Private Beta</span>
             </h1>
 
-            {/* Pitch */}
-            <p className="text-xl md:text-2xl text-[#B7BED3] max-w-2xl mx-auto mb-12 leading-relaxed">
-              The first marketplace where AI agents autonomously discover, negotiate with, and transact services from other agents—with built-in payment infrastructure.
-            </p>
+            {session ? (
+              <>
+                <p className="text-xl text-[#B7BED3] max-w-2xl mx-auto mb-8 leading-relaxed">
+                  Hi {session.user?.name || 'there'}! Your account doesn't have beta access yet.
+                </p>
+                <p className="text-lg text-[#B7BED3] max-w-2xl mx-auto mb-12 leading-relaxed">
+                  Apply below to join as an agent provider, or use an invite link if you have one.
+                </p>
+              </>
+            ) : (
+              <p className="text-xl text-[#B7BED3] max-w-2xl mx-auto mb-12 leading-relaxed">
+                SwarmSync is currently in private beta. Apply to list your agent or use an invite link to get started.
+              </p>
+            )}
 
-            {/* Key Features */}
-            <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-16">
-              <div className="p-6 rounded-lg bg-[var(--surface-base)] border border-[var(--border-base)]">
-                <div className="text-3xl mb-3">🤝</div>
-                <h3 className="font-semibold text-[var(--text-primary)] mb-2">Agent-to-Agent Payments</h3>
-                <p className="text-sm text-[var(--text-secondary)]">Built-in escrow and settlement for autonomous transactions</p>
+            {from && (
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--surface-raised)] border border-[var(--border-base)] text-sm text-[var(--text-muted)] mb-8">
+                <span>Trying to access:</span>
+                <code className="font-mono text-[var(--text-primary)]">{from}</code>
               </div>
-              <div className="p-6 rounded-lg bg-[var(--surface-base)] border border-[var(--border-base)]">
-                <div className="text-3xl mb-3">🔍</div>
-                <h3 className="font-semibold text-[var(--text-primary)] mb-2">Service Discovery</h3>
-                <p className="text-sm text-[var(--text-secondary)]">Agents find and negotiate with other agents by capability</p>
-              </div>
-              <div className="p-6 rounded-lg bg-[var(--surface-base)] border border-[var(--border-base)]">
-                <div className="text-3xl mb-3">⚡</div>
-                <h3 className="font-semibold text-[var(--text-primary)] mb-2">Multi-Agent Workflows</h3>
-                <p className="text-sm text-[var(--text-secondary)]">Orchestrate complex workflows with budget guardrails</p>
-              </div>
-            </div>
+            )}
           </div>
         </section>
 
@@ -140,16 +130,24 @@ export default function ComingSoonPage() {
                 <p className="text-[var(--text-secondary)] mb-6">
                   If approved, you'll receive an invite link at the email you provided.
                 </p>
-                <button
-                  onClick={() => setFormState('idle')}
-                  className="text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition"
-                >
-                  Submit another application
-                </button>
+                <div className="flex gap-4 justify-center">
+                  <button
+                    onClick={() => setFormState('idle')}
+                    className="text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition"
+                  >
+                    Submit another application
+                  </button>
+                  <Link
+                    href="/"
+                    className="text-sm font-semibold text-[var(--accent-primary)] hover:text-[var(--accent-primary)]/80 transition"
+                  >
+                    Back to home
+                  </Link>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Personal Info */}
+                {/* Form fields - same as coming-soon page */}
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-[var(--text-primary)] mb-2">
@@ -160,6 +158,7 @@ export default function ComingSoonPage() {
                       id="name"
                       name="name"
                       required
+                      defaultValue={session?.user?.name || ''}
                       className="w-full px-4 py-3 rounded-lg bg-[var(--surface-base)] border border-[var(--border-base)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent"
                       placeholder="Jane Doe"
                     />
@@ -173,6 +172,7 @@ export default function ComingSoonPage() {
                       id="email"
                       name="email"
                       required
+                      defaultValue={session?.user?.email || ''}
                       className="w-full px-4 py-3 rounded-lg bg-[var(--surface-base)] border border-[var(--border-base)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent"
                       placeholder="jane@example.com"
                     />
@@ -192,7 +192,6 @@ export default function ComingSoonPage() {
                   />
                 </div>
 
-                {/* Agent Info */}
                 <div className="pt-4 border-t border-[var(--border-base)]">
                   <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <div>
@@ -297,23 +296,47 @@ export default function ComingSoonPage() {
           </div>
         </section>
 
-        {/* Alternative Access */}
+        {/* Invite Link Instructions */}
         <section className="relative px-6 md:px-12 py-12 border-t border-[var(--border-base)] bg-[var(--surface-base)]">
-          <div className="max-w-2xl mx-auto text-center">
-            <p className="text-[var(--text-secondary)] mb-4">
-              Already have an invite code?
-            </p>
-            <Link
-              href="/login"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-transparent border border-[var(--border-base)] text-[var(--text-primary)] font-semibold hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] transition"
-            >
-              Sign In
-            </Link>
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold mb-4">Have an Invite Link?</h2>
+              <p className="text-[var(--text-secondary)] mb-6">
+                If you received an invite link, it looks like this:
+              </p>
+              <code className="inline-block px-4 py-2 rounded-lg bg-[var(--surface-base)] border border-[var(--border-base)] font-mono text-sm text-[var(--accent-primary)]">
+                https://swarmsync.ai/invite/your-token-here
+              </code>
+              <p className="text-sm text-[var(--text-muted)] mt-4">
+                Simply paste it into your browser and follow the instructions to activate your beta access.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-transparent border border-[var(--border-base)] text-[var(--text-primary)] font-semibold hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] transition"
+              >
+                Back to Home
+              </Link>
+            </div>
           </div>
         </section>
       </main>
 
       <Footer />
     </div>
+  );
+}
+
+export default function BetaGatePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center bg-black">
+        <div className="text-[var(--text-secondary)]">Loading...</div>
+      </div>
+    }>
+      <BetaGateContent />
+    </Suspense>
   );
 }

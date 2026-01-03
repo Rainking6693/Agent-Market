@@ -38,9 +38,9 @@ export async function POST(request: Request) {
     const body = `
       Name: ${payload.name}
       Email: ${payload.email}
-      Twitter: ${payload.twitter || '–'}
+      X Handle: ${payload.xHandle || payload.twitter || '–'}
       Agent name: ${payload.agentName}
-      What it does: ${payload.whatItDoes}
+      What it does: ${payload.agentDescription || payload.whatItDoes}
       Endpoint type: ${payload.endpointType}
       Docs/repo: ${payload.docsLink || '–'}
       Notes: ${payload.notes || '–'}

@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   secret: nextAuthSecret,
   session: {
-    strategy: 'database', // Use database sessions with PrismaAdapter
+    strategy: 'jwt', // Use JWT sessions for faster middleware checks
   },
   providers: [
     GoogleProvider({
@@ -104,17 +104,52 @@ export const authOptions: NextAuthOptions = {
           image: user.image ?? null,
           emailVerified: new Date(),
           password: null,
+          role: 'user',
+          betaAccess: false,
+          providerBeta: false,
         },
       });
       return true;
     },
-    async session({ session, user }) {
-      // user is the Prisma User model when using database sessions
-      if (session.user && user) {
-        session.user.id = user.id;
-        session.user.email = user.email;
-        session.user.name = (user as { displayName?: string }).displayName ?? user.name ?? user.email;
-        session.user.image = user.image ?? undefined;
+    async jwt({ token, user, trigger }) {
+      // On sign in or update, add custom fields to JWT
+      if (user || trigger === 'update') {
+        // Fetch fresh user data from database
+        const dbUser = await prisma.user.findUnique({
+          where: { email: token.email! },
+          select: {
+            id: true,
+            email: true,
+            displayName: true,
+            image: true,
+            role: true,
+            betaAccess: true,
+            providerBeta: true,
+          },
+        });
+
+        if (dbUser) {
+          token.id = dbUser.id;
+          token.email = dbUser.email;
+          token.name = dbUser.displayName;
+          token.picture = dbUser.image ?? undefined;
+          token.role = dbUser.role;
+          token.betaAccess = dbUser.betaAccess;
+          token.providerBeta = dbUser.providerBeta;
+        }
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // Add custom fields from JWT to session
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.email = token.email!;
+        session.user.name = token.name!;
+        session.user.image = token.picture;
+        (session.user as any).role = token.role;
+        (session.user as any).betaAccess = token.betaAccess;
+        (session.user as any).providerBeta = token.providerBeta;
       }
       return session;
     },
