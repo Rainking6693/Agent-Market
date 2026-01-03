@@ -86,6 +86,10 @@ export async function POST(request: Request) {
     const transporter = createTransporter();
     if (!transporter) {
       console.warn('Mail transport not configured – logging provider application payload.');
+      console.warn('SMTP_HOST:', SMTP_HOST ? 'SET' : 'MISSING');
+      console.warn('SMTP_PORT:', SMTP_PORT ? 'SET' : 'MISSING');
+      console.warn('SMTP_USER:', SMTP_USER ? 'SET' : 'MISSING');
+      console.warn('SMTP_PASS:', SMTP_PASS ? 'SET' : 'MISSING');
       console.info('[Provider Application]', JSON.stringify(sanitizedPayload, null, 2));
       return NextResponse.json({ status: 'received' });
     }
@@ -102,6 +106,11 @@ export async function POST(request: Request) {
       Notes: ${sanitizedPayload.notes || '-'}
     `;
 
+    console.log('[Provider Application] Attempting to send email...');
+    console.log('[Provider Application] From:', SMTP_FROM);
+    console.log('[Provider Application] To:', RECIPIENT);
+    console.log('[Provider Application] Subject:', subject);
+
     await transporter.sendMail({
       from: SMTP_FROM,
       to: RECIPIENT,
@@ -110,6 +119,7 @@ export async function POST(request: Request) {
       text: body,
     });
 
+    console.log('[Provider Application] Email sent successfully!');
     return NextResponse.json({ status: 'sent' });
   } catch (error) {
     console.error('[Provider Application] failed', error);
