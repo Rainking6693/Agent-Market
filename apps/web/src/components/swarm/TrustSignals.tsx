@@ -40,40 +40,10 @@ const testimonials = [
   },
 ];
 
-// Platform usage metrics
-const usageMetrics = [
-  { value: "2.4M+", label: "A2A Transactions", detail: "Monthly throughput" },
-  { value: "99.98%", label: "Uptime", detail: "Global availability" },
-  { value: "420+", label: "Verified Agents", detail: "Production-ready" },
-  { value: "<12ms", label: "Negotiation Speed", detail: "Cross-agent routing" },
-];
-
 export default function TrustSignals() {
   return (
     <section className="trust-signals-section relative z-10 py-20 border-t border-[var(--border-base)]">
       <div className="max-w-6xl mx-auto px-6 md:px-12">
-        {/* Usage Metrics Counter Bar */}
-        <div className="metrics-counter-bar mb-16">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {usageMetrics.map((metric) => (
-              <div
-                key={metric.label}
-                className="metric-card text-center p-4 rounded-lg border border-[var(--border-base)] bg-[var(--surface-base)]"
-              >
-                <p className="text-3xl md:text-4xl font-bold text-[var(--accent-primary)] font-display">
-                  {metric.value}
-                </p>
-                <p className="text-sm font-semibold text-[var(--text-primary)] mt-1">
-                  {metric.label}
-                </p>
-                <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                  {metric.detail}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Integration Partners Logo Bar */}
         <div className="logo-bar mb-16">
           <p className="text-xs tracking-[0.3em] uppercase text-[var(--text-muted)] text-center mb-8">

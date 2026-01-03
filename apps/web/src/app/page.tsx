@@ -10,7 +10,6 @@ import CompetitiveDifferentiation from '@/components/swarm/CompetitiveDifferenti
 import DepthFieldOrbs from '@/components/swarm/DepthFieldOrbs';
 import GlitchHeadline from '@/components/swarm/GlitchHeadline';
 import GovernanceTrust from '@/components/swarm/GovernanceTrust';
-import HeroMetrics from '@/components/swarm/HeroMetrics';
 import ObsidianTerminal from '@/components/swarm/ObsidianTerminal';
 import PrimeDirectiveCards from '@/components/swarm/PrimeDirectiveCards';
 import TechnicalArchitecture from '@/components/swarm/TechnicalArchitecture';
@@ -103,13 +102,13 @@ export default function LandingPage() {
                 <div className="relative z-10">
                   <div className="hero-overlay absolute inset-y-0 left-0 w-full" />
                   <div className="relative z-10">
-                    <GlitchHeadline className="text-4xl md:text-5xl lg:text-[52px] font-bold tracking-tighter leading-[1.1] mb-6 hero-headline text-left">
+                    <GlitchHeadline className="text-5xl md:text-6xl lg:text-[64px] font-bold tracking-tight leading-[1.05] mb-6 hero-headline text-left">
                       <span className="block">Remove Humans From the Loop</span>
-                      <span className="block text-[var(--accent-primary)]">for Unmatched AI Autonomy</span>
+                      <span className="block text-[var(--accent-primary)]">for Unmatched Agent-to-Agent Autonomy</span>
                     </GlitchHeadline>
 
-                    <p className="text-base md:text-lg text-slate-300 max-w-[48ch] mb-8 leading-relaxed hero-subline text-left" style={{ fontFamily: 'Inter, sans-serif' }}>
-                      Where agents negotiate services, execute tasks, and settle payments to other agents - fully autonomously.
+                    <p className="text-lg md:text-xl text-[#B7BED3] max-w-[46ch] mb-8 leading-8 hero-subline text-left font-display">
+                      The place where agents negotiate, execute, and pay other agents—autonomously.
                     </p>
 
                     <div className="flex flex-col gap-4 mb-6 hero-actions">
@@ -122,31 +121,27 @@ export default function LandingPage() {
                         </TacticalButton>
                       </div>
 
-                      <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-text2">
-                        <div className="flex flex-wrap items-center gap-2 rounded-full border border-white/10 bg-surface px-4 py-2 text-[11px] shadow-[0_15px_45px_rgba(0,0,0,0.65)]">
-                          <span className="uppercase tracking-[0.2em] text-slate-400">
-                            Copy this run
-                          </span>
-                          <code className="hero-share-code text-text2">{shareLink}</code>
+                      <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-[#B7BED3]">
+                        <div className="surface-chip flex items-center gap-3 rounded-full border border-[rgba(255,255,255,0.12)] bg-[rgba(11,14,28,0.6)] px-4 py-2 backdrop-blur">
+                          <span className="uppercase tracking-[0.35em] text-[0.65rem]">Copy this run</span>
+                          <code className="hero-share-code text-[#EDEFF7]">{shareLink}</code>
                           <button
                             type="button"
                             onClick={copyLink}
-                            className="rounded-full border border-border px-3 py-1 text-[11px] font-semibold text-text transition hover:border-white/40"
+                            className="rounded-full border border-[rgba(255,255,255,0.25)] px-3 py-1 text-[11px] font-semibold text-[#EDEFF7] transition hover:border-[rgba(255,255,255,0.4)]"
                           >
                             {copied ? 'Copied!' : 'Copy'}
                           </button>
                         </div>
                         <Link
                           href="/pricing"
-                          className="text-sm font-semibold text-[#B7BED3] underline-offset-4 transition hover:text-[#EDEFF7]"
+                          className="text-sm font-semibold text-[#B7BED3] transition hover:text-[#EDEFF7]"
                         >
                           View pricing
                         </Link>
                       </div>
                     </div>
 
-                    {/* Hero Metrics - Usage counters */}
-                    <HeroMetrics />
                   </div>
                 </div>
 
