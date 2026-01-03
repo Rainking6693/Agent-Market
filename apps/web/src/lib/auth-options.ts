@@ -147,9 +147,9 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email!;
         session.user.name = token.name!;
         session.user.image = token.picture;
-        (session.user as any).role = token.role;
-        (session.user as any).betaAccess = token.betaAccess;
-        (session.user as any).providerBeta = token.providerBeta;
+        session.user.role = token.role;
+        session.user.betaAccess = token.betaAccess;
+        session.user.providerBeta = token.providerBeta;
       }
       return session;
     },

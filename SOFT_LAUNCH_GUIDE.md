@@ -218,7 +218,8 @@ requiresBetaAccess(path); // Check if path requires beta access
 **Route Arrays**:
 
 ```typescript
-PUBLIC_ROUTES; // Exact path matches
+PUBLIC_ROUTES; // Exact path matches (e.g., '/', '/login')
+PUBLIC_ROUTE_PREFIXES; // Route prefixes (e.g., '/providers' matches '/providers/thanks')
 PUBLIC_API_ROUTES; // API route prefixes
 PUBLIC_ASSETS; // Static asset prefixes
 INVITE_ROUTES; // Invite link routes
@@ -233,10 +234,13 @@ INVITE_ROUTES; // Invite link routes
 **Functionality**:
 
 - Accepts provider application form data
-- Validates required fields (name, email, agentName, agentDescription, endpointType)
+- Server-side validation of required fields (name, email, agentName, agentDescription, endpointType)
+- Input sanitization to prevent XSS attacks
+- Length validation (max 2000 characters per field)
+- Email format validation
 - Sends email notification to admin (if SMTP configured)
 - Logs application to console (if email not configured)
-- Returns success/error response
+- Returns success/error response with proper error messages
 
 **Email Configuration** (optional):
 

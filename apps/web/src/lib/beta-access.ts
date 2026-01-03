@@ -38,22 +38,21 @@ export function hasBetaAccess(user: BetaUser | null | undefined): boolean {
 export function hasSessionBetaAccess(session: Session | null): boolean {
   if (!session?.user) return false;
 
-  const user = session.user as any; // NextAuth user type doesn't include custom fields
+  // Type is properly extended in types/next-auth.d.ts
   return hasBetaAccess({
-    id: user.id,
-    email: user.email ?? '',
-    role: user.role,
-    betaAccess: user.betaAccess,
-    providerBeta: user.providerBeta,
+    id: session.user.id ?? '',
+    email: session.user.email ?? '',
+    role: session.user.role,
+    betaAccess: session.user.betaAccess,
+    providerBeta: session.user.providerBeta,
   });
 }
 
 /**
- * Routes that are publicly accessible (no beta access required)
+ * Routes that are publicly accessible (exact match, no beta access required)
  */
 export const PUBLIC_ROUTES = [
   '/',
-  '/providers',
   '/login',
   '/register',
   '/auth/error',
@@ -63,13 +62,20 @@ export const PUBLIC_ROUTES = [
 ];
 
 /**
+ * Route prefixes that are publicly accessible (prefix match, no beta access required)
+ * All routes starting with these prefixes are public
+ */
+export const PUBLIC_ROUTE_PREFIXES = [
+  '/providers',  // Provider landing page and thank you page
+];
+
+/**
  * API routes that are publicly accessible
  */
 export const PUBLIC_API_ROUTES = [
   '/api/auth',
   '/api/health',
   '/api/provider-apply',
-  '/api/beta-request',
 ];
 
 /**
@@ -97,6 +103,9 @@ export const INVITE_ROUTES = ['/invite'];
 export function isPublicPath(path: string): boolean {
   // Check exact matches
   if (PUBLIC_ROUTES.includes(path)) return true;
+
+  // Check public route prefixes
+  if (PUBLIC_ROUTE_PREFIXES.some((prefix) => path === prefix || path.startsWith(prefix + '/'))) return true;
 
   // Check API routes
   if (PUBLIC_API_ROUTES.some((route) => path.startsWith(route))) return true;
