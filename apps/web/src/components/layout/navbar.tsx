@@ -38,16 +38,16 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border-base)] bg-[var(--surface-base)]/90 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
         {/* Logo - Top Left (Standard Convention) */}
         <Link href="/" className="flex items-center gap-4 group flex-shrink-0" aria-label="Swarm Sync homepage">
           <Image
             src="/logos/swarm-sync-purple.png"
             alt="Swarm Sync logo"
-            width={160}
-            height={53}
+            width={180}
+            height={60}
             priority
-            className="h-10 w-auto md:h-11 transition-transform duration-300 group-hover:scale-105"
+            className="h-12 w-auto md:h-14 transition-transform duration-300 group-hover:scale-105"
           />
         </Link>
 

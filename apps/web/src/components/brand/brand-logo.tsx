@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { cn } from '@/lib/utils';
 
@@ -11,6 +12,7 @@ interface BrandLogoProps {
   priority?: boolean;
   alt?: string;
   variant?: 'default' | 'transparent';
+  href?: string;
 }
 
 const LOGO_SRC_FINAL = '/logos/swarm-sync-purple.png';
@@ -21,15 +23,18 @@ export function BrandLogo({
   priority = false,
   alt = 'Swarm Sync logo',
   variant = 'default',
+  href = '/',
 }: BrandLogoProps) {
   return (
-    <Image
-      src={LOGO_SRC_FINAL}
-      alt={alt}
-      width={size}
-      height={size}
-      priority={priority}
-      className={cn('h-auto w-auto object-contain', className)}
-    />
+    <Link href={href} aria-label="Swarm Sync homepage">
+      <Image
+        src={LOGO_SRC_FINAL}
+        alt={alt}
+        width={size}
+        height={size}
+        priority={priority}
+        className={cn('h-auto w-auto object-contain', className)}
+      />
+    </Link>
   );
 }

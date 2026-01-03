@@ -235,13 +235,13 @@ function TransactionStoryboard({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-baseline justify-between">
-        <div>
-          <h2 className="text-lg font-semibold text-[var(--text-primary)]" font-display>Transaction Storyboard</h2>
-          <p className="text-xs text-[var(--text-secondary)]" font-ui>
-            Outcomes-first view of a full A2A negotiation, escrow, and payout.
-          </p>
-        </div>
+          <div className="flex items-baseline justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-[var(--text-primary)]" font-display>Transaction Storyboard</h2>
+              <p className="text-xs text-white" font-ui>
+                Outcomes-first view of a full A2A negotiation, escrow, and payout.
+              </p>
+            </div>
       </div>
 
       <div className="demo-feed space-y-8">
@@ -265,10 +265,10 @@ function TransactionStoryboard({
               <div className="flex items-center justify-between gap-2">
                 <span className="text-sm font-semibold text-[var(--text-primary)]" style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '20px' }}>{step.title}</span>
                 {step.timestamp && (
-                  <span className="text-xs text-[var(--text-muted)] whitespace-nowrap" style={{ fontFamily: 'Inter, sans-serif', fontVariantNumeric: 'tabular-nums' }}>{step.timestamp}</span>
+                  <span className="text-xs text-white whitespace-nowrap" style={{ fontFamily: 'Inter, sans-serif', fontVariantNumeric: 'tabular-nums' }}>{step.timestamp}</span>
                 )}
               </div>
-              <p className="mt-1 text-xs text-[var(--text-secondary)]" style={{ fontFamily: 'Inter, sans-serif', fontSize: '14px' }}>{step.description}</p>
+              <p className="mt-1 text-xs text-white" style={{ fontFamily: 'Inter, sans-serif', fontSize: '14px' }}>{step.description}</p>
             </div>
           </div>
         ))}

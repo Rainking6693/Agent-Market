@@ -251,12 +251,12 @@ export function A2ARunner(props: A2ARunnerProps) {
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2">
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-gray-700">Requester Agent</span>
+          <span className="text-sm font-semibold text-white">Requester Agent</span>
           <select
             value={requesterId}
             onChange={(e) => setRequesterId(e.target.value)}
             disabled={agents.length === 0}
-            className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-white/40 focus:outline-none disabled:bg-gray-100"
+            className="rounded-lg border border-border bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-border focus:outline-none disabled:bg-[rgba(11,14,28,0.6)]"
           >
             {agents.length === 0 ? (
               <option>
@@ -273,12 +273,12 @@ export function A2ARunner(props: A2ARunnerProps) {
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-gray-700">Responder Agent</span>
+          <span className="text-sm font-semibold text-white">Responder Agent</span>
           <select
             value={responderId}
             onChange={(e) => setResponderId(e.target.value)}
             disabled={agents.length === 0}
-            className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-white/40 focus:outline-none disabled:bg-gray-100"
+            className="rounded-lg border border-border bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-border focus:outline-none disabled:bg-[rgba(11,14,28,0.6)]"
           >
             {agents.length === 0 ? (
               <option>
@@ -296,28 +296,28 @@ export function A2ARunner(props: A2ARunnerProps) {
       </div>
 
       <label className="flex flex-col gap-2">
-        <span className="text-sm font-semibold text-gray-700">Service Request</span>
+        <span className="text-sm font-semibold text-white">Service Request</span>
         <textarea
           value={service}
           onChange={(e) => setService(e.target.value)}
           rows={3}
-          className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-white/40 focus:outline-none"
+          className="rounded-lg border border-border bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-border focus:outline-none"
         />
       </label>
 
       <div className="grid gap-4 md:grid-cols-2">
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-gray-700">Budget ($)</span>
+          <span className="text-sm font-semibold text-white">Budget ($)</span>
           <input
             type="number"
             value={budget}
             onChange={(e) => setBudget(parseFloat(e.target.value) || 0)}
-            className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-white/40 focus:outline-none"
+            className="rounded-lg border border-border bg-[var(--surface-raised)] px-3 py-2 text-sm text-white focus:border-border focus:outline-none"
           />
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-gray-700">Acceptance Price ($)</span>
+          <span className="text-sm font-semibold text-white">Acceptance Price ($)</span>
           <input
             type="number"
             value={price}

@@ -96,7 +96,7 @@ export default function LandingPage() {
           <DepthFieldOrbs />
 
           {/* Hero Section - Z-Pattern: Text Left, Visual Right */}
-          <section className="relative z-10 px-6 md:px-12 pt-28 md:pt-32 pb-16 lg:mr-[300px]">
+          <section className="relative z-10 px-6 md:px-12 pt-40 md:pt-44 pb-16 lg:mr-[300px]">
             <div className="relative max-w-6xl mx-auto">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 {/* Left Column: Text Content (F-pattern for B2B) */}
@@ -117,8 +117,8 @@ export default function LandingPage() {
                         <TacticalButton href="/demo/a2a" className="chrome-cta min-h-[48px]">
                           Run Live A2A Demo
                         </TacticalButton>
-                        <TacticalButton variant="secondary" href="https://cal.com/swarmsync/demo" className="min-h-[48px]">
-                          Book a Demo
+                        <TacticalButton variant="secondary" href="/demo/workflows" className="min-h-[48px]">
+                          Explore Workflow Builder Demo
                         </TacticalButton>
                       </div>
 
