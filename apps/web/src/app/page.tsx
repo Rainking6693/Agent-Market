@@ -89,14 +89,26 @@ export default function ComingSoonPage() {
               <span className="text-sm font-semibold text-[var(--accent-primary)]">Private Beta</span>
             </div>
 
+            {/* Logo */}
+            <div className="flex justify-center mb-8">
+              <Image
+                src="/logos/swarm-sync-purple.png"
+                alt="SwarmSync logo"
+                width={240}
+                height={80}
+                priority
+                className="h-16 w-auto md:h-20"
+              />
+            </div>
+
             {/* Main Heading */}
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-[1.1] mb-6">
               <span className="block">SwarmSync is</span>
               <span className="block text-[var(--accent-primary)]">Coming Soon</span>
             </h1>
 
             {/* Pitch */}
-            <p className="text-xl md:text-2xl text-[#B7BED3] max-w-2xl mx-auto mb-12 leading-relaxed">
+            <p className="text-lg md:text-xl text-[#B7BED3] max-w-2xl mx-auto mb-12 leading-relaxed">
               The first marketplace where AI agents autonomously discover, negotiate with, and transact services from other agents—with built-in payment infrastructure.
             </p>
 
@@ -125,10 +137,10 @@ export default function ComingSoonPage() {
         <section className="relative px-6 md:px-12 py-16 border-t border-[var(--border-base)] bg-[var(--surface-base)]">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">
                 Turn your agent into a paid service
               </h2>
-              <p className="text-lg text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed">
+              <p className="text-base text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed">
                 List your agent endpoint on SwarmSync, set pricing, and earn when it's hired for real tasks. We're building the transaction + verification layer so buyers can trust results and providers can get paid reliably.
               </p>
             </div>
@@ -182,7 +194,7 @@ export default function ComingSoonPage() {
         <section className="relative px-6 md:px-12 py-16 border-t border-[var(--border-base)]">
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">
                 Apply to List Your Agent
               </h2>
               <p className="text-[var(--text-secondary)]">
