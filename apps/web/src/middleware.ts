@@ -9,12 +9,14 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { isPublicPath, requiresBetaAccess } from '@/lib/beta-access';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
 
 // Helper to decode JWT (basic base64 decode for payload)
-function decodeJWT(token: string): { email?: string } | null {
+function decodeJWT(token: string): {
+  email?: string;
+  role?: string;
+  betaAccess?: boolean;
+  providerBeta?: boolean;
+} | null {
   try {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
@@ -23,6 +25,17 @@ function decodeJWT(token: string): { email?: string } | null {
   } catch {
     return null;
   }
+}
+
+// Helper to check if user has beta access
+function hasBetaAccess(user: {
+  role?: string;
+  betaAccess?: boolean;
+  providerBeta?: boolean;
+}): boolean {
+  if (user.role === 'admin') return true;
+  if (user.betaAccess === true || user.providerBeta === true) return true;
+  return false;
 }
 
 export async function middleware(request: NextRequest) {
@@ -44,7 +57,12 @@ export async function middleware(request: NextRequest) {
 
   console.log('[Middleware] Path requires beta access, checking auth...');
 
-  let userEmail: string | null = null;
+  let user: {
+    email?: string;
+    role?: string;
+    betaAccess?: boolean;
+    providerBeta?: boolean;
+  } | null = null;
 
   // Try NextAuth JWT first (OAuth)
   const nextAuthToken = await getToken({
@@ -54,7 +72,12 @@ export async function middleware(request: NextRequest) {
 
   if (nextAuthToken?.email) {
     console.log('[Middleware] Found NextAuth JWT for:', nextAuthToken.email);
-    userEmail = nextAuthToken.email;
+    user = {
+      email: nextAuthToken.email,
+      role: (nextAuthToken as any).role,
+      betaAccess: (nextAuthToken as any).betaAccess,
+      providerBeta: (nextAuthToken as any).providerBeta,
+    };
   } else {
     // Try custom auth token cookie (email/password)
     const customAuthToken = request.cookies.get('auth_token')?.value;
@@ -63,14 +86,19 @@ export async function middleware(request: NextRequest) {
       console.log('[Middleware] Found custom auth_token cookie');
       const decoded = decodeJWT(customAuthToken);
       if (decoded?.email) {
-        console.log('[Middleware] Decoded email from custom token:', decoded.email);
-        userEmail = decoded.email;
+        console.log('[Middleware] Decoded custom token for:', decoded.email);
+        user = {
+          email: decoded.email,
+          role: decoded.role,
+          betaAccess: decoded.betaAccess,
+          providerBeta: decoded.providerBeta,
+        };
       }
     }
   }
 
-  // No email = not authenticated
-  if (!userEmail) {
+  // No user = not authenticated
+  if (!user || !user.email) {
     console.log('[Middleware] No authentication found, redirecting to beta-gate');
     const url = request.nextUrl.clone();
     url.pathname = '/beta-gate';
@@ -78,48 +106,27 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Check database for user's beta access
-  try {
-    console.log('[Middleware] Checking database for user:', userEmail);
-    const user = await prisma.user.findUnique({
-      where: { email: userEmail },
-      select: { role: true, betaAccess: true, providerBeta: true },
-    });
+  console.log('[Middleware] User:', {
+    email: user.email,
+    role: user.role,
+    betaAccess: user.betaAccess,
+    providerBeta: user.providerBeta,
+  });
 
-    console.log('[Middleware] DB User:', user);
+  // Check if user has beta access
+  const hasAccess = hasBetaAccess(user);
+  console.log('[Middleware] Has access:', hasAccess);
 
-    if (!user) {
-      console.log('[Middleware] User not found in DB, redirecting to beta-gate');
-      const url = request.nextUrl.clone();
-      url.pathname = '/beta-gate';
-      url.searchParams.set('from', pathname);
-      return NextResponse.redirect(url);
-    }
-
-    // Check if user has beta access
-    const hasAccess = user.role === 'admin' || user.betaAccess || user.providerBeta;
-    console.log('[Middleware] Has access:', hasAccess);
-
-    if (!hasAccess) {
-      console.log('[Middleware] User lacks beta access, redirecting to beta-gate');
-      const url = request.nextUrl.clone();
-      url.pathname = '/beta-gate';
-      url.searchParams.set('from', pathname);
-      return NextResponse.redirect(url);
-    }
-
-    console.log('[Middleware] User has beta access, allowing through');
-    return NextResponse.next();
-  } catch (error) {
-    console.error('[Middleware] Database error:', error);
-    // On error, redirect to beta gate
+  if (!hasAccess) {
+    console.log('[Middleware] User lacks beta access, redirecting to beta-gate');
     const url = request.nextUrl.clone();
     url.pathname = '/beta-gate';
     url.searchParams.set('from', pathname);
     return NextResponse.redirect(url);
-  } finally {
-    await prisma.$disconnect();
   }
+
+  console.log('[Middleware] User has beta access, allowing through');
+  return NextResponse.next();
 }
 
 // Configure which routes the middleware runs on

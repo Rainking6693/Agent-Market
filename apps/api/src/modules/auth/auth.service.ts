@@ -69,6 +69,15 @@ export class AuthService {
 
       const dbUser = await this.prisma.user.findUnique({
         where: { email: data.email },
+        select: {
+          id: true,
+          email: true,
+          displayName: true,
+          password: true,
+          role: true,
+          betaAccess: true,
+          providerBeta: true,
+        },
       });
 
       if (!dbUser) {
@@ -78,7 +87,7 @@ export class AuthService {
       // Check if password is in PHC format (starts with $)
       // If not, it's likely a plain text password from old seed data
       const isHashed = dbUser.password.startsWith('$');
-      
+
       let passwordValid: boolean;
       if (isHashed) {
         // Normal verification for hashed passwords
@@ -103,7 +112,11 @@ export class AuthService {
       }
 
       const user = this.dbUserToAuthUser(dbUser);
-      return this.buildAuthResponse(user);
+      return this.buildAuthResponse(user, {
+        role: dbUser.role,
+        betaAccess: dbUser.betaAccess,
+        providerBeta: dbUser.providerBeta,
+      });
     } catch (error) {
       if (error instanceof UnauthorizedException) {
         throw error;
@@ -122,13 +135,21 @@ export class AuthService {
     };
   }
 
-  private buildAuthResponse(user: AuthenticatedUser) {
+  private buildAuthResponse(
+    user: AuthenticatedUser,
+    additionalClaims?: {
+      role?: string;
+      betaAccess?: boolean;
+      providerBeta?: boolean;
+    },
+  ) {
     try {
       const payload = {
         sub: user.id,
         email: user.email,
         displayName: user.displayName,
         kind: user.kind ?? 'user',
+        ...additionalClaims,
       };
 
       const accessToken = this.jwtService.sign(payload);
