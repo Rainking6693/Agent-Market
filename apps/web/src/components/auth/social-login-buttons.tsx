@@ -21,7 +21,11 @@ export function SocialLoginButtons() {
     setIsLoading(true);
 
     try {
-      await signIn(provider, { callbackUrl: '/dashboard' });
+      // Check for callback URL in query params
+      const urlParams = new URLSearchParams(window.location.search);
+      const callbackUrl = urlParams.get('callbackUrl') || '/dashboard';
+
+      await signIn(provider, { callbackUrl });
     } catch (error) {
       console.error(`Failed to initiate ${provider} login:`, error);
       isProcessingRef.current = false;

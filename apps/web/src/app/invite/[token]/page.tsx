@@ -2,21 +2,26 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession, signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
+import { useAuthStore } from '@/stores/auth-store';
 import Link from 'next/link';
 
 export default function InviteAcceptPage({ params }: { params: { token: string } }) {
   const router = useRouter();
   const { data: session, update } = useSession();
+  const authStore = useAuthStore();
   const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'expired' | 'used'>('loading');
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     const acceptInvite = async () => {
       try {
+        // Check if user is authenticated (either OAuth or email/password)
+        const isAuthenticated = !!session || !!authStore.user;
+
         // If not logged in, redirect to login with return URL
-        if (!session) {
-          signIn(undefined, { callbackUrl: `/invite/${params.token}` });
+        if (!isAuthenticated) {
+          router.push(`/login?callbackUrl=${encodeURIComponent(`/invite/${params.token}`)}`);
           return;
         }
 
@@ -60,7 +65,7 @@ export default function InviteAcceptPage({ params }: { params: { token: string }
     };
 
     acceptInvite();
-  }, [session, params.token, router, update]);
+  }, [session, authStore.user, params.token, router, update]);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-black text-slate-50 px-6">
@@ -123,7 +128,7 @@ export default function InviteAcceptPage({ params }: { params: { token: string }
               </Link>
             ) : (
               <button
-                onClick={() => signIn()}
+                onClick={() => router.push('/login')}
                 className="inline-block px-6 py-3 rounded-lg bg-[var(--accent-primary)] text-white font-semibold hover:bg-[var(--accent-primary)]/90 transition"
               >
                 Sign In

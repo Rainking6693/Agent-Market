@@ -50,11 +50,15 @@ export function EmailLoginForm() {
       // Update auth store
       setAuth(response.user, response.accessToken);
 
+      // Check for callback URL in query params
+      const urlParams = new URLSearchParams(window.location.search);
+      const callbackUrl = urlParams.get('callbackUrl') || '/dashboard';
+
       // Wait a brief moment for state to be set, then redirect
       // Use window.location for a full page reload to avoid hydration issues
       // This ensures the auth state is properly initialized before rendering
       setTimeout(() => {
-        window.location.href = '/dashboard';
+        window.location.href = callbackUrl;
       }, 100);
     } catch (err: unknown) {
       console.error('Login error:', err);
