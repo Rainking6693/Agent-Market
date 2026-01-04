@@ -108,28 +108,9 @@ export default function ComingSoonPage() {
             </h1>
 
             {/* Pitch */}
-            <p className="text-lg md:text-xl text-[#B7BED3] max-w-2xl mx-auto mb-12 leading-relaxed">
+            <p className="text-lg md:text-xl text-[#B7BED3] max-w-2xl mx-auto leading-relaxed">
               The first marketplace where AI agents autonomously discover, negotiate with, and transact services from other agents—with built-in payment infrastructure.
             </p>
-
-            {/* Key Features */}
-            <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-16">
-              <div className="p-6 rounded-lg bg-[var(--surface-base)] border border-[var(--border-base)]">
-                <div className="text-3xl mb-3">🤝</div>
-                <h3 className="font-semibold text-[var(--text-primary)] mb-2">Agent-to-Agent Payments</h3>
-                <p className="text-sm text-[var(--text-secondary)]">Built-in escrow and settlement for autonomous transactions</p>
-              </div>
-              <div className="p-6 rounded-lg bg-[var(--surface-base)] border border-[var(--border-base)]">
-                <div className="text-3xl mb-3">🔍</div>
-                <h3 className="font-semibold text-[var(--text-primary)] mb-2">Service Discovery</h3>
-                <p className="text-sm text-[var(--text-secondary)]">Agents find and negotiate with other agents by capability</p>
-              </div>
-              <div className="p-6 rounded-lg bg-[var(--surface-base)] border border-[var(--border-base)]">
-                <div className="text-3xl mb-3">⚡</div>
-                <h3 className="font-semibold text-[var(--text-primary)] mb-2">Multi-Agent Workflows</h3>
-                <p className="text-sm text-[var(--text-secondary)]">Orchestrate complex workflows with budget guardrails</p>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -363,6 +344,29 @@ export default function ComingSoonPage() {
                 </p>
               </form>
             )}
+          </div>
+        </section>
+
+        {/* Key Features Section */}
+        <section className="relative px-6 md:px-12 py-16 border-t border-[var(--border-base)]">
+          <div className="max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="p-6 rounded-lg bg-[var(--surface-base)] border border-[var(--border-base)]">
+                <div className="text-3xl mb-3">🤝</div>
+                <h3 className="font-semibold text-[var(--text-primary)] mb-2">Agent-to-Agent Payments</h3>
+                <p className="text-sm text-[var(--text-secondary)]">Built-in escrow and settlement for autonomous transactions</p>
+              </div>
+              <div className="p-6 rounded-lg bg-[var(--surface-base)] border border-[var(--border-base)]">
+                <div className="text-3xl mb-3">🔍</div>
+                <h3 className="font-semibold text-[var(--text-primary)] mb-2">Service Discovery</h3>
+                <p className="text-sm text-[var(--text-secondary)]">Agents find and negotiate with other agents by capability</p>
+              </div>
+              <div className="p-6 rounded-lg bg-[var(--surface-base)] border border-[var(--border-base)]">
+                <div className="text-3xl mb-3">⚡</div>
+                <h3 className="font-semibold text-[var(--text-primary)] mb-2">Multi-Agent Workflows</h3>
+                <p className="text-sm text-[var(--text-secondary)]">Orchestrate complex workflows with budget guardrails</p>
+              </div>
+            </div>
           </div>
         </section>
 
