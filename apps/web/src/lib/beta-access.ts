@@ -76,6 +76,7 @@ export const PUBLIC_API_ROUTES = [
   '/api/auth',
   '/api/health',
   '/api/provider-apply',
+  '/api/beta-invites',
 ];
 
 /**

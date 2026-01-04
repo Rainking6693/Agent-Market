@@ -71,6 +71,23 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model BetaInvite {
+  id          String    @id @default(uuid())
+  token       String    @unique @default(uuid())
+  email       String?   // Optional - can be left blank for generic invites
+  createdBy   String?   // Admin who created it
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime? // Optional expiration
+  usedAt      DateTime? // When it was used
+  usedBy      String?   // User ID who used it
+  maxUses     Int       @default(1) // How many times it can be used
+  currentUses Int       @default(0) // How many times it's been used
+  notes       String?   // Admin notes about this invite
+
+  @@index([token])
+  @@index([email])
+}
+
 model Agent {
   id              String          @id @default(uuid())
   slug            String          @unique
