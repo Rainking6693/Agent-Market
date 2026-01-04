@@ -112,8 +112,13 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
     async jwt({ token, user, trigger }) {
+      console.log('[JWT Callback] Called with trigger:', trigger, 'user:', user ? 'EXISTS' : 'NULL');
+      console.log('[JWT Callback] Token email:', token.email);
+
       // On sign in or update, add custom fields to JWT
       if (user || trigger === 'update') {
+        console.log('[JWT Callback] Fetching fresh user data from database...');
+
         // Fetch fresh user data from database
         const dbUser = await prisma.user.findUnique({
           where: { email: token.email! },
@@ -128,6 +133,8 @@ export const authOptions: NextAuthOptions = {
           },
         });
 
+        console.log('[JWT Callback] DB User:', dbUser ? JSON.stringify(dbUser, null, 2) : 'NULL');
+
         if (dbUser) {
           token.id = dbUser.id;
           token.email = dbUser.email;
@@ -136,7 +143,20 @@ export const authOptions: NextAuthOptions = {
           token.role = dbUser.role;
           token.betaAccess = dbUser.betaAccess;
           token.providerBeta = dbUser.providerBeta;
+
+          console.log('[JWT Callback] Updated token with:', {
+            role: token.role,
+            betaAccess: token.betaAccess,
+            providerBeta: token.providerBeta,
+          });
         }
+      } else {
+        console.log('[JWT Callback] Returning existing token (no fetch)');
+        console.log('[JWT Callback] Existing token values:', {
+          role: token.role,
+          betaAccess: token.betaAccess,
+          providerBeta: token.providerBeta,
+        });
       }
       return token;
     },

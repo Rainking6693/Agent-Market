@@ -19,14 +19,26 @@ export interface BetaUser {
  * @returns true if user can access gated routes
  */
 export function hasBetaAccess(user: BetaUser | null | undefined): boolean {
-  if (!user) return false;
+  console.log('[hasBetaAccess] Checking user:', JSON.stringify(user, null, 2));
+
+  if (!user) {
+    console.log('[hasBetaAccess] No user, returning false');
+    return false;
+  }
 
   // Admins always have access
-  if (user.role === 'admin') return true;
+  if (user.role === 'admin') {
+    console.log('[hasBetaAccess] User is admin, returning true');
+    return true;
+  }
 
   // Check for either beta access flag
-  if (user.betaAccess === true || user.providerBeta === true) return true;
+  if (user.betaAccess === true || user.providerBeta === true) {
+    console.log('[hasBetaAccess] User has beta flag, returning true');
+    return true;
+  }
 
+  console.log('[hasBetaAccess] User lacks access, returning false');
   return false;
 }
 
