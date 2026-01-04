@@ -89,6 +89,7 @@ export const PUBLIC_API_ROUTES = [
   '/api/health',
   '/api/provider-apply',
   '/api/beta-invites',
+  '/api/debug-token', // Debug endpoint to check JWT token
 ];
 
 /**
