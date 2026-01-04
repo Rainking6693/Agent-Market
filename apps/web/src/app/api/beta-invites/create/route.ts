@@ -1,20 +1,19 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth-options';
+import { getAuthenticatedUser } from '@/lib/auth-helpers';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
   try {
-    // Get session and verify admin
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
+    // Get authenticated user (supports both OAuth and email/password)
+    const authUser = await getAuthenticatedUser();
+    if (!authUser?.email) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
+      where: { email: authUser.email },
       select: { id: true, role: true },
     });
 
@@ -44,7 +43,7 @@ export async function POST(request: Request) {
 
     const inviteUrl = `${process.env.NEXTAUTH_URL || 'https://swarmsync.ai'}/invite/${invite.token}`;
 
-    console.log(`[Beta Invite] Admin ${session.user.email} created invite: ${inviteUrl}`);
+    console.log(`[Beta Invite] Admin ${authUser.email} created invite: ${inviteUrl}`);
 
     return NextResponse.json({
       success: true,

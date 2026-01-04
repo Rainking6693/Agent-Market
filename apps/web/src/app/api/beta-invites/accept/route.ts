@@ -1,15 +1,14 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth-options';
+import { getAuthenticatedUser } from '@/lib/auth-helpers';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
   try {
-    // Get session
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
+    // Get authenticated user (supports both OAuth and email/password)
+    const authUser = await getAuthenticatedUser();
+    if (!authUser?.email) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
@@ -45,7 +44,7 @@ export async function POST(request: Request) {
 
     // Grant beta access to the user
     const user = await prisma.user.update({
-      where: { email: session.user.email },
+      where: { email: authUser.email },
       data: {
         providerBeta: true,
         betaAccess: true,
