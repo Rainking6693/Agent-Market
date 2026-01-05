@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 export default function InviteAcceptPage({ params }: { params: { token: string } }) {
   const router = useRouter();
-  const { data: session, update } = useSession();
+  const { data: session, status: sessionStatus, update } = useSession();
   const authStore = useAuthStore();
   const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'expired' | 'used'>('loading');
   const [message, setMessage] = useState('');
@@ -16,14 +16,23 @@ export default function InviteAcceptPage({ params }: { params: { token: string }
   useEffect(() => {
     const acceptInvite = async () => {
       try {
+        // Wait for session to load before checking authentication
+        if (sessionStatus === 'loading') {
+          console.log('[Invite] Session still loading, waiting...');
+          return;
+        }
+
         // Check if user is authenticated (either OAuth or email/password)
         const isAuthenticated = !!session || !!authStore.user;
 
         // If not logged in, redirect to login with return URL
         if (!isAuthenticated) {
+          console.log('[Invite] Not authenticated, redirecting to login');
           router.push(`/login?callbackUrl=${encodeURIComponent(`/invite/${params.token}`)}`);
           return;
         }
+
+        console.log('[Invite] User authenticated, accepting invite...');
 
         // Accept the invite
         const response = await fetch('/api/beta-invites/accept', {
@@ -65,7 +74,7 @@ export default function InviteAcceptPage({ params }: { params: { token: string }
     };
 
     acceptInvite();
-  }, [session, authStore.user, params.token, router, update]);
+  }, [session, sessionStatus, authStore.user, params.token, router, update]);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-black text-slate-50 px-6">
