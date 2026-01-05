@@ -85,25 +85,20 @@ export const authOptions: NextAuthOptions = {
     async redirect({ url, baseUrl }) {
       console.log('[Redirect Callback] url:', url, 'baseUrl:', baseUrl);
 
-      // Allow relative callback URLs (like /invite/abc123)
+      // Starts with slash = relative callback URL (like /invite/abc123)
       if (url.startsWith('/')) {
         const redirectUrl = `${baseUrl}${url}`;
         console.log('[Redirect Callback] Allowing relative URL, redirecting to:', redirectUrl);
         return redirectUrl;
       }
 
-      // Allow callback URLs on the same origin
-      try {
-        const urlObj = new URL(url);
-        if (urlObj.origin === baseUrl) {
-          console.log('[Redirect Callback] Allowing same-origin URL:', url);
-          return url;
-        }
-      } catch (e) {
-        console.error('[Redirect Callback] Invalid URL:', url, e);
+      // Starts with baseUrl = same origin URL
+      if (url.startsWith(baseUrl)) {
+        console.log('[Redirect Callback] Allowing same-origin URL:', url);
+        return url;
       }
 
-      // Default to base URL for safety
+      // Default to base URL for safety (prevents open redirects)
       console.log('[Redirect Callback] Falling back to baseUrl:', baseUrl);
       return baseUrl;
     },
