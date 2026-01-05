@@ -82,26 +82,6 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      console.log('[Redirect Callback] url:', url, 'baseUrl:', baseUrl);
-
-      // Starts with slash = relative callback URL (like /invite/abc123)
-      if (url.startsWith('/')) {
-        const redirectUrl = `${baseUrl}${url}`;
-        console.log('[Redirect Callback] Allowing relative URL, redirecting to:', redirectUrl);
-        return redirectUrl;
-      }
-
-      // Starts with baseUrl = same origin URL
-      if (url.startsWith(baseUrl)) {
-        console.log('[Redirect Callback] Allowing same-origin URL:', url);
-        return url;
-      }
-
-      // Default to base URL for safety (prevents open redirects)
-      console.log('[Redirect Callback] Falling back to baseUrl:', baseUrl);
-      return baseUrl;
-    },
     async signIn({ user, profile }) {
       // Normalize display name for our Prisma schema
       const displayName =
