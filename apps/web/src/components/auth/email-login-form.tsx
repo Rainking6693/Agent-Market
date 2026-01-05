@@ -40,9 +40,9 @@ export function EmailLoginForm() {
     setError(null);
 
     try {
-      console.log('Attempting login for:', data.email);
+      console.log(`[EmailLogin] Attempting login for: ${data.email}`);
       const response = await authApi.login(data.email, data.password);
-      console.log('Login response received:', response);
+      console.log('[EmailLogin] Login response received successfully');
 
       // Store token in localStorage and cookie
       persistAuth(response.user, response.accessToken);
@@ -63,13 +63,13 @@ export function EmailLoginForm() {
     } catch (err: unknown) {
       console.error('Login error:', err);
       let message = 'Login failed. Please check your credentials and try again.';
-      
+
       if (err && typeof err === 'object') {
         // Handle ky HTTPError
         if ('response' in err && err.response && typeof err.response === 'object') {
           const httpError = err as { response: { status: number; statusText: string } };
           const status = httpError.response.status;
-          
+
           if (status === 401) {
             message = 'Invalid email or password. Please try again.';
           } else if (status === 400) {
@@ -87,7 +87,7 @@ export function EmailLoginForm() {
       } else if (err instanceof Error) {
         message = err.message;
       }
-      
+
       setError(message);
       setIsLoading(false);
     } finally {

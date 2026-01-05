@@ -4,8 +4,12 @@ import { signIn } from 'next-auth/react';
 import { useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { authApi } from '@/lib/api';
+import { persistAuth } from '@/lib/auth';
+import { useAuthStore } from '@/stores/auth-store';
 
 export function SocialLoginButtons() {
+  const [error, setError] = useState<string | null>(null);
   // Guard against double calls (React StrictMode, double clicks, etc.)
   const isProcessingRef = useRef(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,9 +29,19 @@ export function SocialLoginButtons() {
       const urlParams = new URLSearchParams(window.location.search);
       const callbackUrl = urlParams.get('callbackUrl') || '/dashboard';
 
-      await signIn(provider, { callbackUrl });
+      console.log(`[Auth] Initiating ${provider} login with callbackUrl: `, callbackUrl);
+
+      const result = await signIn(provider, { callbackUrl, redirect: true });
+
+      if (result?.error) {
+        console.error(`[Auth] ${provider} login error: `, result.error);
+        setError(`Failed to sign in with ${provider}: ${result.error} `);
+        isProcessingRef.current = false;
+        setIsLoading(false);
+      }
     } catch (error) {
-      console.error(`Failed to initiate ${provider} login:`, error);
+      console.error(`[Auth] Failed to initiate ${provider} login: `, error);
+      setError(`An unexpected error occurred during ${provider} login.`);
       isProcessingRef.current = false;
       setIsLoading(false);
     }
@@ -35,6 +49,11 @@ export function SocialLoginButtons() {
 
   return (
     <div className="space-y-3">
+      {error && (
+        <div className="rounded-lg bg-red-500/10 border border-red-500/30 p-3 text-sm text-red-300">
+          {error}
+        </div>
+      )}
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t border-border" />

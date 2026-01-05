@@ -65,7 +65,15 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
         try {
             const parts = jwtToken.split('.');
             if (parts.length === 3) {
-                const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+                // Use atob for edge runtime compatibility
+                const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(
+                    atob(base64)
+                        .split('')
+                        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                        .join('')
+                );
+                const payload = JSON.parse(jsonPayload);
                 return {
                     id: payload.sub || payload.id,
                     email: payload.email,

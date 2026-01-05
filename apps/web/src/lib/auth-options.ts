@@ -27,43 +27,40 @@ function resolveEnv(
   return fallbackValue;
 }
 
-const googleClientId = resolveEnv(
-  'GOOGLE_CLIENT_ID',
-  [
-    'GOOGLE_CLIENT_ID',
-    'NEXT_PUBLIC_GOOGLE_CLIENT_ID',
-    'NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID',
-  ],
-  'missing-google-client-id',
-);
+const googleClientId =
+  process.env.GOOGLE_CLIENT_ID ||
+  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
+  'missing-google-client-id';
 
-const googleClientSecret = resolveEnv(
-  'GOOGLE_CLIENT_SECRET',
-  [
-    'GOOGLE_CLIENT_SECRET',
-    'GOOGLE_OAUTH_CLIENT_SECRET',
-    'NEXT_PUBLIC_GOOGLE_CLIENT_SECRET',
-  ],
-  'missing-google-client-secret',
-);
+const googleClientSecret =
+  process.env.GOOGLE_CLIENT_SECRET ||
+  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET ||
+  'missing-google-client-secret';
 
-const githubClientId = resolveEnv(
-  'GITHUB_CLIENT_ID',
-  ['GITHUB_ID', 'GITHUB_CLIENT_ID', 'NEXT_PUBLIC_GITHUB_CLIENT_ID'],
-  'missing-github-client-id',
-);
+const githubClientId =
+  process.env.GITHUB_CLIENT_ID ||
+  process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID ||
+  process.env.GITHUB_ID ||
+  'missing-github-client-id';
 
-const githubClientSecret = resolveEnv(
-  'GITHUB_CLIENT_SECRET',
-  ['GITHUB_SECRET', 'GITHUB_CLIENT_SECRET', 'NEXT_PUBLIC_GITHUB_CLIENT_SECRET'],
-  'missing-github-client-secret',
-);
+const githubClientSecret =
+  process.env.GITHUB_CLIENT_SECRET ||
+  process.env.NEXT_PUBLIC_GITHUB_CLIENT_SECRET ||
+  process.env.GITHUB_SECRET ||
+  'missing-github-client-secret';
 
-const nextAuthSecret = resolveEnv(
-  'NEXTAUTH_SECRET',
-  ['NEXTAUTH_SECRET', 'JWT_SECRET'],
-  crypto.randomBytes(32).toString('hex'),
-);
+const nextAuthSecret =
+  process.env.NEXTAUTH_SECRET ||
+  process.env.JWT_SECRET ||
+  (process.env.NODE_ENV === 'production' ? undefined : 'development-secret');
+
+if (!nextAuthSecret && process.env.NODE_ENV === 'production') {
+  console.error('[auth] CRITICAL: NEXTAUTH_SECRET is not set in production!');
+}
+
+if (!process.env.DATABASE_URL) {
+  console.warn('[auth] WARNING: DATABASE_URL is not set. Database-backed auth will fail.');
+}
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -82,6 +79,14 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      console.log('[Auth] Redirect callback called with url:', url, 'baseUrl:', baseUrl);
+      // Allows relative callback URLs
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
     async signIn({ user, profile }) {
       // Normalize display name for our Prisma schema
       const displayName =
