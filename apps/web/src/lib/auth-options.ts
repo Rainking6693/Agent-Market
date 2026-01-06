@@ -68,7 +68,6 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   secret: nextAuthSecret,
   debug: process.env.NODE_ENV === 'development',
-  trustHost: true, // VITAL for Netlify/Vercel proxies
   session: {
     strategy: 'jwt', // Use JWT sessions for faster middleware checks
   },
