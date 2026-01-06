@@ -8,7 +8,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import { isPublicPath, requiresBetaAccess } from '@/lib/beta-access';
+import { isPublicPath } from '@/lib/beta-access';
 
 // Helper to decode JWT (basic base64 decode for payload)
 function decodeJWT(token: string): {
@@ -50,21 +50,13 @@ function hasBetaAccess(user: {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  console.log('[Middleware] Request to:', pathname);
-
-  // Allow public paths without any checks
+  // 1. FAST EXIT for public paths and static assets
+  // This must be the very first thing to avoid SyntaxErrors on CSS/JS
   if (isPublicPath(pathname)) {
-    console.log('[Middleware] Path is public, allowing');
     return NextResponse.next();
   }
 
-  // Check if this route requires beta access
-  if (!requiresBetaAccess(pathname)) {
-    console.log('[Middleware] Path does not require beta access, allowing');
-    return NextResponse.next();
-  }
-
-  console.log('[Middleware] Path requires beta access, checking auth...');
+  console.log('[Middleware] Checking gated route:', pathname);
 
   let user: {
     email?: string;
@@ -72,6 +64,12 @@ export async function middleware(request: NextRequest) {
     betaAccess?: boolean;
     providerBeta?: boolean;
   } | null = null;
+
+  // Verify secret availability for decryption (Log length only for security)
+  const secret = process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET;
+  if (!secret) {
+    console.warn('[Middleware] Warning: No NEXTAUTH_SECRET or JWT_SECRET found for token decryption.');
+  }
 
   // Try NextAuth JWT first (OAuth)
   const nextAuthToken = await getToken({
