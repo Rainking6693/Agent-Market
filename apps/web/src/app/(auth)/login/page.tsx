@@ -1,7 +1,7 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 import { LoginForm } from '@/components/auth/login-form';
-import { Navbar } from '@/components/layout/navbar';
 
 import type { Metadata } from 'next';
 
@@ -16,7 +16,22 @@ export const metadata: Metadata = {
 export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col bg-surface text-text">
-      <Navbar />
+      {/* Isolated Header for Auth Pages to prevent bundle bleed */}
+      <header className="sticky top-0 z-40 border-b border-[var(--border-base)] bg-[var(--surface-base)]/90 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
+          <Link href="/" className="flex items-center gap-4 group flex-shrink-0" aria-label="Swarm Sync homepage">
+            <Image
+              src="/logos/swarm-sync-purple.png"
+              alt="Swarm Sync logo"
+              width={180}
+              height={60}
+              priority
+              className="h-10 w-auto md:h-11 transition-transform duration-300 group-hover:scale-105"
+            />
+          </Link>
+        </div>
+      </header>
+
       <main className="flex flex-1 items-center justify-center px-4 py-12">
         <div className="glass-card w-full max-w-md rounded-[3rem] border border-border bg-surface p-10 shadow-2xl">
           <div className="text-center">

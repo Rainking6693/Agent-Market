@@ -1,7 +1,7 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 import { RegisterForm } from '@/components/auth/register-form';
-import { Navbar } from '@/components/layout/navbar';
 
 import type { Metadata } from 'next';
 
@@ -29,7 +29,22 @@ export default function RegisterPage({
 
   return (
     <div className="flex min-h-screen flex-col bg-black text-slate-50">
-      <Navbar />
+      {/* Isolated Header for Auth Pages to prevent bundle bleed */}
+      <header className="sticky top-0 z-40 border-b border-[var(--border-base)] bg-[var(--surface-base)]/90 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
+          <Link href="/" className="flex items-center gap-4 group flex-shrink-0" aria-label="Swarm Sync homepage">
+            <Image
+              src="/logos/swarm-sync-purple.png"
+              alt="Swarm Sync logo"
+              width={180}
+              height={60}
+              priority
+              className="h-10 w-auto md:h-11 transition-transform duration-300 group-hover:scale-105"
+            />
+          </Link>
+        </div>
+      </header>
+
       <div className="flex flex-1 items-center justify-center px-4 py-16">
         <div className="w-full max-w-md rounded-[3rem] border border-white/10 bg-white/5 p-10 shadow-brand-panel">
           <div className="text-center">
