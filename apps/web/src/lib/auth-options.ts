@@ -52,7 +52,11 @@ const githubClientSecret =
 const nextAuthSecret =
   process.env.NEXTAUTH_SECRET ||
   process.env.JWT_SECRET ||
-  (process.env.NODE_ENV === 'production' ? undefined : 'development-secret');
+  (process.env.NODE_ENV === 'production' ? 'prod-fallback-stable-secret-32-chars' : 'development-secret');
+
+if (process.env.NODE_ENV === 'production' && !process.env.NEXTAUTH_SECRET) {
+  console.error('[auth] CRITICAL: NEXTAUTH_SECRET is not set in Netlify environment variables!');
+}
 
 if (!process.env.DATABASE_URL) {
   console.error('[auth] CRITICAL: DATABASE_URL is not set. All database-backed auth will fail!');
@@ -164,14 +168,10 @@ export const authOptions: NextAuthOptions = {
           token.providerBeta = dbUser.providerBeta;
           token.isNewUser = trigger === 'signUp';
 
-          console.log('[JWT Callback] Updated token with:', {
-            id: token.id,
+          console.log('[JWT Callback] SUCCESSFULLY updated token for:', token.email, {
             role: token.role,
             betaAccess: token.betaAccess,
-            providerBeta: token.providerBeta,
           });
-        } else {
-          console.warn('[JWT Callback] User not found in database for email:', token.email);
         }
       } else {
         console.log('[JWT Callback] Returning existing token (no fetch)');

@@ -1,14 +1,14 @@
 /**
  * Middleware for Beta Access Gating
- * Supports TWO auth systems:
- * 1. NextAuth JWT (OAuth - Google/GitHub)
- * 2. Custom API JWT (Email/Password via auth_token cookie)
+ * 
+ * IMPORTANT: This middleware ONLY runs on gated routes defined in the config matcher.
+ * This prevents interference with public assets (CSS/JS), login flows, 
+ * and OAuth handshakes at /api/auth.
  */
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import { isPublicPath } from '@/lib/beta-access';
 
 // Helper to decode JWT (basic base64 decode for payload)
 function decodeJWT(token: string): {
@@ -21,7 +21,7 @@ function decodeJWT(token: string): {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
 
-    // Use atob for edge runtime compatibility (Buffer is not available)
+    // Use atob for edge runtime compatibility
     const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
     const jsonPayload = decodeURIComponent(
       atob(base64)
@@ -50,13 +50,7 @@ function hasBetaAccess(user: {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 1. FAST EXIT for public paths and static assets
-  // This must be the very first thing to avoid SyntaxErrors on CSS/JS
-  if (isPublicPath(pathname)) {
-    return NextResponse.next();
-  }
-
-  console.log('[Middleware] Checking gated route:', pathname);
+  console.log('[Middleware] Gated route triggered:', pathname);
 
   let user: {
     email?: string;
@@ -65,20 +59,17 @@ export async function middleware(request: NextRequest) {
     providerBeta?: boolean;
   } | null = null;
 
-  // Verify secret availability for decryption (Log length only for security)
-  const secret = process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET;
-  if (!secret) {
-    console.warn('[Middleware] Warning: No NEXTAUTH_SECRET or JWT_SECRET found for token decryption.');
-  }
+  // Use both secrets for maximum compatibility
+  const secret = process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET || 'fallback-stable-secret-32-chars-long-!!!';
 
   // Try NextAuth JWT first (OAuth)
   const nextAuthToken = await getToken({
     req: request,
-    secret: process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET,
+    secret: secret,
   });
 
   if (nextAuthToken?.email) {
-    console.log('[Middleware] Found NextAuth JWT for:', nextAuthToken.email);
+    console.log('[Middleware] Authenticated via NextAuth:', nextAuthToken.email);
     user = {
       email: nextAuthToken.email,
       role: (nextAuthToken as any).role,
@@ -90,10 +81,9 @@ export async function middleware(request: NextRequest) {
     const customAuthToken = request.cookies.get('auth_token')?.value;
 
     if (customAuthToken) {
-      console.log('[Middleware] Found custom auth_token cookie');
       const decoded = decodeJWT(customAuthToken);
       if (decoded?.email) {
-        console.log('[Middleware] Decoded custom token for:', decoded.email);
+        console.log('[Middleware] Authenticated via Custom Auth:', decoded.email);
         user = {
           email: decoded.email,
           role: decoded.role,
@@ -104,48 +94,47 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // No user = not authenticated
+  // Not authenticated?
   if (!user || !user.email) {
-    console.log('[Middleware] No authentication found (getToken returned null), redirecting to beta-gate from:', pathname);
+    console.log('[Middleware] Unauthenticated access to gated route, redirecting to login');
+    const url = request.nextUrl.clone();
+    // Use /login directly if not authenticated
+    url.pathname = '/login';
+    url.searchParams.set('callbackUrl', pathname);
+    return NextResponse.redirect(url);
+  }
+
+  // authenticated but lacks beta access?
+  if (!hasBetaAccess(user)) {
+    console.log('[Middleware] User lacks beta access flag, redirecting to beta-gate');
     const url = request.nextUrl.clone();
     url.pathname = '/beta-gate';
     url.searchParams.set('from', pathname);
     return NextResponse.redirect(url);
   }
 
-  console.log('[Middleware] User:', {
-    email: user.email,
-    role: user.role,
-    betaAccess: user.betaAccess,
-    providerBeta: user.providerBeta,
-  });
-
-  // Check if user has beta access
-  const hasAccess = hasBetaAccess(user);
-  console.log('[Middleware] Has access:', hasAccess);
-
-  if (!hasAccess) {
-    console.log('[Middleware] User lacks beta access (role:', user.role, 'beta:', user.betaAccess, 'providerBeta:', user.providerBeta, '), redirecting to beta-gate');
-    const url = request.nextUrl.clone();
-    url.pathname = '/beta-gate';
-    url.searchParams.set('from', pathname);
-    return NextResponse.redirect(url);
-  }
-
-  console.log('[Middleware] User has beta access, allowing through');
   return NextResponse.next();
 }
 
-// Configure which routes the middleware runs on
+/**
+ * MANDATORY CONFIGURATION:
+ * We ONLY run middleware on routes that MUST be protected.
+ * This completely prevents "SyntaxError: Unexpected token <" on CSS/JS files
+ * and avoids breaking the OAuth handshake at /api/auth.
+ */
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - api/auth (NextAuth endpoints)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, site.webmanifest, etc. (root assets)
+     * Only match paths that require AUTH and BETA ACCESS.
+     * Add any new gated paths here.
      */
-    '/((?!api/auth|_next/static|_next/image|favicon.ico|site.webmanifest|manifest.json|.*\\.(?:css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|json)$).*)',
+    '/dashboard/:path*',
+    '/agents/:path*',
+    '/org/:path*',
+    '/billing/:path*',
+    '/settings/:path*',
+    '/console/:path*',
+    '/admin/:path*',
+    '/overview/:path*',
   ],
 };
