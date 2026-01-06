@@ -27,47 +27,47 @@ function resolveEnv(
   return fallbackValue;
 }
 
-const googleClientId =
-  process.env.GOOGLE_CLIENT_ID ||
-  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
-  'missing-google-client-id';
+const googleClientId = resolveEnv(
+  'GOOGLE_CLIENT_ID',
+  [
+    'GOOGLE_CLIENT_ID',
+    'NEXT_PUBLIC_GOOGLE_CLIENT_ID',
+    'NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID',
+  ],
+  'missing-google-client-id',
+);
 
-const googleClientSecret =
-  process.env.GOOGLE_CLIENT_SECRET ||
-  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET ||
-  'missing-google-client-secret';
+const googleClientSecret = resolveEnv(
+  'GOOGLE_CLIENT_SECRET',
+  [
+    'GOOGLE_CLIENT_SECRET',
+    'GOOGLE_OAUTH_CLIENT_SECRET',
+    'NEXT_PUBLIC_GOOGLE_CLIENT_SECRET',
+  ],
+  'missing-google-client-secret',
+);
 
-const githubClientId =
-  process.env.GITHUB_CLIENT_ID ||
-  process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID ||
-  process.env.GITHUB_ID ||
-  'missing-github-client-id';
+const githubClientId = resolveEnv(
+  'GITHUB_CLIENT_ID',
+  ['GITHUB_ID', 'GITHUB_CLIENT_ID', 'NEXT_PUBLIC_GITHUB_CLIENT_ID'],
+  'missing-github-client-id',
+);
 
-const githubClientSecret =
-  process.env.GITHUB_CLIENT_SECRET ||
-  process.env.NEXT_PUBLIC_GITHUB_CLIENT_SECRET ||
-  process.env.GITHUB_SECRET ||
-  'missing-github-client-secret';
+const githubClientSecret = resolveEnv(
+  'GITHUB_CLIENT_SECRET',
+  ['GITHUB_SECRET', 'GITHUB_CLIENT_SECRET', 'NEXT_PUBLIC_GITHUB_CLIENT_SECRET'],
+  'missing-github-client-secret',
+);
 
-const nextAuthSecret =
-  process.env.NEXTAUTH_SECRET ||
-  process.env.JWT_SECRET ||
-  (process.env.NODE_ENV === 'production' ? 'prod-fallback-stable-secret-32-chars' : 'development-secret');
-
-if (process.env.NODE_ENV === 'production' && !process.env.NEXTAUTH_SECRET) {
-  console.error('[auth] CRITICAL: NEXTAUTH_SECRET is not set in Netlify environment variables!');
-}
-
-if (!process.env.DATABASE_URL) {
-  console.error('[auth] CRITICAL: DATABASE_URL is not set. All database-backed auth will fail!');
-} else {
-  console.log('[auth] DATABASE_URL is present.');
-}
+const nextAuthSecret = resolveEnv(
+  'NEXTAUTH_SECRET',
+  ['NEXTAUTH_SECRET', 'JWT_SECRET'],
+  crypto.randomBytes(32).toString('hex'),
+);
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   secret: nextAuthSecret,
-  debug: process.env.NODE_ENV === 'development',
   session: {
     strategy: 'jwt', // Use JWT sessions for faster middleware checks
   },
@@ -82,58 +82,34 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      console.log('[Auth] Redirect callback called with url:', url, 'baseUrl:', baseUrl);
-      // Allows relative callback URLs
-      if (url.startsWith('/')) return `${baseUrl}${url}`;
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
-    },
     async signIn({ user, profile }) {
-      console.log('[Auth] signIn callback starting for:', user.email);
-      try {
-        // Normalize display name for our Prisma schema
-        const displayName =
-          (profile as { name?: string })?.name ??
-          user.name ??
-          user.email ??
-          'User';
+      // Normalize display name for our Prisma schema
+      const displayName =
+        (profile as { name?: string })?.name ??
+        user.name ??
+        user.email ??
+        'User';
 
-        if (!user.email) {
-          console.error('[Auth] signIn failed: No email provided by provider');
-          return false;
-        }
-
-        console.log('[Auth] Upserting user into database...');
-        // Upsert the user into our Prisma User table to satisfy API FKs
-        const updatedUser = await prisma.user.upsert({
-          where: { email: user.email! },
-          update: {
-            displayName,
-            image: user.image ?? null,
-            emailVerified: new Date(),
-          },
-          create: {
-            email: user.email!,
-            displayName,
-            image: user.image ?? null,
-            emailVerified: new Date(),
-            password: null,
-            role: 'user',
-            betaAccess: false,
-            providerBeta: false,
-          },
-        });
-        console.log('[Auth] User upserted successfully:', updatedUser.id);
-        return true;
-      } catch (error) {
-        console.error('[Auth] CRITICAL ERROR in signIn callback:', error);
-        // If we're in production, we might want to return true anyway 
-        // if we want to allow social login even if DB upsert fails, 
-        // but that will break subsequent steps.
-        return false;
-      }
+      // Upsert the user into our Prisma User table to satisfy API FKs
+      await prisma.user.upsert({
+        where: { email: user.email! },
+        update: {
+          displayName,
+          image: user.image ?? null,
+          emailVerified: new Date(),
+        },
+        create: {
+          email: user.email!,
+          displayName,
+          image: user.image ?? null,
+          emailVerified: new Date(),
+          password: null,
+          role: 'user',
+          betaAccess: false,
+          providerBeta: false,
+        },
+      });
+      return true;
     },
     async jwt({ token, user, trigger }) {
       console.log('[JWT Callback] Called with trigger:', trigger, 'user:', user ? 'EXISTS' : 'NULL');
@@ -167,11 +143,11 @@ export const authOptions: NextAuthOptions = {
           token.role = dbUser.role;
           token.betaAccess = dbUser.betaAccess;
           token.providerBeta = dbUser.providerBeta;
-          token.isNewUser = trigger === 'signUp';
 
-          console.log('[JWT Callback] SUCCESSFULLY updated token for:', token.email, {
+          console.log('[JWT Callback] Updated token with:', {
             role: token.role,
             betaAccess: token.betaAccess,
+            providerBeta: token.providerBeta,
           });
         }
       } else {
