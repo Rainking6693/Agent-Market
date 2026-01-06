@@ -10,7 +10,7 @@ export default function InviteAcceptPage({ params }: { params: { token: string }
   const router = useRouter();
   const { data: session, status: sessionStatus, update } = useSession();
   const authStore = useAuthStore();
-  const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'expired' | 'used'>('loading');
+  const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'expired' | 'used' | 'manual_login_required'>('loading');
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -30,17 +30,14 @@ export default function InviteAcceptPage({ params }: { params: { token: string }
 
         if (!isAuthenticated) {
           console.log('[Invite] Initial check shows not authenticated. Current Status:', sessionStatus);
-          await new Promise(resolve => setTimeout(resolve, 1500)); // Increase to 1.5s
+          await new Promise(resolve => setTimeout(resolve, 2000));
 
-          // Check if session status changed
-          console.log('[Invite] Re-checking after 1.5s. Status:', sessionStatus, 'Session exists:', !!session);
-
+          // Re-check session status
           if (sessionStatus === 'unauthenticated' && !authStore.user) {
-            console.log('[Invite] Still not authenticated after wait, redirecting to login');
-            router.push(`/login?callbackUrl=${encodeURIComponent(`/invite/${params.token}`)}`);
+            console.log('[Invite] Still not authenticated after wait. STOPPING AUTO-REDIRECT.');
+            // DO NOT REDIRECT AUTOMATICALLY. Show check UI instead.
+            setStatus('manual_login_required');
             return;
-          } else {
-            console.log('[Invite] Authenticated during wait or loading. Status:', sessionStatus);
           }
         }
 
@@ -97,6 +94,25 @@ export default function InviteAcceptPage({ params }: { params: { token: string }
             <h1 className="text-2xl font-bold mb-2">Processing your invite...</h1>
             <p className="text-[var(--text-secondary)]">Please wait</p>
           </>
+        )}
+
+        {status === 'manual_login_required' && (
+          <div className="p-8 rounded-lg bg-[var(--surface-raised)] border border-[var(--border-base)]">
+            <div className="text-4xl mb-4">🔑</div>
+            <h1 className="text-2xl font-bold mb-4">Authentication Required</h1>
+            <p className="text-[var(--text-secondary)] mb-6">
+              To accept this invite, you need to be signed in.
+            </p>
+            <p className="text-sm text-yellow-500 mb-6 bg-yellow-500/10 p-2 rounded">
+              Debug Status: {sessionStatus} (Session: {session ? 'Yes' : 'No'})
+            </p>
+            <button
+              onClick={() => router.push(`/login?callbackUrl=${encodeURIComponent(window.location.pathname)}`)}
+              className="w-full px-6 py-3 rounded-lg bg-[var(--accent-primary)] text-white font-semibold hover:bg-[var(--accent-primary)]/90 transition"
+            >
+              Sign In to Accept
+            </button>
+          </div>
         )}
 
         {status === 'success' && (
