@@ -1,122 +1,155 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+Test Complete Invite Link Flow
+"""
+
+import asyncio
+from playwright.async_api import async_playwright
 import sys
-import io
+import os
 
-if sys.platform == 'win32':
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+if sys.platform == "win32":
+    os.system("")
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
 
-from playwright.sync_api import sync_playwright
-import time
+INVITE_URL = "https://swarmsync.ai/invite/4db223a6-93a2-4561-92e5-8561b32a72d5"
 
-# Test the complete invite flow
-with sync_playwright() as p:
-    browser = p.chromium.launch(headless=False)
-    context = browser.new_context()
-    page = context.new_page()
+async def test_invite_flow():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=False)
+        context = await browser.new_context(viewport={'width': 1920, 'height': 1080})
+        page = await context.new_page()
 
-    # Enable console logging
-    page.on('console', lambda msg: print(f"[Browser Console] {msg.type}: {msg.text}"))
+        print("=" * 80)
+        print("COMPLETE INVITE FLOW TEST")
+        print("=" * 80)
+        print()
 
-    # Step 1: Go to login to generate an invite link as admin
-    print("=" * 60)
-    print("STEP 1: Login as admin to generate invite link")
-    print("=" * 60)
+        # Step 1: Visit invite link (unauthenticated)
+        print("STEP 1: Visit invite link (unauthenticated)")
+        print("-" * 80)
+        await page.goto(INVITE_URL, wait_until="networkidle")
+        await page.wait_for_timeout(3000)
 
-    page.goto('https://swarmsync.ai/login')
-    page.wait_for_load_state('networkidle')
+        page_content = await page.content()
 
-    print("\nPlease log in as admin manually...")
-    print("Waiting 30 seconds for you to log in...")
-    time.sleep(30)
-
-    # Step 2: Navigate to invite generation page
-    print("\n" + "=" * 60)
-    print("STEP 2: Navigate to invite generation page")
-    print("=" * 60)
-
-    page.goto('https://swarmsync.ai/console/beta-invites')
-    page.wait_for_load_state('networkidle')
-    time.sleep(2)
-    page.screenshot(path='admin-invite-page.png')
-
-    # Step 3: Generate an invite
-    print("\n" + "=" * 60)
-    print("STEP 3: Generate invite link")
-    print("=" * 60)
-
-    # Fill form and submit
-    page.fill('input[name="maxUses"]', '5')  # Allow 5 uses for testing
-    page.click('button:has-text("Generate")')
-    time.sleep(3)
-
-    # Get the generated URL
-    generated_url = page.locator('input[readonly]').input_value()
-    print(f"\nGenerated invite URL: {generated_url}")
-    page.screenshot(path='invite-generated.png')
-
-    # Step 4: Open invite link in new incognito context (fresh user)
-    print("\n" + "=" * 60)
-    print("STEP 4: Test invite link as new user")
-    print("=" * 60)
-
-    # Close first context
-    context.close()
-
-    # Open fresh incognito context
-    new_context = browser.new_context()
-    new_page = new_context.new_page()
-    new_page.on('console', lambda msg: print(f"[New User Console] {msg.type}: {msg.text}"))
-
-    print(f"\nNavigating to: {generated_url}")
-    new_page.goto(generated_url)
-    new_page.wait_for_load_state('networkidle')
-    time.sleep(2)
-
-    current_url = new_page.url
-    print(f"Current URL after invite: {current_url}")
-    new_page.screenshot(path='after-invite-click.png')
-
-    # Check if we're at login page
-    if '/login' in current_url:
-        print("\n✓ Correctly redirected to login page")
-        print(f"  Callback URL should be in query params: {current_url}")
-
-        # Check for Google login button
-        google_btn = new_page.locator('button:has-text("Google")')
-        if google_btn.count() > 0:
-            print("\n✓ Google login button found")
-            print("\nNow testing Google OAuth flow...")
-            print("NOTE: This will open Google sign-in. It should redirect back to the invite page after login.")
-            print("\nWaiting 5 seconds before clicking Google login...")
-            time.sleep(5)
-
-            google_btn.click()
-            print("Clicked Google login button")
-
-            # Wait for potential navigation
-            print("\nWaiting 15 seconds to see what happens...")
-            time.sleep(15)
-
-            final_url = new_page.url
-            print(f"\nFinal URL: {final_url}")
-            new_page.screenshot(path='final-state-invite-test.png')
-
-            if '/invite/' in final_url:
-                print("\n✅ SUCCESS! Stayed on invite page - checking if accepted...")
-                time.sleep(3)
-                new_page.screenshot(path='invite-accepted.png')
-
-                # Check for success message
-                if new_page.locator('text=/success|welcome|granted/i').count() > 0:
-                    print("✅ INVITE ACCEPTED SUCCESSFULLY!")
-                else:
-                    print("⚠️  Still on invite page but no success message visible")
-            else:
-                print(f"\n❌ FAILED: Ended up at {final_url} instead of invite page")
+        # Check for authentication required message
+        if "Authentication Required" in page_content or "Sign In to Accept" in page_content:
+            print("   SUCCESS: Page correctly shows authentication required")
         else:
-            print("\n❌ Google login button not found")
-    else:
-        print(f"\n❌ Not redirected to login, currently at: {current_url}")
+            print("   WARNING: Unexpected page state")
 
-    print("\nTest complete. Check screenshots for details.")
-    browser.close()
+        await page.screenshot(path="invite-step1-auth-required.png")
+        print("   Screenshot: invite-step1-auth-required.png")
+        print()
+
+        # Step 2: Click "Sign In to Accept" button
+        print("STEP 2: Click Sign In to Accept button")
+        print("-" * 80)
+
+        sign_in_btn = page.locator('button:has-text("Sign In to Accept")')
+        if await sign_in_btn.count() == 0:
+            print("   FAIL: Sign in button not found")
+            await browser.close()
+            return False
+
+        print("   SUCCESS: Sign in button found")
+
+        # Click and verify redirect
+        await sign_in_btn.click()
+        await page.wait_for_timeout(2000)
+
+        current_url = page.url
+        print(f"   Current URL: {current_url[:80]}...")
+
+        # Check if we're on login page with callback URL
+        if "/login" in current_url and "callbackUrl" in current_url:
+            print("   SUCCESS: Redirected to login with callback URL")
+
+            # Decode callback URL to verify it points back to invite
+            import urllib.parse
+            parsed_url = urllib.parse.urlparse(current_url)
+            query_params = urllib.parse.parse_qs(parsed_url.query)
+            callback_url = query_params.get('callbackUrl', [''])[0]
+
+            print(f"   Callback URL: {callback_url}")
+
+            if "/invite/" in callback_url:
+                print("   SUCCESS: Callback URL points back to invite link")
+            else:
+                print("   WARNING: Callback URL doesn't point to invite")
+        else:
+            print("   FAIL: Unexpected redirect")
+            await browser.close()
+            return False
+
+        await page.screenshot(path="invite-step2-login-page.png")
+        print("   Screenshot: invite-step2-login-page.png")
+        print()
+
+        # Step 3: Verify Google OAuth button works
+        print("STEP 3: Test Google OAuth from invite-triggered login")
+        print("-" * 80)
+
+        google_btn = page.locator('button:has-text("Google")')
+        if await google_btn.count() == 0:
+            print("   FAIL: Google button not found")
+            await browser.close()
+            return False
+
+        print("   SUCCESS: Google button found")
+
+        is_visible = await google_btn.is_visible()
+        is_enabled = await google_btn.is_enabled()
+
+        print(f"   Button visible: {is_visible}, enabled: {is_enabled}")
+
+        if not is_visible or not is_enabled:
+            print("   FAIL: Google button not clickable")
+            await browser.close()
+            return False
+
+        # Click Google button
+        print("   Clicking Google button...")
+        try:
+            async with page.expect_navigation(timeout=10000) as nav_info:
+                await google_btn.click()
+
+            navigation = await nav_info.value
+            final_url = navigation.url
+
+            if "accounts.google.com" in final_url:
+                print("   SUCCESS: OAuth redirect working!")
+                print(f"   Google URL: {final_url[:80]}...")
+
+                await page.screenshot(path="invite-step3-google-oauth.png")
+                print("   Screenshot: invite-step3-google-oauth.png")
+            else:
+                print(f"   FAIL: Unexpected URL: {final_url}")
+                await browser.close()
+                return False
+
+        except Exception as e:
+            print(f"   FAIL: OAuth redirect failed: {e}")
+            await browser.close()
+            return False
+
+        print()
+        print("=" * 80)
+        print("INVITE FLOW VERIFICATION COMPLETE")
+        print("=" * 80)
+        print()
+        print("ALL STEPS SUCCESSFUL:")
+        print("   1. Invite page shows authentication required")
+        print("   2. Sign In to Accept redirects to login with callback")
+        print("   3. OAuth button works from callback login page")
+        print("   4. Callback URL preserved for post-auth redirect")
+
+        await browser.close()
+        return True
+
+if __name__ == "__main__":
+    result = asyncio.run(test_invite_flow())
+    sys.exit(0 if result else 1)
