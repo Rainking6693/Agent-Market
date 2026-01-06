@@ -39,8 +39,11 @@ export async function getAuthenticatedUser(): Promise<{
   providerBeta?: boolean;
 } | null> {
   // Try NextAuth first (OAuth)
+  // getServerSession uses the secret from authOptions automatically
   const session = await getServerSession(authOptions);
+
   if (session?.user?.email) {
+    console.log('[Auth Helper] NextAuth session found:', session.user.email);
     return {
       email: session.user.email,
       role: (session.user as any).role,
@@ -49,10 +52,18 @@ export async function getAuthenticatedUser(): Promise<{
     };
   }
 
-  // Try custom auth token (email/password)
+  // Debug cookie presence
   const cookieStore = cookies();
+  const nextAuthCookie = cookieStore.get('next-auth.session-token')?.value ||
+    cookieStore.get('__Secure-next-auth.session-token')?.value;
   const authToken = cookieStore.get('auth_token')?.value;
 
+  console.log('[Auth Helper] NextAuth session not found. Cookies present:', {
+    nextAuth: !!nextAuthCookie,
+    customAuth: !!authToken
+  });
+
+  // Try custom auth token (email/password)
   if (authToken) {
     const decoded = decodeJWT(authToken);
     if (decoded?.email) {

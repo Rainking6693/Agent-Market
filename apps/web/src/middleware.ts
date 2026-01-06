@@ -76,7 +76,7 @@ export async function middleware(request: NextRequest) {
   // Try NextAuth JWT first (OAuth)
   const nextAuthToken = await getToken({
     req: request,
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET,
   });
 
   if (nextAuthToken?.email) {

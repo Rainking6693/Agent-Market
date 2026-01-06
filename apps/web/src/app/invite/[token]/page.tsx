@@ -22,14 +22,24 @@ export default function InviteAcceptPage({ params }: { params: { token: string }
           return;
         }
 
+        console.log('[Invite] Session status settle:', sessionStatus, 'User in store:', !!authStore.user);
+
         // Check if user is authenticated (either OAuth or email/password)
         const isAuthenticated = !!session || !!authStore.user;
 
-        // If not logged in, redirect to login with return URL
+        // If not logged in, wait a tiny bit and check again to be sure 
+        // (sometimes session status flips quickly after redirect)
         if (!isAuthenticated) {
-          console.log('[Invite] Not authenticated, redirecting to login');
-          router.push(`/login?callbackUrl=${encodeURIComponent(`/invite/${params.token}`)}`);
-          return;
+          console.log('[Invite] Initial check shows not authenticated, waiting 1s for settle...');
+          await new Promise(resolve => setTimeout(resolve, 1000));
+
+          // Re-check session status would need a re-render or status change, 
+          // but we can at least log what we have.
+          if (sessionStatus === 'unauthenticated' && !authStore.user) {
+            console.log('[Invite] Still not authenticated after wait, redirecting to login');
+            router.push(`/login?callbackUrl=${encodeURIComponent(`/invite/${params.token}`)}`);
+            return;
+          }
         }
 
         console.log('[Invite] User authenticated, accepting invite...');

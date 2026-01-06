@@ -54,12 +54,10 @@ const nextAuthSecret =
   process.env.JWT_SECRET ||
   (process.env.NODE_ENV === 'production' ? undefined : 'development-secret');
 
-if (!nextAuthSecret && process.env.NODE_ENV === 'production') {
-  console.error('[auth] CRITICAL: NEXTAUTH_SECRET is not set in production!');
-}
-
 if (!process.env.DATABASE_URL) {
-  console.warn('[auth] WARNING: DATABASE_URL is not set. Database-backed auth will fail.');
+  console.error('[auth] CRITICAL: DATABASE_URL is not set. All database-backed auth will fail!');
+} else {
+  console.log('[auth] DATABASE_URL is present.');
 }
 
 export const authOptions: NextAuthOptions = {
@@ -88,33 +86,49 @@ export const authOptions: NextAuthOptions = {
       return baseUrl;
     },
     async signIn({ user, profile }) {
-      // Normalize display name for our Prisma schema
-      const displayName =
-        (profile as { name?: string })?.name ??
-        user.name ??
-        user.email ??
-        'User';
+      console.log('[Auth] signIn callback starting for:', user.email);
+      try {
+        // Normalize display name for our Prisma schema
+        const displayName =
+          (profile as { name?: string })?.name ??
+          user.name ??
+          user.email ??
+          'User';
 
-      // Upsert the user into our Prisma User table to satisfy API FKs
-      await prisma.user.upsert({
-        where: { email: user.email! },
-        update: {
-          displayName,
-          image: user.image ?? null,
-          emailVerified: new Date(),
-        },
-        create: {
-          email: user.email!,
-          displayName,
-          image: user.image ?? null,
-          emailVerified: new Date(),
-          password: null,
-          role: 'user',
-          betaAccess: false,
-          providerBeta: false,
-        },
-      });
-      return true;
+        if (!user.email) {
+          console.error('[Auth] signIn failed: No email provided by provider');
+          return false;
+        }
+
+        console.log('[Auth] Upserting user into database...');
+        // Upsert the user into our Prisma User table to satisfy API FKs
+        const updatedUser = await prisma.user.upsert({
+          where: { email: user.email! },
+          update: {
+            displayName,
+            image: user.image ?? null,
+            emailVerified: new Date(),
+          },
+          create: {
+            email: user.email!,
+            displayName,
+            image: user.image ?? null,
+            emailVerified: new Date(),
+            password: null,
+            role: 'user',
+            betaAccess: false,
+            providerBeta: false,
+          },
+        });
+        console.log('[Auth] User upserted successfully:', updatedUser.id);
+        return true;
+      } catch (error) {
+        console.error('[Auth] CRITICAL ERROR in signIn callback:', error);
+        // If we're in production, we might want to return true anyway 
+        // if we want to allow social login even if DB upsert fails, 
+        // but that will break subsequent steps.
+        return false;
+      }
     },
     async jwt({ token, user, trigger }) {
       console.log('[JWT Callback] Called with trigger:', trigger, 'user:', user ? 'EXISTS' : 'NULL');
