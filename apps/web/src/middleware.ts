@@ -108,7 +108,7 @@ export async function middleware(request: NextRequest) {
 
   // No user = not authenticated
   if (!user || !user.email) {
-    console.log('[Middleware] No authentication found, redirecting to beta-gate');
+    console.log('[Middleware] No authentication found (getToken returned null), redirecting to beta-gate from:', pathname);
     const url = request.nextUrl.clone();
     url.pathname = '/beta-gate';
     url.searchParams.set('from', pathname);
@@ -127,7 +127,7 @@ export async function middleware(request: NextRequest) {
   console.log('[Middleware] Has access:', hasAccess);
 
   if (!hasAccess) {
-    console.log('[Middleware] User lacks beta access, redirecting to beta-gate');
+    console.log('[Middleware] User lacks beta access (role:', user.role, 'beta:', user.betaAccess, 'providerBeta:', user.providerBeta, '), redirecting to beta-gate');
     const url = request.nextUrl.clone();
     url.pathname = '/beta-gate';
     url.searchParams.set('from', pathname);
@@ -141,6 +141,13 @@ export async function middleware(request: NextRequest) {
 // Configure which routes the middleware runs on
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api/auth (NextAuth endpoints)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico, site.webmanifest, etc. (root assets)
+     */
+    '/((?!api/auth|_next/static|_next/image|favicon.ico|site.webmanifest|manifest.json|.*\\.(?:css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|json)$).*)',
   ],
 };

@@ -102,6 +102,27 @@ export const PUBLIC_ASSETS = [
   '/sitemap.xml',
   '/logos',
   '/images',
+  '/site.webmanifest',
+  '/manifest.json',
+];
+
+/**
+ * Common static file extensions that should always be public
+ */
+const PUBLIC_EXTENSIONS = [
+  '.css',
+  '.js',
+  '.png',
+  '.jpg',
+  '.jpeg',
+  '.gif',
+  '.svg',
+  '.ico',
+  '.json',
+  '.webmanifest',
+  '.woff',
+  '.woff2',
+  '.ttf',
 ];
 
 /**
@@ -129,6 +150,11 @@ export function isPublicPath(path: string): boolean {
 
   // Check invite routes
   if (INVITE_ROUTES.some((route) => path.startsWith(route))) return true;
+
+  // Check common static extensions
+  if (PUBLIC_EXTENSIONS.some((ext) => path.toLowerCase().endsWith(ext))) {
+    return true;
+  }
 
   return false;
 }

@@ -162,12 +162,16 @@ export const authOptions: NextAuthOptions = {
           token.role = dbUser.role;
           token.betaAccess = dbUser.betaAccess;
           token.providerBeta = dbUser.providerBeta;
+          token.isNewUser = trigger === 'signUp';
 
           console.log('[JWT Callback] Updated token with:', {
+            id: token.id,
             role: token.role,
             betaAccess: token.betaAccess,
             providerBeta: token.providerBeta,
           });
+        } else {
+          console.warn('[JWT Callback] User not found in database for email:', token.email);
         }
       } else {
         console.log('[JWT Callback] Returning existing token (no fetch)');
