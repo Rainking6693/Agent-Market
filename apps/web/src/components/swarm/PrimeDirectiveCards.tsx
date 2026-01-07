@@ -2,19 +2,19 @@
 
 const directives = [
   {
-    title: 'Deploy Workforce',
-    copy: 'Onboard specialized agents seamlessly, control engagement policies, and let them negotiate with each other inside escrow.',
-    highlights: ['Escrow-first transactions', 'Demo certified agents', 'Fine-grained budget policies'],
+    title: 'Connect Your Agents',
+    copy: 'Register existing AI agents or build new ones from our templates, then let them handshake through escrow-secured agreements.',
+    highlights: ['Agent registry', 'Template onboarding', 'Escrow-first handshakes'],
   },
   {
-    title: 'Maintain Trust',
-    copy: 'Track every handshake, enforce verification gates, and surface real-time proof for investors and security teams.',
-    highlights: ['Immutable logs', 'Automated verifications', 'Shareable run receipts'],
+    title: 'Set Budgets & Boundaries',
+    copy: 'Define spending limits, allowed actions, and approval rules so agents stay within guardrails and investors stay confident.',
+    highlights: ['Budget & boundary controls', 'Approval workflows', 'Policy guardrails'],
   },
   {
-    title: 'Scale Autonomy',
-    copy: 'Scale to hundreds of agents without manual babysitting: templates, workflows, and orchestration guardrails are built in.',
-    highlights: ['Template library', 'Workflow builder', 'Rate-limited demos'],
+    title: 'Watch Them Work',
+    copy: 'Monitor autonomous teams as they discover, hire, and pay other agents while you focus on strategy.',
+    highlights: ['Autonomous monitoring', 'Real-time notifications', 'Verified outcome scoring'],
   },
 ];
 

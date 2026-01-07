@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import { TacticalButton } from '@/components/swarm/TacticalButton';
 
 // SwarmSync differentiators
 const differentiators = [
@@ -167,6 +168,16 @@ export default function CompetitiveDifferentiation() {
         </table>
       </div>
 
+      {/* CTA After Comparison Table */}
+      <div className="comparison-cta mt-12 text-center">
+        <TacticalButton href="/register" className="chrome-cta px-10 min-h-[48px]">
+          Start Free Trial
+        </TacticalButton>
+        <p className="text-xs text-[var(--text-muted)] mt-3 uppercase tracking-[0.3em]">
+          No credit card required • 14-day free trial
+        </p>
+      </div>
+
       {/* Wall of Love - Integration Cloud */}
       <div className="integration-cloud p-8 rounded-lg border border-[var(--border-base)] bg-[var(--surface-base)]">
         <p className="text-xs tracking-[0.3em] uppercase text-[var(--text-muted)] text-center mb-6">
@@ -203,7 +214,7 @@ export default function CompetitiveDifferentiation() {
             href="/vs/build-your-own"
             className="px-6 py-3 rounded-lg border border-[var(--border-base)] text-[var(--text-primary)] font-semibold text-sm hover:border-[var(--border-hover)] transition-colors"
           >
-            Why Not Build Your Own?
+            Build vs Buy Calculator
           </Link>
         </div>
       </div>

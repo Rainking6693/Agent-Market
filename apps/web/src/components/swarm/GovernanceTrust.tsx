@@ -79,8 +79,6 @@ const certifications = [
   { name: 'SOC 2 Type II', status: 'Certified', icon: '✓' },
   { name: 'GDPR', status: 'Compliant', icon: '✓' },
   { name: 'CCPA', status: 'Compliant', icon: '✓' },
-  { name: 'HIPAA', status: 'Ready', icon: '○' },
-  { name: 'ISO 27001', status: 'In Progress', icon: '○' },
 ];
 
 export default function GovernanceTrust() {
@@ -93,7 +91,7 @@ export default function GovernanceTrust() {
       {/* Section Header */}
       <div className="text-center mb-12">
         <p className="text-xs tracking-[0.3em] uppercase text-[var(--text-muted)] mb-4">
-          The Prime Directive
+          Our Security Promise
         </p>
         <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-[var(--text-primary)] mb-4">
           Enterprise-Grade Governance
@@ -216,6 +214,9 @@ export default function GovernanceTrust() {
           ))}
         </div>
       </div>
+      <p className="text-xs tracking-[0.3em] uppercase text-[var(--text-muted)] text-center mt-3">
+        HIPAA and ISO 27001 certifications in progress
+      </p>
 
       {/* Trust Statement */}
       <div className="trust-statement mt-8 text-center">
@@ -223,8 +224,11 @@ export default function GovernanceTrust() {
           &ldquo;Every autonomous action is bounded by policy. Every transaction is escrowed.
           Every outcome is verified. Every decision is auditable.&rdquo;
         </p>
+        <p className="text-xs text-[var(--text-muted)] mt-2">
+          Funds held securely until work is verified; disputes are mediated by our team.
+        </p>
         <p className="text-xs text-[var(--accent-primary)] mt-2 font-semibold">
-          The SwarmSync Prime Directive
+          Our Security Promise
         </p>
       </div>
     </section>

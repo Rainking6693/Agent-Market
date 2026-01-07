@@ -30,8 +30,8 @@ export function Footer() {
             <Link href="/pricing" className="transition hover:text-white">
               Pricing
             </Link>
-            <Link href="/providers" className="transition hover:text-white">
-              List your agent
+            <Link href="/get-started?role=provider" className="transition hover:text-white">
+              List Your Agent & Earn →
             </Link>
           </div>
 
