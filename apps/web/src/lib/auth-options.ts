@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   secret: nextAuthSecret,
   session: {
-    strategy: 'jwt', // Use JWT sessions for faster middleware checks
+    strategy: 'database', // Use database sessions with PrismaAdapter
   },
   providers: [
     GoogleProvider({
@@ -82,14 +82,6 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      // Allow relative callback URLs (like /invite/abc123)
-      if (url.startsWith('/')) return `${baseUrl}${url}`;
-      // Allow callback URLs on the same origin
-      if (url.startsWith(baseUrl)) return url;
-      // Default to baseUrl for safety
-      return baseUrl;
-    },
     async signIn({ user, profile }) {
       // Normalize display name for our Prisma schema
       const displayName =
@@ -112,72 +104,17 @@ export const authOptions: NextAuthOptions = {
           image: user.image ?? null,
           emailVerified: new Date(),
           password: null,
-          role: 'user',
-          betaAccess: false,
-          providerBeta: false,
         },
       });
       return true;
     },
-    async jwt({ token, user, trigger }) {
-      console.log('[JWT Callback] Called with trigger:', trigger, 'user:', user ? 'EXISTS' : 'NULL');
-      console.log('[JWT Callback] Token email:', token.email);
-
-      // On sign in or update, add custom fields to JWT
-      if (user || trigger === 'update') {
-        console.log('[JWT Callback] Fetching fresh user data from database...');
-
-        // Fetch fresh user data from database
-        const dbUser = await prisma.user.findUnique({
-          where: { email: token.email! },
-          select: {
-            id: true,
-            email: true,
-            displayName: true,
-            image: true,
-            role: true,
-            betaAccess: true,
-            providerBeta: true,
-          },
-        });
-
-        console.log('[JWT Callback] DB User:', dbUser ? JSON.stringify(dbUser, null, 2) : 'NULL');
-
-        if (dbUser) {
-          token.id = dbUser.id;
-          token.email = dbUser.email;
-          token.name = dbUser.displayName;
-          token.picture = dbUser.image ?? undefined;
-          token.role = dbUser.role;
-          token.betaAccess = dbUser.betaAccess;
-          token.providerBeta = dbUser.providerBeta;
-
-          console.log('[JWT Callback] Updated token with:', {
-            role: token.role,
-            betaAccess: token.betaAccess,
-            providerBeta: token.providerBeta,
-          });
-        }
-      } else {
-        console.log('[JWT Callback] Returning existing token (no fetch)');
-        console.log('[JWT Callback] Existing token values:', {
-          role: token.role,
-          betaAccess: token.betaAccess,
-          providerBeta: token.providerBeta,
-        });
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      // Add custom fields from JWT to session
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.email = token.email!;
-        session.user.name = token.name!;
-        session.user.image = token.picture;
-        session.user.role = token.role;
-        session.user.betaAccess = token.betaAccess;
-        session.user.providerBeta = token.providerBeta;
+    async session({ session, user }) {
+      // user is the Prisma User model when using database sessions
+      if (session.user && user) {
+        session.user.id = user.id;
+        session.user.email = user.email;
+        session.user.name = (user as { displayName?: string }).displayName ?? user.name ?? user.email;
+        session.user.image = user.image ?? undefined;
       }
       return session;
     },
