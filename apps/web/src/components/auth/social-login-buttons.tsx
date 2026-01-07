@@ -59,7 +59,7 @@ export function SocialLoginButtons() {
           <span className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+          <span className="bg-[#0B0E1C] px-2 text-muted-foreground">Or continue with</span>
         </div>
       </div>
 
