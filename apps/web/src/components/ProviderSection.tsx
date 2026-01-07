@@ -147,7 +147,7 @@ export default function ProviderSection() {
               href="/docs/providers#payouts"
               className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
             >
-              How payouts work ->
+              How payouts work -{'>'}
             </Link>
           </div>
           <p className="text-xs uppercase tracking-[0.4em] text-[var(--text-muted)]">
