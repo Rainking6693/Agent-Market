@@ -50,7 +50,9 @@ type NotificationDetails = {
   amount?: string;
 };
 
-const EVENT_STATE_MAP: Record<Exclude<ProviderLifecycleEvent, 'agentSubmitted'>, ApplicationStatus> = {
+type ProviderLifecycleEventWithoutSubmission = Exclude<ProviderLifecycleEvent, 'agentSubmitted'>;
+
+const STATUS_BY_EVENT: Record<ProviderLifecycleEventWithoutSubmission, ApplicationStatus> = {
   agentApproved: 'approved',
   agentRejected: 'rejected',
   agentFirstHire: 'live',
@@ -296,7 +298,7 @@ export async function PATCH(request: Request) {
     const applicationId = sanitize(payload.applicationId);
     const event = payload.event as ProviderLifecycleEvent;
 
-    const allowedEvents: ProviderLifecycleEvent[] = [
+    const allowedEvents: ProviderLifecycleEventWithoutSubmission[] = [
       'agentApproved',
       'agentRejected',
       'agentFirstHire',
@@ -307,7 +309,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'applicationId is required' }, { status: 400 });
     }
 
-    if (!event || !allowedEvents.includes(event)) {
+    if (!event || !allowedEvents.includes(event as ProviderLifecycleEventWithoutSubmission)) {
       return NextResponse.json({ error: 'Unsupported event' }, { status: 400 });
     }
 
@@ -318,7 +320,8 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'Application not found' }, { status: 404 });
     }
 
-    application.status = EVENT_STATE_MAP[event];
+    const lifecycleEvent = event as ProviderLifecycleEventWithoutSubmission;
+    application.status = STATUS_BY_EVENT[lifecycleEvent];
     application.updatedAt = new Date().toISOString();
 
     await writeApplications(applications);
