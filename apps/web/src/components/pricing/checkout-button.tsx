@@ -81,7 +81,7 @@ export function CheckoutButton({
   return (
     <div className="space-y-2">
       <Button
-        className={`w-full ${popular ? 'bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] text-black hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.75)]' : 'bg-gradient-to-br from-[#94A3B8] via-[#cbd5f5] to-[#f8fafc] text-black hover:shadow-[0_20px_45px_-15px_rgba(0,0,0,0.75)] border border-white/20'}`}
+        className="w-full bg-gradient-to-br from-[#e2e8f0] via-[#f8fafc] to-[#ffffff] text-black hover:shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] transition-all font-semibold border border-white/20"
         onClick={handleCheckout}
         disabled={checkoutMutation.isPending}
       >
