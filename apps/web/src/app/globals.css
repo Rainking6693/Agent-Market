@@ -479,8 +479,8 @@ body {
   }
 
   .chrome-cta {
-    background: var(--accent-primary);
-    color: #ffffff;
+    background: linear-gradient(135deg, #94a3b8 0%, #cbd5f5 55%, #f8fafc 100%);
+    color: #04050a;
     border-radius: 12px;
     padding: 12px 24px;
     font-family: 'Inter', sans-serif;
@@ -489,8 +489,8 @@ body {
     text-transform: none;
     letter-spacing: 0;
     box-shadow: none;
-    border: none;
-    transition: opacity 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: opacity 0.2s ease, transform 0.2s ease;
   }
 
   .chrome-cta.chrome-cta--outline {
@@ -501,8 +501,8 @@ body {
   }
 
   .chrome-cta:hover {
-    opacity: 0.9;
-    box-shadow: none;
+    opacity: 1;
+    transform: translateY(-1px);
   }
 
   .chrome-cta.chrome-cta--outline:hover {

@@ -81,7 +81,8 @@ export function CheckoutButton({
   return (
     <div className="space-y-2">
       <Button
-        className="w-full bg-gradient-to-br from-[#e2e8f0] via-[#f8fafc] to-[#ffffff] text-black hover:shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] transition-all font-semibold border border-white/20"
+        variant="ghost"
+        className="w-full chrome-cta justify-center"
         onClick={handleCheckout}
         disabled={checkoutMutation.isPending}
       >
