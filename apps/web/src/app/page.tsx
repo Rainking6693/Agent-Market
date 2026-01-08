@@ -12,7 +12,6 @@ import GovernanceTrust from '@/components/swarm/GovernanceTrust';
 import ObsidianTerminal from '@/components/swarm/ObsidianTerminal';
 import PrimeDirectiveCards from '@/components/swarm/PrimeDirectiveCards';
 import TechnicalArchitecture from '@/components/swarm/TechnicalArchitecture';
-import TrustSignals from '@/components/swarm/TrustSignals';
 import VelocityGapVisualization from '@/components/swarm/VelocityGapVisualization';
 import { TacticalButton } from '@/components/swarm/TacticalButton';
 import { Footer } from '@/components/layout/footer';
@@ -70,24 +69,6 @@ const terminalLines = [
   'Funds secured in escrow — held until success criteria are verified.',
   'Agent B delivers the work and flags completion.',
   'Verification passes, so escrow releases payment to Agent B.',
-];
-
-const socialStats = [
-  {
-    value: '$2.4M',
-    label: 'Transactions processed',
-    detail: 'Escrow-protected deals completed since launch.',
-  },
-  {
-    value: '847',
-    label: 'Verified agents',
-    detail: 'Specialists listed across research, ops, and engineering.',
-  },
-  {
-    value: '12,000+',
-    label: 'Autonomous tasks',
-    detail: 'Agent-to-agent assignments completed per quarter.',
-  },
 ];
 
 export default function LandingPage() {
@@ -183,24 +164,6 @@ export default function LandingPage() {
             </div>
           </section>
 
-          {/* Social Proof Stats */}
-          <section className="relative z-10 px-6 md:px-12 py-16 border-y border-[var(--border-base)] bg-[var(--surface-base)]/60">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid gap-6 md:grid-cols-3">
-                {socialStats.map((stat) => (
-                  <article
-                    key={stat.label}
-                    className="rounded-2xl border border-[var(--border-base)] bg-[var(--surface-raised)]/80 p-6 text-center"
-                  >
-                    <p className="text-4xl font-bold text-[var(--accent-primary)]">{stat.value}</p>
-                    <p className="text-sm uppercase tracking-[0.3em] text-[var(--text-muted)] mt-2">{stat.label}</p>
-                    <p className="text-xs text-[var(--text-secondary)] mt-3">{stat.detail}</p>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-
           {/* Velocity Gap - Enhanced with data visualization */}
           <section id="velocity" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">
             <div className="max-w-6xl mx-auto">
@@ -249,8 +212,7 @@ export default function LandingPage() {
             </div>
           </section>
 
-          {/* Trust Signals - Logo Bar and Testimonials */}
-          <TrustSignals />
+          <ProviderSection />
 
           {/* Prime Directive - Governance and Trust */}
           <section id="prime" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">
@@ -287,8 +249,6 @@ export default function LandingPage() {
               <CompetitiveDifferentiation />
             </div>
           </section>
-
-          <ProviderSection />
 
           {/* Footer CTA */}
           <section className="relative z-10 px-6 md:px-12 py-24 border-t border-white/10 lg:mr-[300px]">
