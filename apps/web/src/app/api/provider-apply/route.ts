@@ -3,6 +3,14 @@ import nodemailer from 'nodemailer';
 import { randomUUID } from 'crypto';
 import { mkdir, readFile, writeFile } from 'fs/promises';
 import path from 'path';
+import {
+  ApplicationStatus,
+  NotificationDetails,
+  ProviderApplication,
+  ProviderLifecycleEvent,
+  trendify,
+} from '@/lib/provider-application';
+import { triggerProviderLifecycleEvent } from '@/lib/trigger/provider';
 
 const STORAGE_DIR = path.join(process.cwd(), 'data');
 const STORAGE_FILE = path.join(STORAGE_DIR, 'provider-applications.json');
@@ -13,42 +21,6 @@ const SMTP_PASS = process.env.SMTP_PASS;
 const SMTP_FROM = process.env.SMTP_FROM ?? 'no-reply@swarmsync.ai';
 const RECIPIENT = process.env.PROVIDER_APPLICATION_RECIPIENT ?? 'rainking6693@gmail.com';
 const MONITORING_EMAIL = process.env.PROVIDER_NOTIFICATION_MONITOR ?? RECIPIENT;
-
-type ApplicationStatus = 'submitted' | 'approved' | 'rejected' | 'live' | 'paid';
-
-type ProviderApplication = {
-  id: string;
-  name: string;
-  email: string;
-  agentName: string;
-  agentDescription: string;
-  category: string;
-  pricingModel: string;
-  endpointType: string;
-  docsLink?: string;
-  apiEndpoint?: string;
-  pricingTiers: { title: string; price: string; description?: string }[];
-  capabilityTags: string[];
-  sampleOutputs: string[];
-  status: ApplicationStatus;
-  createdAt: string;
-  updatedAt?: string;
-  twitter?: string;
-  notes?: string;
-};
-
-type ProviderLifecycleEvent =
-  | 'agentSubmitted'
-  | 'agentApproved'
-  | 'agentRejected'
-  | 'agentFirstHire'
-  | 'agentPayout';
-
-type NotificationDetails = {
-  feedback?: string;
-  jobName?: string;
-  amount?: string;
-};
 
 type ProviderLifecycleEventWithoutSubmission = Exclude<ProviderLifecycleEvent, 'agentSubmitted'>;
 
@@ -254,6 +226,7 @@ export async function POST(request: Request) {
     await writeApplications(applications);
 
     await sendProviderNotification('agentSubmitted', application);
+    await triggerProviderLifecycleEvent(application, 'agentSubmitted');
 
     const transporter = createTransporter();
     if (!transporter) {
@@ -326,11 +299,14 @@ export async function PATCH(request: Request) {
 
     await writeApplications(applications);
 
-    await sendProviderNotification(event, application, {
+    const eventDetails: NotificationDetails = {
       feedback: sanitize(payload.feedback),
       jobName: sanitize(payload.jobName),
       amount: sanitize(payload.amount),
-    });
+    };
+
+    await sendProviderNotification(event, application, eventDetails);
+    await triggerProviderLifecycleEvent(application, event, eventDetails);
 
     return NextResponse.json({
       status: 'notified',
@@ -341,10 +317,4 @@ export async function PATCH(request: Request) {
     console.error('[Provider Application] PATCH failed', error);
     return NextResponse.json({ error: 'Unable to dispatch notification' }, { status: 500 });
   }
-}
-
-function trendify(pricingModel: string) {
-  if (pricingModel.toLowerCase().includes('subscription')) return 'Monthly Access';
-  if (pricingModel.toLowerCase().includes('per-task')) return 'Per Task';
-  return 'Custom Tier';
 }
