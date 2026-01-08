@@ -5,12 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate --schema=./prisma/schema.prisma && next build",
+    "build": "node ./scripts/prisma-generate.js --schema=./prisma/schema.prisma && next build",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
     "test:stripe-smoke": "cross-env RUN_STRIPE_SMOKE=1 playwright test stripe-smoke --project=chromium --config=playwright.config.ts",
-    "postinstall": "prisma generate --schema=./prisma/schema.prisma"
+    "postinstall": "node ./scripts/prisma-generate.js --schema=./prisma/schema.prisma"
   },
   "dependencies": {
     "@agent-market/sdk": "0.1.0",
