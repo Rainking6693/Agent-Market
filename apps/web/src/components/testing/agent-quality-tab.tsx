@@ -36,12 +36,12 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
     }
   };
 
-  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const pollingIntervalRef = useRef<number | null>(null);
 
   useEffect(() => {
     fetchRuns();
     // Poll for updates every 2 seconds
-    pollingIntervalRef.current = setInterval(async () => {
+    pollingIntervalRef.current = window.setInterval(async () => {
       const currentRuns = await fetchRuns();
       const hasActiveRuns = currentRuns.some(
         (run) => run.status === 'QUEUED' || run.status === 'RUNNING',
@@ -185,7 +185,7 @@ export function AgentQualityTab({ agentId, agentName, trustScore, badges }: Agen
           await fetchRuns();
           // Restart polling if not already running
           if (!pollingIntervalRef.current) {
-            pollingIntervalRef.current = setInterval(async () => {
+            pollingIntervalRef.current = window.setInterval(async () => {
               const currentRuns = await fetchRuns();
               const hasActiveRuns = currentRuns.some(
                 (run) => run.status === 'QUEUED' || run.status === 'RUNNING',

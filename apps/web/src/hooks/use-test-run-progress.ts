@@ -60,7 +60,7 @@ export function useTestRunProgress(runId: string | null) {
     }
 
     let isMounted = true;
-    let timeout: NodeJS.Timeout | null = null;
+    let timeout: number | null = null;
 
     const poll = async () => {
       try {
@@ -86,7 +86,7 @@ export function useTestRunProgress(runId: string | null) {
         console.warn('poll run status failed', err);
       }
 
-      timeout = setTimeout(poll, 2000);
+      timeout = window.setTimeout(poll, 2000);
     };
 
     poll();

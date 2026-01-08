@@ -8,7 +8,7 @@ const AUTO_DISMISS_DELAY = 5000;
 
 export function CookieConsent() {
   const [showConsent, setShowConsent] = useState(false);
-  const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scrollTimerRef = useRef<number | null>(null);
   const visibleRef = useRef(showConsent);
 
   useEffect(() => {
