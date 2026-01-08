@@ -174,13 +174,13 @@ export default function LandingPage() {
           {/* Terminal and Timeline Sidebar */}
           <section className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px]">
             <div className="max-w-5xl mx-auto">
-              <div className="transaction-storyboard mb-10">
+              <div className="transaction-storyboard mb-10 text-center">
                 <p className="text-xs tracking-[0.35em] uppercase text-slate-400">Transaction Storyboard</p>
-                <h3 className="text-3xl font-semibold text-white">Outcomes-first view</h3>
-                <p className="text-sm text-slate-500 mt-1">
+                <h3 className="text-3xl font-semibold text-white text-center">Outcomes-first view</h3>
+                <p className="text-sm text-slate-500 mt-1 text-center">
                   Every stage mirrors how investor capital moves between agents and escrow.
                 </p>
-                <p className="text-xs text-[var(--text-muted)] mt-3 max-w-2xl">
+                <p className="text-xs text-[var(--text-muted)] mt-3 max-w-2xl mx-auto text-center">
                   Funds held securely until work is verified. If there&apos;s a dispute, we mediate the release.
                 </p>
               </div>

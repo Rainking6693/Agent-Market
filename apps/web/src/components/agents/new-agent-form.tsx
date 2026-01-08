@@ -360,7 +360,7 @@ export default function NewAgentForm() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6 rounded-[3rem] border border-[var(--border-base)] bg-[var(--surface-raised)] p-10 text-white">
+      <div className="space-y-6 rounded-[3rem] border border-[var(--border-base)] bg-[var(--surface-raised)] p-10 text-[var(--text-primary)]">
         <h1 className="text-3xl font-display">Loading...</h1>
         <p className="text-sm text-[var(--text-muted)]">Verifying your authentication...</p>
       </div>
@@ -369,7 +369,7 @@ export default function NewAgentForm() {
 
   if (!user) {
     return (
-      <div className="space-y-6 rounded-[3rem] border border-[var(--border-base)] bg-[var(--surface-raised)] p-10 text-white">
+      <div className="space-y-6 rounded-[3rem] border border-[var(--border-base)] bg-[var(--surface-raised)] p-10 text-[var(--text-primary)]">
         <h1 className="text-3xl font-display">Authentication Required</h1>
         <p className="text-sm text-[var(--text-muted)]">
           You need to be signed in to create and deploy agents on the marketplace.
@@ -401,9 +401,9 @@ export default function NewAgentForm() {
     <div className="space-y-10">
       <header className="space-y-3">
         <p className="text-xs uppercase tracking-[0.35em] text-[var(--text-muted)]">Agents</p>
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h1 className="text-4xl font-display text-white">Launch a new agent</h1>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+            <h1 className="text-4xl font-display text-[var(--text-primary)]">Launch a new agent</h1>
             <p className="mt-2 max-w-2xl text-sm text-[var(--text-muted)]">
               Capture the basics, declare pricing and schemas, then lock budgets.
             </p>
@@ -414,7 +414,7 @@ export default function NewAgentForm() {
         </div>
       </header>
 
-      <Card className="border-[var(--border-base)]">
+          <Card className="border-[var(--border-base)] bg-[var(--surface-raised)]/70">
         <CardHeader>
           <CardTitle className="text-sm font-display uppercase tracking-wide text-[var(--text-muted)]">
             Import Agent Configuration
@@ -528,8 +528,8 @@ export default function NewAgentForm() {
         </Card>
       ) : (
         <Card className="border-[var(--border-base)]">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-2xl font-display text-white">
+            <CardHeader className="pb-4">
+            <CardTitle className="text-2xl font-display text-[var(--text-primary)]">
               {steps[currentStep].title}
             </CardTitle>
           </CardHeader>
@@ -612,7 +612,7 @@ export default function NewAgentForm() {
                       'rounded-2xl border px-4 py-2 text-sm transition',
                       visibility === option
                         ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
-                        : 'border-[var(--border-base)] text-[var(--text-muted)] hover:text-white',
+                        : 'border-[var(--border-base)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]',
                     )}
                   >
                     {option === 'PUBLIC' && 'Public'}
@@ -642,8 +642,8 @@ export default function NewAgentForm() {
                       className={cn(
                         'rounded-full border px-4 py-2 text-xs uppercase tracking-wide transition',
                         isSelected
-                          ? 'border-ink bg-black text-white'
-                          : 'border-[var(--border-base)] text-[var(--text-muted)] hover:text-white',
+                          ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
+                          : 'border-[var(--border-base)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]',
                       )}
                     >
                       {category}
@@ -665,7 +665,7 @@ export default function NewAgentForm() {
                         'w-full rounded-2xl border px-4 py-3 text-left text-sm',
                         pricingModel === option.value
                           ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
-                          : 'border-[var(--border-base)] text-[var(--text-muted)] hover:text-white',
+                      : 'border-[var(--border-base)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]',
                       )}
                     >
                       {option.label}
