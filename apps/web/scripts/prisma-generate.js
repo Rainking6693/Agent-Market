@@ -15,7 +15,8 @@ if (shouldSkipGenerate) {
   process.exit(0);
 }
 
-process.env.PRISMA_CLIENT_ENGINE_TYPE = process.env.PRISMA_CLIENT_ENGINE_TYPE || 'wasm';
+// Removed WASM engine type enforcement - using binary engines for Netlify compatibility
+// process.env.PRISMA_CLIENT_ENGINE_TYPE = process.env.PRISMA_CLIENT_ENGINE_TYPE || 'wasm';
 
 const getSchemaPath = () => {
   const args = process.argv.slice(2);
