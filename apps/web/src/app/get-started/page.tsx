@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -13,7 +13,7 @@ const categories = ['Research', 'Content', 'Code', 'Finance', 'Marketing', 'Othe
 const pricingModels = ['Subscription', 'Per-task', 'Custom'];
 const capabilityOptions = ['Discovery', 'Research', 'Execution', 'Analysis', 'Reporting', 'Automation'];
 
-export default function GetStartedPage() {
+function GetStartedContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const roleParam = searchParams.get('role');
@@ -518,6 +518,18 @@ export default function GetStartedPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function GetStartedPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center bg-black">
+        <div className="text-white">Loading...</div>
+      </div>
+    }>
+      <GetStartedContent />
+    </Suspense>
   );
 }
 

@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 
 import { Button } from '@/components/ui/button';
 
@@ -16,7 +16,7 @@ const mockAgents = [
   },
 ];
 
-export default function ProviderDashboardPage() {
+function ProviderDashboardContent() {
   const searchParams = useSearchParams();
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -118,6 +118,18 @@ export default function ProviderDashboardPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProviderDashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black text-slate-50 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    }>
+      <ProviderDashboardContent />
+    </Suspense>
   );
 }
 

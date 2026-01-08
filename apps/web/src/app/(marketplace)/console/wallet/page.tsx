@@ -3,6 +3,8 @@ import { OrgPayoutConnector } from '@/components/wallet/org-payout-connector';
 import { WalletBalanceCard } from '@/components/wallet/wallet-balance-card';
 import { WalletTransactionsList } from '@/components/wallet/wallet-transactions-list';
 
+export const dynamic = "force-dynamic";
+
 interface Transaction {
   id: string;
   type: string;
@@ -51,35 +53,44 @@ export default async function WalletPage() {
         </p>
       </header>
 
-      <section className="grid gap-6 lg:grid-cols-2">
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-[var(--text-primary)]">Your wallet</h2>
-            <span className="text-xs text-[var(--text-muted)]">User balance</span>
-          </div>
+      <section className="space-y-8">
+        <div className="grid gap-8 lg:grid-cols-2">
           <WalletBalanceCard wallet={wallet} />
+          <TopUpCard />
         </div>
-        <TopUpCard />
-      </section>
-
-      <section className="grid gap-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-[var(--text-primary)]">
-            Organization wallet ({DEFAULT_ORG_SLUG})
-          </h2>
-          <span className="text-xs text-[var(--text-muted)]">Platform funds and fees</span>
-        </div>
-        <WalletBalanceCard wallet={orgWallet} />
-        {!orgWallet && (
-          <p className="text-xs text-amber-700">
-            No organization wallet found yet. It will be created automatically when fees settle or
-            funds are added.
-          </p>
+        {orgWallet && (
+          <div className="rounded-2xl border border-white/5 bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6">
+            <div className="mb-4 flex items-start justify-between">
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">Organization Wallet</p>
+                <p className="mt-1 text-2xl font-display text-white">{orgWallet.orgSlug || DEFAULT_ORG_SLUG}</p>
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="rounded-xl bg-black/20 p-4">
+                <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">Total Collected</p>
+                <p className="mt-2 text-xl font-display text-white">
+                  ${Number(orgWallet.balance || 0).toFixed(2)}
+                </p>
+              </div>
+              <div className="rounded-xl bg-black/20 p-4">
+                <p className="text-xs uppercase tracking-[0.3em] text-[var(--text-muted)]">Payout Available</p>
+                <p className="mt-2 text-xl font-display text-white">
+                  ${Number(orgWallet.availableForPayout || 0).toFixed(2)}
+                </p>
+              </div>
+            </div>
+            <div className="mt-6">
+              <OrgPayoutConnector />
+            </div>
+          </div>
         )}
-        <OrgPayoutConnector />
       </section>
 
-      <WalletTransactionsList transactions={transactions} />
+      <section className="glass-card p-8">
+        <h2 className="mb-6 text-xl font-display text-[var(--text-primary)]">Recent Transactions</h2>
+        <WalletTransactionsList transactions={transactions} />
+      </section>
     </div>
   );
 }
