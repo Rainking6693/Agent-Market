@@ -69,15 +69,12 @@ export class AuthService {
 
       const dbUser = await this.prisma.user.findUnique({
         where: { email: data.email },
-        select: {
-          id: true,
-          email: true,
-          displayName: true,
-          password: true,
-          role: true,
-          betaAccess: true,
-          providerBeta: true,
-        },
+      select: {
+        id: true,
+        email: true,
+        displayName: true,
+        password: true,
+      },
       });
 
       if (!dbUser) {
@@ -112,11 +109,7 @@ export class AuthService {
       }
 
       const user = this.dbUserToAuthUser(dbUser);
-      return this.buildAuthResponse(user, {
-        role: dbUser.role,
-        betaAccess: dbUser.betaAccess,
-        providerBeta: dbUser.providerBeta,
-      });
+      return this.buildAuthResponse(user);
     } catch (error) {
       if (error instanceof UnauthorizedException) {
         throw error;
