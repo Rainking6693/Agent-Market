@@ -27,3 +27,4 @@ Logos/DiscordSetup.exe
 
 # Railway local link/config (created by `railway link`)
 .railway/
+.trigger
