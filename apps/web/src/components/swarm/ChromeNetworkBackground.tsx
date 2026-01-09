@@ -35,12 +35,13 @@ export default function ChromeNetworkBackground() {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    const nodeCount = 45;
+    const isMobile = window.innerWidth < 768;
+    const nodeCount = isMobile ? 20 : 45;
     nodesRef.current = Array.from({ length: nodeCount }, () => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
+      vx: (Math.random() - 0.5) * (isMobile ? 0.2 : 0.4),
+      vy: (Math.random() - 0.5) * (isMobile ? 0.2 : 0.4),
       radius: Math.random() * 2 + 1.5,
       pulseIntensity: 0,
     }));

@@ -64,8 +64,8 @@ export function CookieConsent() {
           <p>
             We use cookies to improve your experience, analyze usage, and assist marketing efforts. By clicking
             &ldquo;Accept&rdquo;, you consent to our use of cookies.{' '}
-            <a href="/privacy" className="underline">
-              Learn more
+            <a href="/privacy" className="underline" aria-label="Read our Privacy Policy">
+              Read our Privacy Policy
             </a>
           </p>
         </div>
@@ -73,7 +73,7 @@ export function CookieConsent() {
           <Button variant="outline" size="sm" onClick={handleDecline} className="min-w-[90px]">
             Decline
           </Button>
-          <Button size="sm" onClick={handleAccept} className="min-w-[90px]">
+          <Button size="sm" onClick={handleAccept} className="min-w-[90px] bg-white text-black hover:bg-slate-200">
             Accept
           </Button>
         </div>

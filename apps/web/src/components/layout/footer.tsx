@@ -17,7 +17,7 @@ export function Footer() {
 
         <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 md:gap-16">
           <div className="flex flex-col gap-3">
-            <h4 className="font-medium text-white">Platform</h4>
+            <p className="font-medium text-white mb-2">Platform</p>
             <Link href="/agents" className="transition hover:text-white">
               Marketplace
             </Link>
@@ -36,7 +36,7 @@ export function Footer() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <h4 className="font-medium text-white">Resources</h4>
+            <p className="font-medium text-white mb-2">Resources</p>
             <Link href="/resources" className="transition hover:text-white">
               Documentation
             </Link>
@@ -49,7 +49,7 @@ export function Footer() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <h4 className="font-medium text-white">Legal</h4>
+            <p className="font-medium text-white mb-2">Legal</p>
             <Link href="/terms" className="transition hover:text-white">
               Terms of Service
             </Link>
