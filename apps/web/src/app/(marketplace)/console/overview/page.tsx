@@ -145,10 +145,10 @@ export default function OverviewPage() {
                                     <div
                                         key={i}
                                         className={`rounded-lg border p-3 text-sm ${alert.tone === 'violet' || alert.type === 'info'
-                                                ? 'border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
-                                                : alert.type === 'warning'
-                                                    ? 'border-amber-500/30 bg-amber-500/10 text-amber-300'
-                                                    : 'border-[var(--border-base)] bg-[var(--surface-raised)] text-[var(--text-secondary)]'
+                                            ? 'border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
+                                            : alert.type === 'warning'
+                                                ? 'border-amber-500/30 bg-amber-500/10 text-amber-300'
+                                                : 'border-[var(--border-base)] bg-[var(--surface-raised)] text-[var(--text-secondary)]'
                                             }`}
                                     >
                                         <p>{alert.message}</p>
@@ -166,7 +166,7 @@ export default function OverviewPage() {
                             <p className="text-sm text-[var(--text-muted)]" font-ui>All systems operational. No action needed.</p>
                         )}
                         <div className="mt-4 grid gap-3 md:grid-cols-2">
-                            {defaultNextSteps.map((step) => (
+                            {defaultNextSteps.filter(s => !(s.title === 'Add agents' && agents.length > 0)).map((step) => (
                                 <Link
                                     key={step.title}
                                     href={step.href}
@@ -180,6 +180,26 @@ export default function OverviewPage() {
                         </div>
                     </CardContent>
                 </Card>
+
+                {/* My Agents Row - If Exists */}
+                {agents.length > 0 && (
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <CardTitle className="text-lg" font-display>My Agents</CardTitle>
+                            <Link href="/console/agents" className="text-xs text-[var(--accent-primary)] hover:underline">View All</Link>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex flex-col gap-2">
+                                {agents.slice(0, 4).map((agent: any) => (
+                                    <Link key={agent.id} href={`/agents/${agent.slug || agent.id}`} className="flex items-center justify-between rounded-md border border-[var(--border-base)] p-2 hover:bg-[var(--surface-raised)]">
+                                        <span className="font-semibold text-sm">{agent.name}</span>
+                                        <span className="text-xs text-[var(--text-muted)]">{agent.visibility}</span>
+                                    </Link>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
 
                 {/* Recent Activity */}
                 <Card>

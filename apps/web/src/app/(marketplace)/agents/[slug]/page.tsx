@@ -21,15 +21,45 @@ const currency = new Intl.NumberFormat('en-US', {
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default async function AgentDetailPage({ 
-  params 
-}: { 
-  params: Promise<{ slug: string }> | { slug: string } 
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> | { slug: string } }
+) {
+  const resolvedParams = params instanceof Promise ? await params : params;
+
+  if (!resolvedParams?.slug) {
+    return { title: 'Agent Not Found | SwarmSync' };
+  }
+
+  try {
+    const client = getAgentMarketClient();
+    const agent = await client.getAgentBySlug(resolvedParams.slug);
+
+    if (!agent) {
+      return { title: 'Agent Not Found | SwarmSync' };
+    }
+
+    return {
+      title: `${agent.name} | SwarmSync`,
+      description: agent.description || `Hire ${agent.name} on SwarmSync Marketplace.`,
+      openGraph: {
+        title: agent.name,
+        description: agent.description,
+      },
+    };
+  } catch (error) {
+    return { title: 'Agent Details | SwarmSync' };
+  }
+}
+
+export default async function AgentDetailPage({
+  params
+}: {
+  params: Promise<{ slug: string }> | { slug: string }
 }) {
   // Handle both Promise and direct params (Next.js 13-15 compatibility)
   const resolvedParams = params instanceof Promise ? await params : params;
   const slug = resolvedParams.slug;
-  
+
   if (!slug || typeof slug !== 'string') {
     console.error('Invalid slug parameter:', slug);
     notFound();
@@ -95,7 +125,7 @@ export default async function AgentDetailPage({
                     } else {
                       variant = 'accent';
                     }
-                    
+
                     return (
                       <Badge key={badge} variant={variant} className="text-[0.65rem] uppercase tracking-wide">
                         {badge}
@@ -209,11 +239,10 @@ export default async function AgentDetailPage({
                               <span className="text-xs text-slate-400">{evaluation.latencyMs}ms</span>
                             )}
                             <span
-                              className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
-                                evaluation.status === 'PASSED'
+                              className={`rounded-full px-2 py-0.5 text-xs font-semibold ${evaluation.status === 'PASSED'
                                   ? 'bg-green-100 text-green-700'
                                   : 'bg-red-100 text-red-700'
-                              }`}
+                                }`}
                             >
                               {evaluation.status}
                             </span>

@@ -214,7 +214,7 @@ export default function NewAgentForm() {
   const stepComplete = (index: number) => index < currentStep;
   const stepActive = (index: number) => index === currentStep;
 
-  const canAdvance = useMemo(() => {
+  const canAdvance = (() => {
     switch (currentStep) {
       case 0:
         return name.trim().length >= 3 && description.trim().length >= 20;
@@ -227,7 +227,7 @@ export default function NewAgentForm() {
       default:
         return false;
     }
-  }, [currentStep, name, description, selectedCategories, pricingModel, ap2Endpoint]);
+  })();
 
   useEffect(() => {
     if (searchParams.get('import') === 'true' && fileInputRef.current) {
@@ -401,8 +401,8 @@ export default function NewAgentForm() {
     <div className="space-y-10">
       <header className="space-y-3">
         <p className="text-xs uppercase tracking-[0.35em] text-[var(--text-muted)]">Agents</p>
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
             <h1 className="text-4xl font-display text-[var(--text-primary)]">Launch a new agent</h1>
             <p className="mt-2 max-w-2xl text-sm text-[var(--text-muted)]">
               Capture the basics, declare pricing and schemas, then lock budgets.
@@ -414,7 +414,7 @@ export default function NewAgentForm() {
         </div>
       </header>
 
-          <Card className="border-[var(--border-base)] bg-[var(--surface-raised)]/70">
+      <Card className="border-[var(--border-base)] bg-[var(--surface-raised)]/70">
         <CardHeader>
           <CardTitle className="text-sm font-display uppercase tracking-wide text-[var(--text-muted)]">
             Import Agent Configuration
@@ -528,7 +528,7 @@ export default function NewAgentForm() {
         </Card>
       ) : (
         <Card className="border-[var(--border-base)]">
-            <CardHeader className="pb-4">
+          <CardHeader className="pb-4">
             <CardTitle className="text-2xl font-display text-[var(--text-primary)]">
               {steps[currentStep].title}
             </CardTitle>
@@ -590,6 +590,9 @@ export default function NewAgentForm() {
                 placeholder="E.g. Apollo Pipeline Orchestrator"
                 onChange={(event) => setName(event.target.value)}
               />
+              {name.length > 0 && name.trim().length < 3 && (
+                <p className="mt-1 text-xs text-amber-500">Name must be at least 3 characters.</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="agent-description">Description</Label>
@@ -599,6 +602,11 @@ export default function NewAgentForm() {
                 placeholder="Describe what the agent does..."
                 onChange={(event) => setDescription(event.target.value)}
               />
+              {description.length > 0 && description.trim().length < 20 && (
+                <p className="mt-1 text-xs text-amber-500">
+                  Description must be at least 20 characters (current: {description.trim().length}).
+                </p>
+              )}
             </div>
             <div className="space-y-3">
               <Label>Visibility</Label>
@@ -665,7 +673,7 @@ export default function NewAgentForm() {
                         'w-full rounded-2xl border px-4 py-3 text-left text-sm',
                         pricingModel === option.value
                           ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]'
-                      : 'border-[var(--border-base)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]',
+                          : 'border-[var(--border-base)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]',
                       )}
                     >
                       {option.label}

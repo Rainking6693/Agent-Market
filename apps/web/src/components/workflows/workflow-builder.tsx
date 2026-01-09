@@ -178,10 +178,11 @@ export const WorkflowBuilder = () => {
         </CardHeader>
         <CardContent className="grid gap-6 md:grid-cols-2">
           <div>
-            <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-2">
+            <label htmlFor="workflow-creator" className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-2">
               Creator ID
             </label>
             <input
+              id="workflow-creator"
               value={creatorId}
               onChange={(event) => setCreatorId(event.target.value)}
               placeholder="UUID of the workflow owner"
@@ -189,10 +190,11 @@ export const WorkflowBuilder = () => {
             />
           </div>
           <div>
-            <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-2">
+            <label htmlFor="workflow-name" className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-2">
               Workflow Name
             </label>
             <input
+              id="workflow-name"
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder="e.g., Research → Analysis → Archive"
@@ -200,10 +202,11 @@ export const WorkflowBuilder = () => {
             />
           </div>
           <div>
-            <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-2">
+            <label htmlFor="workflow-budget" className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-2">
               Total Budget (credits)
             </label>
             <input
+              id="workflow-budget"
               type="number"
               value={budget}
               onChange={(event) => setBudget(Number(event.target.value))}
@@ -212,10 +215,11 @@ export const WorkflowBuilder = () => {
             />
           </div>
           <div className="md:col-span-2">
-            <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-2">
+            <label htmlFor="workflow-desc" className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-2">
               Description
             </label>
             <textarea
+              id="workflow-desc"
               value={description}
               onChange={(event) => setDescription(event.target.value)}
               rows={3}
@@ -243,32 +247,35 @@ export const WorkflowBuilder = () => {
               {parsedSteps.map((step, index) => (
                 <div key={index} className="flex items-end gap-3 rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] p-4">
                   <div className="flex-1">
-                    <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-1">
+                    <label htmlFor={`step-${index}-agent`} className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-1">
                       Agent ID
                     </label>
                     <input
+                      id={`step-${index}-agent`}
                       value={step.agentId}
                       onChange={(e) => handleUpdateStep(index, 'agentId', e.target.value)}
                       placeholder="e.g., agent_research_001"
-                      className="w-full rounded border border-[var(--border-base)] bg-white px-2 py-1 text-xs text-white placeholder:text-[var(--text-muted)]/50"
+                      className="w-full rounded border border-[var(--border-base)] bg-[var(--surface-raised)] px-2 py-1 text-xs text-white placeholder:text-[var(--text-muted)]/50"
                     />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-1">
+                    <label htmlFor={`step-${index}-job`} className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-1">
                       Job Reference
                     </label>
                     <input
+                      id={`step-${index}-job`}
                       value={step.jobReference}
                       onChange={(e) => handleUpdateStep(index, 'jobReference', e.target.value)}
                       placeholder="e.g., research"
-                      className="w-full rounded border border-[var(--border-base)] bg-white px-2 py-1 text-xs text-white placeholder:text-[var(--text-muted)]/50"
+                      className="w-full rounded border border-[var(--border-base)] bg-[var(--surface-raised)] px-2 py-1 text-xs text-white placeholder:text-[var(--text-muted)]/50"
                     />
                   </div>
                   <div className="w-24">
-                    <label className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-1">
+                    <label htmlFor={`step-${index}-budget`} className="block text-xs uppercase tracking-wide text-[var(--text-muted)] mb-1">
                       Budget
                     </label>
                     <input
+                      id={`step-${index}-budget`}
                       type="number"
                       value={step.budget}
                       onChange={(e) => handleUpdateStep(index, 'budget', e.target.value)}
@@ -302,7 +309,17 @@ export const WorkflowBuilder = () => {
           </label>
           <textarea
             value={steps}
-            onChange={(event) => setSteps(event.target.value)}
+            onChange={(event) => {
+              setSteps(event.target.value);
+              try {
+                const parsed = JSON.parse(event.target.value);
+                if (Array.isArray(parsed)) {
+                  setParsedSteps(parsed);
+                }
+              } catch (e) {
+                // Ignore parsing errors while typing
+              }
+            }}
             rows={6}
             className="w-full rounded-lg border border-[var(--border-base)] bg-[var(--surface-raised)] px-3 py-2 font-mono text-xs text-white focus:border-white/40 focus:outline-none"
           />
