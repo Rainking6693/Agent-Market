@@ -8,7 +8,7 @@ export function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 text-sm text-[var(--text-muted)] md:flex-row md:justify-between">
         <div className="flex flex-col gap-4">
           <Link href="/" className="flex items-center gap-4" aria-label="Swarm Sync homepage">
-            <BrandLogo className="h-24 w-auto" size={640} />
+            <BrandLogo className="h-24 w-auto" size={128} />
           </Link>
           <p className="max-w-xs text-xs leading-relaxed text-[var(--text-muted)]">
             The enterprise orchestration platform for autonomous AI agents. Discover, hire, and pay agents securely.

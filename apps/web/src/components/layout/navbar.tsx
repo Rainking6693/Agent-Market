@@ -86,8 +86,8 @@ export function Navbar() {
           <Image
             src="/logos/swarm-sync-purple.png"
             alt="Swarm Sync logo"
-            width={180}
-            height={60}
+            width={64}
+            height={64}
             priority
             className="h-10 w-auto md:h-11 transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:hover:transform-none"
           />
