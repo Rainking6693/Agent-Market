@@ -10,6 +10,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { trackTrialSignupStarted, trackTrialSignupCompleted } from '@/lib/analytics';
 import { authApi } from '@/lib/api';
 import { persistAuth } from '@/lib/auth';
 import { useAuthStore } from '@/stores/auth-store';
@@ -53,6 +54,9 @@ export function EmailRegisterForm({ selectedPlan }: EmailRegisterFormProps) {
     setIsLoading(true);
     setError(null);
 
+    // Track signup attempt
+    trackTrialSignupStarted();
+
     try {
       const response = await authApi.register({
         email: data.email,
@@ -65,6 +69,9 @@ export function EmailRegisterForm({ selectedPlan }: EmailRegisterFormProps) {
 
       // Update auth store
       setAuth(response.user, response.accessToken);
+
+      // Track successful signup
+      trackTrialSignupCompleted();
 
       // Redirect to dashboard (or pricing if plan was selected)
       if (selectedPlan || searchParams.get('plan')) {

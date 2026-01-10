@@ -19,6 +19,9 @@ export default function MarketplaceAgentsPage() {
   const [capability, setCapability] = useState('');
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [showMyAgents, setShowMyAgents] = useState(false);
+  const [sortBy, setSortBy] = useState('relevance');
+  const [minRating, setMinRating] = useState(0);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
 
   // When showing "My Agents", also pass showAll to bypass default PUBLIC/APPROVED filter
   const filters = useMemo(
@@ -33,6 +36,7 @@ export default function MarketplaceAgentsPage() {
     [search, category, capability, verifiedOnly, showMyAgents, user?.id],
   );
 
+  // Sort and filter agents client-side (since backend doesn't support all filters yet)
   // When showing "My Agents" but user.id isn't available yet, use empty filters to trigger loading state
   const effectiveFilters = useMemo(() => {
     // If showing all agents (not filtering by creator), use the filters as-is
@@ -50,6 +54,52 @@ export default function MarketplaceAgentsPage() {
   const { data: agents, isLoading: queryLoading, isError, error, refetch } = useAgents(
     effectiveFilters ?? undefined
   );
+
+  const sortedAndFilteredAgents = useMemo(() => {
+    if (!agents) return [];
+    let filtered = [...agents];
+
+    // Filter by rating
+    if (minRating > 0) {
+      filtered = filtered.filter((agent) => (agent.trustScore ?? 0) >= minRating);
+    }
+
+    // Filter by price range
+    filtered = filtered.filter((agent) => {
+      const price = agent.basePriceCents ? agent.basePriceCents / 100 : 0;
+      return price >= priceRange[0] && price <= priceRange[1];
+    });
+
+    // Sort
+    switch (sortBy) {
+      case 'rating':
+        filtered.sort((a, b) => (b.trustScore ?? 0) - (a.trustScore ?? 0));
+        break;
+      case 'price_low':
+        filtered.sort((a, b) => (a.basePriceCents ?? 0) - (b.basePriceCents ?? 0));
+        break;
+      case 'price_high':
+        filtered.sort((a, b) => (b.basePriceCents ?? 0) - (a.basePriceCents ?? 0));
+        break;
+      case 'newest':
+        filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        break;
+      case 'popular':
+        // Sort by trust score and success count as popularity indicators
+        filtered.sort((a, b) => {
+          const aPopularity = (a.trustScore ?? 0) + (a.successCount ?? 0);
+          const bPopularity = (b.trustScore ?? 0) + (b.successCount ?? 0);
+          return bPopularity - aPopularity;
+        });
+        break;
+      case 'relevance':
+      default:
+        // Keep original order (relevance from backend)
+        break;
+    }
+
+    return filtered;
+  }, [agents, minRating, priceRange, sortBy]);
 
   // Show loading if we're waiting for user ID to be available OR if query is loading
   const isLoading = queryLoading || (showMyAgents && !user?.id);
@@ -106,9 +156,15 @@ export default function MarketplaceAgentsPage() {
             onCategoryChange={setCategory}
             onCapabilityChange={setCapability}
             onVerifiedToggle={setVerifiedOnly}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+            minRating={minRating}
+            onMinRatingChange={setMinRating}
+            priceRange={priceRange}
+            onPriceRangeChange={setPriceRange}
           />
 
-          <AgentGrid agents={agents} isLoading={isLoading} isError={isError} />
+          <AgentGrid agents={sortedAndFilteredAgents} isLoading={isLoading} isError={isError} />
         </div>
       </div>
       <Footer />

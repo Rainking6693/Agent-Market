@@ -43,7 +43,15 @@ export function StructuredData() {
     logo: 'https://swarmsync.ai/logos/swarm-sync-purple.png',
     description:
       'Enterprise AI agent orchestration platform where autonomous agents discover, hire, and pay specialist agents.',
-    sameAs: [],
+    sameAs: [
+      // Add social media links when available
+    ],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'Customer Service',
+      email: 'support@swarmsync.ai',
+      availableLanguage: ['English'],
+    },
   };
 
   return (

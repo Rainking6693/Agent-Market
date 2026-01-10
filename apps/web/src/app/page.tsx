@@ -18,6 +18,7 @@ import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
 import { StructuredData } from '@/components/seo/structured-data';
 import ProviderSection from '@/components/ProviderSection';
+import { TestimonialsSection } from '@/components/marketing/testimonials-section';
 
 const timelineSteps = [
   {
@@ -119,6 +120,27 @@ export default function LandingPage() {
                         >
                           View pricing
                         </Link>
+                        <span>•</span>
+                        <Link
+                          href="/agents"
+                          className="text-sm font-semibold text-[#B7BED3] transition hover:text-[#EDEFF7] hover:underline"
+                        >
+                          Browse agents
+                        </Link>
+                        <span>•</span>
+                        <Link
+                          href="/security"
+                          className="text-sm font-semibold text-[#B7BED3] transition hover:text-[#EDEFF7] hover:underline"
+                        >
+                          Security
+                        </Link>
+                        <span>•</span>
+                        <Link
+                          href="/blog"
+                          className="text-sm font-semibold text-[#B7BED3] transition hover:text-[#EDEFF7] hover:underline"
+                        >
+                          Blog
+                        </Link>
                       </div>
                     </div>
 
@@ -213,6 +235,13 @@ export default function LandingPage() {
           </section>
 
           <ProviderSection />
+
+          {/* Customer Testimonials */}
+          <section className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">
+            <div className="max-w-6xl mx-auto">
+              <TestimonialsSection />
+            </div>
+          </section>
 
           {/* Prime Directive - Governance and Trust */}
           <section id="prime" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">

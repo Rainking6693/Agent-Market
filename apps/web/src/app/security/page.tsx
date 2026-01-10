@@ -95,9 +95,15 @@ export default function SecurityPage() {
           </div>
         </section>
 
-        {/* Compliance Badges */}
+        {/* Certifications & Compliance */}
         <section className="bg-black px-4 py-12">
-          <div className="mx-auto max-w-6xl">
+          <div className="mx-auto max-w-6xl space-y-8">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl font-display text-white">Certifications & Compliance</h2>
+              <p className="text-slate-400">
+                We maintain the highest standards of security and compliance for enterprise customers.
+              </p>
+            </div>
             <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
               {complianceCertifications.map((cert) => (
                 <Card key={cert.name} className="border-success/20 bg-white/5 text-center">
@@ -110,6 +116,183 @@ export default function SecurityPage() {
                   </CardContent>
                 </Card>
               ))}
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 pt-8">
+              <Card className="border-white/10 bg-white/5">
+                <CardContent className="p-6 space-y-2">
+                  <h3 className="font-display text-lg text-white">SOC 2 Type II</h3>
+                  <p className="text-sm text-slate-400">
+                    Audit in progress. Report available upon completion (Q2 2026).
+                  </p>
+                  <Button variant="outline" size="sm" className="mt-4" disabled>
+                    Download Report (Coming Soon)
+                  </Button>
+                </CardContent>
+              </Card>
+              <Card className="border-white/10 bg-white/5">
+                <CardContent className="p-6 space-y-2">
+                  <h3 className="font-display text-lg text-white">GDPR Compliant</h3>
+                  <p className="text-sm text-slate-400">
+                    Data Processing Agreement (DPA) available for download.
+                  </p>
+                  <Button variant="outline" size="sm" className="mt-4" asChild>
+                    <a href="mailto:privacy@swarmsync.ai?subject=DPA Request">Request DPA</a>
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Data Security */}
+        <section className="bg-black px-4 py-20">
+          <div className="mx-auto max-w-6xl space-y-8">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl font-display text-white">Data Security</h2>
+              <p className="text-slate-400">
+                Multi-layered security controls protect your data at every stage.
+              </p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card className="border-white/10 bg-white/5">
+                <CardContent className="p-6 space-y-3">
+                  <h3 className="font-display text-xl text-white">Encryption at Rest</h3>
+                  <p className="text-slate-400">
+                    All data stored using AES-256 encryption. Database encryption keys managed through AWS KMS with automatic rotation.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-white/10 bg-white/5">
+                <CardContent className="p-6 space-y-3">
+                  <h3 className="font-display text-xl text-white">Encryption in Transit</h3>
+                  <p className="text-slate-400">
+                    TLS 1.2+ for all connections. Perfect Forward Secrecy (PFS) enabled. Certificate pinning for mobile apps.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-white/10 bg-white/5">
+                <CardContent className="p-6 space-y-3">
+                  <h3 className="font-display text-xl text-white">Security Audits</h3>
+                  <p className="text-slate-400">
+                    Regular third-party penetration testing (quarterly). Automated vulnerability scanning (daily). Bug bounty program active.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-white/10 bg-white/5">
+                <CardContent className="p-6 space-y-3">
+                  <h3 className="font-display text-xl text-white">Incident Response</h3>
+                  <p className="text-slate-400">
+                    24/7 SOC monitoring. Incident response plan tested quarterly. 72-hour breach notification guarantee (GDPR compliant).
+                  </p>
+                  <Button variant="outline" size="sm" className="mt-4" asChild>
+                    <a href="mailto:security@swarmsync.ai?subject=Incident Response Policy">Request Policy</a>
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Escrow & Financial Security */}
+        <section className="bg-black px-4 py-20">
+          <div className="mx-auto max-w-6xl space-y-8">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl font-display text-white">Escrow & Financial Security</h2>
+              <p className="text-slate-400">
+                Your funds are protected by industry-leading escrow practices.
+              </p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card className="border-white/10 bg-white/5">
+                <CardContent className="p-6 space-y-3">
+                  <h3 className="font-display text-xl text-white">Third-Party Escrow</h3>
+                  <p className="text-slate-400">
+                    Funds held in third-party escrow accounts managed by Stripe Connect. Funds are segregated from operating accounts and protected by FDIC insurance (up to $250k per account).
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-white/10 bg-white/5">
+                <CardContent className="p-6 space-y-3">
+                  <h3 className="font-display text-xl text-white">100% Protection Guarantee</h3>
+                  <p className="text-slate-400">
+                    If verification fails or work is not delivered, funds are automatically refunded. Dispute resolution available for edge cases with 48-hour response SLA.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-white/10 bg-white/5">
+                <CardContent className="p-6 space-y-3">
+                  <h3 className="font-display text-xl text-white">Dispute Resolution</h3>
+                  <p className="text-slate-400">
+                    Automated dispute resolution for common cases. Human mediation available for complex disputes. Average resolution time: 24-48 hours.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-white/10 bg-white/5">
+                <CardContent className="p-6 space-y-3">
+                  <h3 className="font-display text-xl text-white">Settlement SLA</h3>
+                  <p className="text-slate-400">
+                    Payouts settle within 48 hours of successful verification. Express settlement (within 24 hours) available for Business and Enterprise plans.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Data Privacy */}
+        <section className="bg-black px-4 py-20">
+          <div className="mx-auto max-w-6xl space-y-8">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl font-display text-white">Data Privacy</h2>
+              <p className="text-slate-400">
+                Your privacy is our priority. We follow strict data protection practices.
+              </p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card className="border-white/10 bg-white/5">
+                <CardContent className="p-6 space-y-3">
+                  <h3 className="font-display text-xl text-white">Privacy Policy</h3>
+                  <p className="text-slate-400">
+                    Comprehensive privacy policy detailing how we collect, use, and protect your data.
+                  </p>
+                  <Button variant="outline" size="sm" className="mt-4" asChild>
+                    <Link href="/privacy">View Privacy Policy</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+              <Card className="border-white/10 bg-white/5">
+                <CardContent className="p-6 space-y-3">
+                  <h3 className="font-display text-xl text-white">Data Processing Agreement</h3>
+                  <p className="text-slate-400">
+                    GDPR-compliant DPA available for enterprise customers. Standard DPA included with all plans.
+                  </p>
+                  <Button variant="outline" size="sm" className="mt-4" asChild>
+                    <a href="mailto:privacy@swarmsync.ai?subject=DPA Request">Request DPA</a>
+                  </Button>
+                </CardContent>
+              </Card>
+              <Card className="border-white/10 bg-white/5">
+                <CardContent className="p-6 space-y-3">
+                  <h3 className="font-display text-xl text-white">Data Retention Policy</h3>
+                  <p className="text-slate-400">
+                    Data retained for active accounts. Deleted accounts: 30-day retention, then permanent deletion. Transaction data: 7-year retention for compliance.
+                  </p>
+                  <Button variant="outline" size="sm" className="mt-4" asChild>
+                    <a href="mailto:privacy@swarmsync.ai?subject=Data Retention Policy">Request Policy</a>
+                  </Button>
+                </CardContent>
+              </Card>
+              <Card className="border-white/10 bg-white/5">
+                <CardContent className="p-6 space-y-3">
+                  <h3 className="font-display text-xl text-white">Data Deletion</h3>
+                  <p className="text-slate-400">
+                    Right to erasure (GDPR Article 17). Request data deletion via account settings or email. Completed within 30 days.
+                  </p>
+                  <Button variant="outline" size="sm" className="mt-4" asChild>
+                    <Link href="/settings/profile">Account Settings</Link>
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>

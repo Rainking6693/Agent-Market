@@ -155,12 +155,15 @@ export default async function AgentDetailPage({
                 <div className="flex flex-wrap gap-3">
                   <Button
                     asChild
-                    className="rounded-full px-6 py-2 text-sm font-semibold uppercase tracking-wide"
+                    className="rounded-full px-6 py-2 text-sm font-semibold uppercase tracking-wide bg-gradient-to-r from-[var(--accent-primary)] to-[#FFD87E] text-black"
                   >
-                    <Link href="#request-service-panel">Request service</Link>
+                    <Link href="#request-service-panel">Hire This Agent</Link>
                   </Button>
                   <AgentActionPanel agentSlug={agent.slug} />
                 </div>
+                <p className="text-xs text-slate-400 text-center">
+                  Start an A2A transaction with this agent
+                </p>
               </div>
             </div>
           </header>

@@ -1,53 +1,23 @@
-import Link from 'next/link';
+import { Shield, Lock, CheckCircle2 } from 'lucide-react';
 
 export function SecurityBadges() {
-  const badges = [
-    {
-      icon: '🔒',
-      title: 'SOC 2',
-      subtitle: 'Ready',
-      link: '/security#compliance',
-    },
-    {
-      icon: '🛡️',
-      title: '256-bit',
-      subtitle: 'Encryption',
-      link: '/security#encryption',
-    },
-    {
-      icon: '✓',
-      title: 'GDPR',
-      subtitle: 'Aligned',
-      link: '/security#privacy',
-    },
-    {
-      icon: '🏆',
-      title: '99.9%',
-      subtitle: 'Uptime Target',
-      link: '/security#reliability',
-    },
-  ];
-
   return (
-    <div className="border-t border-[var(--border-base)]/20 bg-[var(--surface-raised)] px-4 py-8">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-          {badges.map((badge) => (
-            <Link
-              key={badge.title}
-              href={badge.link}
-              className="flex flex-col items-center space-y-2 text-center transition hover:opacity-80"
-            >
-              <div className="text-3xl">{badge.icon}</div>
-              <div>
-                <p className="font-display text-sm text-white">{badge.title}</p>
-                <p className="font-ui text-xs text-muted-foreground">
-                  {badge.subtitle}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
+    <div className="flex flex-wrap items-center justify-center gap-6 py-8">
+      <div className="flex items-center gap-2 text-slate-300">
+        <Shield className="h-5 w-5 text-emerald-400" />
+        <span className="text-sm font-medium">SOC 2 Type II</span>
+      </div>
+      <div className="flex items-center gap-2 text-slate-300">
+        <Lock className="h-5 w-5 text-emerald-400" />
+        <span className="text-sm font-medium">GDPR Compliant</span>
+      </div>
+      <div className="flex items-center gap-2 text-slate-300">
+        <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+        <span className="text-sm font-medium">CCPA Compliant</span>
+      </div>
+      <div className="flex items-center gap-2 text-slate-300">
+        <Shield className="h-5 w-5 text-emerald-400" />
+        <span className="text-sm font-medium">Escrow Protected</span>
       </div>
     </div>
   );

@@ -3,7 +3,10 @@ import './globals.css';
 import { Inter, Space_Grotesk } from 'next/font/google';
 
 import { Providers } from '@/app/providers';
+import { SkipToContent } from '@/components/accessibility/skip-to-content';
+import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 import { CookieConsent } from '@/components/marketing/cookie-consent';
+import { StickyMobileCTA } from '@/components/marketing/sticky-mobile-cta';
 
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
@@ -104,8 +107,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className="min-h-screen bg-background font-ui text-foreground antialiased"
       >
+        <SkipToContent />
+        <GoogleAnalytics />
         <Providers>{children}</Providers>
         <CookieConsent />
+        <StickyMobileCTA />
       </body>
     </html>
   );

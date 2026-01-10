@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { trackLoginAttempted, trackLoginSuccessful } from '@/lib/analytics';
 import { authApi } from '@/lib/api';
 import { persistAuth } from '@/lib/auth';
 import { useAuthStore } from '@/stores/auth-store';
@@ -39,6 +40,9 @@ export function EmailLoginForm() {
     setIsLoading(true);
     setError(null);
 
+    // Track login attempt
+    trackLoginAttempted();
+
     try {
       console.log(`[EmailLogin] Attempting login for: ${data.email}`);
       const response = await authApi.login(data.email, data.password);
@@ -49,6 +53,9 @@ export function EmailLoginForm() {
 
       // Update auth store
       setAuth(response.user, response.accessToken);
+
+      // Track successful login
+      trackLoginSuccessful();
 
       // Check for callback URL in query params
       const urlParams = new URLSearchParams(window.location.search);

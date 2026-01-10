@@ -4,6 +4,8 @@ import Link from 'next/link';
 import ChromeNetworkBackground from '@/components/swarm/ChromeNetworkBackground';
 import DepthFieldOrbs from '@/components/swarm/DepthFieldOrbs';
 import { Sidebar } from '@/components/layout/Sidebar';
+import { WelcomeModal } from '@/components/onboarding/welcome-modal';
+import { Walkthrough } from '@/components/onboarding/walkthrough';
 import { requireAuth } from '@/lib/auth-guard';
 
 import type { ReactNode } from 'react';
@@ -35,6 +37,8 @@ export default async function ConsoleLayout({ children }: { children: ReactNode 
           <div className="mx-auto max-w-7xl space-y-12">{children}</div>
         </main>
       </div>
+      <WelcomeModal />
+      <Walkthrough />
     </div>
   );
 }

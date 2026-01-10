@@ -40,6 +40,9 @@ export function Footer() {
             <Link href="/resources" className="transition hover:text-white">
               Documentation
             </Link>
+            <Link href="/blog" className="transition hover:text-white">
+              Blog
+            </Link>
             <Link href="/faq" className="transition hover:text-white">
               FAQ
             </Link>
