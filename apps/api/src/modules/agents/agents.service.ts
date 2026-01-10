@@ -45,6 +45,7 @@ export class AgentsService {
     private readonly prisma: PrismaService,
     private readonly walletsService: WalletsService,
     private readonly ap2Service: Ap2Service,
+    private readonly triggerService: TriggerService,
   ) { }
 
   async create(data: CreateAgentDto) {
@@ -270,6 +271,16 @@ export class AgentsService {
         },
       });
     }
+
+    // Trigger autonomous verification
+    this.triggerService.triggerAgentVerification(
+      id,
+      agent.ap2Endpoint ?? undefined,
+      agent.inputSchema as unknown,
+      agent.outputSchema as unknown
+    ).catch(error => {
+      console.error(`Failed to trigger verification for agent ${id}:`, error);
+    });
 
     return presentAgent(agent);
   }
