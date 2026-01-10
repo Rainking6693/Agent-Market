@@ -727,7 +727,7 @@
 
 | Phase                    | Owner              | Stakeholder             |
 | ------------------------ | ------------------ | ----------------------- |
-| **Auth Fix**             | Backend Lead       | CTO, CEO                |
+|                          |
 | **Testimonials**         | Marketing Lead     | Sales, Customer Success |
 | **Pricing Page**         | Product Manager    | Marketing, Designers    |
 | **Trust Center**         | Legal/Product      | Privacy Officer, CEO    |
@@ -744,9 +744,9 @@
 
 **Approved By:**
 
-- [ ] CEO / Product Lead: ****\_\_\_**** (Date: \_\_\_)
-- [ ] Engineering Lead: ****\_\_\_**** (Date: \_\_\_)
-- [ ] Marketing Lead: ****\_\_\_**** (Date: \_\_\_)
+- [ ] CEO / Product Lead: \***\*\_\_\_\*\*** (Date: \_\_\_)
+- [ ] Engineering Lead: \***\*\_\_\_\*\*** (Date: \_\_\_)
+- [ ] Marketing Lead: \***\*\_\_\_\*\*** (Date: \_\_\_)
 
 **Next Review:** February 10, 2026
 

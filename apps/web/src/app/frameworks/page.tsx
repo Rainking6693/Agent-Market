@@ -90,7 +90,7 @@ export default function FrameworksPage() {
                             <TacticalButton href="/docs/integration" className="min-w-[200px]">
                                 View Integration Docs
                             </TacticalButton>
-                            <TacticalButton variant="secondary" href="https://github.com/e2b-dev/awesome-ai-agents" className="min-w-[200px]">
+                            <TacticalButton variant="secondary" href="https://github.com/e2b-dev/awesome-ai-agents" target="_blank" rel="noopener noreferrer" className="min-w-[200px]">
                                 Explore Frameworks
                             </TacticalButton>
                         </div>
@@ -111,10 +111,10 @@ export default function FrameworksPage() {
                                             {framework.icon}
                                         </div>
                                         <span className={`rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider ${framework.integrationStatus === 'Ready'
-                                                ? 'bg-emerald-500/10 text-emerald-400'
-                                                : framework.integrationStatus === 'Beta'
-                                                    ? 'bg-amber-500/10 text-amber-400'
-                                                    : 'bg-slate-500/10 text-slate-400'
+                                            ? 'bg-emerald-500/10 text-emerald-400'
+                                            : framework.integrationStatus === 'Beta'
+                                                ? 'bg-amber-500/10 text-amber-400'
+                                                : 'bg-slate-500/10 text-slate-400'
                                             }`}>
                                             {framework.integrationStatus}
                                         </span>
@@ -134,6 +134,7 @@ export default function FrameworksPage() {
                                     <Link
                                         href={framework.link}
                                         target="_blank"
+                                        rel="noopener noreferrer"
                                         className="inline-flex items-center text-sm font-semibold text-[var(--accent-primary)] transition-colors hover:text-white"
                                     >
                                         View Repository <Terminal className="ml-2 h-4 w-4" />

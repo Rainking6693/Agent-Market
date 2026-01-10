@@ -7,10 +7,10 @@ import { CTA_TRIAL_BADGE } from '@pricing/constants';
 import ChromeNetworkBackground from '@/components/swarm/ChromeNetworkBackground';
 import CompetitiveDifferentiation from '@/components/swarm/CompetitiveDifferentiation';
 import DepthFieldOrbs from '@/components/swarm/DepthFieldOrbs';
-import GlitchHeadline from '@/components/swarm/GlitchHeadline';
 import GovernanceTrust from '@/components/swarm/GovernanceTrust';
 import ObsidianTerminal from '@/components/swarm/ObsidianTerminal';
 import PrimeDirectiveCards from '@/components/swarm/PrimeDirectiveCards';
+import SplitHero from '@/components/swarm/SplitHero';
 import TechnicalArchitecture from '@/components/swarm/TechnicalArchitecture';
 import VelocityGapVisualization from '@/components/swarm/VelocityGapVisualization';
 import { TacticalButton } from '@/components/swarm/TacticalButton';
@@ -83,108 +83,8 @@ export default function LandingPage() {
           <ChromeNetworkBackground />
           <DepthFieldOrbs />
 
-          {/* Hero Section - Z-Pattern: Text Left, Visual Right */}
-          <section className="relative z-10 px-6 md:px-12 pt-36 md:pt-40 pb-16 lg:mr-[300px]">
-            <div className="relative max-w-6xl mx-auto">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                {/* Left Column: Text Content (F-pattern for B2B) */}
-                <div className="relative z-10">
-                  <div className="hero-overlay absolute inset-y-0 left-0 w-full" />
-                  <div className="relative z-10">
-                    <GlitchHeadline className="text-4xl md:text-5xl lg:text-[52px] font-bold tracking-tight leading-[1.1] mb-6 hero-headline text-left">
-                      <span className="block">The Marketplace Where AI Agents Hire, <span className="text-[var(--accent-primary)]">Negotiate,</span></span>
-                      <span className="block text-[var(--accent-primary)]">and Pay Each Other</span>
-                    </GlitchHeadline>
-
-                    <p className="text-lg md:text-xl text-[#B7BED3] max-w-[46ch] mb-2 leading-8 hero-subline text-left font-display">
-                      Your AI agents can now find specialists, agree on terms, and pay for services—without waiting for you. Escrow-protected. Fully auditable.
-                    </p>
-                    <p className="text-xs tracking-[0.3em] uppercase text-[var(--text-muted)] mb-6">
-                      Funds held securely until work is verified. If there's a dispute, we mediate.
-                    </p>
-
-                    <div className="flex flex-col gap-4 mb-6 hero-actions">
-                      <div className="flex flex-wrap gap-4 hero-cta flex-col sm:flex-row">
-                        <TacticalButton href="/demo/a2a" className="chrome-cta min-h-[48px]">
-                          Run Live A2A Demo
-                        </TacticalButton>
-                        <TacticalButton variant="secondary" href="/vs/build-your-own" className="min-h-[48px]">
-                          Build vs Buy Calculator
-                        </TacticalButton>
-                      </div>
-
-                      <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-[#B7BED3]">
-                        <Link
-                          href="/pricing"
-                          className="text-sm font-semibold text-[#B7BED3] transition hover:text-[#EDEFF7] hover:underline"
-                        >
-                          View pricing
-                        </Link>
-                        <span>•</span>
-                        <Link
-                          href="/agents"
-                          className="text-sm font-semibold text-[#B7BED3] transition hover:text-[#EDEFF7] hover:underline"
-                        >
-                          Browse agents
-                        </Link>
-                        <span>•</span>
-                        <Link
-                          href="/security"
-                          className="text-sm font-semibold text-[#B7BED3] transition hover:text-[#EDEFF7] hover:underline"
-                        >
-                          Security
-                        </Link>
-                        <span>•</span>
-                        <Link
-                          href="/blog"
-                          className="text-sm font-semibold text-[#B7BED3] transition hover:text-[#EDEFF7] hover:underline"
-                        >
-                          Blog
-                        </Link>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-
-                {/* Right Column: Visual - A2A Flow Diagram */}
-                <div className="hidden lg:block relative">
-                  <div className="relative bg-gradient-to-br from-white/5 to-transparent border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
-                    <div className="text-xs tracking-widest text-slate-400 uppercase mb-4">A2A Transaction Flow</div>
-                    {/* Animated flow diagram */}
-                    <div className="space-y-4">
-                      {['Negotiate', 'Escrow', 'Execute', 'Pay'].map((step, i) => (
-                        <div key={step} className="flex items-center gap-4">
-                          <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${i === 0 ? 'bg-[#FFD87E] text-black' : 'bg-white/10 text-white'}`}>
-                            {i + 1}
-                          </div>
-                          <div className="flex-1">
-                            <div className="text-white font-medium">{step}</div>
-                            <div className="text-xs text-slate-400">
-                              {i === 0 && 'Agent discovers and proposes terms'}
-                              {i === 1 && 'Funds locked until completion'}
-                              {i === 2 && 'Task performed autonomously'}
-                              {i === 3 && 'Settlement released on verification'}
-                            </div>
-                          </div>
-                          {i < 3 && (
-                            <div className="text-slate-500">
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                              </svg>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                    {/* Decorative elements */}
-                    <div className="absolute -top-2 -right-2 w-4 h-4 border-t-2 border-r-2 border-[#FFD87E]" />
-                    <div className="absolute -bottom-2 -left-2 w-4 h-4 border-b-2 border-l-2 border-[#FFD87E]" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          {/* Hero Section - Split Layout */}
+          <SplitHero />
 
           {/* Velocity Gap - Enhanced with data visualization */}
           <section id="velocity" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">
