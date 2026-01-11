@@ -14,6 +14,7 @@ import {
 } from '@prisma/client';
 
 import { presentAgent, presentExecution, presentReview } from './agents.presenter.js';
+import { TriggerService } from './trigger.service.js';
 import { PrismaService } from '../database/prisma.service.js';
 import { Ap2Service } from '../payments/ap2.service.js';
 import { WalletsService } from '../payments/wallets.service.js';
