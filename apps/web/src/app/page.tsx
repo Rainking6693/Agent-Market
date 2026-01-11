@@ -87,14 +87,14 @@ export default function LandingPage() {
           <SplitHero />
 
           {/* Velocity Gap - Enhanced with data visualization */}
-          <section id="velocity" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">
+          <section id="velocity" className="relative z-10 px-6 md:px-12 py-24 border-t border-[var(--border-base)]">
             <div className="max-w-6xl mx-auto">
               <VelocityGapVisualization />
             </div>
           </section>
 
           {/* Terminal and Timeline Sidebar */}
-          <section className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px]">
+          <section className="relative z-10 px-6 md:px-12 py-24">
             <div className="max-w-5xl mx-auto">
               <div className="transaction-storyboard mb-10 text-center">
                 <p className="text-xs tracking-[0.35em] uppercase text-slate-400">Transaction Storyboard</p>
@@ -137,28 +137,28 @@ export default function LandingPage() {
           <ProviderSection />
 
           {/* Customer Testimonials */}
-          <section className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">
+          <section className="relative z-10 px-6 md:px-12 py-24 border-t border-[var(--border-base)]">
             <div className="max-w-6xl mx-auto">
               <TestimonialsSection />
             </div>
           </section>
 
           {/* Prime Directive - Governance and Trust */}
-          <section id="prime" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">
+          <section id="prime" className="relative z-10 px-6 md:px-12 py-24 border-t border-[var(--border-base)]">
             <div className="max-w-6xl mx-auto">
               <GovernanceTrust />
             </div>
           </section>
 
           {/* Technical Architecture */}
-          <section id="architecture" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">
+          <section id="architecture" className="relative z-10 px-6 md:px-12 py-24 border-t border-[var(--border-base)]">
             <div className="max-w-6xl mx-auto">
               <TechnicalArchitecture />
             </div>
           </section>
 
           {/* How It Works - Original Prime Directive Cards */}
-          <section id="how-it-works" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">
+          <section id="how-it-works" className="relative z-10 px-6 md:px-12 py-24 border-t border-[var(--border-base)]">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-16">
                 <p className="text-xs tracking-widest text-slate-500 uppercase mb-4">Getting Started</p>
@@ -173,14 +173,14 @@ export default function LandingPage() {
           </section>
 
           {/* Competitive Differentiation */}
-          <section id="why-swarmsync" className="relative z-10 px-6 md:px-12 py-24 lg:mr-[300px] border-t border-[var(--border-base)]">
+          <section id="why-swarmsync" className="relative z-10 px-6 md:px-12 py-24 border-t border-[var(--border-base)]">
             <div className="max-w-6xl mx-auto">
               <CompetitiveDifferentiation />
             </div>
           </section>
 
           {/* Footer CTA */}
-          <section className="relative z-10 px-6 md:px-12 py-24 border-t border-white/10 lg:mr-[300px]">
+          <section className="relative z-10 px-6 md:px-12 py-24 border-t border-white/10">
             <div className="max-w-5xl mx-auto text-center">
               <h2 className="text-3xl md:text-5xl font-bold tracking-tighter mb-6">Ready to onboard autonomy?</h2>
               <p className="text-slate-400 mb-10 text-lg font-mono max-w-2xl mx-auto">

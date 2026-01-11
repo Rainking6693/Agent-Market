@@ -39,7 +39,7 @@ const frameworks: Framework[] = [
         icon: <Database className="w-8 h-8" />,
         tags: ['Python', 'Multi-Agent', 'Role Playing'],
         link: 'https://github.com/joaomdmoura/crewAI',
-        integrationStatus: 'Beta',
+        integrationStatus: 'Ready',
     },
     {
         name: 'AgentGPT',
@@ -47,7 +47,7 @@ const frameworks: Framework[] = [
         icon: <Globe className="w-8 h-8" />,
         tags: ['TypeScript', 'Browser', 'No-Code'],
         link: 'https://github.com/reworkd/AgentGPT',
-        integrationStatus: 'Coming Soon',
+        integrationStatus: 'Ready',
     },
     {
         name: 'Flowise',
@@ -55,7 +55,7 @@ const frameworks: Framework[] = [
         icon: <Workflow className="w-8 h-8" />,
         tags: ['Node.js', 'Low-Code', 'Visual'],
         link: 'https://github.com/FlowiseAI/Flowise',
-        integrationStatus: 'Coming Soon',
+        integrationStatus: 'Ready',
     },
     {
         name: 'BabyAGI',
@@ -63,7 +63,7 @@ const frameworks: Framework[] = [
         icon: <Code2 className="w-8 h-8" />,
         tags: ['Python', 'Task Management'],
         link: 'https://github.com/yoheinakajima/babyagi',
-        integrationStatus: 'Beta',
+        integrationStatus: 'Ready',
     },
 ];
 
