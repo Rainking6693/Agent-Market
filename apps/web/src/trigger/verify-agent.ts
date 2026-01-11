@@ -1,6 +1,5 @@
 import { task } from "@trigger.dev/sdk/v3";
 import { PrismaClient } from "@prisma/client";
-import { z } from "zod";
 
 const prisma = new PrismaClient();
 
@@ -8,7 +7,7 @@ export const verifyAgentTask = task({
     id: "verify-agent",
     // Set a reasonable timeout for verification
     maxDuration: 300,
-    run: async (payload: { agentId: string; ap2Endpoint?: string; inputSchema?: any; outputSchema?: any }) => {
+    run: async (payload: { agentId: string; ap2Endpoint?: string; inputSchema?: unknown; outputSchema?: unknown }) => {
         const { agentId, ap2Endpoint, inputSchema } = payload;
 
         console.log(`Starting verification for Agent ${agentId} at ${ap2Endpoint}`);
@@ -38,9 +37,10 @@ export const verifyAgentTask = task({
                     verificationStatus = 'REJECTED';
                     notes.push(`Endpoint unreachable. Status: ${response.status}`);
                 }
-            } catch (error: any) {
+            } catch (error: unknown) {
+                const errorMessage = error instanceof Error ? error.message : 'Unknown error';
                 verificationStatus = 'REJECTED';
-                notes.push(`Endpoint connection failed: ${error.message}`);
+                notes.push(`Endpoint connection failed: ${errorMessage}`);
             }
         }
 
