@@ -1,42 +1,42 @@
 "use client";
 
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Navbar } from '@/components/layout/navbar';
 import { Footer } from '@/components/layout/footer';
 import ChromeNetworkBackground from '@/components/swarm/ChromeNetworkBackground';
 import { TacticalButton } from '@/components/swarm/TacticalButton';
 
 export default function ContactPage() {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        framework: '',
-        message: '',
-    });
-    const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+    const router = useRouter();
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setStatus('sending');
+        const form = e.currentTarget;
+        const formData = new FormData(form);
 
-        try {
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
+        // Create mailto link with form data
+        const name = formData.get('name');
+        const email = formData.get('email');
+        const framework = formData.get('framework');
+        const message = formData.get('message');
 
-            if (response.ok) {
-                setStatus('success');
-                setFormData({ name: '', email: '', framework: '', message: '' });
-            } else {
-                setStatus('error');
-            }
-        } catch (error) {
-            setStatus('error');
-        }
+        const subject = `Framework Integration Request: ${framework}`;
+        const body = `
+Name: ${name}
+Email: ${email}
+Framework: ${framework}
+
+Message:
+${message || 'No additional details provided.'}
+    `.trim();
+
+        // Open default email client
+        window.location.href = `mailto:rainking6693@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+        // Redirect to thank you page after a short delay
+        setTimeout(() => {
+            router.push('/contact/thank-you');
+        }, 500);
     };
 
     return (
@@ -64,9 +64,8 @@ export default function ContactPage() {
                             <input
                                 type="text"
                                 id="name"
+                                name="name"
                                 required
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition-colors focus:border-[var(--accent-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/20"
                                 placeholder="John Doe"
                             />
@@ -79,9 +78,8 @@ export default function ContactPage() {
                             <input
                                 type="email"
                                 id="email"
+                                name="email"
                                 required
-                                value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition-colors focus:border-[var(--accent-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/20"
                                 placeholder="you@example.com"
                             />
@@ -94,9 +92,8 @@ export default function ContactPage() {
                             <input
                                 type="text"
                                 id="framework"
+                                name="framework"
                                 required
-                                value={formData.framework}
-                                onChange={(e) => setFormData({ ...formData, framework: e.target.value })}
                                 className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition-colors focus:border-[var(--accent-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/20"
                                 placeholder="e.g., Semantic Kernel, AutoGen, etc."
                             />
@@ -108,33 +105,19 @@ export default function ContactPage() {
                             </label>
                             <textarea
                                 id="message"
+                                name="message"
                                 rows={6}
-                                value={formData.message}
-                                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                 className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition-colors focus:border-[var(--accent-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/20"
                                 placeholder="Tell us about your use case, framework version, or any specific requirements..."
                             />
                         </div>
 
-                        {status === 'success' && (
-                            <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-4 text-emerald-400">
-                                ✓ Thank you! We've received your request and will be in touch soon.
-                            </div>
-                        )}
-
-                        {status === 'error' && (
-                            <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-red-400">
-                                ✗ Something went wrong. Please try again or email us directly at rainking6693@gmail.com
-                            </div>
-                        )}
-
-                        <div className="flex gap-4">
+                        <div className="flex flex-col sm:flex-row gap-4">
                             <button
                                 type="submit"
-                                disabled={status === 'sending'}
-                                className="flex-1 rounded-lg bg-[var(--accent-primary)] px-6 py-3 font-semibold text-white transition-colors hover:bg-[var(--accent-primary)]/90 disabled:opacity-50"
+                                className="flex-1 rounded-lg bg-[var(--accent-primary)] px-6 py-3 font-semibold text-white transition-colors hover:bg-[var(--accent-primary)]/90"
                             >
-                                {status === 'sending' ? 'Sending...' : 'Submit Request'}
+                                Submit Request
                             </button>
                             <TacticalButton variant="secondary" href="/frameworks" className="flex-1">
                                 Back to Frameworks
