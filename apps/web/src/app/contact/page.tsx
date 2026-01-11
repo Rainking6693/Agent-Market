@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Navbar } from '@/components/layout/navbar';
 import { Footer } from '@/components/layout/footer';
@@ -8,35 +9,39 @@ import { TacticalButton } from '@/components/swarm/TacticalButton';
 
 export default function ContactPage() {
     const router = useRouter();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsSubmitting(true);
+
         const form = e.currentTarget;
         const formData = new FormData(form);
 
-        // Create mailto link with form data
-        const name = formData.get('name');
-        const email = formData.get('email');
-        const framework = formData.get('framework');
-        const message = formData.get('message');
+        const payload = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            framework: formData.get('framework'),
+            message: formData.get('message'),
+        };
 
-        const subject = `Framework Integration Request: ${framework}`;
-        const body = `
-Name: ${name}
-Email: ${email}
-Framework: ${framework}
+        try {
+            // Send form data to our API route
+            await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+        } catch (error) {
+            console.error('Failed to submit form:', error);
+            // We still redirect to thank you page so the user isn't stuck,
+            // and they can see the manual contact info there if it somehow failed.
+        }
 
-Message:
-${message || 'No additional details provided.'}
-    `.trim();
-
-        // Open default email client
-        window.location.href = `mailto:rainking6693@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-        // Redirect to thank you page after a short delay
-        setTimeout(() => {
-            router.push('/contact/thank-you');
-        }, 500);
+        // Redirect to thank you page
+        router.push('/contact/thank-you');
     };
 
     return (
@@ -115,9 +120,10 @@ ${message || 'No additional details provided.'}
                         <div className="flex flex-col sm:flex-row gap-4">
                             <button
                                 type="submit"
-                                className="flex-1 rounded-lg bg-[var(--accent-primary)] px-6 py-3 font-semibold text-white transition-colors hover:bg-[var(--accent-primary)]/90"
+                                disabled={isSubmitting}
+                                className="flex-1 rounded-lg bg-[var(--accent-primary)] px-6 py-3 font-semibold text-white transition-colors hover:bg-[var(--accent-primary)]/90 disabled:opacity-50"
                             >
-                                Submit Request
+                                {isSubmitting ? 'Sending...' : 'Submit Request'}
                             </button>
                             <TacticalButton variant="secondary" href="/frameworks" className="flex-1">
                                 Back to Frameworks

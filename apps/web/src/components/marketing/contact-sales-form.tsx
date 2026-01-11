@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
 export function ContactSalesForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -24,25 +25,31 @@ export function ContactSalesForm() {
     setSubmitStatus('idle');
 
     try {
-      // Create mailto link with form data
-      const subject = encodeURIComponent('Enterprise Plan Inquiry');
-      const body = encodeURIComponent(
-        `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nCompany: ${formData.company}\n\nMessage:\n${formData.message}`,
-      );
-      const mailtoLink = `mailto:rainking6693@gmail.com?subject=${subject}&body=${body}`;
+      // Send form data to our API route
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          framework: `ENTERPRISE_SALES - ${formData.company || 'No Company'}`,
+          message: `Phone: ${formData.phone}\n\n${formData.message}`,
+        }),
+      });
 
-      // Open mailto link
-      window.location.href = mailtoLink;
-
-      // Reset form after a short delay
-      setTimeout(() => {
-        setFormData({ name: '', email: '', phone: '', company: '', message: '' });
+      if (response.ok) {
         setSubmitStatus('success');
-        setIsSubmitting(false);
-      }, 500);
+        // Redirect to thank you page
+        router.push('/contact/thank-you');
+      } else {
+        setSubmitStatus('error');
+      }
     } catch (error) {
       console.error('Failed to submit form:', error);
       setSubmitStatus('error');
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -51,7 +58,7 @@ export function ContactSalesForm() {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="name">Name *</Label>
+          <Label htmlFor="name" className="text-white">Name *</Label>
           <Input
             id="name"
             type="text"
@@ -59,10 +66,11 @@ export function ContactSalesForm() {
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             placeholder="Your full name"
+            className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="email">Email *</Label>
+          <Label htmlFor="email" className="text-white">Email *</Label>
           <Input
             id="email"
             type="email"
@@ -70,33 +78,36 @@ export function ContactSalesForm() {
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             placeholder="your@email.com"
+            className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
           />
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="phone">Phone</Label>
+          <Label htmlFor="phone" className="text-white">Phone</Label>
           <Input
             id="phone"
             type="tel"
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             placeholder="+1 (555) 123-4567"
+            className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="company">Company</Label>
+          <Label htmlFor="company" className="text-white">Company</Label>
           <Input
             id="company"
             type="text"
             value={formData.company}
             onChange={(e) => setFormData({ ...formData, company: e.target.value })}
             placeholder="Your company name"
+            className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
           />
         </div>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="message">Message *</Label>
+        <Label htmlFor="message" className="text-white">Message *</Label>
         <Textarea
           id="message"
           required
@@ -104,22 +115,21 @@ export function ContactSalesForm() {
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
           placeholder="Tell us about your requirements..."
           rows={4}
+          className="bg-white/5 border-white/10 text-white placeholder:text-slate-500 min-h-[100px]"
         />
       </div>
-      {submitStatus === 'success' && (
-        <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 text-sm text-emerald-700">
-          Form submitted! Your email client should open shortly.
-        </div>
-      )}
       {submitStatus === 'error' && (
-        <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+        <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-400">
           Failed to submit. Please try again or email us directly at rainking6693@gmail.com
         </div>
       )}
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
+      <Button
+        type="submit"
+        className="w-full bg-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/90 text-white font-semibold py-6"
+        disabled={isSubmitting}
+      >
         {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
       </Button>
     </form>
   );
 }
-
