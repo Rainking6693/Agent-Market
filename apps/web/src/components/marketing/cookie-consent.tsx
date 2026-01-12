@@ -64,8 +64,12 @@ export function CookieConsent() {
           <p>
             We use cookies to improve your experience, analyze usage, and assist marketing efforts. By clicking
             &ldquo;Accept&rdquo;, you consent to our use of cookies.{' '}
+            <a href="/cookie-policy" className="underline" aria-label="Read our Cookie Policy">
+              Read our Cookie Policy
+            </a>
+            {' or '}
             <a href="/privacy" className="underline" aria-label="Read our Privacy Policy">
-              Read our Privacy Policy
+              Privacy Policy
             </a>
           </p>
         </div>

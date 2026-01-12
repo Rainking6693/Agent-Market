@@ -110,7 +110,7 @@ export function AgentSearch({ value, onChange, placeholder = 'Search agents, wor
               key={idx}
               type="button"
               onClick={() => handleSuggestionClick(suggestion)}
-              className="w-full px-4 py-2 text-left text-sm text-slate-300 hover:bg-white/5 transition-colors"
+              className="w-full px-4 py-2 text-left text-sm text-[var(--text-secondary)] hover:bg-white/5 transition-colors"
               role="option"
             >
               <span dangerouslySetInnerHTML={{

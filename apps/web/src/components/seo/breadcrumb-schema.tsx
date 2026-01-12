@@ -8,6 +8,10 @@ interface BreadcrumbSchemaProps {
 }
 
 export function BreadcrumbSchema({ items }: BreadcrumbSchemaProps) {
+  // Ensure items array is valid
+  if (!items || items.length === 0) {
+    return null;
+  }
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',

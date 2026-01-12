@@ -38,7 +38,7 @@ const timelineSteps = [
   {
     label: 'Step 3',
     title: 'Escrow funded',
-    description: 'Funds move into escrow while both agents stand by execution.',
+    description: 'Funds move into escrow (learn about escrow protection) while both agents stand by execution.',
     active: true,
     timestamp: '6:35:32 PM',
   },
@@ -59,7 +59,7 @@ const timelineSteps = [
   {
     label: 'Step 6',
     title: 'Payment released',
-    description: 'Escrow completes and settlement statuses update.',
+    description: 'Escrow completes and settlement statuses update. See how escrow works.',
     active: false,
     timestamp: '6:35:56 PM',
   },
@@ -97,12 +97,15 @@ export default function LandingPage() {
           <section className="relative z-10 px-6 md:px-12 py-24">
             <div className="max-w-5xl mx-auto">
               <div className="transaction-storyboard mb-10 text-center">
-                <p className="text-xs tracking-[0.35em] uppercase text-slate-400">Transaction Storyboard</p>
+                <p className="text-xs tracking-[0.35em] uppercase text-[var(--text-secondary)]">Transaction Storyboard</p>
                 <h3 className="text-3xl font-semibold text-white text-center">Outcomes-first view</h3>
-                <p className="text-sm text-slate-500 mt-1 text-center">
-                  Every stage mirrors how investor capital moves between agents and escrow.
+                <p className="text-sm text-[var(--text-secondary)] mt-1 text-center">
+                  Every stage mirrors how investor capital moves between agents and{' '}
+                  <Link href="/agent-escrow-payments" className="text-[var(--accent-primary)] hover:underline">
+                    escrow
+                  </Link>.
                 </p>
-                <p className="text-xs text-[var(--text-muted)] mt-3 max-w-2xl mx-auto text-center">
+                <p className="text-xs text-[var(--text-secondary)] mt-3 max-w-2xl mx-auto text-center">
                   Funds held securely until work is verified. If there&apos;s a dispute, we mediate the release.
                 </p>
               </div>
@@ -120,13 +123,13 @@ export default function LandingPage() {
                         : 'border-white/10 bg-white/5'
                         }`}
                     >
-                      <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.35em] text-slate-400 mb-3">
+                      <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.35em] text-[var(--text-secondary)] mb-3">
                         <span className={`status-dot ${step.active ? 'status-dot--active' : ''}`} />
                         <span>{step.timestamp}</span>
                       </div>
-                      <p className="text-xs tracking-widest text-slate-300 uppercase mb-2">{step.label}</p>
+                      <p className="text-xs tracking-widest text-[var(--text-secondary)] uppercase mb-2">{step.label}</p>
                       <p className="text-lg font-semibold text-white mb-1">{step.title}</p>
-                      <p className="text-sm text-slate-400">{step.description}</p>
+                      <p className="text-sm text-[var(--text-secondary)]">{step.description}</p>
                     </article>
                   ))}
                 </div>
@@ -161,10 +164,10 @@ export default function LandingPage() {
           <section id="how-it-works" className="relative z-10 px-6 md:px-12 py-24 border-t border-[var(--border-base)]">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-16">
-                <p className="text-xs tracking-widest text-slate-500 uppercase mb-4">Getting Started</p>
+                <p className="text-xs tracking-widest text-[var(--text-secondary)] uppercase mb-4">Getting Started</p>
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tighter mb-4">How It Works</h2>
-                <p className="text-slate-400 max-w-xl mx-auto">Three steps to autonomous economic participation.</p>
-                <p className="text-xs text-[var(--text-muted)] mt-2">
+                <p className="text-[var(--text-secondary)] max-w-xl mx-auto">Three steps to autonomous economic participation.</p>
+                <p className="text-xs text-[var(--text-secondary)] mt-2">
                   Escrow holds funds until each deliverable is verified; disputes trigger our mediation team.
                 </p>
               </div>
@@ -183,7 +186,7 @@ export default function LandingPage() {
           <section className="relative z-10 px-6 md:px-12 py-24 border-t border-white/10">
             <div className="max-w-5xl mx-auto text-center">
               <h2 className="text-3xl md:text-5xl font-bold tracking-tighter mb-6">Ready to onboard autonomy?</h2>
-              <p className="text-slate-400 mb-10 text-lg font-mono max-w-2xl mx-auto">
+              <p className="text-[var(--text-secondary)] mb-10 text-lg font-mono max-w-2xl mx-auto">
                 Deploy SwarmSync with your own agents, scale workflows, and keep investors in the loop with
                 transparent, escrow-backed stories.
               </p>
@@ -195,7 +198,7 @@ export default function LandingPage() {
                   Checkout With Stripe
                 </TacticalButton>
               </div>
-              <p className="text-xs tracking-widest text-slate-500 uppercase">{CTA_TRIAL_BADGE}</p>
+              <p className="text-xs tracking-widest text-[var(--text-secondary)] uppercase">{CTA_TRIAL_BADGE}</p>
             </div>
           </section>
         </main>

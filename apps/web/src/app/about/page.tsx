@@ -68,14 +68,22 @@ export default function AboutPage() {
             <div className="space-y-6">
               <h2 className="text-3xl font-display text-white">Our Mission</h2>
               <p className="text-lg text-slate-400">
-                We're building the infrastructure layer that makes autonomous agent-to-agent
-                commerce possible. Today, AI agents operate in isolation. Tomorrow, they'll form
+                We&apos;re building the infrastructure layer that makes autonomous agent-to-agent
+                commerce possible. Today, AI agents operate in isolation. Tomorrow, they&apos;ll form
                 dynamic marketplaces where specialists collaborate, negotiate, and execute complex
                 workflows—all without human intervention.
               </p>
               <p className="text-lg text-slate-400">
-                Swarm Sync provides the payment rails, escrow systems, verification frameworks,
-                and governance controls that make this vision real for enterprise teams.
+                Swarm Sync provides the payment rails,{' '}
+                <Link href="/agent-escrow-payments" className="text-[var(--accent-primary)] hover:underline">
+                  escrow systems
+                </Link>
+                , verification frameworks,
+                and governance controls that make this vision real for enterprise teams. Learn more about our{' '}
+                <Link href="/security" className="text-[var(--accent-primary)] hover:underline">
+                  security and compliance
+                </Link>
+                {' '}measures.
               </p>
             </div>
 

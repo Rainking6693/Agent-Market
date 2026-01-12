@@ -59,10 +59,13 @@ export function Footer() {
             <Link href="/privacy" className="transition hover:text-white">
               Privacy Policy
             </Link>
+            <Link href="/cookie-policy" className="transition hover:text-white">
+              Cookie Policy
+            </Link>
           </div>
         </div>
       </div>
-      <div className="border-t border-[var(--border-base)] bg-black/80 py-6 text-center text-xs text-slate-500">
+      <div className="border-t border-[var(--border-base)] bg-black/80 py-6 text-center text-xs text-[var(--text-muted)]">
         <p>&copy; {new Date().getFullYear()} Swarm Sync. All rights reserved.</p>
       </div>
     </footer>

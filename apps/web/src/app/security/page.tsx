@@ -35,16 +35,40 @@ const securityFeatures = [
   {
     icon: '✅',
     title: 'SOC 2-Ready Controls',
-    description:
-      'Implementing SOC 2 Type II aligned security controls for availability, processing integrity, confidentiality, and privacy. Audit in progress.',
+    description: (
+      <>
+        Implementing{' '}
+        <a
+          href="https://www.aicpa.org/interestareas/frc/assuranceadvisoryservices/aicpasoc2report.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[var(--accent-primary)] hover:underline"
+        >
+          SOC 2 Type II
+        </a>{' '}
+        aligned security controls for availability, processing integrity, confidentiality, and privacy. Audit in progress.
+      </>
+    ),
     technical:
       'SOC 2-aligned security framework with continuous monitoring, incident response, and comprehensive logging.',
   },
   {
     icon: '🌍',
     title: 'GDPR-Aligned Practices',
-    description:
-      'Following GDPR best practices for data protection. Data processing agreements, right to erasure, data portability, and breach notification protocols in place.',
+    description: (
+      <>
+        Following{' '}
+        <a
+          href="https://gdpr.eu/what-is-gdpr/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[var(--accent-primary)] hover:underline"
+        >
+          GDPR
+        </a>{' '}
+        best practices for data protection. Data processing agreements, right to erasure, data portability, and breach notification protocols in place.
+      </>
+    ),
     technical:
       'Data residency options (EU/US), DPA templates available, automated data export, and 72-hour breach notification process.',
   },
@@ -67,10 +91,30 @@ const securityFeatures = [
 ];
 
 const complianceCertifications = [
-  { name: 'SOC 2 Type II', status: 'Audit in Progress', year: '2025' },
-  { name: 'GDPR', status: 'Aligned', year: 'Ongoing' },
-  { name: 'ISO 27001', status: 'Planned', year: '2025' },
-  { name: 'HIPAA', status: 'Available on Request', year: 'Enterprise' },
+  { 
+    name: 'SOC 2 Type II', 
+    status: 'Audit in Progress', 
+    year: '2025',
+    link: 'https://www.aicpa.org/interestareas/frc/assuranceadvisoryservices/aicpasoc2report.html'
+  },
+  { 
+    name: 'GDPR', 
+    status: 'Aligned', 
+    year: 'Ongoing',
+    link: 'https://gdpr.eu/what-is-gdpr/'
+  },
+  { 
+    name: 'ISO 27001', 
+    status: 'Planned', 
+    year: '2025',
+    link: 'https://www.iso.org/isoiec-27001-information-security.html'
+  },
+  { 
+    name: 'HIPAA', 
+    status: 'Available on Request', 
+    year: 'Enterprise',
+    link: 'https://www.hhs.gov/hipaa/index.html'
+  },
 ];
 
 export default function SecurityPage() {
@@ -82,13 +126,13 @@ export default function SecurityPage() {
         {/* Hero */}
         <section className="relative overflow-hidden bg-black px-4 pb-20 pt-24">
           <div className="mx-auto max-w-5xl text-center">
-            <p className="text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
+            <p className="text-sm font-medium uppercase tracking-[0.3em] text-[var(--text-secondary)]">
               Security & Compliance
             </p>
             <h1 className="mt-6 text-5xl font-display leading-tight text-white lg:text-6xl">
               Enterprise-Grade Security for Agent Orchestration
             </h1>
-            <p className="mt-6 text-xl font-ui text-slate-400">
+            <p className="mt-6 text-xl font-ui text-[var(--text-secondary)]">
               SOC 2-ready security controls, GDPR-aligned practices, with comprehensive protections for
               your agents and data.
             </p>
@@ -100,7 +144,7 @@ export default function SecurityPage() {
           <div className="mx-auto max-w-6xl space-y-8">
             <div className="text-center space-y-4">
               <h2 className="text-3xl font-display text-white">Certifications & Compliance</h2>
-              <p className="text-slate-400">
+              <p className="text-[var(--text-secondary)]">
                 We maintain the highest standards of security and compliance for enterprise customers.
               </p>
             </div>
@@ -108,11 +152,24 @@ export default function SecurityPage() {
               {complianceCertifications.map((cert) => (
                 <Card key={cert.name} className="border-success/20 bg-white/5 text-center">
                   <CardContent className="space-y-2 p-6">
-                    <p className="font-display text-base text-white">{cert.name}</p>
+                    <p className="font-display text-base text-white">
+                      {cert.link ? (
+                        <a
+                          href={cert.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[var(--accent-primary)] hover:underline"
+                        >
+                          {cert.name}
+                        </a>
+                      ) : (
+                        cert.name
+                      )}
+                    </p>
                     <div className="rounded-full bg-success/10 px-3 py-1 text-xs font-medium text-success">
                       {cert.status}
                     </div>
-                    <p className="font-ui text-xs text-slate-400">{cert.year}</p>
+                    <p className="font-ui text-xs text-[var(--text-muted)]">{cert.year}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -149,7 +206,7 @@ export default function SecurityPage() {
           <div className="mx-auto max-w-6xl space-y-8">
             <div className="text-center space-y-4">
               <h2 className="text-3xl font-display text-white">Data Security</h2>
-              <p className="text-slate-400">
+              <p className="text-[var(--text-secondary)]">
                 Multi-layered security controls protect your data at every stage.
               </p>
             </div>
@@ -157,7 +214,7 @@ export default function SecurityPage() {
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="p-6 space-y-3">
                   <h3 className="font-display text-xl text-white">Encryption at Rest</h3>
-                  <p className="text-slate-400">
+                  <p className="text-[var(--text-secondary)]">
                     All data stored using AES-256 encryption. Database encryption keys managed through AWS KMS with automatic rotation.
                   </p>
                 </CardContent>
@@ -165,7 +222,7 @@ export default function SecurityPage() {
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="p-6 space-y-3">
                   <h3 className="font-display text-xl text-white">Encryption in Transit</h3>
-                  <p className="text-slate-400">
+                  <p className="text-[var(--text-secondary)]">
                     TLS 1.2+ for all connections. Perfect Forward Secrecy (PFS) enabled. Certificate pinning for mobile apps.
                   </p>
                 </CardContent>
@@ -173,7 +230,7 @@ export default function SecurityPage() {
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="p-6 space-y-3">
                   <h3 className="font-display text-xl text-white">Security Audits</h3>
-                  <p className="text-slate-400">
+                  <p className="text-[var(--text-secondary)]">
                     Regular third-party penetration testing (quarterly). Automated vulnerability scanning (daily). Bug bounty program active.
                   </p>
                 </CardContent>
@@ -181,7 +238,7 @@ export default function SecurityPage() {
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="p-6 space-y-3">
                   <h3 className="font-display text-xl text-white">Incident Response</h3>
-                  <p className="text-slate-400">
+                  <p className="text-[var(--text-secondary)]">
                     24/7 SOC monitoring. Incident response plan tested quarterly. 72-hour breach notification guarantee (GDPR compliant).
                   </p>
                   <Button variant="outline" size="sm" className="mt-4" asChild>
@@ -198,7 +255,7 @@ export default function SecurityPage() {
           <div className="mx-auto max-w-6xl space-y-8">
             <div className="text-center space-y-4">
               <h2 className="text-3xl font-display text-white">Escrow & Financial Security</h2>
-              <p className="text-slate-400">
+              <p className="text-[var(--text-secondary)]">
                 Your funds are protected by industry-leading escrow practices.
               </p>
             </div>
@@ -206,7 +263,7 @@ export default function SecurityPage() {
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="p-6 space-y-3">
                   <h3 className="font-display text-xl text-white">Third-Party Escrow</h3>
-                  <p className="text-slate-400">
+                  <p className="text-[var(--text-secondary)]">
                     Funds held in third-party escrow accounts managed by Stripe Connect. Funds are segregated from operating accounts and protected by FDIC insurance (up to $250k per account).
                   </p>
                 </CardContent>
@@ -214,7 +271,7 @@ export default function SecurityPage() {
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="p-6 space-y-3">
                   <h3 className="font-display text-xl text-white">100% Protection Guarantee</h3>
-                  <p className="text-slate-400">
+                  <p className="text-[var(--text-secondary)]">
                     If verification fails or work is not delivered, funds are automatically refunded. Dispute resolution available for edge cases with 48-hour response SLA.
                   </p>
                 </CardContent>
@@ -222,7 +279,7 @@ export default function SecurityPage() {
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="p-6 space-y-3">
                   <h3 className="font-display text-xl text-white">Dispute Resolution</h3>
-                  <p className="text-slate-400">
+                  <p className="text-[var(--text-secondary)]">
                     Automated dispute resolution for common cases. Human mediation available for complex disputes. Average resolution time: 24-48 hours.
                   </p>
                 </CardContent>
@@ -230,7 +287,7 @@ export default function SecurityPage() {
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="p-6 space-y-3">
                   <h3 className="font-display text-xl text-white">Settlement SLA</h3>
-                  <p className="text-slate-400">
+                  <p className="text-[var(--text-secondary)]">
                     Payouts settle within 48 hours of successful verification. Express settlement (within 24 hours) available for Business and Enterprise plans.
                   </p>
                 </CardContent>
@@ -244,7 +301,7 @@ export default function SecurityPage() {
           <div className="mx-auto max-w-6xl space-y-8">
             <div className="text-center space-y-4">
               <h2 className="text-3xl font-display text-white">Data Privacy</h2>
-              <p className="text-slate-400">
+              <p className="text-[var(--text-secondary)]">
                 Your privacy is our priority. We follow strict data protection practices.
               </p>
             </div>
@@ -252,7 +309,7 @@ export default function SecurityPage() {
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="p-6 space-y-3">
                   <h3 className="font-display text-xl text-white">Privacy Policy</h3>
-                  <p className="text-slate-400">
+                  <p className="text-[var(--text-secondary)]">
                     Comprehensive privacy policy detailing how we collect, use, and protect your data.
                   </p>
                   <Button variant="outline" size="sm" className="mt-4" asChild>
@@ -263,7 +320,7 @@ export default function SecurityPage() {
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="p-6 space-y-3">
                   <h3 className="font-display text-xl text-white">Data Processing Agreement</h3>
-                  <p className="text-slate-400">
+                  <p className="text-[var(--text-secondary)]">
                     GDPR-compliant DPA available for enterprise customers. Standard DPA included with all plans.
                   </p>
                   <Button variant="outline" size="sm" className="mt-4" asChild>
@@ -274,7 +331,7 @@ export default function SecurityPage() {
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="p-6 space-y-3">
                   <h3 className="font-display text-xl text-white">Data Retention Policy</h3>
-                  <p className="text-slate-400">
+                  <p className="text-[var(--text-secondary)]">
                     Data retained for active accounts. Deleted accounts: 30-day retention, then permanent deletion. Transaction data: 7-year retention for compliance.
                   </p>
                   <Button variant="outline" size="sm" className="mt-4" asChild>
@@ -285,7 +342,7 @@ export default function SecurityPage() {
               <Card className="border-white/10 bg-white/5">
                 <CardContent className="p-6 space-y-3">
                   <h3 className="font-display text-xl text-white">Data Deletion</h3>
-                  <p className="text-slate-400">
+                  <p className="text-[var(--text-secondary)]">
                     Right to erasure (GDPR Article 17). Request data deletion via account settings or email. Completed within 30 days.
                   </p>
                   <Button variant="outline" size="sm" className="mt-4" asChild>

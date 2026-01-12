@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
+import { NewsletterSignup } from '@/components/marketing/newsletter-signup';
 import { Card, CardContent, CardDescription } from '@/components/ui/card';
 
 export const metadata: Metadata = {
@@ -84,7 +85,7 @@ export default function BlogPage() {
               <Card key={post.slug} className="border-white/10 bg-white/5 hover:border-white/20 transition-colors">
                 <CardContent className="p-8">
                   <Link href={`/blog/${post.slug}`} className="block space-y-4 group">
-                    <div className="flex items-center gap-4 text-sm text-slate-400">
+                    <div className="flex items-center gap-4 text-sm text-[var(--text-secondary)]">
                       <time dateTime={post.date}>
                         {new Date(post.date).toLocaleDateString('en-US', {
                           year: 'numeric',
@@ -98,7 +99,7 @@ export default function BlogPage() {
                     <h2 className="text-2xl font-display text-white group-hover:text-[var(--accent-primary)] transition-colors">
                       {post.title}
                     </h2>
-                    <CardDescription className="text-slate-400 text-base">
+                    <CardDescription className="text-[var(--text-secondary)] text-base">
                       {post.description}
                     </CardDescription>
                     <div className="text-sm font-medium text-[var(--accent-primary)] group-hover:underline">
@@ -110,11 +111,16 @@ export default function BlogPage() {
             ))}
           </div>
 
+          {/* Newsletter Signup */}
+          <div className="pt-8">
+            <NewsletterSignup />
+          </div>
+
           {/* RSS Feed Link */}
           <div className="text-center pt-8 border-t border-white/10">
             <Link
               href="/blog/feed.xml"
-              className="text-sm text-slate-400 hover:text-white transition-colors"
+              className="text-sm text-[var(--text-secondary)] hover:text-white transition-colors"
             >
               Subscribe via RSS →
             </Link>

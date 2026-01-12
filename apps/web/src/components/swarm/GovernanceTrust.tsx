@@ -108,6 +108,7 @@ export default function GovernanceTrust() {
           <button
             key={directive.id}
             onClick={() => setActiveDirective(directive.id)}
+            id={`directive-${directive.id}-tab`}
             role="tab"
             aria-selected={activeDirective === directive.id}
             aria-controls={`directive-${directive.id}-panel`}

@@ -4,8 +4,11 @@ import { useState } from 'react';
 import { Check } from 'lucide-react';
 import { FREE_CREDITS_LABEL, NO_CARD_REQUIRED_LABEL, TRIAL_DAYS } from '@pricing/constants';
 
+import Link from 'next/link';
+
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
+import { BreadcrumbNav } from '@/components/seo/breadcrumb-nav';
 import { ContactSalesForm } from '@/components/marketing/contact-sales-form';
 import { SecurityBadges } from '@/components/marketing/security-badges';
 import { TestimonialsSection } from '@/components/marketing/testimonials-section';
@@ -29,7 +32,7 @@ type PricingTier = {
     price: number;
     annualPrice: number;
     period: string;
-    description: string;
+    description: string | React.ReactNode;
     features: string[];
     cta: string;
     ctaLink: string;
@@ -45,7 +48,14 @@ const pricingTiers: PricingTier[] = [
         price: 0,
         annualPrice: 0,
         period: '/month',
-        description: 'Try SwarmSync and run real A2A escrow transactions.',
+        description: (
+          <>
+            Try SwarmSync and run real{' '}
+            <Link href="/agent-escrow-payments" className="text-[var(--accent-primary)] hover:underline">
+              A2A escrow transactions
+            </Link>.
+          </>
+        ),
         features: [
             '3 agents',
             '$25 A2A Credits/mo',
@@ -142,7 +152,24 @@ const faqItems = [
     },
     {
         question: 'What payment methods do you accept?',
-        answer: 'We accept all major credit cards, debit cards, and ACH transfers via Stripe. Enterprise customers can also pay via invoice. All payments are processed securely through Stripe\'s infrastructure.',
+        answer: (
+          <>
+            We accept all major credit cards, debit cards, and ACH transfers via{' '}
+            <a
+              href="https://stripe.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[var(--accent-primary)] hover:underline"
+            >
+              Stripe
+            </a>
+            . Enterprise customers can also pay via invoice. All payments are processed securely through Stripe&apos;s infrastructure. Learn more about our{' '}
+            <Link href="/agent-escrow-payments" className="text-[var(--accent-primary)] hover:underline">
+              escrow payment system
+            </Link>
+            .
+          </>
+        ),
     },
     {
         question: 'Is there a free trial?',
@@ -199,6 +226,14 @@ export default function PricingPage() {
 
             <main className="flex-1 px-4 py-16">
                 <div className="mx-auto max-w-7xl space-y-16">
+                    {/* Breadcrumbs */}
+                    <BreadcrumbNav
+                      items={[
+                        { label: 'Home', href: '/' },
+                        { label: 'Pricing', href: '/pricing' },
+                      ]}
+                    />
+
                     {/* Header */}
                     <div className="text-center space-y-4">
                         <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
@@ -240,16 +275,16 @@ export default function PricingPage() {
 
                                     <CardHeader className="pb-8">
                                         <CardTitle className="text-2xl font-display text-white">{tier.name}</CardTitle>
-                                        <CardDescription className="text-sm text-slate-400">{tier.description}</CardDescription>
+                                        <CardDescription className="text-sm text-[var(--text-secondary)]">{tier.description}</CardDescription>
                                         <div className="mt-4">
                                             <span className="text-4xl font-display text-white">{display.price}</span>
-                                            <span className="text-slate-400">{display.period}</span>
+                                            <span className="text-[var(--text-secondary)]">{display.period}</span>
                                         </div>
                                         {display.savings && (
                                             <p className="text-sm text-emerald-400 font-medium mt-1">{display.savings}</p>
                                         )}
                                         {tier.bestFor && (
-                                            <p className="text-xs text-slate-500 mt-2">Best for: {tier.bestFor}</p>
+                                            <p className="text-xs text-[var(--text-muted)] mt-2">Best for: {tier.bestFor}</p>
                                         )}
                                     </CardHeader>
 
@@ -258,7 +293,7 @@ export default function PricingPage() {
                                             {tier.features.map((feature, idx) => (
                                                 <li key={idx} className="flex items-start gap-2 text-sm">
                                                     <Check className="h-4 w-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-                                                    <span className="text-slate-300">{feature}</span>
+                                                    <span className="text-[var(--text-secondary)]">{feature}</span>
                                                 </li>
                                             ))}
                                         </ul>
@@ -348,7 +383,7 @@ export default function PricingPage() {
                                     <AccordionTrigger className="text-left font-semibold text-white hover:no-underline">
                                         {faq.question}
                                     </AccordionTrigger>
-                                    <AccordionContent className="text-sm text-slate-400">
+                                    <AccordionContent className="text-sm text-[var(--text-secondary)]">
                                         {faq.answer}
                                     </AccordionContent>
                                 </AccordionItem>
@@ -362,7 +397,7 @@ export default function PricingPage() {
                             <h2 className="text-3xl font-display text-white">
                                 Need a Custom Enterprise Plan?
                             </h2>
-                            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+                            <p className="text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
                                 For organizations with unique requirements, we offer custom pricing, dedicated infrastructure, and white-label solutions.
                             </p>
                         </div>

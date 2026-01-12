@@ -154,6 +154,7 @@ export default function TechnicalArchitecture() {
       <div className="flex flex-wrap justify-center gap-3 mb-8" role="tablist" aria-label="Technical architecture sections">
         <button
           onClick={() => setActiveSection('a2a')}
+          id="a2a-tab"
           role="tab"
           aria-selected={activeSection === 'a2a'}
           aria-controls="a2a-panel"
@@ -167,6 +168,7 @@ export default function TechnicalArchitecture() {
         </button>
         <button
           onClick={() => setActiveSection('patterns')}
+          id="patterns-tab"
           role="tab"
           aria-selected={activeSection === 'patterns'}
           aria-controls="patterns-panel"
@@ -180,6 +182,7 @@ export default function TechnicalArchitecture() {
         </button>
         <button
           onClick={() => setActiveSection('mcp')}
+          id="mcp-tab"
           role="tab"
           aria-selected={activeSection === 'mcp'}
           aria-controls="mcp-panel"

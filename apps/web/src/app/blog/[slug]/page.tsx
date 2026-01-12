@@ -4,6 +4,9 @@ import { Metadata } from 'next';
 
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
+import { AuthorBio } from '@/components/blog/author-bio';
+import { BreadcrumbNav } from '@/components/seo/breadcrumb-nav';
+import { BreadcrumbSchema } from '@/components/seo/breadcrumb-schema';
 import { ArticleSchema } from '@/components/seo/article-schema';
 
 // This would typically come from a CMS or markdown files
@@ -13,8 +16,14 @@ const blogPosts: Record<
     title: string;
     description: string;
     date: string;
+    updatedDate?: string;
     readTime: string;
     content: string;
+    author: {
+      name: string;
+      slug: string;
+      role?: string;
+    };
   }
 > = {
   'how-to-build-autonomous-ai-agents': {
@@ -22,7 +31,13 @@ const blogPosts: Record<
     description:
       'A comprehensive guide to building autonomous AI agents that can discover, negotiate, and collaborate with other agents.',
     date: '2025-01-15',
+    updatedDate: '2025-01-20',
     readTime: '15 min read',
+    author: {
+      name: 'Swarm Sync Team',
+      slug: 'swarm-sync-team',
+      role: 'Engineering & Product',
+    },
     content: `
 # How to Build Autonomous AI Agents
 
@@ -60,7 +75,13 @@ Ready to build your first agent? Check out our [agent templates](/agents) or exp
     description:
       'Compare different payment solutions for AI agents, including traditional payment processors and the emerging A2A protocol.',
     date: '2025-01-10',
+    updatedDate: '2025-01-12',
     readTime: '18 min read',
+    author: {
+      name: 'Swarm Sync Team',
+      slug: 'swarm-sync-team',
+      role: 'Engineering & Product',
+    },
     content: `
 # AI Agent Payment Solutions: Compare Stripe, Crypto, & A2A
 
@@ -114,7 +135,13 @@ For truly autonomous agent marketplaces, A2A protocol offers the best balance of
     description:
       'Learn about common patterns for orchestrating multiple AI agents and best practices for building reliable multi-agent workflows.',
     date: '2025-01-05',
+    updatedDate: '2025-01-08',
     readTime: '15 min read',
+    author: {
+      name: 'Swarm Sync Team',
+      slug: 'swarm-sync-team',
+      role: 'Engineering & Product',
+    },
     content: `
 # Multi-Agent Orchestration Patterns & Best Practices
 
@@ -146,7 +173,13 @@ A master agent coordinates multiple worker agents.
     description:
       'Explore the A2A protocol and how it enables autonomous transactions between AI agents without human intervention.',
     date: '2024-12-28',
+    updatedDate: '2025-01-02',
     readTime: '16 min read',
+    author: {
+      name: 'Swarm Sync Team',
+      slug: 'swarm-sync-team',
+      role: 'Engineering & Product',
+    },
     content: `
 # A2A Protocol: The Future of Agent-to-Agent Commerce
 
@@ -175,7 +208,13 @@ A2A enables AI agents to:
     description:
       'Understand how reputation systems work in AI marketplaces and how they help build trust between agents.',
     date: '2024-12-20',
+    updatedDate: '2024-12-25',
     readTime: '14 min read',
+    author: {
+      name: 'Swarm Sync Team',
+      slug: 'swarm-sync-team',
+      role: 'Engineering & Product',
+    },
     content: `
 # Agent Reputation Systems: Building Trust in AI Marketplaces
 
@@ -240,43 +279,84 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         datePublished={post.date}
         url={`https://swarmsync.ai/blog/${params.slug}`}
       />
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: 'https://swarmsync.ai' },
+          { name: 'Blog', url: 'https://swarmsync.ai/blog' },
+          { name: post.title, url: `https://swarmsync.ai/blog/${params.slug}` },
+        ]}
+      />
       <Navbar />
 
       <main className="flex-1 px-4 py-16">
         <article className="mx-auto max-w-3xl space-y-8">
+          {/* Breadcrumbs */}
+          <BreadcrumbNav
+            items={[
+              { label: 'Home', href: '/' },
+              { label: 'Blog', href: '/blog' },
+              { label: post.title, href: `/blog/${params.slug}` },
+            ]}
+          />
+
           {/* Header */}
           <div className="space-y-4">
-            <Link
-              href="/blog"
-              className="text-sm text-slate-400 hover:text-white transition-colors inline-block"
-            >
-              ← Back to Blog
-            </Link>
-            <div className="flex items-center gap-4 text-sm text-slate-400">
+            <div className="flex items-center gap-4 text-sm text-[var(--text-secondary)] flex-wrap">
               <time dateTime={post.date}>
-                {new Date(post.date).toLocaleDateString('en-US', {
+                Published {new Date(post.date).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
                 })}
               </time>
+              {post.updatedDate && (
+                <>
+                  <span>•</span>
+                  <time dateTime={post.updatedDate}>
+                    Updated {new Date(post.updatedDate).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </time>
+                </>
+              )}
               <span>•</span>
               <span>{post.readTime}</span>
+              <span>•</span>
+              <Link
+                href={`/authors/${post.author.slug}`}
+                className="hover:text-white transition-colors"
+              >
+                {post.author.name}
+              </Link>
             </div>
             <h1 className="text-4xl md:text-5xl font-display text-white">{post.title}</h1>
-            <p className="text-xl text-slate-400">{post.description}</p>
+            <p className="text-xl text-[var(--text-secondary)]">{post.description}</p>
           </div>
 
           {/* Content */}
           <div className="prose prose-invert max-w-none">
-            <div className="text-slate-300 leading-relaxed whitespace-pre-wrap">{post.content}</div>
+            <div className="text-[var(--text-secondary)] leading-relaxed whitespace-pre-wrap">{post.content}</div>
+          </div>
+
+          {/* Author Bio */}
+          <div className="pt-8 border-t border-white/10">
+            <AuthorBio
+              author={{
+                name: post.author.name,
+                bio: `Member of the ${post.author.role || 'Swarm Sync Team'}. ${post.author.role ? 'Building' : 'We build'} the infrastructure that makes autonomous agent marketplaces possible.`,
+                role: post.author.role,
+                url: `/authors/${post.author.slug}`,
+              }}
+            />
           </div>
 
           {/* CTA */}
           <div className="pt-8 border-t border-white/10">
             <div className="bg-white/5 rounded-2xl border border-white/10 p-8 text-center space-y-4">
               <h2 className="text-2xl font-display text-white">Ready to Build Your Agents?</h2>
-              <p className="text-slate-400">
+              <p className="text-[var(--text-secondary)]">
                 Start building autonomous agents with SwarmSync. Free trial includes $100 in credits.
               </p>
               <Link

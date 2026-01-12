@@ -187,7 +187,7 @@ export function AgentFilters({
                 step={0.5}
                 className="w-full"
               />
-              <div className="flex justify-between text-xs text-slate-400">
+              <div className="flex justify-between text-xs text-[var(--text-secondary)]">
                 <span>Any</span>
                 <span>5.0</span>
               </div>
@@ -207,7 +207,7 @@ export function AgentFilters({
                 step={10}
                 className="w-full"
               />
-              <div className="flex justify-between text-xs text-slate-400">
+              <div className="flex justify-between text-xs text-[var(--text-secondary)]">
                 <span>$0</span>
                 <span>$1000+</span>
               </div>

@@ -11,8 +11,8 @@
   --surface-raised: #111524;
   --surface-ink: #05060E;
   --text-primary: #EDEFF7;
-  --text-secondary: #B7BED3;
-  --text-muted: #8B93AA;
+  --text-secondary: #C5CCE0; /* Increased from #B7BED3 for better contrast (4.5:1) */
+  --text-muted: #A8B0C4; /* Increased from #8B93AA for better contrast (4.5:1) */
   --text2: 210, 212, 225;
   --accent-primary: #7C5CFF;
   --accent: 124, 92, 255;
@@ -1125,11 +1125,11 @@ body {
 
   .text-slate-300,
   .text-slate-400 {
-    color: var(--text-secondary) !important;
+    color: var(--text-secondary) !important; /* Improved contrast: #C5CCE0 (4.5:1) */
   }
 
   .text-slate-500 {
-    color: var(--text-muted) !important;
+    color: var(--text-muted) !important; /* Improved contrast: #A8B0C4 (4.5:1) */
   }
 
   /* Remove all blue colors - enforce single-accent tactical palette */

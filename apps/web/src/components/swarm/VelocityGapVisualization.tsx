@@ -79,6 +79,7 @@ export default function VelocityGapVisualization() {
           onClick={() => setActiveTab('comparison')}
           role="tab"
           aria-selected={activeTab === 'comparison'}
+          id="comparison-tab"
           aria-controls="comparison-panel"
           className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all ${
             activeTab === 'comparison'
@@ -92,6 +93,7 @@ export default function VelocityGapVisualization() {
           onClick={() => setActiveTab('benefits')}
           role="tab"
           aria-selected={activeTab === 'benefits'}
+          id="benefits-tab"
           aria-controls="benefits-panel"
           className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all ${
             activeTab === 'benefits'

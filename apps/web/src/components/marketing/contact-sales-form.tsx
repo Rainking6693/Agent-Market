@@ -66,7 +66,7 @@ export function ContactSalesForm() {
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             placeholder="Your full name"
-            className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
+            className="bg-white/5 border-white/10 text-white placeholder:text-[var(--text-muted)]"
           />
         </div>
         <div className="space-y-2">
@@ -78,7 +78,7 @@ export function ContactSalesForm() {
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             placeholder="your@email.com"
-            className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
+            className="bg-white/5 border-white/10 text-white placeholder:text-[var(--text-muted)]"
           />
         </div>
       </div>
@@ -91,7 +91,7 @@ export function ContactSalesForm() {
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             placeholder="+1 (555) 123-4567"
-            className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
+            className="bg-white/5 border-white/10 text-white placeholder:text-[var(--text-muted)]"
           />
         </div>
         <div className="space-y-2">
@@ -102,7 +102,7 @@ export function ContactSalesForm() {
             value={formData.company}
             onChange={(e) => setFormData({ ...formData, company: e.target.value })}
             placeholder="Your company name"
-            className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
+            className="bg-white/5 border-white/10 text-white placeholder:text-[var(--text-muted)]"
           />
         </div>
       </div>
@@ -115,7 +115,7 @@ export function ContactSalesForm() {
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
           placeholder="Tell us about your requirements..."
           rows={4}
-          className="bg-white/5 border-white/10 text-white placeholder:text-slate-500 min-h-[100px]"
+          className="bg-white/5 border-white/10 text-white placeholder:text-[var(--text-muted)] min-h-[100px]"
         />
       </div>
       {submitStatus === 'error' && (
