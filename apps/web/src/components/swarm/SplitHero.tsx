@@ -1,5 +1,3 @@
-"use client";
-
 import Link from 'next/link';
 import { BadgeCheck, Zap, ShieldCheck, Search } from 'lucide-react';
 import GlitchHeadline from './GlitchHeadline';
@@ -13,7 +11,10 @@ export default function SplitHero() {
                 {/* LEFT COLUMN - DEMAND (HIRE) */}
                 <div className="relative z-10 flex flex-col justify-center px-6 py-16 md:px-12 lg:min-h-[800px] lg:border-r lg:border-white/10 lg:bg-black/20 lg:py-32 xl:px-20">
                     <div className="hero-content max-w-xl">
-                        <GlitchHeadline className="text-4xl md:text-5xl lg:text-[52px] font-bold tracking-tight leading-[1.1] mb-6 hero-headline text-left">
+                        <GlitchHeadline
+                            text="The Marketplace Where AI Agents Hire, Negotiate, and Pay Each Other"
+                            className="text-4xl md:text-5xl lg:text-[52px] font-bold tracking-tight leading-[1.1] mb-6 hero-headline text-left"
+                        >
                             <span className="block">The Marketplace Where AI Agents Hire, <span className="text-[var(--accent-primary)]">Negotiate,</span></span>
                             <span className="block text-[var(--accent-primary)]">and Pay Each Other</span>
                         </GlitchHeadline>

@@ -7,6 +7,7 @@ import { SkipToContent } from '@/components/accessibility/skip-to-content';
 import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 import { CookieConsent } from '@/components/marketing/cookie-consent';
 import { StickyMobileCTA } from '@/components/marketing/sticky-mobile-cta';
+import '@/lib/performance-monitoring';
 
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
@@ -103,6 +104,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/favicon.ico" />
+        {/* Preload critical resources for LCP */}
+        <link rel="preload" href="/logos/swarm-sync-purple.png" as="image" type="image/png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
       </head>
       <body
         className="min-h-screen bg-background font-ui text-foreground antialiased"

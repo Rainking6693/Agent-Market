@@ -76,45 +76,86 @@ export function Walkthrough() {
   };
 
   const tooltip = tooltips.find((t) => t.id === activeTooltip);
-  const element = tooltip ? document.querySelector(tooltip.selector) : null;
+  const [positionStyles, setPositionStyles] = useState<React.CSSProperties>({});
 
-  if (!element || dismissedTooltips.includes(activeTooltip || '')) {
-    return null;
+  useEffect(() => {
+    if (!activeTooltip || !tooltip) {
+      setPositionStyles({});
+      return;
+    }
+
+    const element = document.querySelector(tooltip.selector);
+    if (!element) {
+      setPositionStyles({});
+      return;
+    }
+
+    // Use requestAnimationFrame to batch DOM reads and avoid forced reflow
+    const updatePosition = () => {
+      const rect = element.getBoundingClientRect();
+      const position = tooltip.position || 'bottom';
+
+      let styles: React.CSSProperties = {};
+      switch (position) {
+        case 'top':
+          styles = {
+            bottom: window.innerHeight - rect.top + 10,
+            left: rect.left + rect.width / 2,
+            transform: 'translateX(-50%)',
+          };
+          break;
+        case 'bottom':
+          styles = {
+            top: rect.bottom + 10,
+            left: rect.left + rect.width / 2,
+            transform: 'translateX(-50%)',
+          };
+          break;
+        case 'left':
+          styles = {
+            top: rect.top + rect.height / 2,
+            right: window.innerWidth - rect.left + 10,
+            transform: 'translateY(-50%)',
+          };
+          break;
+        case 'right':
+          styles = {
+            top: rect.top + rect.height / 2,
+            left: rect.right + 10,
+            transform: 'translateY(-50%)',
+          };
+          break;
+      }
+      setPositionStyles(styles);
+    };
+
+    // Batch DOM reads in requestAnimationFrame
+    const rafId = requestAnimationFrame(updatePosition);
+    return () => cancelAnimationFrame(rafId);
+  }, [activeTooltip, tooltip]);
+
+  if (!tooltip || dismissedTooltips.includes(activeTooltip || '')) {
+    return (
+      <>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            const firstUndismissed = tooltips.find((t) => !dismissedTooltips.includes(t.id));
+            if (firstUndismissed) {
+              setActiveTooltip(firstUndismissed.id);
+            }
+          }}
+          className="fixed bottom-4 right-4 z-40 rounded-full shadow-lg"
+          aria-label="Show help tooltips"
+        >
+          <HelpCircle className="h-4 w-4" />
+        </Button>
+      </>
+    );
   }
 
-  const rect = element.getBoundingClientRect();
-  const position = tooltip?.position || 'bottom';
-
-  const getPositionStyles = () => {
-    switch (position) {
-      case 'top':
-        return {
-          bottom: window.innerHeight - rect.top + 10,
-          left: rect.left + rect.width / 2,
-          transform: 'translateX(-50%)',
-        };
-      case 'bottom':
-        return {
-          top: rect.bottom + 10,
-          left: rect.left + rect.width / 2,
-          transform: 'translateX(-50%)',
-        };
-      case 'left':
-        return {
-          top: rect.top + rect.height / 2,
-          right: window.innerWidth - rect.left + 10,
-          transform: 'translateY(-50%)',
-        };
-      case 'right':
-        return {
-          top: rect.top + rect.height / 2,
-          left: rect.right + 10,
-          transform: 'translateY(-50%)',
-        };
-      default:
-        return {};
-    }
-  };
+  const getPositionStyles = () => positionStyles;
 
   return (
     <>
@@ -138,7 +179,7 @@ export function Walkthrough() {
       {tooltip && (
         <div
           className="fixed z-50 w-80"
-          style={getPositionStyles()}
+          style={positionStyles}
         >
           <Card className="border-white/20 bg-black/95 shadow-2xl">
             <CardContent className="p-4">

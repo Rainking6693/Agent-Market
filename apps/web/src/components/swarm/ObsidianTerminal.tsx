@@ -1,5 +1,3 @@
-"use client";
-
 type Props = {
   lines: string[];
   title?: string;

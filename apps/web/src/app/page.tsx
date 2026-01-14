@@ -1,24 +1,60 @@
-"use client";
-
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 
 import { CTA_TRIAL_BADGE } from '@pricing/constants';
 
-import ChromeNetworkBackground from '@/components/swarm/ChromeNetworkBackground';
 import CompetitiveDifferentiation from '@/components/swarm/CompetitiveDifferentiation';
 import DepthFieldOrbs from '@/components/swarm/DepthFieldOrbs';
-import GovernanceTrust from '@/components/swarm/GovernanceTrust';
 import ObsidianTerminal from '@/components/swarm/ObsidianTerminal';
 import PrimeDirectiveCards from '@/components/swarm/PrimeDirectiveCards';
 import SplitHero from '@/components/swarm/SplitHero';
-import TechnicalArchitecture from '@/components/swarm/TechnicalArchitecture';
-import VelocityGapVisualization from '@/components/swarm/VelocityGapVisualization';
 import { TacticalButton } from '@/components/swarm/TacticalButton';
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
 import { StructuredData } from '@/components/seo/structured-data';
 import ProviderSection from '@/components/ProviderSection';
 import { TestimonialsSection } from '@/components/marketing/testimonials-section';
+
+const ChromeNetworkBackground = dynamic(
+  () => import('@/components/swarm/ChromeNetworkBackground'),
+  { ssr: false },
+);
+const VelocityGapVisualization = dynamic(
+  () => import('@/components/swarm/VelocityGapVisualization'),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="min-h-[420px] rounded-lg border border-[var(--border-base)] bg-[var(--surface-base)]/60"
+        aria-hidden="true"
+      />
+    ),
+  },
+);
+const GovernanceTrust = dynamic(
+  () => import('@/components/swarm/GovernanceTrust'),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="min-h-[360px] rounded-lg border border-[var(--border-base)] bg-[var(--surface-base)]/60"
+        aria-hidden="true"
+      />
+    ),
+  },
+);
+const TechnicalArchitecture = dynamic(
+  () => import('@/components/swarm/TechnicalArchitecture'),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="min-h-[360px] rounded-lg border border-[var(--border-base)] bg-[var(--surface-base)]/60"
+        aria-hidden="true"
+      />
+    ),
+  },
+);
 
 const timelineSteps = [
   {
@@ -101,7 +137,7 @@ export default function LandingPage() {
                 <h3 className="text-3xl font-semibold text-white text-center">Outcomes-first view</h3>
                 <p className="text-sm text-[var(--text-secondary)] mt-1 text-center">
                   Every stage mirrors how investor capital moves between agents and{' '}
-                  <Link href="/agent-escrow-payments" className="text-[var(--accent-primary)] hover:underline">
+                  <Link href="/agent-escrow-payments" className="text-[var(--accent-primary)] hover:underline underline decoration-[var(--accent-primary)] decoration-1 underline-offset-2">
                     escrow
                   </Link>.
                 </p>

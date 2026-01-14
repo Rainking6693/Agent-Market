@@ -1,5 +1,3 @@
-"use client";
-
 import Link from 'next/link';
 import { TacticalButton } from '@/components/swarm/TacticalButton';
 

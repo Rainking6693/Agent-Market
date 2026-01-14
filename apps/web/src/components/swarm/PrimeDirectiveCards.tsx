@@ -1,5 +1,3 @@
-"use client";
-
 const directives = [
   {
     title: 'Connect Your Agents',

@@ -382,6 +382,8 @@ body {
     filter: blur(2px);
     opacity: 0.5;
     animation: float 12s ease-in-out infinite;
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   .orb-one {
@@ -404,15 +406,15 @@ body {
 
   @keyframes float {
     0% {
-      transform: translateY(0px) scale(1);
+      transform: translate3d(0, 0, 0) scale(1);
     }
 
     50% {
-      transform: translateY(-15px) scale(1.05);
+      transform: translate3d(0, -15px, 0) scale(1.05);
     }
 
     100% {
-      transform: translateY(0px) scale(1);
+      transform: translate3d(0, 0, 0) scale(1);
     }
   }
 
@@ -426,6 +428,16 @@ body {
     line-height: 1.05;
     white-space: pre-line;
     text-align: left;
+  }
+
+  .glitch-headline__text {
+    display: block;
+    background: linear-gradient(135deg, #94a3b8 0%, #e2e8f0 40%, #ffffff 60%, #e2e8f0 80%, #94a3b8 100%);
+    background-size: 200% 200%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: shimmer 10s linear infinite;
   }
 
   .glitch-headline::before,
@@ -443,6 +455,56 @@ body {
   .glitch-headline::after {
     clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
     animation-delay: 1.4s;
+  }
+
+  @keyframes glitch {
+    0% {
+      transform: translate(0, 0);
+      opacity: 0.55;
+    }
+
+    20% {
+      transform: translate(-1px, 1px);
+    }
+
+    40% {
+      transform: translate(1px, -1px);
+    }
+
+    60% {
+      transform: translate(-1px, 0);
+    }
+
+    80% {
+      transform: translate(1px, 1px);
+    }
+
+    100% {
+      transform: translate(0, 0);
+      opacity: 0.55;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glitch-headline::before,
+    .glitch-headline::after,
+    .glitch-headline__text {
+      animation: none;
+    }
   }
 
   .glitch-label {
@@ -1183,11 +1245,27 @@ body {
     border-color: var(--accent-primary) !important;
   }
 
-  /* Cyan/light blue → accent violet */
-  .text-cyan-400,
-  .text-cyan-500,
-  .text-sky-400,
-  .text-sky-500 {
-    color: var(--accent-primary) !important;
-  }
-}
+      /* Cyan/light blue → accent violet */
+      .text-cyan-400,
+      .text-cyan-500,
+      .text-sky-400,
+      .text-sky-500 {
+        color: var(--accent-primary) !important;
+      }
+
+      /* Ensure links with accent color are distinguishable */
+      a[class*="text-[var(--accent-primary)]"]:not([class*="underline"]):not([class*="no-underline"]) {
+        text-decoration: underline;
+        text-decoration-color: var(--accent-primary);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 2px;
+      }
+
+      /* Improve focus visibility for accessibility */
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent-primary);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+    }

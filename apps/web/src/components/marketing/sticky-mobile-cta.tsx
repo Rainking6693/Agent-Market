@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -12,11 +13,18 @@ const DISMISS_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 export function StickyMobileCTA() {
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     // Don't show on auth pages
-    const pathname = window.location.pathname;
-    if (pathname === '/login' || pathname === '/register' || pathname.startsWith('/auth/')) {
+    if (pathname === '/login' || pathname === '/register' || pathname?.startsWith('/auth/')) {
       return;
     }
 
@@ -53,7 +61,9 @@ export function StickyMobileCTA() {
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
-  }, [isDismissed]);
+  }, [isDismissed, mounted, pathname]);
+
+  if (!mounted) return null;
 
   const handleDismiss = () => {
     localStorage.setItem(STORAGE_KEY, Date.now().toString());

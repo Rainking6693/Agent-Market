@@ -1,5 +1,3 @@
-"use client";
-
 export default function DepthFieldOrbs() {
   return (
     <div className="depth-orbs" aria-hidden="true">
