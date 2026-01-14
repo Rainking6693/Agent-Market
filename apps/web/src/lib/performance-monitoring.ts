@@ -9,6 +9,15 @@ export interface WebVitalsMetric {
   entries: PerformanceEntry[];
 }
 
+const allowedRatings = ['good', 'needs-improvement', 'poor'] as const;
+type AllowedRating = (typeof allowedRatings)[number];
+
+const normalizeRating = (rating: string | undefined): AllowedRating => {
+  return allowedRatings.includes(rating as AllowedRating)
+    ? (rating as AllowedRating)
+    : 'needs-improvement';
+};
+
 export function reportWebVitals(metric: WebVitalsMetric) {
   // Send to Google Analytics 4
   if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -44,7 +53,13 @@ export function measurePerformance() {
             id: entry.entryType,
             name: 'FCP',
             value: entry.startTime,
-            rating: entry.startTime < 1800 ? 'good' : entry.startTime < 3000 ? 'needs-improvement' : 'poor',
+            rating: normalizeRating(
+              entry.startTime < 1800
+                ? 'good'
+                : entry.startTime < 3000
+                  ? 'needs-improvement'
+                  : 'poor',
+            ),
             delta: entry.startTime,
             entries: [entry],
           };
@@ -67,7 +82,13 @@ export function measurePerformance() {
           id: lastEntry.id || 'lcp',
           name: 'LCP',
           value: lastEntry.renderTime || lastEntry.loadTime,
-          rating: lastEntry.renderTime < 2500 ? 'good' : lastEntry.renderTime < 4000 ? 'needs-improvement' : 'poor',
+          rating: normalizeRating(
+            lastEntry.renderTime < 2500
+              ? 'good'
+              : lastEntry.renderTime < 4000
+                ? 'needs-improvement'
+                : 'poor',
+          ),
           delta: lastEntry.renderTime || lastEntry.loadTime,
           entries: [lastEntry],
         };
@@ -92,7 +113,13 @@ export function measurePerformance() {
         id: 'cls',
         name: 'CLS',
         value: clsValue,
-        rating: clsValue < 0.1 ? 'good' : clsValue < 0.25 ? 'needs-improvement' : 'poor',
+        rating: normalizeRating(
+          clsValue < 0.1
+            ? 'good'
+            : clsValue < 0.25
+              ? 'needs-improvement'
+              : 'poor',
+        ),
         delta: clsValue,
         entries: [],
       };
@@ -117,7 +144,13 @@ export function measurePerformance() {
           id: 'tbt',
           name: 'TBT',
           value: totalBlockingTime,
-          rating: totalBlockingTime < 200 ? 'good' : totalBlockingTime < 600 ? 'needs-improvement' : 'poor',
+          rating: normalizeRating(
+            totalBlockingTime < 200
+              ? 'good'
+              : totalBlockingTime < 600
+                ? 'needs-improvement'
+                : 'poor',
+          ),
           delta: totalBlockingTime,
           entries: [],
         };
