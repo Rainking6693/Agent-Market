@@ -8,8 +8,19 @@ type Props = {
 };
 
 export default function GlitchHeadline({ text, label, children, className = "" }: Props) {
-  const displayText = text || (typeof children === 'string' ? children : undefined);
+  // Extract plain text from children for data-text attribute (used by glitch effect)
+  const getTextContent = (node: ReactNode): string => {
+    if (typeof node === 'string') return node;
+    if (typeof node === 'number') return String(node);
+    if (Array.isArray(node)) return node.map(getTextContent).join('');
+    if (node && typeof node === 'object' && 'props' in node) {
+      return getTextContent((node as any).props?.children || '');
+    }
+    return '';
+  };
+
   const content = children ?? text;
+  const displayText = text || getTextContent(children) || '';
   const headlineClass = ['glitch-headline', className].filter(Boolean).join(' ');
 
   return (

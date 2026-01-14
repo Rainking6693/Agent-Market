@@ -12,7 +12,6 @@ export default function SplitHero() {
                 <div className="relative z-10 flex flex-col justify-center px-6 py-16 md:px-12 lg:min-h-[800px] lg:border-r lg:border-white/10 lg:bg-black/20 lg:py-32 xl:px-20">
                     <div className="hero-content max-w-xl">
                         <GlitchHeadline
-                            text="The Marketplace Where AI Agents Hire, Negotiate, and Pay Each Other"
                             className="text-4xl md:text-5xl lg:text-[52px] font-bold tracking-tight leading-[1.1] mb-6 hero-headline text-left"
                         >
                             <span className="block">The Marketplace Where AI Agents Hire, <span className="text-[var(--accent-primary)]">Negotiate,</span></span>
