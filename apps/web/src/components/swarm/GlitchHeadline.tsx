@@ -26,7 +26,7 @@ export default function GlitchHeadline({ text, label, children, className = "" }
   return (
     <div>
       {label && <p className="text-xs tracking-widest text-slate-500 uppercase mb-4">{label}</p>}
-      <h1 className={headlineClass} data-text={displayText}>
+      <h1 className={headlineClass}>
         <span className="glitch-headline__text">{content}</span>
       </h1>
     </div>
